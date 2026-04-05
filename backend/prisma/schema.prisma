@@ -1,0 +1,220 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider     = "prisma-client-js"
+  output       = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── User Model ───────────────────────────────────────────────────────────────
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  phone     String?
+  avatar    String?
+  role      String   @default("USER") // USER, PARTNER, ADMIN
+  status    String   @default("ACTIVE") // ACTIVE, SUSPENDED, INACTIVE
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  events        Event[]
+  bookings      Booking[]
+  notifications Notification[]
+  reviews       Review[]
+}
+
+// ─── Event Model ──────────────────────────────────────────────────────────────
+model Event {
+  id             String   @id @default(uuid())
+  title          String
+  description    String
+  category       String   // SPORTS, MUSIC, COMEDY, WORKSHOP, ADVENTURE, FOOD, NIGHTLIFE, FESTIVAL, THEATER, EXHIBITION
+  bookingFormat  String   @default("HYBRID") // SEAT, TIER, HYBRID
+  visibility     String   @default("PUBLIC") // PUBLIC, PRIVATE, INVITE_ONLY
+  accessCode     String?
+  location       String
+  venue          String
+  date           DateTime
+  time           String
+  bookingStartAt DateTime?
+  bookingEndAt   DateTime?
+  price          Float    // Minimum tier price (or base price)
+  currency       String   @default("INR")
+  taxPercent     Float    @default(0)
+  platformFeeType String  @default("PERCENT") // PERCENT, FIXED
+  platformFeeValue Float  @default(0)
+  totalSlots     Int
+  availableSlots Int
+  images         String   @default("[]") // JSON array of image URLs
+  status         String   @default("DRAFT") // ACTIVE, DRAFT, COMPLETED, CANCELLED
+  isPublished    Boolean  @default(false)
+  publishedAt    DateTime?
+  featured       Boolean  @default(false)
+
+  // Seating configuration (stored as JSON)
+  seatLayout     String   @default("standard") // standard, theater, stadium, openground, custom
+  seatRows       Int?
+  seatsPerRow    Int?
+  numberedSeats  Boolean  @default(true)
+  seatSelection  Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  partnerId String
+  partner   User      @relation(fields: [partnerId], references: [id])
+  bookings  Booking[]
+  reviews   Review[]
+  shows     Show[]
+  tiers     Tier[]
+}
+
+// ─── Tier Model (Ticket Categories) ──────────────────────────────────────────
+model Tier {
+  id          String @id @default(uuid())
+  name        String // VIP, Gold, Silver, etc.
+  price       Float
+  quantity    Int    // Total seats in this tier
+  available   Int    // Available seats in this tier
+  description String @default("")
+  color       String @default("rose") // Color tag for UI
+
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  bookingItems BookingItem[]
+}
+
+// ─── Booking Model ────────────────────────────────────────────────────────────
+model Booking {
+  id          String   @id @default(uuid())
+  quantity    Int
+  totalAmount Float
+  status      String   @default("CONFIRMED") // CONFIRMED, CANCELLED, USED, PENDING
+  qrCode      String?
+  seatNumbers String?  // JSON array of selected seat numbers
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId  String
+  user    User     @relation(fields: [userId], references: [id])
+  eventId String
+  event   Event    @relation(fields: [eventId], references: [id])
+  showId  String?
+  show    Show?    @relation(fields: [showId], references: [id])
+  payment Payment?
+  items   BookingItem[]
+  bookingSeats BookingSeat[]
+}
+
+// ─── Show Model (date/time instances of an event) ───────────────────────────
+model Show {
+  id             String   @id @default(uuid())
+  venue          String?
+  showDate       DateTime
+  startTime      String
+  endTime        String?
+  bookingStartAt DateTime?
+  bookingEndAt   DateTime?
+  status         String   @default("ACTIVE") // ACTIVE, CANCELLED, COMPLETED
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  eventId String
+  event   Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  seats   ShowSeat[]
+  bookings Booking[]
+
+  @@index([eventId, showDate])
+}
+
+// ─── ShowSeat Model (seat inventory per show) ───────────────────────────────
+model ShowSeat {
+  id        String   @id @default(uuid())
+  seatCode  String
+  section   String?
+  price     Float?
+  status    String   @default("AVAILABLE") // AVAILABLE, LOCKED, BOOKED, BLOCKED
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  showId String
+  show   Show  @relation(fields: [showId], references: [id], onDelete: Cascade)
+
+  bookingSeat BookingSeat?
+
+  @@unique([showId, seatCode])
+  @@index([showId, status])
+}
+
+// ─── BookingSeat Model (seat mapping for show-based bookings) ────────────────
+model BookingSeat {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  bookingId  String
+  booking    Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  showSeatId String   @unique
+  showSeat   ShowSeat @relation(fields: [showSeatId], references: [id])
+
+  @@index([bookingId])
+}
+
+// ─── BookingItem (per-tier breakdown) ────────────────────────────────────────
+model BookingItem {
+  id       String @id @default(uuid())
+  quantity Int
+  price    Float  // Price per ticket at time of booking
+
+  bookingId String
+  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  tierId    String
+  tier      Tier    @relation(fields: [tierId], references: [id])
+}
+
+// ─── Payment Model ────────────────────────────────────────────────────────────
+model Payment {
+  id            String   @id @default(uuid())
+  amount        Float
+  method        String   @default("MOCK") // MOCK, RAZORPAY, STRIPE, UPI
+  transactionId String   @unique
+  status        String   @default("PENDING") // PENDING, SUCCESS, FAILED, REFUNDED
+  createdAt     DateTime @default(now())
+
+  bookingId String  @unique
+  booking   Booking @relation(fields: [bookingId], references: [id])
+}
+
+// ─── Notification Model ───────────────────────────────────────────────────────
+model Notification {
+  id        String   @id @default(uuid())
+  title     String
+  message   String
+  type      String   @default("GENERAL") // GENERAL, BOOKING, PAYMENT, EVENT
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+// ─── Review Model ─────────────────────────────────────────────────────────────
+model Review {
+  id        String   @id @default(uuid())
+  rating    Int      // 1-5
+  comment   String?
+  createdAt DateTime @default(now())
+
+  userId  String
+  user    User   @relation(fields: [userId], references: [id])
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id])
+
+  @@unique([userId, eventId])
+}

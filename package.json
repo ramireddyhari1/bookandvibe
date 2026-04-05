@@ -1,0 +1,12 @@
+{
+  "name": "book-and-vibe",
+  "version": "1.0.0",
+  "description": "Book & Vibe Monorepo",
+  "private": true,
+  "scripts": {
+    "dev:web": "cd web-app && npm run dev",
+    "dev:admin": "cd admin-dashboard && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:mobile": "cd mobile-app && npx expo start"
+  }
+}
