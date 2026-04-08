@@ -7,6 +7,10 @@
     "dev:web": "cd web-app && npm run dev",
     "dev:admin": "cd admin-dashboard && npm run dev",
     "dev:backend": "cd backend && npm run dev",
-    "dev:mobile": "cd mobile-app && npx expo start"
+    "dev:mobile": "cd mobile-app && npx expo start",
+    "dev:partner": "cd partner-mobile-app && npx expo start"
+  },
+  "dependencies": {
+    "expo-blur": "^55.0.12"
   }
 }

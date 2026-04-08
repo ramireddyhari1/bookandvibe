@@ -6,7 +6,8 @@ This repository is a monorepo containing:
 - Public web experience for customers
 - Premium admin dashboard for admins and partners
 - Backend API with role-based access and operational modules
-- Mobile app (Expo)
+- Mobile app (Expo) - User facing
+- Partner App (Expo) - Venue/Turf management
 
 ## Product Scope
 
@@ -22,7 +23,8 @@ This repository is a monorepo containing:
 book-and-vibe/
 |- admin-dashboard/    Next.js admin and partner control suite
 |- backend/            Express API + Prisma + PostgreSQL + Redis support
-|- mobile-app/         Expo React Native client
+|- mobile-app/         Expo React Native client (User)
+|- partner-mobile-app/ Expo React Native client (Partner)
 |- web-app/            Next.js public user-facing app
 |- docker-compose.yml  Local PostgreSQL service
 `- package.json        Root dev shortcuts
@@ -116,6 +118,7 @@ npm run dev:backend
 npm run dev:web
 npm run dev:admin
 npm run dev:mobile
+npm run dev:partner
 ```
 
 Option B: Run each app directly
@@ -136,7 +139,8 @@ Defined in root `package.json`:
 	"dev:web": "cd web-app && npm run dev",
 	"dev:admin": "cd admin-dashboard && npm run dev",
 	"dev:backend": "cd backend && npm run dev",
-	"dev:mobile": "cd mobile-app && npx expo start"
+	"dev:mobile": "cd mobile-app && npx expo start",
+	"dev:partner": "cd partner-mobile-app && npx expo start"
 }
 ```
 
@@ -167,7 +171,8 @@ Prisma models include:
 - `User` (roles, account status)
 - `Event`, `Tier`, `Show`, `ShowSeat`
 - `Booking`, `BookingItem`, `BookingSeat`, `Payment`
-- `GamehubFacility`, `GamehubBooking`, related operational models
+- `GamehubFacility`, `GamehubBooking`, `GamehubBlockedSlot`
+- `Wallet`, `WalletTransaction`, `Payout` (Financial Logic)
 
 Key relationship behavior:
 - Partners can be scoped to resources

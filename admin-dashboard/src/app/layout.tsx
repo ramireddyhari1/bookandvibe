@@ -1,13 +1,21 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Inter_Tight } from "next/font/google";
 import "./globals.css";
-import Sidebar from "@/components/layout/Sidebar";
+import AppShell from "@/components/layout/AppShell";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-body",
+});
+
+const interTight = Inter_Tight({
+  subsets: ["latin"],
+  variable: "--font-display",
+});
 
 export const metadata: Metadata = {
   title: "Admin Dashboard | Book & Vibe",
-  description: "Manage events, bookings, and users.",
+  description: "Professional control center for operations, partners, and bookings.",
 };
 
 export default function RootLayout({
@@ -17,11 +25,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-slate-50 text-slate-900 antialiased`}>
-        <Sidebar />
-        <main className="ml-[260px] p-8 min-h-screen">
-          {children}
-        </main>
+      <body className={`${inter.variable} ${interTight.variable} dashboard-body antialiased`}>
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );

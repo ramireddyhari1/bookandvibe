@@ -3,6 +3,8 @@ const http = require('http');
 const cors = require('cors');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const { Server } = require('socket.io');
 const { getSeatRoom, setSocketServer } = require('./lib/realtime');
 
@@ -36,11 +38,45 @@ io.on('connection', (socket) => {
   });
 });
 
-// ─── Middleware ───────────────────────────────────────────────────────────────
-app.use(cors());
-app.use(express.json({ limit: process.env.REQUEST_BODY_LIMIT || '12mb' }));
-app.use(express.urlencoded({ extended: true, limit: process.env.REQUEST_BODY_LIMIT || '12mb' }));
-app.use(morgan('dev'));
+// ─── Security Middleware ──────────────────────────────────────────────────────
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per 15 mins globally
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests, please try again later.' }
+});
+
+// Strict limiter for authentication endpoints
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10, // Max 10 login/register attempts per 15 minutes
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many login attempts. Please try again after 15 minutes.' }
+});
+
+// ─── Logging Redaction Middleware ─────────────────────────────────────────────
+// Redact sensitive headers and PII from outgoing logs
+morgan.token('safe-url', (req) => {
+  return req.originalUrl.replace(/(token|password|email)=[^&]+/g, '$1=[REDACTED]');
+});
+morgan.token('auth-status', (req, res) => {
+  return req.headers.authorization ? 'AUTH_PRESENT' : 'ANONYMOUS';
+});
+
+app.use(helmet());
+app.use(limiter);
+app.use(cors({
+  origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  credentials: true
+}));
+app.use(express.json({ limit: process.env.REQUEST_BODY_LIMIT || '5mb' }));
+app.use(express.urlencoded({ extended: true, limit: process.env.REQUEST_BODY_LIMIT || '5mb' }));
+
+// Using customized morgan for security
+app.use(morgan(':method :safe-url :status :res[content-length] - :response-time ms [:auth-status]'));
 
 // ─── Route Imports ────────────────────────────────────────────────────────────
 const authRoutes = require('./routes/auth.routes');
@@ -50,15 +86,17 @@ const paymentRoutes = require('./routes/payment.routes');
 const notificationRoutes = require('./routes/notification.routes');
 const userRoutes = require('./routes/user.routes');
 const gamehubRoutes = require('./routes/gamehub.routes');
+const partnerRoutes = require('./routes/partner.routes');
 
 // ─── API Routes ───────────────────────────────────────────────────────────────
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/gamehub', gamehubRoutes);
+app.use('/api/partners', partnerRoutes);
 
 // ─── Health Check ─────────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {

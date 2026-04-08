@@ -68,6 +68,41 @@ export type Notification = $Result.DefaultSelection<Prisma.$NotificationPayload>
  * 
  */
 export type Review = $Result.DefaultSelection<Prisma.$ReviewPayload>
+/**
+ * Model GamehubFacility
+ * 
+ */
+export type GamehubFacility = $Result.DefaultSelection<Prisma.$GamehubFacilityPayload>
+/**
+ * Model GamehubReview
+ * 
+ */
+export type GamehubReview = $Result.DefaultSelection<Prisma.$GamehubReviewPayload>
+/**
+ * Model GamehubBooking
+ * 
+ */
+export type GamehubBooking = $Result.DefaultSelection<Prisma.$GamehubBookingPayload>
+/**
+ * Model GamehubBlockedSlot
+ * 
+ */
+export type GamehubBlockedSlot = $Result.DefaultSelection<Prisma.$GamehubBlockedSlotPayload>
+/**
+ * Model Wallet
+ * 
+ */
+export type Wallet = $Result.DefaultSelection<Prisma.$WalletPayload>
+/**
+ * Model WalletTransaction
+ * 
+ */
+export type WalletTransaction = $Result.DefaultSelection<Prisma.$WalletTransactionPayload>
+/**
+ * Model Payout
+ * 
+ */
+export type Payout = $Result.DefaultSelection<Prisma.$PayoutPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -299,6 +334,76 @@ export class PrismaClient<
     * ```
     */
   get review(): Prisma.ReviewDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.gamehubFacility`: Exposes CRUD operations for the **GamehubFacility** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more GamehubFacilities
+    * const gamehubFacilities = await prisma.gamehubFacility.findMany()
+    * ```
+    */
+  get gamehubFacility(): Prisma.GamehubFacilityDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.gamehubReview`: Exposes CRUD operations for the **GamehubReview** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more GamehubReviews
+    * const gamehubReviews = await prisma.gamehubReview.findMany()
+    * ```
+    */
+  get gamehubReview(): Prisma.GamehubReviewDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.gamehubBooking`: Exposes CRUD operations for the **GamehubBooking** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more GamehubBookings
+    * const gamehubBookings = await prisma.gamehubBooking.findMany()
+    * ```
+    */
+  get gamehubBooking(): Prisma.GamehubBookingDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.gamehubBlockedSlot`: Exposes CRUD operations for the **GamehubBlockedSlot** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more GamehubBlockedSlots
+    * const gamehubBlockedSlots = await prisma.gamehubBlockedSlot.findMany()
+    * ```
+    */
+  get gamehubBlockedSlot(): Prisma.GamehubBlockedSlotDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.wallet`: Exposes CRUD operations for the **Wallet** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Wallets
+    * const wallets = await prisma.wallet.findMany()
+    * ```
+    */
+  get wallet(): Prisma.WalletDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.walletTransaction`: Exposes CRUD operations for the **WalletTransaction** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more WalletTransactions
+    * const walletTransactions = await prisma.walletTransaction.findMany()
+    * ```
+    */
+  get walletTransaction(): Prisma.WalletTransactionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.payout`: Exposes CRUD operations for the **Payout** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Payouts
+    * const payouts = await prisma.payout.findMany()
+    * ```
+    */
+  get payout(): Prisma.PayoutDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -743,7 +848,14 @@ export namespace Prisma {
     BookingItem: 'BookingItem',
     Payment: 'Payment',
     Notification: 'Notification',
-    Review: 'Review'
+    Review: 'Review',
+    GamehubFacility: 'GamehubFacility',
+    GamehubReview: 'GamehubReview',
+    GamehubBooking: 'GamehubBooking',
+    GamehubBlockedSlot: 'GamehubBlockedSlot',
+    Wallet: 'Wallet',
+    WalletTransaction: 'WalletTransaction',
+    Payout: 'Payout'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -759,7 +871,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "event" | "tier" | "booking" | "show" | "showSeat" | "bookingSeat" | "bookingItem" | "payment" | "notification" | "review"
+      modelProps: "user" | "event" | "tier" | "booking" | "show" | "showSeat" | "bookingSeat" | "bookingItem" | "payment" | "notification" | "review" | "gamehubFacility" | "gamehubReview" | "gamehubBooking" | "gamehubBlockedSlot" | "wallet" | "walletTransaction" | "payout"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1577,6 +1689,524 @@ export namespace Prisma {
           }
         }
       }
+      GamehubFacility: {
+        payload: Prisma.$GamehubFacilityPayload<ExtArgs>
+        fields: Prisma.GamehubFacilityFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.GamehubFacilityFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubFacilityPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.GamehubFacilityFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubFacilityPayload>
+          }
+          findFirst: {
+            args: Prisma.GamehubFacilityFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubFacilityPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.GamehubFacilityFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubFacilityPayload>
+          }
+          findMany: {
+            args: Prisma.GamehubFacilityFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubFacilityPayload>[]
+          }
+          create: {
+            args: Prisma.GamehubFacilityCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubFacilityPayload>
+          }
+          createMany: {
+            args: Prisma.GamehubFacilityCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.GamehubFacilityCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubFacilityPayload>[]
+          }
+          delete: {
+            args: Prisma.GamehubFacilityDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubFacilityPayload>
+          }
+          update: {
+            args: Prisma.GamehubFacilityUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubFacilityPayload>
+          }
+          deleteMany: {
+            args: Prisma.GamehubFacilityDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.GamehubFacilityUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.GamehubFacilityUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubFacilityPayload>[]
+          }
+          upsert: {
+            args: Prisma.GamehubFacilityUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubFacilityPayload>
+          }
+          aggregate: {
+            args: Prisma.GamehubFacilityAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGamehubFacility>
+          }
+          groupBy: {
+            args: Prisma.GamehubFacilityGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GamehubFacilityGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.GamehubFacilityCountArgs<ExtArgs>
+            result: $Utils.Optional<GamehubFacilityCountAggregateOutputType> | number
+          }
+        }
+      }
+      GamehubReview: {
+        payload: Prisma.$GamehubReviewPayload<ExtArgs>
+        fields: Prisma.GamehubReviewFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.GamehubReviewFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubReviewPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.GamehubReviewFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubReviewPayload>
+          }
+          findFirst: {
+            args: Prisma.GamehubReviewFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubReviewPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.GamehubReviewFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubReviewPayload>
+          }
+          findMany: {
+            args: Prisma.GamehubReviewFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubReviewPayload>[]
+          }
+          create: {
+            args: Prisma.GamehubReviewCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubReviewPayload>
+          }
+          createMany: {
+            args: Prisma.GamehubReviewCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.GamehubReviewCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubReviewPayload>[]
+          }
+          delete: {
+            args: Prisma.GamehubReviewDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubReviewPayload>
+          }
+          update: {
+            args: Prisma.GamehubReviewUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubReviewPayload>
+          }
+          deleteMany: {
+            args: Prisma.GamehubReviewDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.GamehubReviewUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.GamehubReviewUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubReviewPayload>[]
+          }
+          upsert: {
+            args: Prisma.GamehubReviewUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubReviewPayload>
+          }
+          aggregate: {
+            args: Prisma.GamehubReviewAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGamehubReview>
+          }
+          groupBy: {
+            args: Prisma.GamehubReviewGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GamehubReviewGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.GamehubReviewCountArgs<ExtArgs>
+            result: $Utils.Optional<GamehubReviewCountAggregateOutputType> | number
+          }
+        }
+      }
+      GamehubBooking: {
+        payload: Prisma.$GamehubBookingPayload<ExtArgs>
+        fields: Prisma.GamehubBookingFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.GamehubBookingFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubBookingPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.GamehubBookingFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubBookingPayload>
+          }
+          findFirst: {
+            args: Prisma.GamehubBookingFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubBookingPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.GamehubBookingFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubBookingPayload>
+          }
+          findMany: {
+            args: Prisma.GamehubBookingFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubBookingPayload>[]
+          }
+          create: {
+            args: Prisma.GamehubBookingCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubBookingPayload>
+          }
+          createMany: {
+            args: Prisma.GamehubBookingCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.GamehubBookingCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubBookingPayload>[]
+          }
+          delete: {
+            args: Prisma.GamehubBookingDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubBookingPayload>
+          }
+          update: {
+            args: Prisma.GamehubBookingUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubBookingPayload>
+          }
+          deleteMany: {
+            args: Prisma.GamehubBookingDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.GamehubBookingUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.GamehubBookingUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubBookingPayload>[]
+          }
+          upsert: {
+            args: Prisma.GamehubBookingUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubBookingPayload>
+          }
+          aggregate: {
+            args: Prisma.GamehubBookingAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGamehubBooking>
+          }
+          groupBy: {
+            args: Prisma.GamehubBookingGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GamehubBookingGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.GamehubBookingCountArgs<ExtArgs>
+            result: $Utils.Optional<GamehubBookingCountAggregateOutputType> | number
+          }
+        }
+      }
+      GamehubBlockedSlot: {
+        payload: Prisma.$GamehubBlockedSlotPayload<ExtArgs>
+        fields: Prisma.GamehubBlockedSlotFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.GamehubBlockedSlotFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubBlockedSlotPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.GamehubBlockedSlotFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubBlockedSlotPayload>
+          }
+          findFirst: {
+            args: Prisma.GamehubBlockedSlotFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubBlockedSlotPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.GamehubBlockedSlotFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubBlockedSlotPayload>
+          }
+          findMany: {
+            args: Prisma.GamehubBlockedSlotFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubBlockedSlotPayload>[]
+          }
+          create: {
+            args: Prisma.GamehubBlockedSlotCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubBlockedSlotPayload>
+          }
+          createMany: {
+            args: Prisma.GamehubBlockedSlotCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.GamehubBlockedSlotCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubBlockedSlotPayload>[]
+          }
+          delete: {
+            args: Prisma.GamehubBlockedSlotDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubBlockedSlotPayload>
+          }
+          update: {
+            args: Prisma.GamehubBlockedSlotUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubBlockedSlotPayload>
+          }
+          deleteMany: {
+            args: Prisma.GamehubBlockedSlotDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.GamehubBlockedSlotUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.GamehubBlockedSlotUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubBlockedSlotPayload>[]
+          }
+          upsert: {
+            args: Prisma.GamehubBlockedSlotUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GamehubBlockedSlotPayload>
+          }
+          aggregate: {
+            args: Prisma.GamehubBlockedSlotAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGamehubBlockedSlot>
+          }
+          groupBy: {
+            args: Prisma.GamehubBlockedSlotGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GamehubBlockedSlotGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.GamehubBlockedSlotCountArgs<ExtArgs>
+            result: $Utils.Optional<GamehubBlockedSlotCountAggregateOutputType> | number
+          }
+        }
+      }
+      Wallet: {
+        payload: Prisma.$WalletPayload<ExtArgs>
+        fields: Prisma.WalletFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.WalletFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.WalletFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletPayload>
+          }
+          findFirst: {
+            args: Prisma.WalletFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.WalletFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletPayload>
+          }
+          findMany: {
+            args: Prisma.WalletFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletPayload>[]
+          }
+          create: {
+            args: Prisma.WalletCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletPayload>
+          }
+          createMany: {
+            args: Prisma.WalletCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.WalletCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletPayload>[]
+          }
+          delete: {
+            args: Prisma.WalletDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletPayload>
+          }
+          update: {
+            args: Prisma.WalletUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletPayload>
+          }
+          deleteMany: {
+            args: Prisma.WalletDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.WalletUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.WalletUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletPayload>[]
+          }
+          upsert: {
+            args: Prisma.WalletUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletPayload>
+          }
+          aggregate: {
+            args: Prisma.WalletAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateWallet>
+          }
+          groupBy: {
+            args: Prisma.WalletGroupByArgs<ExtArgs>
+            result: $Utils.Optional<WalletGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.WalletCountArgs<ExtArgs>
+            result: $Utils.Optional<WalletCountAggregateOutputType> | number
+          }
+        }
+      }
+      WalletTransaction: {
+        payload: Prisma.$WalletTransactionPayload<ExtArgs>
+        fields: Prisma.WalletTransactionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.WalletTransactionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletTransactionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.WalletTransactionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletTransactionPayload>
+          }
+          findFirst: {
+            args: Prisma.WalletTransactionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletTransactionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.WalletTransactionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletTransactionPayload>
+          }
+          findMany: {
+            args: Prisma.WalletTransactionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletTransactionPayload>[]
+          }
+          create: {
+            args: Prisma.WalletTransactionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletTransactionPayload>
+          }
+          createMany: {
+            args: Prisma.WalletTransactionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.WalletTransactionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletTransactionPayload>[]
+          }
+          delete: {
+            args: Prisma.WalletTransactionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletTransactionPayload>
+          }
+          update: {
+            args: Prisma.WalletTransactionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletTransactionPayload>
+          }
+          deleteMany: {
+            args: Prisma.WalletTransactionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.WalletTransactionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.WalletTransactionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletTransactionPayload>[]
+          }
+          upsert: {
+            args: Prisma.WalletTransactionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletTransactionPayload>
+          }
+          aggregate: {
+            args: Prisma.WalletTransactionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateWalletTransaction>
+          }
+          groupBy: {
+            args: Prisma.WalletTransactionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<WalletTransactionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.WalletTransactionCountArgs<ExtArgs>
+            result: $Utils.Optional<WalletTransactionCountAggregateOutputType> | number
+          }
+        }
+      }
+      Payout: {
+        payload: Prisma.$PayoutPayload<ExtArgs>
+        fields: Prisma.PayoutFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PayoutFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayoutPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PayoutFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayoutPayload>
+          }
+          findFirst: {
+            args: Prisma.PayoutFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayoutPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PayoutFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayoutPayload>
+          }
+          findMany: {
+            args: Prisma.PayoutFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayoutPayload>[]
+          }
+          create: {
+            args: Prisma.PayoutCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayoutPayload>
+          }
+          createMany: {
+            args: Prisma.PayoutCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PayoutCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayoutPayload>[]
+          }
+          delete: {
+            args: Prisma.PayoutDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayoutPayload>
+          }
+          update: {
+            args: Prisma.PayoutUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayoutPayload>
+          }
+          deleteMany: {
+            args: Prisma.PayoutDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PayoutUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PayoutUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayoutPayload>[]
+          }
+          upsert: {
+            args: Prisma.PayoutUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayoutPayload>
+          }
+          aggregate: {
+            args: Prisma.PayoutAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePayout>
+          }
+          groupBy: {
+            args: Prisma.PayoutGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PayoutGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PayoutCountArgs<ExtArgs>
+            result: $Utils.Optional<PayoutCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1696,6 +2326,13 @@ export namespace Prisma {
     payment?: PaymentOmit
     notification?: NotificationOmit
     review?: ReviewOmit
+    gamehubFacility?: GamehubFacilityOmit
+    gamehubReview?: GamehubReviewOmit
+    gamehubBooking?: GamehubBookingOmit
+    gamehubBlockedSlot?: GamehubBlockedSlotOmit
+    wallet?: WalletOmit
+    walletTransaction?: WalletTransactionOmit
+    payout?: PayoutOmit
   }
 
   /* Types for Logging */
@@ -1778,15 +2415,21 @@ export namespace Prisma {
   export type UserCountOutputType = {
     events: number
     bookings: number
+    gamehubBookings: number
     notifications: number
     reviews: number
+    gamehubFacilities: number
+    payouts: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     events?: boolean | UserCountOutputTypeCountEventsArgs
     bookings?: boolean | UserCountOutputTypeCountBookingsArgs
+    gamehubBookings?: boolean | UserCountOutputTypeCountGamehubBookingsArgs
     notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
     reviews?: boolean | UserCountOutputTypeCountReviewsArgs
+    gamehubFacilities?: boolean | UserCountOutputTypeCountGamehubFacilitiesArgs
+    payouts?: boolean | UserCountOutputTypeCountPayoutsArgs
   }
 
   // Custom InputTypes
@@ -1817,6 +2460,13 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
+  export type UserCountOutputTypeCountGamehubBookingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GamehubBookingWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
   export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: NotificationWhereInput
   }
@@ -1826,6 +2476,20 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountReviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReviewWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountGamehubFacilitiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GamehubFacilityWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountPayoutsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PayoutWhereInput
   }
 
 
@@ -1995,6 +2659,86 @@ export namespace Prisma {
    */
   export type ShowCountOutputTypeCountBookingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: BookingWhereInput
+  }
+
+
+  /**
+   * Count Type GamehubFacilityCountOutputType
+   */
+
+  export type GamehubFacilityCountOutputType = {
+    reviews: number
+    bookings: number
+    blockedSlots: number
+  }
+
+  export type GamehubFacilityCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    reviews?: boolean | GamehubFacilityCountOutputTypeCountReviewsArgs
+    bookings?: boolean | GamehubFacilityCountOutputTypeCountBookingsArgs
+    blockedSlots?: boolean | GamehubFacilityCountOutputTypeCountBlockedSlotsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * GamehubFacilityCountOutputType without action
+   */
+  export type GamehubFacilityCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubFacilityCountOutputType
+     */
+    select?: GamehubFacilityCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * GamehubFacilityCountOutputType without action
+   */
+  export type GamehubFacilityCountOutputTypeCountReviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GamehubReviewWhereInput
+  }
+
+  /**
+   * GamehubFacilityCountOutputType without action
+   */
+  export type GamehubFacilityCountOutputTypeCountBookingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GamehubBookingWhereInput
+  }
+
+  /**
+   * GamehubFacilityCountOutputType without action
+   */
+  export type GamehubFacilityCountOutputTypeCountBlockedSlotsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GamehubBlockedSlotWhereInput
+  }
+
+
+  /**
+   * Count Type WalletCountOutputType
+   */
+
+  export type WalletCountOutputType = {
+    transactions: number
+  }
+
+  export type WalletCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    transactions?: boolean | WalletCountOutputTypeCountTransactionsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * WalletCountOutputType without action
+   */
+  export type WalletCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WalletCountOutputType
+     */
+    select?: WalletCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * WalletCountOutputType without action
+   */
+  export type WalletCountOutputTypeCountTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WalletTransactionWhereInput
   }
 
 
@@ -2208,8 +2952,12 @@ export namespace Prisma {
     updatedAt?: boolean
     events?: boolean | User$eventsArgs<ExtArgs>
     bookings?: boolean | User$bookingsArgs<ExtArgs>
+    gamehubBookings?: boolean | User$gamehubBookingsArgs<ExtArgs>
     notifications?: boolean | User$notificationsArgs<ExtArgs>
     reviews?: boolean | User$reviewsArgs<ExtArgs>
+    gamehubFacilities?: boolean | User$gamehubFacilitiesArgs<ExtArgs>
+    wallet?: boolean | User$walletArgs<ExtArgs>
+    payouts?: boolean | User$payoutsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2256,8 +3004,12 @@ export namespace Prisma {
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     events?: boolean | User$eventsArgs<ExtArgs>
     bookings?: boolean | User$bookingsArgs<ExtArgs>
+    gamehubBookings?: boolean | User$gamehubBookingsArgs<ExtArgs>
     notifications?: boolean | User$notificationsArgs<ExtArgs>
     reviews?: boolean | User$reviewsArgs<ExtArgs>
+    gamehubFacilities?: boolean | User$gamehubFacilitiesArgs<ExtArgs>
+    wallet?: boolean | User$walletArgs<ExtArgs>
+    payouts?: boolean | User$payoutsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2268,8 +3020,12 @@ export namespace Prisma {
     objects: {
       events: Prisma.$EventPayload<ExtArgs>[]
       bookings: Prisma.$BookingPayload<ExtArgs>[]
+      gamehubBookings: Prisma.$GamehubBookingPayload<ExtArgs>[]
       notifications: Prisma.$NotificationPayload<ExtArgs>[]
       reviews: Prisma.$ReviewPayload<ExtArgs>[]
+      gamehubFacilities: Prisma.$GamehubFacilityPayload<ExtArgs>[]
+      wallet: Prisma.$WalletPayload<ExtArgs> | null
+      payouts: Prisma.$PayoutPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2678,8 +3434,12 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     events<T extends User$eventsArgs<ExtArgs> = {}>(args?: Subset<T, User$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     bookings<T extends User$bookingsArgs<ExtArgs> = {}>(args?: Subset<T, User$bookingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    gamehubBookings<T extends User$gamehubBookingsArgs<ExtArgs> = {}>(args?: Subset<T, User$gamehubBookingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamehubBookingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notifications<T extends User$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reviews<T extends User$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, User$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    gamehubFacilities<T extends User$gamehubFacilitiesArgs<ExtArgs> = {}>(args?: Subset<T, User$gamehubFacilitiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamehubFacilityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    wallet<T extends User$walletArgs<ExtArgs> = {}>(args?: Subset<T, User$walletArgs<ExtArgs>>): Prisma__WalletClient<$Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    payouts<T extends User$payoutsArgs<ExtArgs> = {}>(args?: Subset<T, User$payoutsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PayoutPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3160,6 +3920,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.gamehubBookings
+   */
+  export type User$gamehubBookingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubBooking
+     */
+    select?: GamehubBookingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubBooking
+     */
+    omit?: GamehubBookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubBookingInclude<ExtArgs> | null
+    where?: GamehubBookingWhereInput
+    orderBy?: GamehubBookingOrderByWithRelationInput | GamehubBookingOrderByWithRelationInput[]
+    cursor?: GamehubBookingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GamehubBookingScalarFieldEnum | GamehubBookingScalarFieldEnum[]
+  }
+
+  /**
    * User.notifications
    */
   export type User$notificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3205,6 +3989,73 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ReviewScalarFieldEnum | ReviewScalarFieldEnum[]
+  }
+
+  /**
+   * User.gamehubFacilities
+   */
+  export type User$gamehubFacilitiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubFacility
+     */
+    select?: GamehubFacilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubFacility
+     */
+    omit?: GamehubFacilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubFacilityInclude<ExtArgs> | null
+    where?: GamehubFacilityWhereInput
+    orderBy?: GamehubFacilityOrderByWithRelationInput | GamehubFacilityOrderByWithRelationInput[]
+    cursor?: GamehubFacilityWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GamehubFacilityScalarFieldEnum | GamehubFacilityScalarFieldEnum[]
+  }
+
+  /**
+   * User.wallet
+   */
+  export type User$walletArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wallet
+     */
+    select?: WalletSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wallet
+     */
+    omit?: WalletOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletInclude<ExtArgs> | null
+    where?: WalletWhereInput
+  }
+
+  /**
+   * User.payouts
+   */
+  export type User$payoutsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payout
+     */
+    select?: PayoutSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payout
+     */
+    omit?: PayoutOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutInclude<ExtArgs> | null
+    where?: PayoutWhereInput
+    orderBy?: PayoutOrderByWithRelationInput | PayoutOrderByWithRelationInput[]
+    cursor?: PayoutWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PayoutScalarFieldEnum | PayoutScalarFieldEnum[]
   }
 
   /**
@@ -15150,6 +16001,8330 @@ export namespace Prisma {
 
 
   /**
+   * Model GamehubFacility
+   */
+
+  export type AggregateGamehubFacility = {
+    _count: GamehubFacilityCountAggregateOutputType | null
+    _avg: GamehubFacilityAvgAggregateOutputType | null
+    _sum: GamehubFacilitySumAggregateOutputType | null
+    _min: GamehubFacilityMinAggregateOutputType | null
+    _max: GamehubFacilityMaxAggregateOutputType | null
+  }
+
+  export type GamehubFacilityAvgAggregateOutputType = {
+    rating: number | null
+    reviewsCount: number | null
+    pricePerHour: number | null
+  }
+
+  export type GamehubFacilitySumAggregateOutputType = {
+    rating: number | null
+    reviewsCount: number | null
+    pricePerHour: number | null
+  }
+
+  export type GamehubFacilityMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    type: string | null
+    location: string | null
+    venue: string | null
+    distance: string | null
+    rating: number | null
+    reviewsCount: number | null
+    pricePerHour: number | null
+    unit: string | null
+    priceRange: string | null
+    image: string | null
+    description: string | null
+    phone: string | null
+    openHours: string | null
+    status: string | null
+    pricingRules: string | null
+    amenities: string | null
+    features: string | null
+    tags: string | null
+    gallery: string | null
+    battleModes: string | null
+    slotTemplate: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    partnerId: string | null
+  }
+
+  export type GamehubFacilityMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    type: string | null
+    location: string | null
+    venue: string | null
+    distance: string | null
+    rating: number | null
+    reviewsCount: number | null
+    pricePerHour: number | null
+    unit: string | null
+    priceRange: string | null
+    image: string | null
+    description: string | null
+    phone: string | null
+    openHours: string | null
+    status: string | null
+    pricingRules: string | null
+    amenities: string | null
+    features: string | null
+    tags: string | null
+    gallery: string | null
+    battleModes: string | null
+    slotTemplate: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    partnerId: string | null
+  }
+
+  export type GamehubFacilityCountAggregateOutputType = {
+    id: number
+    name: number
+    type: number
+    location: number
+    venue: number
+    distance: number
+    rating: number
+    reviewsCount: number
+    pricePerHour: number
+    unit: number
+    priceRange: number
+    image: number
+    description: number
+    phone: number
+    openHours: number
+    status: number
+    pricingRules: number
+    amenities: number
+    features: number
+    tags: number
+    gallery: number
+    battleModes: number
+    slotTemplate: number
+    createdAt: number
+    updatedAt: number
+    partnerId: number
+    _all: number
+  }
+
+
+  export type GamehubFacilityAvgAggregateInputType = {
+    rating?: true
+    reviewsCount?: true
+    pricePerHour?: true
+  }
+
+  export type GamehubFacilitySumAggregateInputType = {
+    rating?: true
+    reviewsCount?: true
+    pricePerHour?: true
+  }
+
+  export type GamehubFacilityMinAggregateInputType = {
+    id?: true
+    name?: true
+    type?: true
+    location?: true
+    venue?: true
+    distance?: true
+    rating?: true
+    reviewsCount?: true
+    pricePerHour?: true
+    unit?: true
+    priceRange?: true
+    image?: true
+    description?: true
+    phone?: true
+    openHours?: true
+    status?: true
+    pricingRules?: true
+    amenities?: true
+    features?: true
+    tags?: true
+    gallery?: true
+    battleModes?: true
+    slotTemplate?: true
+    createdAt?: true
+    updatedAt?: true
+    partnerId?: true
+  }
+
+  export type GamehubFacilityMaxAggregateInputType = {
+    id?: true
+    name?: true
+    type?: true
+    location?: true
+    venue?: true
+    distance?: true
+    rating?: true
+    reviewsCount?: true
+    pricePerHour?: true
+    unit?: true
+    priceRange?: true
+    image?: true
+    description?: true
+    phone?: true
+    openHours?: true
+    status?: true
+    pricingRules?: true
+    amenities?: true
+    features?: true
+    tags?: true
+    gallery?: true
+    battleModes?: true
+    slotTemplate?: true
+    createdAt?: true
+    updatedAt?: true
+    partnerId?: true
+  }
+
+  export type GamehubFacilityCountAggregateInputType = {
+    id?: true
+    name?: true
+    type?: true
+    location?: true
+    venue?: true
+    distance?: true
+    rating?: true
+    reviewsCount?: true
+    pricePerHour?: true
+    unit?: true
+    priceRange?: true
+    image?: true
+    description?: true
+    phone?: true
+    openHours?: true
+    status?: true
+    pricingRules?: true
+    amenities?: true
+    features?: true
+    tags?: true
+    gallery?: true
+    battleModes?: true
+    slotTemplate?: true
+    createdAt?: true
+    updatedAt?: true
+    partnerId?: true
+    _all?: true
+  }
+
+  export type GamehubFacilityAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GamehubFacility to aggregate.
+     */
+    where?: GamehubFacilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GamehubFacilities to fetch.
+     */
+    orderBy?: GamehubFacilityOrderByWithRelationInput | GamehubFacilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: GamehubFacilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GamehubFacilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GamehubFacilities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned GamehubFacilities
+    **/
+    _count?: true | GamehubFacilityCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: GamehubFacilityAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: GamehubFacilitySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: GamehubFacilityMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: GamehubFacilityMaxAggregateInputType
+  }
+
+  export type GetGamehubFacilityAggregateType<T extends GamehubFacilityAggregateArgs> = {
+        [P in keyof T & keyof AggregateGamehubFacility]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateGamehubFacility[P]>
+      : GetScalarType<T[P], AggregateGamehubFacility[P]>
+  }
+
+
+
+
+  export type GamehubFacilityGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GamehubFacilityWhereInput
+    orderBy?: GamehubFacilityOrderByWithAggregationInput | GamehubFacilityOrderByWithAggregationInput[]
+    by: GamehubFacilityScalarFieldEnum[] | GamehubFacilityScalarFieldEnum
+    having?: GamehubFacilityScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: GamehubFacilityCountAggregateInputType | true
+    _avg?: GamehubFacilityAvgAggregateInputType
+    _sum?: GamehubFacilitySumAggregateInputType
+    _min?: GamehubFacilityMinAggregateInputType
+    _max?: GamehubFacilityMaxAggregateInputType
+  }
+
+  export type GamehubFacilityGroupByOutputType = {
+    id: string
+    name: string
+    type: string
+    location: string
+    venue: string
+    distance: string
+    rating: number
+    reviewsCount: number
+    pricePerHour: number
+    unit: string
+    priceRange: string
+    image: string
+    description: string
+    phone: string
+    openHours: string
+    status: string
+    pricingRules: string
+    amenities: string
+    features: string
+    tags: string
+    gallery: string
+    battleModes: string
+    slotTemplate: string
+    createdAt: Date
+    updatedAt: Date
+    partnerId: string | null
+    _count: GamehubFacilityCountAggregateOutputType | null
+    _avg: GamehubFacilityAvgAggregateOutputType | null
+    _sum: GamehubFacilitySumAggregateOutputType | null
+    _min: GamehubFacilityMinAggregateOutputType | null
+    _max: GamehubFacilityMaxAggregateOutputType | null
+  }
+
+  type GetGamehubFacilityGroupByPayload<T extends GamehubFacilityGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<GamehubFacilityGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof GamehubFacilityGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], GamehubFacilityGroupByOutputType[P]>
+            : GetScalarType<T[P], GamehubFacilityGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type GamehubFacilitySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    type?: boolean
+    location?: boolean
+    venue?: boolean
+    distance?: boolean
+    rating?: boolean
+    reviewsCount?: boolean
+    pricePerHour?: boolean
+    unit?: boolean
+    priceRange?: boolean
+    image?: boolean
+    description?: boolean
+    phone?: boolean
+    openHours?: boolean
+    status?: boolean
+    pricingRules?: boolean
+    amenities?: boolean
+    features?: boolean
+    tags?: boolean
+    gallery?: boolean
+    battleModes?: boolean
+    slotTemplate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    partnerId?: boolean
+    partner?: boolean | GamehubFacility$partnerArgs<ExtArgs>
+    reviews?: boolean | GamehubFacility$reviewsArgs<ExtArgs>
+    bookings?: boolean | GamehubFacility$bookingsArgs<ExtArgs>
+    blockedSlots?: boolean | GamehubFacility$blockedSlotsArgs<ExtArgs>
+    _count?: boolean | GamehubFacilityCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["gamehubFacility"]>
+
+  export type GamehubFacilitySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    type?: boolean
+    location?: boolean
+    venue?: boolean
+    distance?: boolean
+    rating?: boolean
+    reviewsCount?: boolean
+    pricePerHour?: boolean
+    unit?: boolean
+    priceRange?: boolean
+    image?: boolean
+    description?: boolean
+    phone?: boolean
+    openHours?: boolean
+    status?: boolean
+    pricingRules?: boolean
+    amenities?: boolean
+    features?: boolean
+    tags?: boolean
+    gallery?: boolean
+    battleModes?: boolean
+    slotTemplate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    partnerId?: boolean
+    partner?: boolean | GamehubFacility$partnerArgs<ExtArgs>
+  }, ExtArgs["result"]["gamehubFacility"]>
+
+  export type GamehubFacilitySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    type?: boolean
+    location?: boolean
+    venue?: boolean
+    distance?: boolean
+    rating?: boolean
+    reviewsCount?: boolean
+    pricePerHour?: boolean
+    unit?: boolean
+    priceRange?: boolean
+    image?: boolean
+    description?: boolean
+    phone?: boolean
+    openHours?: boolean
+    status?: boolean
+    pricingRules?: boolean
+    amenities?: boolean
+    features?: boolean
+    tags?: boolean
+    gallery?: boolean
+    battleModes?: boolean
+    slotTemplate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    partnerId?: boolean
+    partner?: boolean | GamehubFacility$partnerArgs<ExtArgs>
+  }, ExtArgs["result"]["gamehubFacility"]>
+
+  export type GamehubFacilitySelectScalar = {
+    id?: boolean
+    name?: boolean
+    type?: boolean
+    location?: boolean
+    venue?: boolean
+    distance?: boolean
+    rating?: boolean
+    reviewsCount?: boolean
+    pricePerHour?: boolean
+    unit?: boolean
+    priceRange?: boolean
+    image?: boolean
+    description?: boolean
+    phone?: boolean
+    openHours?: boolean
+    status?: boolean
+    pricingRules?: boolean
+    amenities?: boolean
+    features?: boolean
+    tags?: boolean
+    gallery?: boolean
+    battleModes?: boolean
+    slotTemplate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    partnerId?: boolean
+  }
+
+  export type GamehubFacilityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "type" | "location" | "venue" | "distance" | "rating" | "reviewsCount" | "pricePerHour" | "unit" | "priceRange" | "image" | "description" | "phone" | "openHours" | "status" | "pricingRules" | "amenities" | "features" | "tags" | "gallery" | "battleModes" | "slotTemplate" | "createdAt" | "updatedAt" | "partnerId", ExtArgs["result"]["gamehubFacility"]>
+  export type GamehubFacilityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    partner?: boolean | GamehubFacility$partnerArgs<ExtArgs>
+    reviews?: boolean | GamehubFacility$reviewsArgs<ExtArgs>
+    bookings?: boolean | GamehubFacility$bookingsArgs<ExtArgs>
+    blockedSlots?: boolean | GamehubFacility$blockedSlotsArgs<ExtArgs>
+    _count?: boolean | GamehubFacilityCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type GamehubFacilityIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    partner?: boolean | GamehubFacility$partnerArgs<ExtArgs>
+  }
+  export type GamehubFacilityIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    partner?: boolean | GamehubFacility$partnerArgs<ExtArgs>
+  }
+
+  export type $GamehubFacilityPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "GamehubFacility"
+    objects: {
+      partner: Prisma.$UserPayload<ExtArgs> | null
+      reviews: Prisma.$GamehubReviewPayload<ExtArgs>[]
+      bookings: Prisma.$GamehubBookingPayload<ExtArgs>[]
+      blockedSlots: Prisma.$GamehubBlockedSlotPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      type: string
+      location: string
+      venue: string
+      distance: string
+      rating: number
+      reviewsCount: number
+      pricePerHour: number
+      unit: string
+      priceRange: string
+      image: string
+      description: string
+      phone: string
+      openHours: string
+      status: string
+      pricingRules: string
+      amenities: string
+      features: string
+      tags: string
+      gallery: string
+      battleModes: string
+      slotTemplate: string
+      createdAt: Date
+      updatedAt: Date
+      partnerId: string | null
+    }, ExtArgs["result"]["gamehubFacility"]>
+    composites: {}
+  }
+
+  type GamehubFacilityGetPayload<S extends boolean | null | undefined | GamehubFacilityDefaultArgs> = $Result.GetResult<Prisma.$GamehubFacilityPayload, S>
+
+  type GamehubFacilityCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<GamehubFacilityFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: GamehubFacilityCountAggregateInputType | true
+    }
+
+  export interface GamehubFacilityDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GamehubFacility'], meta: { name: 'GamehubFacility' } }
+    /**
+     * Find zero or one GamehubFacility that matches the filter.
+     * @param {GamehubFacilityFindUniqueArgs} args - Arguments to find a GamehubFacility
+     * @example
+     * // Get one GamehubFacility
+     * const gamehubFacility = await prisma.gamehubFacility.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends GamehubFacilityFindUniqueArgs>(args: SelectSubset<T, GamehubFacilityFindUniqueArgs<ExtArgs>>): Prisma__GamehubFacilityClient<$Result.GetResult<Prisma.$GamehubFacilityPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one GamehubFacility that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {GamehubFacilityFindUniqueOrThrowArgs} args - Arguments to find a GamehubFacility
+     * @example
+     * // Get one GamehubFacility
+     * const gamehubFacility = await prisma.gamehubFacility.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends GamehubFacilityFindUniqueOrThrowArgs>(args: SelectSubset<T, GamehubFacilityFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GamehubFacilityClient<$Result.GetResult<Prisma.$GamehubFacilityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GamehubFacility that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubFacilityFindFirstArgs} args - Arguments to find a GamehubFacility
+     * @example
+     * // Get one GamehubFacility
+     * const gamehubFacility = await prisma.gamehubFacility.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends GamehubFacilityFindFirstArgs>(args?: SelectSubset<T, GamehubFacilityFindFirstArgs<ExtArgs>>): Prisma__GamehubFacilityClient<$Result.GetResult<Prisma.$GamehubFacilityPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GamehubFacility that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubFacilityFindFirstOrThrowArgs} args - Arguments to find a GamehubFacility
+     * @example
+     * // Get one GamehubFacility
+     * const gamehubFacility = await prisma.gamehubFacility.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends GamehubFacilityFindFirstOrThrowArgs>(args?: SelectSubset<T, GamehubFacilityFindFirstOrThrowArgs<ExtArgs>>): Prisma__GamehubFacilityClient<$Result.GetResult<Prisma.$GamehubFacilityPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more GamehubFacilities that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubFacilityFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all GamehubFacilities
+     * const gamehubFacilities = await prisma.gamehubFacility.findMany()
+     * 
+     * // Get first 10 GamehubFacilities
+     * const gamehubFacilities = await prisma.gamehubFacility.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const gamehubFacilityWithIdOnly = await prisma.gamehubFacility.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends GamehubFacilityFindManyArgs>(args?: SelectSubset<T, GamehubFacilityFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamehubFacilityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a GamehubFacility.
+     * @param {GamehubFacilityCreateArgs} args - Arguments to create a GamehubFacility.
+     * @example
+     * // Create one GamehubFacility
+     * const GamehubFacility = await prisma.gamehubFacility.create({
+     *   data: {
+     *     // ... data to create a GamehubFacility
+     *   }
+     * })
+     * 
+     */
+    create<T extends GamehubFacilityCreateArgs>(args: SelectSubset<T, GamehubFacilityCreateArgs<ExtArgs>>): Prisma__GamehubFacilityClient<$Result.GetResult<Prisma.$GamehubFacilityPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many GamehubFacilities.
+     * @param {GamehubFacilityCreateManyArgs} args - Arguments to create many GamehubFacilities.
+     * @example
+     * // Create many GamehubFacilities
+     * const gamehubFacility = await prisma.gamehubFacility.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends GamehubFacilityCreateManyArgs>(args?: SelectSubset<T, GamehubFacilityCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many GamehubFacilities and returns the data saved in the database.
+     * @param {GamehubFacilityCreateManyAndReturnArgs} args - Arguments to create many GamehubFacilities.
+     * @example
+     * // Create many GamehubFacilities
+     * const gamehubFacility = await prisma.gamehubFacility.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many GamehubFacilities and only return the `id`
+     * const gamehubFacilityWithIdOnly = await prisma.gamehubFacility.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends GamehubFacilityCreateManyAndReturnArgs>(args?: SelectSubset<T, GamehubFacilityCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamehubFacilityPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a GamehubFacility.
+     * @param {GamehubFacilityDeleteArgs} args - Arguments to delete one GamehubFacility.
+     * @example
+     * // Delete one GamehubFacility
+     * const GamehubFacility = await prisma.gamehubFacility.delete({
+     *   where: {
+     *     // ... filter to delete one GamehubFacility
+     *   }
+     * })
+     * 
+     */
+    delete<T extends GamehubFacilityDeleteArgs>(args: SelectSubset<T, GamehubFacilityDeleteArgs<ExtArgs>>): Prisma__GamehubFacilityClient<$Result.GetResult<Prisma.$GamehubFacilityPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one GamehubFacility.
+     * @param {GamehubFacilityUpdateArgs} args - Arguments to update one GamehubFacility.
+     * @example
+     * // Update one GamehubFacility
+     * const gamehubFacility = await prisma.gamehubFacility.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends GamehubFacilityUpdateArgs>(args: SelectSubset<T, GamehubFacilityUpdateArgs<ExtArgs>>): Prisma__GamehubFacilityClient<$Result.GetResult<Prisma.$GamehubFacilityPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more GamehubFacilities.
+     * @param {GamehubFacilityDeleteManyArgs} args - Arguments to filter GamehubFacilities to delete.
+     * @example
+     * // Delete a few GamehubFacilities
+     * const { count } = await prisma.gamehubFacility.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends GamehubFacilityDeleteManyArgs>(args?: SelectSubset<T, GamehubFacilityDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GamehubFacilities.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubFacilityUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many GamehubFacilities
+     * const gamehubFacility = await prisma.gamehubFacility.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends GamehubFacilityUpdateManyArgs>(args: SelectSubset<T, GamehubFacilityUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GamehubFacilities and returns the data updated in the database.
+     * @param {GamehubFacilityUpdateManyAndReturnArgs} args - Arguments to update many GamehubFacilities.
+     * @example
+     * // Update many GamehubFacilities
+     * const gamehubFacility = await prisma.gamehubFacility.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more GamehubFacilities and only return the `id`
+     * const gamehubFacilityWithIdOnly = await prisma.gamehubFacility.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends GamehubFacilityUpdateManyAndReturnArgs>(args: SelectSubset<T, GamehubFacilityUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamehubFacilityPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one GamehubFacility.
+     * @param {GamehubFacilityUpsertArgs} args - Arguments to update or create a GamehubFacility.
+     * @example
+     * // Update or create a GamehubFacility
+     * const gamehubFacility = await prisma.gamehubFacility.upsert({
+     *   create: {
+     *     // ... data to create a GamehubFacility
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the GamehubFacility we want to update
+     *   }
+     * })
+     */
+    upsert<T extends GamehubFacilityUpsertArgs>(args: SelectSubset<T, GamehubFacilityUpsertArgs<ExtArgs>>): Prisma__GamehubFacilityClient<$Result.GetResult<Prisma.$GamehubFacilityPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of GamehubFacilities.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubFacilityCountArgs} args - Arguments to filter GamehubFacilities to count.
+     * @example
+     * // Count the number of GamehubFacilities
+     * const count = await prisma.gamehubFacility.count({
+     *   where: {
+     *     // ... the filter for the GamehubFacilities we want to count
+     *   }
+     * })
+    **/
+    count<T extends GamehubFacilityCountArgs>(
+      args?: Subset<T, GamehubFacilityCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], GamehubFacilityCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a GamehubFacility.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubFacilityAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends GamehubFacilityAggregateArgs>(args: Subset<T, GamehubFacilityAggregateArgs>): Prisma.PrismaPromise<GetGamehubFacilityAggregateType<T>>
+
+    /**
+     * Group by GamehubFacility.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubFacilityGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends GamehubFacilityGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: GamehubFacilityGroupByArgs['orderBy'] }
+        : { orderBy?: GamehubFacilityGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, GamehubFacilityGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGamehubFacilityGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the GamehubFacility model
+   */
+  readonly fields: GamehubFacilityFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for GamehubFacility.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__GamehubFacilityClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    partner<T extends GamehubFacility$partnerArgs<ExtArgs> = {}>(args?: Subset<T, GamehubFacility$partnerArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    reviews<T extends GamehubFacility$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, GamehubFacility$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamehubReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    bookings<T extends GamehubFacility$bookingsArgs<ExtArgs> = {}>(args?: Subset<T, GamehubFacility$bookingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamehubBookingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    blockedSlots<T extends GamehubFacility$blockedSlotsArgs<ExtArgs> = {}>(args?: Subset<T, GamehubFacility$blockedSlotsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamehubBlockedSlotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the GamehubFacility model
+   */
+  interface GamehubFacilityFieldRefs {
+    readonly id: FieldRef<"GamehubFacility", 'String'>
+    readonly name: FieldRef<"GamehubFacility", 'String'>
+    readonly type: FieldRef<"GamehubFacility", 'String'>
+    readonly location: FieldRef<"GamehubFacility", 'String'>
+    readonly venue: FieldRef<"GamehubFacility", 'String'>
+    readonly distance: FieldRef<"GamehubFacility", 'String'>
+    readonly rating: FieldRef<"GamehubFacility", 'Float'>
+    readonly reviewsCount: FieldRef<"GamehubFacility", 'Int'>
+    readonly pricePerHour: FieldRef<"GamehubFacility", 'Float'>
+    readonly unit: FieldRef<"GamehubFacility", 'String'>
+    readonly priceRange: FieldRef<"GamehubFacility", 'String'>
+    readonly image: FieldRef<"GamehubFacility", 'String'>
+    readonly description: FieldRef<"GamehubFacility", 'String'>
+    readonly phone: FieldRef<"GamehubFacility", 'String'>
+    readonly openHours: FieldRef<"GamehubFacility", 'String'>
+    readonly status: FieldRef<"GamehubFacility", 'String'>
+    readonly pricingRules: FieldRef<"GamehubFacility", 'String'>
+    readonly amenities: FieldRef<"GamehubFacility", 'String'>
+    readonly features: FieldRef<"GamehubFacility", 'String'>
+    readonly tags: FieldRef<"GamehubFacility", 'String'>
+    readonly gallery: FieldRef<"GamehubFacility", 'String'>
+    readonly battleModes: FieldRef<"GamehubFacility", 'String'>
+    readonly slotTemplate: FieldRef<"GamehubFacility", 'String'>
+    readonly createdAt: FieldRef<"GamehubFacility", 'DateTime'>
+    readonly updatedAt: FieldRef<"GamehubFacility", 'DateTime'>
+    readonly partnerId: FieldRef<"GamehubFacility", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * GamehubFacility findUnique
+   */
+  export type GamehubFacilityFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubFacility
+     */
+    select?: GamehubFacilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubFacility
+     */
+    omit?: GamehubFacilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubFacilityInclude<ExtArgs> | null
+    /**
+     * Filter, which GamehubFacility to fetch.
+     */
+    where: GamehubFacilityWhereUniqueInput
+  }
+
+  /**
+   * GamehubFacility findUniqueOrThrow
+   */
+  export type GamehubFacilityFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubFacility
+     */
+    select?: GamehubFacilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubFacility
+     */
+    omit?: GamehubFacilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubFacilityInclude<ExtArgs> | null
+    /**
+     * Filter, which GamehubFacility to fetch.
+     */
+    where: GamehubFacilityWhereUniqueInput
+  }
+
+  /**
+   * GamehubFacility findFirst
+   */
+  export type GamehubFacilityFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubFacility
+     */
+    select?: GamehubFacilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubFacility
+     */
+    omit?: GamehubFacilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubFacilityInclude<ExtArgs> | null
+    /**
+     * Filter, which GamehubFacility to fetch.
+     */
+    where?: GamehubFacilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GamehubFacilities to fetch.
+     */
+    orderBy?: GamehubFacilityOrderByWithRelationInput | GamehubFacilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GamehubFacilities.
+     */
+    cursor?: GamehubFacilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GamehubFacilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GamehubFacilities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GamehubFacilities.
+     */
+    distinct?: GamehubFacilityScalarFieldEnum | GamehubFacilityScalarFieldEnum[]
+  }
+
+  /**
+   * GamehubFacility findFirstOrThrow
+   */
+  export type GamehubFacilityFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubFacility
+     */
+    select?: GamehubFacilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubFacility
+     */
+    omit?: GamehubFacilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubFacilityInclude<ExtArgs> | null
+    /**
+     * Filter, which GamehubFacility to fetch.
+     */
+    where?: GamehubFacilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GamehubFacilities to fetch.
+     */
+    orderBy?: GamehubFacilityOrderByWithRelationInput | GamehubFacilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GamehubFacilities.
+     */
+    cursor?: GamehubFacilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GamehubFacilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GamehubFacilities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GamehubFacilities.
+     */
+    distinct?: GamehubFacilityScalarFieldEnum | GamehubFacilityScalarFieldEnum[]
+  }
+
+  /**
+   * GamehubFacility findMany
+   */
+  export type GamehubFacilityFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubFacility
+     */
+    select?: GamehubFacilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubFacility
+     */
+    omit?: GamehubFacilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubFacilityInclude<ExtArgs> | null
+    /**
+     * Filter, which GamehubFacilities to fetch.
+     */
+    where?: GamehubFacilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GamehubFacilities to fetch.
+     */
+    orderBy?: GamehubFacilityOrderByWithRelationInput | GamehubFacilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing GamehubFacilities.
+     */
+    cursor?: GamehubFacilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GamehubFacilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GamehubFacilities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GamehubFacilities.
+     */
+    distinct?: GamehubFacilityScalarFieldEnum | GamehubFacilityScalarFieldEnum[]
+  }
+
+  /**
+   * GamehubFacility create
+   */
+  export type GamehubFacilityCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubFacility
+     */
+    select?: GamehubFacilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubFacility
+     */
+    omit?: GamehubFacilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubFacilityInclude<ExtArgs> | null
+    /**
+     * The data needed to create a GamehubFacility.
+     */
+    data: XOR<GamehubFacilityCreateInput, GamehubFacilityUncheckedCreateInput>
+  }
+
+  /**
+   * GamehubFacility createMany
+   */
+  export type GamehubFacilityCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many GamehubFacilities.
+     */
+    data: GamehubFacilityCreateManyInput | GamehubFacilityCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GamehubFacility createManyAndReturn
+   */
+  export type GamehubFacilityCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubFacility
+     */
+    select?: GamehubFacilitySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubFacility
+     */
+    omit?: GamehubFacilityOmit<ExtArgs> | null
+    /**
+     * The data used to create many GamehubFacilities.
+     */
+    data: GamehubFacilityCreateManyInput | GamehubFacilityCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubFacilityIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GamehubFacility update
+   */
+  export type GamehubFacilityUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubFacility
+     */
+    select?: GamehubFacilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubFacility
+     */
+    omit?: GamehubFacilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubFacilityInclude<ExtArgs> | null
+    /**
+     * The data needed to update a GamehubFacility.
+     */
+    data: XOR<GamehubFacilityUpdateInput, GamehubFacilityUncheckedUpdateInput>
+    /**
+     * Choose, which GamehubFacility to update.
+     */
+    where: GamehubFacilityWhereUniqueInput
+  }
+
+  /**
+   * GamehubFacility updateMany
+   */
+  export type GamehubFacilityUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update GamehubFacilities.
+     */
+    data: XOR<GamehubFacilityUpdateManyMutationInput, GamehubFacilityUncheckedUpdateManyInput>
+    /**
+     * Filter which GamehubFacilities to update
+     */
+    where?: GamehubFacilityWhereInput
+    /**
+     * Limit how many GamehubFacilities to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * GamehubFacility updateManyAndReturn
+   */
+  export type GamehubFacilityUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubFacility
+     */
+    select?: GamehubFacilitySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubFacility
+     */
+    omit?: GamehubFacilityOmit<ExtArgs> | null
+    /**
+     * The data used to update GamehubFacilities.
+     */
+    data: XOR<GamehubFacilityUpdateManyMutationInput, GamehubFacilityUncheckedUpdateManyInput>
+    /**
+     * Filter which GamehubFacilities to update
+     */
+    where?: GamehubFacilityWhereInput
+    /**
+     * Limit how many GamehubFacilities to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubFacilityIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GamehubFacility upsert
+   */
+  export type GamehubFacilityUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubFacility
+     */
+    select?: GamehubFacilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubFacility
+     */
+    omit?: GamehubFacilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubFacilityInclude<ExtArgs> | null
+    /**
+     * The filter to search for the GamehubFacility to update in case it exists.
+     */
+    where: GamehubFacilityWhereUniqueInput
+    /**
+     * In case the GamehubFacility found by the `where` argument doesn't exist, create a new GamehubFacility with this data.
+     */
+    create: XOR<GamehubFacilityCreateInput, GamehubFacilityUncheckedCreateInput>
+    /**
+     * In case the GamehubFacility was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<GamehubFacilityUpdateInput, GamehubFacilityUncheckedUpdateInput>
+  }
+
+  /**
+   * GamehubFacility delete
+   */
+  export type GamehubFacilityDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubFacility
+     */
+    select?: GamehubFacilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubFacility
+     */
+    omit?: GamehubFacilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubFacilityInclude<ExtArgs> | null
+    /**
+     * Filter which GamehubFacility to delete.
+     */
+    where: GamehubFacilityWhereUniqueInput
+  }
+
+  /**
+   * GamehubFacility deleteMany
+   */
+  export type GamehubFacilityDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GamehubFacilities to delete
+     */
+    where?: GamehubFacilityWhereInput
+    /**
+     * Limit how many GamehubFacilities to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * GamehubFacility.partner
+   */
+  export type GamehubFacility$partnerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * GamehubFacility.reviews
+   */
+  export type GamehubFacility$reviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubReview
+     */
+    select?: GamehubReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubReview
+     */
+    omit?: GamehubReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubReviewInclude<ExtArgs> | null
+    where?: GamehubReviewWhereInput
+    orderBy?: GamehubReviewOrderByWithRelationInput | GamehubReviewOrderByWithRelationInput[]
+    cursor?: GamehubReviewWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GamehubReviewScalarFieldEnum | GamehubReviewScalarFieldEnum[]
+  }
+
+  /**
+   * GamehubFacility.bookings
+   */
+  export type GamehubFacility$bookingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubBooking
+     */
+    select?: GamehubBookingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubBooking
+     */
+    omit?: GamehubBookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubBookingInclude<ExtArgs> | null
+    where?: GamehubBookingWhereInput
+    orderBy?: GamehubBookingOrderByWithRelationInput | GamehubBookingOrderByWithRelationInput[]
+    cursor?: GamehubBookingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GamehubBookingScalarFieldEnum | GamehubBookingScalarFieldEnum[]
+  }
+
+  /**
+   * GamehubFacility.blockedSlots
+   */
+  export type GamehubFacility$blockedSlotsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubBlockedSlot
+     */
+    select?: GamehubBlockedSlotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubBlockedSlot
+     */
+    omit?: GamehubBlockedSlotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubBlockedSlotInclude<ExtArgs> | null
+    where?: GamehubBlockedSlotWhereInput
+    orderBy?: GamehubBlockedSlotOrderByWithRelationInput | GamehubBlockedSlotOrderByWithRelationInput[]
+    cursor?: GamehubBlockedSlotWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GamehubBlockedSlotScalarFieldEnum | GamehubBlockedSlotScalarFieldEnum[]
+  }
+
+  /**
+   * GamehubFacility without action
+   */
+  export type GamehubFacilityDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubFacility
+     */
+    select?: GamehubFacilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubFacility
+     */
+    omit?: GamehubFacilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubFacilityInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model GamehubReview
+   */
+
+  export type AggregateGamehubReview = {
+    _count: GamehubReviewCountAggregateOutputType | null
+    _avg: GamehubReviewAvgAggregateOutputType | null
+    _sum: GamehubReviewSumAggregateOutputType | null
+    _min: GamehubReviewMinAggregateOutputType | null
+    _max: GamehubReviewMaxAggregateOutputType | null
+  }
+
+  export type GamehubReviewAvgAggregateOutputType = {
+    rating: number | null
+    helpful: number | null
+  }
+
+  export type GamehubReviewSumAggregateOutputType = {
+    rating: number | null
+    helpful: number | null
+  }
+
+  export type GamehubReviewMinAggregateOutputType = {
+    id: string | null
+    rating: number | null
+    comment: string | null
+    userName: string | null
+    avatar: string | null
+    helpful: number | null
+    createdAt: Date | null
+    facilityId: string | null
+  }
+
+  export type GamehubReviewMaxAggregateOutputType = {
+    id: string | null
+    rating: number | null
+    comment: string | null
+    userName: string | null
+    avatar: string | null
+    helpful: number | null
+    createdAt: Date | null
+    facilityId: string | null
+  }
+
+  export type GamehubReviewCountAggregateOutputType = {
+    id: number
+    rating: number
+    comment: number
+    userName: number
+    avatar: number
+    helpful: number
+    createdAt: number
+    facilityId: number
+    _all: number
+  }
+
+
+  export type GamehubReviewAvgAggregateInputType = {
+    rating?: true
+    helpful?: true
+  }
+
+  export type GamehubReviewSumAggregateInputType = {
+    rating?: true
+    helpful?: true
+  }
+
+  export type GamehubReviewMinAggregateInputType = {
+    id?: true
+    rating?: true
+    comment?: true
+    userName?: true
+    avatar?: true
+    helpful?: true
+    createdAt?: true
+    facilityId?: true
+  }
+
+  export type GamehubReviewMaxAggregateInputType = {
+    id?: true
+    rating?: true
+    comment?: true
+    userName?: true
+    avatar?: true
+    helpful?: true
+    createdAt?: true
+    facilityId?: true
+  }
+
+  export type GamehubReviewCountAggregateInputType = {
+    id?: true
+    rating?: true
+    comment?: true
+    userName?: true
+    avatar?: true
+    helpful?: true
+    createdAt?: true
+    facilityId?: true
+    _all?: true
+  }
+
+  export type GamehubReviewAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GamehubReview to aggregate.
+     */
+    where?: GamehubReviewWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GamehubReviews to fetch.
+     */
+    orderBy?: GamehubReviewOrderByWithRelationInput | GamehubReviewOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: GamehubReviewWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GamehubReviews from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GamehubReviews.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned GamehubReviews
+    **/
+    _count?: true | GamehubReviewCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: GamehubReviewAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: GamehubReviewSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: GamehubReviewMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: GamehubReviewMaxAggregateInputType
+  }
+
+  export type GetGamehubReviewAggregateType<T extends GamehubReviewAggregateArgs> = {
+        [P in keyof T & keyof AggregateGamehubReview]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateGamehubReview[P]>
+      : GetScalarType<T[P], AggregateGamehubReview[P]>
+  }
+
+
+
+
+  export type GamehubReviewGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GamehubReviewWhereInput
+    orderBy?: GamehubReviewOrderByWithAggregationInput | GamehubReviewOrderByWithAggregationInput[]
+    by: GamehubReviewScalarFieldEnum[] | GamehubReviewScalarFieldEnum
+    having?: GamehubReviewScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: GamehubReviewCountAggregateInputType | true
+    _avg?: GamehubReviewAvgAggregateInputType
+    _sum?: GamehubReviewSumAggregateInputType
+    _min?: GamehubReviewMinAggregateInputType
+    _max?: GamehubReviewMaxAggregateInputType
+  }
+
+  export type GamehubReviewGroupByOutputType = {
+    id: string
+    rating: number
+    comment: string
+    userName: string
+    avatar: string
+    helpful: number
+    createdAt: Date
+    facilityId: string
+    _count: GamehubReviewCountAggregateOutputType | null
+    _avg: GamehubReviewAvgAggregateOutputType | null
+    _sum: GamehubReviewSumAggregateOutputType | null
+    _min: GamehubReviewMinAggregateOutputType | null
+    _max: GamehubReviewMaxAggregateOutputType | null
+  }
+
+  type GetGamehubReviewGroupByPayload<T extends GamehubReviewGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<GamehubReviewGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof GamehubReviewGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], GamehubReviewGroupByOutputType[P]>
+            : GetScalarType<T[P], GamehubReviewGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type GamehubReviewSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    rating?: boolean
+    comment?: boolean
+    userName?: boolean
+    avatar?: boolean
+    helpful?: boolean
+    createdAt?: boolean
+    facilityId?: boolean
+    facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["gamehubReview"]>
+
+  export type GamehubReviewSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    rating?: boolean
+    comment?: boolean
+    userName?: boolean
+    avatar?: boolean
+    helpful?: boolean
+    createdAt?: boolean
+    facilityId?: boolean
+    facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["gamehubReview"]>
+
+  export type GamehubReviewSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    rating?: boolean
+    comment?: boolean
+    userName?: boolean
+    avatar?: boolean
+    helpful?: boolean
+    createdAt?: boolean
+    facilityId?: boolean
+    facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["gamehubReview"]>
+
+  export type GamehubReviewSelectScalar = {
+    id?: boolean
+    rating?: boolean
+    comment?: boolean
+    userName?: boolean
+    avatar?: boolean
+    helpful?: boolean
+    createdAt?: boolean
+    facilityId?: boolean
+  }
+
+  export type GamehubReviewOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rating" | "comment" | "userName" | "avatar" | "helpful" | "createdAt" | "facilityId", ExtArgs["result"]["gamehubReview"]>
+  export type GamehubReviewInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
+  }
+  export type GamehubReviewIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
+  }
+  export type GamehubReviewIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
+  }
+
+  export type $GamehubReviewPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "GamehubReview"
+    objects: {
+      facility: Prisma.$GamehubFacilityPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      rating: number
+      comment: string
+      userName: string
+      avatar: string
+      helpful: number
+      createdAt: Date
+      facilityId: string
+    }, ExtArgs["result"]["gamehubReview"]>
+    composites: {}
+  }
+
+  type GamehubReviewGetPayload<S extends boolean | null | undefined | GamehubReviewDefaultArgs> = $Result.GetResult<Prisma.$GamehubReviewPayload, S>
+
+  type GamehubReviewCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<GamehubReviewFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: GamehubReviewCountAggregateInputType | true
+    }
+
+  export interface GamehubReviewDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GamehubReview'], meta: { name: 'GamehubReview' } }
+    /**
+     * Find zero or one GamehubReview that matches the filter.
+     * @param {GamehubReviewFindUniqueArgs} args - Arguments to find a GamehubReview
+     * @example
+     * // Get one GamehubReview
+     * const gamehubReview = await prisma.gamehubReview.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends GamehubReviewFindUniqueArgs>(args: SelectSubset<T, GamehubReviewFindUniqueArgs<ExtArgs>>): Prisma__GamehubReviewClient<$Result.GetResult<Prisma.$GamehubReviewPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one GamehubReview that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {GamehubReviewFindUniqueOrThrowArgs} args - Arguments to find a GamehubReview
+     * @example
+     * // Get one GamehubReview
+     * const gamehubReview = await prisma.gamehubReview.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends GamehubReviewFindUniqueOrThrowArgs>(args: SelectSubset<T, GamehubReviewFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GamehubReviewClient<$Result.GetResult<Prisma.$GamehubReviewPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GamehubReview that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubReviewFindFirstArgs} args - Arguments to find a GamehubReview
+     * @example
+     * // Get one GamehubReview
+     * const gamehubReview = await prisma.gamehubReview.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends GamehubReviewFindFirstArgs>(args?: SelectSubset<T, GamehubReviewFindFirstArgs<ExtArgs>>): Prisma__GamehubReviewClient<$Result.GetResult<Prisma.$GamehubReviewPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GamehubReview that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubReviewFindFirstOrThrowArgs} args - Arguments to find a GamehubReview
+     * @example
+     * // Get one GamehubReview
+     * const gamehubReview = await prisma.gamehubReview.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends GamehubReviewFindFirstOrThrowArgs>(args?: SelectSubset<T, GamehubReviewFindFirstOrThrowArgs<ExtArgs>>): Prisma__GamehubReviewClient<$Result.GetResult<Prisma.$GamehubReviewPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more GamehubReviews that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubReviewFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all GamehubReviews
+     * const gamehubReviews = await prisma.gamehubReview.findMany()
+     * 
+     * // Get first 10 GamehubReviews
+     * const gamehubReviews = await prisma.gamehubReview.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const gamehubReviewWithIdOnly = await prisma.gamehubReview.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends GamehubReviewFindManyArgs>(args?: SelectSubset<T, GamehubReviewFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamehubReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a GamehubReview.
+     * @param {GamehubReviewCreateArgs} args - Arguments to create a GamehubReview.
+     * @example
+     * // Create one GamehubReview
+     * const GamehubReview = await prisma.gamehubReview.create({
+     *   data: {
+     *     // ... data to create a GamehubReview
+     *   }
+     * })
+     * 
+     */
+    create<T extends GamehubReviewCreateArgs>(args: SelectSubset<T, GamehubReviewCreateArgs<ExtArgs>>): Prisma__GamehubReviewClient<$Result.GetResult<Prisma.$GamehubReviewPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many GamehubReviews.
+     * @param {GamehubReviewCreateManyArgs} args - Arguments to create many GamehubReviews.
+     * @example
+     * // Create many GamehubReviews
+     * const gamehubReview = await prisma.gamehubReview.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends GamehubReviewCreateManyArgs>(args?: SelectSubset<T, GamehubReviewCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many GamehubReviews and returns the data saved in the database.
+     * @param {GamehubReviewCreateManyAndReturnArgs} args - Arguments to create many GamehubReviews.
+     * @example
+     * // Create many GamehubReviews
+     * const gamehubReview = await prisma.gamehubReview.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many GamehubReviews and only return the `id`
+     * const gamehubReviewWithIdOnly = await prisma.gamehubReview.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends GamehubReviewCreateManyAndReturnArgs>(args?: SelectSubset<T, GamehubReviewCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamehubReviewPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a GamehubReview.
+     * @param {GamehubReviewDeleteArgs} args - Arguments to delete one GamehubReview.
+     * @example
+     * // Delete one GamehubReview
+     * const GamehubReview = await prisma.gamehubReview.delete({
+     *   where: {
+     *     // ... filter to delete one GamehubReview
+     *   }
+     * })
+     * 
+     */
+    delete<T extends GamehubReviewDeleteArgs>(args: SelectSubset<T, GamehubReviewDeleteArgs<ExtArgs>>): Prisma__GamehubReviewClient<$Result.GetResult<Prisma.$GamehubReviewPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one GamehubReview.
+     * @param {GamehubReviewUpdateArgs} args - Arguments to update one GamehubReview.
+     * @example
+     * // Update one GamehubReview
+     * const gamehubReview = await prisma.gamehubReview.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends GamehubReviewUpdateArgs>(args: SelectSubset<T, GamehubReviewUpdateArgs<ExtArgs>>): Prisma__GamehubReviewClient<$Result.GetResult<Prisma.$GamehubReviewPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more GamehubReviews.
+     * @param {GamehubReviewDeleteManyArgs} args - Arguments to filter GamehubReviews to delete.
+     * @example
+     * // Delete a few GamehubReviews
+     * const { count } = await prisma.gamehubReview.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends GamehubReviewDeleteManyArgs>(args?: SelectSubset<T, GamehubReviewDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GamehubReviews.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubReviewUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many GamehubReviews
+     * const gamehubReview = await prisma.gamehubReview.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends GamehubReviewUpdateManyArgs>(args: SelectSubset<T, GamehubReviewUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GamehubReviews and returns the data updated in the database.
+     * @param {GamehubReviewUpdateManyAndReturnArgs} args - Arguments to update many GamehubReviews.
+     * @example
+     * // Update many GamehubReviews
+     * const gamehubReview = await prisma.gamehubReview.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more GamehubReviews and only return the `id`
+     * const gamehubReviewWithIdOnly = await prisma.gamehubReview.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends GamehubReviewUpdateManyAndReturnArgs>(args: SelectSubset<T, GamehubReviewUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamehubReviewPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one GamehubReview.
+     * @param {GamehubReviewUpsertArgs} args - Arguments to update or create a GamehubReview.
+     * @example
+     * // Update or create a GamehubReview
+     * const gamehubReview = await prisma.gamehubReview.upsert({
+     *   create: {
+     *     // ... data to create a GamehubReview
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the GamehubReview we want to update
+     *   }
+     * })
+     */
+    upsert<T extends GamehubReviewUpsertArgs>(args: SelectSubset<T, GamehubReviewUpsertArgs<ExtArgs>>): Prisma__GamehubReviewClient<$Result.GetResult<Prisma.$GamehubReviewPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of GamehubReviews.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubReviewCountArgs} args - Arguments to filter GamehubReviews to count.
+     * @example
+     * // Count the number of GamehubReviews
+     * const count = await prisma.gamehubReview.count({
+     *   where: {
+     *     // ... the filter for the GamehubReviews we want to count
+     *   }
+     * })
+    **/
+    count<T extends GamehubReviewCountArgs>(
+      args?: Subset<T, GamehubReviewCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], GamehubReviewCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a GamehubReview.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubReviewAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends GamehubReviewAggregateArgs>(args: Subset<T, GamehubReviewAggregateArgs>): Prisma.PrismaPromise<GetGamehubReviewAggregateType<T>>
+
+    /**
+     * Group by GamehubReview.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubReviewGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends GamehubReviewGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: GamehubReviewGroupByArgs['orderBy'] }
+        : { orderBy?: GamehubReviewGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, GamehubReviewGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGamehubReviewGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the GamehubReview model
+   */
+  readonly fields: GamehubReviewFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for GamehubReview.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__GamehubReviewClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    facility<T extends GamehubFacilityDefaultArgs<ExtArgs> = {}>(args?: Subset<T, GamehubFacilityDefaultArgs<ExtArgs>>): Prisma__GamehubFacilityClient<$Result.GetResult<Prisma.$GamehubFacilityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the GamehubReview model
+   */
+  interface GamehubReviewFieldRefs {
+    readonly id: FieldRef<"GamehubReview", 'String'>
+    readonly rating: FieldRef<"GamehubReview", 'Int'>
+    readonly comment: FieldRef<"GamehubReview", 'String'>
+    readonly userName: FieldRef<"GamehubReview", 'String'>
+    readonly avatar: FieldRef<"GamehubReview", 'String'>
+    readonly helpful: FieldRef<"GamehubReview", 'Int'>
+    readonly createdAt: FieldRef<"GamehubReview", 'DateTime'>
+    readonly facilityId: FieldRef<"GamehubReview", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * GamehubReview findUnique
+   */
+  export type GamehubReviewFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubReview
+     */
+    select?: GamehubReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubReview
+     */
+    omit?: GamehubReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubReviewInclude<ExtArgs> | null
+    /**
+     * Filter, which GamehubReview to fetch.
+     */
+    where: GamehubReviewWhereUniqueInput
+  }
+
+  /**
+   * GamehubReview findUniqueOrThrow
+   */
+  export type GamehubReviewFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubReview
+     */
+    select?: GamehubReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubReview
+     */
+    omit?: GamehubReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubReviewInclude<ExtArgs> | null
+    /**
+     * Filter, which GamehubReview to fetch.
+     */
+    where: GamehubReviewWhereUniqueInput
+  }
+
+  /**
+   * GamehubReview findFirst
+   */
+  export type GamehubReviewFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubReview
+     */
+    select?: GamehubReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubReview
+     */
+    omit?: GamehubReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubReviewInclude<ExtArgs> | null
+    /**
+     * Filter, which GamehubReview to fetch.
+     */
+    where?: GamehubReviewWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GamehubReviews to fetch.
+     */
+    orderBy?: GamehubReviewOrderByWithRelationInput | GamehubReviewOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GamehubReviews.
+     */
+    cursor?: GamehubReviewWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GamehubReviews from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GamehubReviews.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GamehubReviews.
+     */
+    distinct?: GamehubReviewScalarFieldEnum | GamehubReviewScalarFieldEnum[]
+  }
+
+  /**
+   * GamehubReview findFirstOrThrow
+   */
+  export type GamehubReviewFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubReview
+     */
+    select?: GamehubReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubReview
+     */
+    omit?: GamehubReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubReviewInclude<ExtArgs> | null
+    /**
+     * Filter, which GamehubReview to fetch.
+     */
+    where?: GamehubReviewWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GamehubReviews to fetch.
+     */
+    orderBy?: GamehubReviewOrderByWithRelationInput | GamehubReviewOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GamehubReviews.
+     */
+    cursor?: GamehubReviewWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GamehubReviews from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GamehubReviews.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GamehubReviews.
+     */
+    distinct?: GamehubReviewScalarFieldEnum | GamehubReviewScalarFieldEnum[]
+  }
+
+  /**
+   * GamehubReview findMany
+   */
+  export type GamehubReviewFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubReview
+     */
+    select?: GamehubReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubReview
+     */
+    omit?: GamehubReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubReviewInclude<ExtArgs> | null
+    /**
+     * Filter, which GamehubReviews to fetch.
+     */
+    where?: GamehubReviewWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GamehubReviews to fetch.
+     */
+    orderBy?: GamehubReviewOrderByWithRelationInput | GamehubReviewOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing GamehubReviews.
+     */
+    cursor?: GamehubReviewWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GamehubReviews from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GamehubReviews.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GamehubReviews.
+     */
+    distinct?: GamehubReviewScalarFieldEnum | GamehubReviewScalarFieldEnum[]
+  }
+
+  /**
+   * GamehubReview create
+   */
+  export type GamehubReviewCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubReview
+     */
+    select?: GamehubReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubReview
+     */
+    omit?: GamehubReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubReviewInclude<ExtArgs> | null
+    /**
+     * The data needed to create a GamehubReview.
+     */
+    data: XOR<GamehubReviewCreateInput, GamehubReviewUncheckedCreateInput>
+  }
+
+  /**
+   * GamehubReview createMany
+   */
+  export type GamehubReviewCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many GamehubReviews.
+     */
+    data: GamehubReviewCreateManyInput | GamehubReviewCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GamehubReview createManyAndReturn
+   */
+  export type GamehubReviewCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubReview
+     */
+    select?: GamehubReviewSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubReview
+     */
+    omit?: GamehubReviewOmit<ExtArgs> | null
+    /**
+     * The data used to create many GamehubReviews.
+     */
+    data: GamehubReviewCreateManyInput | GamehubReviewCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubReviewIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GamehubReview update
+   */
+  export type GamehubReviewUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubReview
+     */
+    select?: GamehubReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubReview
+     */
+    omit?: GamehubReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubReviewInclude<ExtArgs> | null
+    /**
+     * The data needed to update a GamehubReview.
+     */
+    data: XOR<GamehubReviewUpdateInput, GamehubReviewUncheckedUpdateInput>
+    /**
+     * Choose, which GamehubReview to update.
+     */
+    where: GamehubReviewWhereUniqueInput
+  }
+
+  /**
+   * GamehubReview updateMany
+   */
+  export type GamehubReviewUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update GamehubReviews.
+     */
+    data: XOR<GamehubReviewUpdateManyMutationInput, GamehubReviewUncheckedUpdateManyInput>
+    /**
+     * Filter which GamehubReviews to update
+     */
+    where?: GamehubReviewWhereInput
+    /**
+     * Limit how many GamehubReviews to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * GamehubReview updateManyAndReturn
+   */
+  export type GamehubReviewUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubReview
+     */
+    select?: GamehubReviewSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubReview
+     */
+    omit?: GamehubReviewOmit<ExtArgs> | null
+    /**
+     * The data used to update GamehubReviews.
+     */
+    data: XOR<GamehubReviewUpdateManyMutationInput, GamehubReviewUncheckedUpdateManyInput>
+    /**
+     * Filter which GamehubReviews to update
+     */
+    where?: GamehubReviewWhereInput
+    /**
+     * Limit how many GamehubReviews to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubReviewIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GamehubReview upsert
+   */
+  export type GamehubReviewUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubReview
+     */
+    select?: GamehubReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubReview
+     */
+    omit?: GamehubReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubReviewInclude<ExtArgs> | null
+    /**
+     * The filter to search for the GamehubReview to update in case it exists.
+     */
+    where: GamehubReviewWhereUniqueInput
+    /**
+     * In case the GamehubReview found by the `where` argument doesn't exist, create a new GamehubReview with this data.
+     */
+    create: XOR<GamehubReviewCreateInput, GamehubReviewUncheckedCreateInput>
+    /**
+     * In case the GamehubReview was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<GamehubReviewUpdateInput, GamehubReviewUncheckedUpdateInput>
+  }
+
+  /**
+   * GamehubReview delete
+   */
+  export type GamehubReviewDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubReview
+     */
+    select?: GamehubReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubReview
+     */
+    omit?: GamehubReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubReviewInclude<ExtArgs> | null
+    /**
+     * Filter which GamehubReview to delete.
+     */
+    where: GamehubReviewWhereUniqueInput
+  }
+
+  /**
+   * GamehubReview deleteMany
+   */
+  export type GamehubReviewDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GamehubReviews to delete
+     */
+    where?: GamehubReviewWhereInput
+    /**
+     * Limit how many GamehubReviews to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * GamehubReview without action
+   */
+  export type GamehubReviewDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubReview
+     */
+    select?: GamehubReviewSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubReview
+     */
+    omit?: GamehubReviewOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubReviewInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model GamehubBooking
+   */
+
+  export type AggregateGamehubBooking = {
+    _count: GamehubBookingCountAggregateOutputType | null
+    _avg: GamehubBookingAvgAggregateOutputType | null
+    _sum: GamehubBookingSumAggregateOutputType | null
+    _min: GamehubBookingMinAggregateOutputType | null
+    _max: GamehubBookingMaxAggregateOutputType | null
+  }
+
+  export type GamehubBookingAvgAggregateOutputType = {
+    totalAmount: number | null
+  }
+
+  export type GamehubBookingSumAggregateOutputType = {
+    totalAmount: number | null
+  }
+
+  export type GamehubBookingMinAggregateOutputType = {
+    id: string | null
+    bookingDate: Date | null
+    slotLabel: string | null
+    totalAmount: number | null
+    currency: string | null
+    status: string | null
+    paymentMethod: string | null
+    paymentStatus: string | null
+    transactionId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    userId: string | null
+    facilityId: string | null
+  }
+
+  export type GamehubBookingMaxAggregateOutputType = {
+    id: string | null
+    bookingDate: Date | null
+    slotLabel: string | null
+    totalAmount: number | null
+    currency: string | null
+    status: string | null
+    paymentMethod: string | null
+    paymentStatus: string | null
+    transactionId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    userId: string | null
+    facilityId: string | null
+  }
+
+  export type GamehubBookingCountAggregateOutputType = {
+    id: number
+    bookingDate: number
+    slotLabel: number
+    totalAmount: number
+    currency: number
+    status: number
+    paymentMethod: number
+    paymentStatus: number
+    transactionId: number
+    createdAt: number
+    updatedAt: number
+    userId: number
+    facilityId: number
+    _all: number
+  }
+
+
+  export type GamehubBookingAvgAggregateInputType = {
+    totalAmount?: true
+  }
+
+  export type GamehubBookingSumAggregateInputType = {
+    totalAmount?: true
+  }
+
+  export type GamehubBookingMinAggregateInputType = {
+    id?: true
+    bookingDate?: true
+    slotLabel?: true
+    totalAmount?: true
+    currency?: true
+    status?: true
+    paymentMethod?: true
+    paymentStatus?: true
+    transactionId?: true
+    createdAt?: true
+    updatedAt?: true
+    userId?: true
+    facilityId?: true
+  }
+
+  export type GamehubBookingMaxAggregateInputType = {
+    id?: true
+    bookingDate?: true
+    slotLabel?: true
+    totalAmount?: true
+    currency?: true
+    status?: true
+    paymentMethod?: true
+    paymentStatus?: true
+    transactionId?: true
+    createdAt?: true
+    updatedAt?: true
+    userId?: true
+    facilityId?: true
+  }
+
+  export type GamehubBookingCountAggregateInputType = {
+    id?: true
+    bookingDate?: true
+    slotLabel?: true
+    totalAmount?: true
+    currency?: true
+    status?: true
+    paymentMethod?: true
+    paymentStatus?: true
+    transactionId?: true
+    createdAt?: true
+    updatedAt?: true
+    userId?: true
+    facilityId?: true
+    _all?: true
+  }
+
+  export type GamehubBookingAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GamehubBooking to aggregate.
+     */
+    where?: GamehubBookingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GamehubBookings to fetch.
+     */
+    orderBy?: GamehubBookingOrderByWithRelationInput | GamehubBookingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: GamehubBookingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GamehubBookings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GamehubBookings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned GamehubBookings
+    **/
+    _count?: true | GamehubBookingCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: GamehubBookingAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: GamehubBookingSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: GamehubBookingMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: GamehubBookingMaxAggregateInputType
+  }
+
+  export type GetGamehubBookingAggregateType<T extends GamehubBookingAggregateArgs> = {
+        [P in keyof T & keyof AggregateGamehubBooking]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateGamehubBooking[P]>
+      : GetScalarType<T[P], AggregateGamehubBooking[P]>
+  }
+
+
+
+
+  export type GamehubBookingGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GamehubBookingWhereInput
+    orderBy?: GamehubBookingOrderByWithAggregationInput | GamehubBookingOrderByWithAggregationInput[]
+    by: GamehubBookingScalarFieldEnum[] | GamehubBookingScalarFieldEnum
+    having?: GamehubBookingScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: GamehubBookingCountAggregateInputType | true
+    _avg?: GamehubBookingAvgAggregateInputType
+    _sum?: GamehubBookingSumAggregateInputType
+    _min?: GamehubBookingMinAggregateInputType
+    _max?: GamehubBookingMaxAggregateInputType
+  }
+
+  export type GamehubBookingGroupByOutputType = {
+    id: string
+    bookingDate: Date
+    slotLabel: string
+    totalAmount: number
+    currency: string
+    status: string
+    paymentMethod: string
+    paymentStatus: string
+    transactionId: string
+    createdAt: Date
+    updatedAt: Date
+    userId: string
+    facilityId: string
+    _count: GamehubBookingCountAggregateOutputType | null
+    _avg: GamehubBookingAvgAggregateOutputType | null
+    _sum: GamehubBookingSumAggregateOutputType | null
+    _min: GamehubBookingMinAggregateOutputType | null
+    _max: GamehubBookingMaxAggregateOutputType | null
+  }
+
+  type GetGamehubBookingGroupByPayload<T extends GamehubBookingGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<GamehubBookingGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof GamehubBookingGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], GamehubBookingGroupByOutputType[P]>
+            : GetScalarType<T[P], GamehubBookingGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type GamehubBookingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    bookingDate?: boolean
+    slotLabel?: boolean
+    totalAmount?: boolean
+    currency?: boolean
+    status?: boolean
+    paymentMethod?: boolean
+    paymentStatus?: boolean
+    transactionId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    userId?: boolean
+    facilityId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["gamehubBooking"]>
+
+  export type GamehubBookingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    bookingDate?: boolean
+    slotLabel?: boolean
+    totalAmount?: boolean
+    currency?: boolean
+    status?: boolean
+    paymentMethod?: boolean
+    paymentStatus?: boolean
+    transactionId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    userId?: boolean
+    facilityId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["gamehubBooking"]>
+
+  export type GamehubBookingSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    bookingDate?: boolean
+    slotLabel?: boolean
+    totalAmount?: boolean
+    currency?: boolean
+    status?: boolean
+    paymentMethod?: boolean
+    paymentStatus?: boolean
+    transactionId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    userId?: boolean
+    facilityId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["gamehubBooking"]>
+
+  export type GamehubBookingSelectScalar = {
+    id?: boolean
+    bookingDate?: boolean
+    slotLabel?: boolean
+    totalAmount?: boolean
+    currency?: boolean
+    status?: boolean
+    paymentMethod?: boolean
+    paymentStatus?: boolean
+    transactionId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    userId?: boolean
+    facilityId?: boolean
+  }
+
+  export type GamehubBookingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "bookingDate" | "slotLabel" | "totalAmount" | "currency" | "status" | "paymentMethod" | "paymentStatus" | "transactionId" | "createdAt" | "updatedAt" | "userId" | "facilityId", ExtArgs["result"]["gamehubBooking"]>
+  export type GamehubBookingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
+  }
+  export type GamehubBookingIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
+  }
+  export type GamehubBookingIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
+  }
+
+  export type $GamehubBookingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "GamehubBooking"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      facility: Prisma.$GamehubFacilityPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      bookingDate: Date
+      slotLabel: string
+      totalAmount: number
+      currency: string
+      status: string
+      paymentMethod: string
+      paymentStatus: string
+      transactionId: string
+      createdAt: Date
+      updatedAt: Date
+      userId: string
+      facilityId: string
+    }, ExtArgs["result"]["gamehubBooking"]>
+    composites: {}
+  }
+
+  type GamehubBookingGetPayload<S extends boolean | null | undefined | GamehubBookingDefaultArgs> = $Result.GetResult<Prisma.$GamehubBookingPayload, S>
+
+  type GamehubBookingCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<GamehubBookingFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: GamehubBookingCountAggregateInputType | true
+    }
+
+  export interface GamehubBookingDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GamehubBooking'], meta: { name: 'GamehubBooking' } }
+    /**
+     * Find zero or one GamehubBooking that matches the filter.
+     * @param {GamehubBookingFindUniqueArgs} args - Arguments to find a GamehubBooking
+     * @example
+     * // Get one GamehubBooking
+     * const gamehubBooking = await prisma.gamehubBooking.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends GamehubBookingFindUniqueArgs>(args: SelectSubset<T, GamehubBookingFindUniqueArgs<ExtArgs>>): Prisma__GamehubBookingClient<$Result.GetResult<Prisma.$GamehubBookingPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one GamehubBooking that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {GamehubBookingFindUniqueOrThrowArgs} args - Arguments to find a GamehubBooking
+     * @example
+     * // Get one GamehubBooking
+     * const gamehubBooking = await prisma.gamehubBooking.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends GamehubBookingFindUniqueOrThrowArgs>(args: SelectSubset<T, GamehubBookingFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GamehubBookingClient<$Result.GetResult<Prisma.$GamehubBookingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GamehubBooking that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubBookingFindFirstArgs} args - Arguments to find a GamehubBooking
+     * @example
+     * // Get one GamehubBooking
+     * const gamehubBooking = await prisma.gamehubBooking.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends GamehubBookingFindFirstArgs>(args?: SelectSubset<T, GamehubBookingFindFirstArgs<ExtArgs>>): Prisma__GamehubBookingClient<$Result.GetResult<Prisma.$GamehubBookingPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GamehubBooking that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubBookingFindFirstOrThrowArgs} args - Arguments to find a GamehubBooking
+     * @example
+     * // Get one GamehubBooking
+     * const gamehubBooking = await prisma.gamehubBooking.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends GamehubBookingFindFirstOrThrowArgs>(args?: SelectSubset<T, GamehubBookingFindFirstOrThrowArgs<ExtArgs>>): Prisma__GamehubBookingClient<$Result.GetResult<Prisma.$GamehubBookingPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more GamehubBookings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubBookingFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all GamehubBookings
+     * const gamehubBookings = await prisma.gamehubBooking.findMany()
+     * 
+     * // Get first 10 GamehubBookings
+     * const gamehubBookings = await prisma.gamehubBooking.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const gamehubBookingWithIdOnly = await prisma.gamehubBooking.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends GamehubBookingFindManyArgs>(args?: SelectSubset<T, GamehubBookingFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamehubBookingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a GamehubBooking.
+     * @param {GamehubBookingCreateArgs} args - Arguments to create a GamehubBooking.
+     * @example
+     * // Create one GamehubBooking
+     * const GamehubBooking = await prisma.gamehubBooking.create({
+     *   data: {
+     *     // ... data to create a GamehubBooking
+     *   }
+     * })
+     * 
+     */
+    create<T extends GamehubBookingCreateArgs>(args: SelectSubset<T, GamehubBookingCreateArgs<ExtArgs>>): Prisma__GamehubBookingClient<$Result.GetResult<Prisma.$GamehubBookingPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many GamehubBookings.
+     * @param {GamehubBookingCreateManyArgs} args - Arguments to create many GamehubBookings.
+     * @example
+     * // Create many GamehubBookings
+     * const gamehubBooking = await prisma.gamehubBooking.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends GamehubBookingCreateManyArgs>(args?: SelectSubset<T, GamehubBookingCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many GamehubBookings and returns the data saved in the database.
+     * @param {GamehubBookingCreateManyAndReturnArgs} args - Arguments to create many GamehubBookings.
+     * @example
+     * // Create many GamehubBookings
+     * const gamehubBooking = await prisma.gamehubBooking.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many GamehubBookings and only return the `id`
+     * const gamehubBookingWithIdOnly = await prisma.gamehubBooking.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends GamehubBookingCreateManyAndReturnArgs>(args?: SelectSubset<T, GamehubBookingCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamehubBookingPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a GamehubBooking.
+     * @param {GamehubBookingDeleteArgs} args - Arguments to delete one GamehubBooking.
+     * @example
+     * // Delete one GamehubBooking
+     * const GamehubBooking = await prisma.gamehubBooking.delete({
+     *   where: {
+     *     // ... filter to delete one GamehubBooking
+     *   }
+     * })
+     * 
+     */
+    delete<T extends GamehubBookingDeleteArgs>(args: SelectSubset<T, GamehubBookingDeleteArgs<ExtArgs>>): Prisma__GamehubBookingClient<$Result.GetResult<Prisma.$GamehubBookingPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one GamehubBooking.
+     * @param {GamehubBookingUpdateArgs} args - Arguments to update one GamehubBooking.
+     * @example
+     * // Update one GamehubBooking
+     * const gamehubBooking = await prisma.gamehubBooking.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends GamehubBookingUpdateArgs>(args: SelectSubset<T, GamehubBookingUpdateArgs<ExtArgs>>): Prisma__GamehubBookingClient<$Result.GetResult<Prisma.$GamehubBookingPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more GamehubBookings.
+     * @param {GamehubBookingDeleteManyArgs} args - Arguments to filter GamehubBookings to delete.
+     * @example
+     * // Delete a few GamehubBookings
+     * const { count } = await prisma.gamehubBooking.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends GamehubBookingDeleteManyArgs>(args?: SelectSubset<T, GamehubBookingDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GamehubBookings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubBookingUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many GamehubBookings
+     * const gamehubBooking = await prisma.gamehubBooking.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends GamehubBookingUpdateManyArgs>(args: SelectSubset<T, GamehubBookingUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GamehubBookings and returns the data updated in the database.
+     * @param {GamehubBookingUpdateManyAndReturnArgs} args - Arguments to update many GamehubBookings.
+     * @example
+     * // Update many GamehubBookings
+     * const gamehubBooking = await prisma.gamehubBooking.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more GamehubBookings and only return the `id`
+     * const gamehubBookingWithIdOnly = await prisma.gamehubBooking.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends GamehubBookingUpdateManyAndReturnArgs>(args: SelectSubset<T, GamehubBookingUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamehubBookingPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one GamehubBooking.
+     * @param {GamehubBookingUpsertArgs} args - Arguments to update or create a GamehubBooking.
+     * @example
+     * // Update or create a GamehubBooking
+     * const gamehubBooking = await prisma.gamehubBooking.upsert({
+     *   create: {
+     *     // ... data to create a GamehubBooking
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the GamehubBooking we want to update
+     *   }
+     * })
+     */
+    upsert<T extends GamehubBookingUpsertArgs>(args: SelectSubset<T, GamehubBookingUpsertArgs<ExtArgs>>): Prisma__GamehubBookingClient<$Result.GetResult<Prisma.$GamehubBookingPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of GamehubBookings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubBookingCountArgs} args - Arguments to filter GamehubBookings to count.
+     * @example
+     * // Count the number of GamehubBookings
+     * const count = await prisma.gamehubBooking.count({
+     *   where: {
+     *     // ... the filter for the GamehubBookings we want to count
+     *   }
+     * })
+    **/
+    count<T extends GamehubBookingCountArgs>(
+      args?: Subset<T, GamehubBookingCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], GamehubBookingCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a GamehubBooking.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubBookingAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends GamehubBookingAggregateArgs>(args: Subset<T, GamehubBookingAggregateArgs>): Prisma.PrismaPromise<GetGamehubBookingAggregateType<T>>
+
+    /**
+     * Group by GamehubBooking.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubBookingGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends GamehubBookingGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: GamehubBookingGroupByArgs['orderBy'] }
+        : { orderBy?: GamehubBookingGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, GamehubBookingGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGamehubBookingGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the GamehubBooking model
+   */
+  readonly fields: GamehubBookingFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for GamehubBooking.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__GamehubBookingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    facility<T extends GamehubFacilityDefaultArgs<ExtArgs> = {}>(args?: Subset<T, GamehubFacilityDefaultArgs<ExtArgs>>): Prisma__GamehubFacilityClient<$Result.GetResult<Prisma.$GamehubFacilityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the GamehubBooking model
+   */
+  interface GamehubBookingFieldRefs {
+    readonly id: FieldRef<"GamehubBooking", 'String'>
+    readonly bookingDate: FieldRef<"GamehubBooking", 'DateTime'>
+    readonly slotLabel: FieldRef<"GamehubBooking", 'String'>
+    readonly totalAmount: FieldRef<"GamehubBooking", 'Float'>
+    readonly currency: FieldRef<"GamehubBooking", 'String'>
+    readonly status: FieldRef<"GamehubBooking", 'String'>
+    readonly paymentMethod: FieldRef<"GamehubBooking", 'String'>
+    readonly paymentStatus: FieldRef<"GamehubBooking", 'String'>
+    readonly transactionId: FieldRef<"GamehubBooking", 'String'>
+    readonly createdAt: FieldRef<"GamehubBooking", 'DateTime'>
+    readonly updatedAt: FieldRef<"GamehubBooking", 'DateTime'>
+    readonly userId: FieldRef<"GamehubBooking", 'String'>
+    readonly facilityId: FieldRef<"GamehubBooking", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * GamehubBooking findUnique
+   */
+  export type GamehubBookingFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubBooking
+     */
+    select?: GamehubBookingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubBooking
+     */
+    omit?: GamehubBookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubBookingInclude<ExtArgs> | null
+    /**
+     * Filter, which GamehubBooking to fetch.
+     */
+    where: GamehubBookingWhereUniqueInput
+  }
+
+  /**
+   * GamehubBooking findUniqueOrThrow
+   */
+  export type GamehubBookingFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubBooking
+     */
+    select?: GamehubBookingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubBooking
+     */
+    omit?: GamehubBookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubBookingInclude<ExtArgs> | null
+    /**
+     * Filter, which GamehubBooking to fetch.
+     */
+    where: GamehubBookingWhereUniqueInput
+  }
+
+  /**
+   * GamehubBooking findFirst
+   */
+  export type GamehubBookingFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubBooking
+     */
+    select?: GamehubBookingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubBooking
+     */
+    omit?: GamehubBookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubBookingInclude<ExtArgs> | null
+    /**
+     * Filter, which GamehubBooking to fetch.
+     */
+    where?: GamehubBookingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GamehubBookings to fetch.
+     */
+    orderBy?: GamehubBookingOrderByWithRelationInput | GamehubBookingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GamehubBookings.
+     */
+    cursor?: GamehubBookingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GamehubBookings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GamehubBookings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GamehubBookings.
+     */
+    distinct?: GamehubBookingScalarFieldEnum | GamehubBookingScalarFieldEnum[]
+  }
+
+  /**
+   * GamehubBooking findFirstOrThrow
+   */
+  export type GamehubBookingFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubBooking
+     */
+    select?: GamehubBookingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubBooking
+     */
+    omit?: GamehubBookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubBookingInclude<ExtArgs> | null
+    /**
+     * Filter, which GamehubBooking to fetch.
+     */
+    where?: GamehubBookingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GamehubBookings to fetch.
+     */
+    orderBy?: GamehubBookingOrderByWithRelationInput | GamehubBookingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GamehubBookings.
+     */
+    cursor?: GamehubBookingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GamehubBookings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GamehubBookings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GamehubBookings.
+     */
+    distinct?: GamehubBookingScalarFieldEnum | GamehubBookingScalarFieldEnum[]
+  }
+
+  /**
+   * GamehubBooking findMany
+   */
+  export type GamehubBookingFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubBooking
+     */
+    select?: GamehubBookingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubBooking
+     */
+    omit?: GamehubBookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubBookingInclude<ExtArgs> | null
+    /**
+     * Filter, which GamehubBookings to fetch.
+     */
+    where?: GamehubBookingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GamehubBookings to fetch.
+     */
+    orderBy?: GamehubBookingOrderByWithRelationInput | GamehubBookingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing GamehubBookings.
+     */
+    cursor?: GamehubBookingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GamehubBookings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GamehubBookings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GamehubBookings.
+     */
+    distinct?: GamehubBookingScalarFieldEnum | GamehubBookingScalarFieldEnum[]
+  }
+
+  /**
+   * GamehubBooking create
+   */
+  export type GamehubBookingCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubBooking
+     */
+    select?: GamehubBookingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubBooking
+     */
+    omit?: GamehubBookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubBookingInclude<ExtArgs> | null
+    /**
+     * The data needed to create a GamehubBooking.
+     */
+    data: XOR<GamehubBookingCreateInput, GamehubBookingUncheckedCreateInput>
+  }
+
+  /**
+   * GamehubBooking createMany
+   */
+  export type GamehubBookingCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many GamehubBookings.
+     */
+    data: GamehubBookingCreateManyInput | GamehubBookingCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GamehubBooking createManyAndReturn
+   */
+  export type GamehubBookingCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubBooking
+     */
+    select?: GamehubBookingSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubBooking
+     */
+    omit?: GamehubBookingOmit<ExtArgs> | null
+    /**
+     * The data used to create many GamehubBookings.
+     */
+    data: GamehubBookingCreateManyInput | GamehubBookingCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubBookingIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GamehubBooking update
+   */
+  export type GamehubBookingUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubBooking
+     */
+    select?: GamehubBookingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubBooking
+     */
+    omit?: GamehubBookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubBookingInclude<ExtArgs> | null
+    /**
+     * The data needed to update a GamehubBooking.
+     */
+    data: XOR<GamehubBookingUpdateInput, GamehubBookingUncheckedUpdateInput>
+    /**
+     * Choose, which GamehubBooking to update.
+     */
+    where: GamehubBookingWhereUniqueInput
+  }
+
+  /**
+   * GamehubBooking updateMany
+   */
+  export type GamehubBookingUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update GamehubBookings.
+     */
+    data: XOR<GamehubBookingUpdateManyMutationInput, GamehubBookingUncheckedUpdateManyInput>
+    /**
+     * Filter which GamehubBookings to update
+     */
+    where?: GamehubBookingWhereInput
+    /**
+     * Limit how many GamehubBookings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * GamehubBooking updateManyAndReturn
+   */
+  export type GamehubBookingUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubBooking
+     */
+    select?: GamehubBookingSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubBooking
+     */
+    omit?: GamehubBookingOmit<ExtArgs> | null
+    /**
+     * The data used to update GamehubBookings.
+     */
+    data: XOR<GamehubBookingUpdateManyMutationInput, GamehubBookingUncheckedUpdateManyInput>
+    /**
+     * Filter which GamehubBookings to update
+     */
+    where?: GamehubBookingWhereInput
+    /**
+     * Limit how many GamehubBookings to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubBookingIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GamehubBooking upsert
+   */
+  export type GamehubBookingUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubBooking
+     */
+    select?: GamehubBookingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubBooking
+     */
+    omit?: GamehubBookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubBookingInclude<ExtArgs> | null
+    /**
+     * The filter to search for the GamehubBooking to update in case it exists.
+     */
+    where: GamehubBookingWhereUniqueInput
+    /**
+     * In case the GamehubBooking found by the `where` argument doesn't exist, create a new GamehubBooking with this data.
+     */
+    create: XOR<GamehubBookingCreateInput, GamehubBookingUncheckedCreateInput>
+    /**
+     * In case the GamehubBooking was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<GamehubBookingUpdateInput, GamehubBookingUncheckedUpdateInput>
+  }
+
+  /**
+   * GamehubBooking delete
+   */
+  export type GamehubBookingDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubBooking
+     */
+    select?: GamehubBookingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubBooking
+     */
+    omit?: GamehubBookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubBookingInclude<ExtArgs> | null
+    /**
+     * Filter which GamehubBooking to delete.
+     */
+    where: GamehubBookingWhereUniqueInput
+  }
+
+  /**
+   * GamehubBooking deleteMany
+   */
+  export type GamehubBookingDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GamehubBookings to delete
+     */
+    where?: GamehubBookingWhereInput
+    /**
+     * Limit how many GamehubBookings to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * GamehubBooking without action
+   */
+  export type GamehubBookingDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubBooking
+     */
+    select?: GamehubBookingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubBooking
+     */
+    omit?: GamehubBookingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubBookingInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model GamehubBlockedSlot
+   */
+
+  export type AggregateGamehubBlockedSlot = {
+    _count: GamehubBlockedSlotCountAggregateOutputType | null
+    _min: GamehubBlockedSlotMinAggregateOutputType | null
+    _max: GamehubBlockedSlotMaxAggregateOutputType | null
+  }
+
+  export type GamehubBlockedSlotMinAggregateOutputType = {
+    id: string | null
+    blockDate: Date | null
+    slotLabel: string | null
+    reason: string | null
+    createdAt: Date | null
+    createdByUserId: string | null
+    facilityId: string | null
+  }
+
+  export type GamehubBlockedSlotMaxAggregateOutputType = {
+    id: string | null
+    blockDate: Date | null
+    slotLabel: string | null
+    reason: string | null
+    createdAt: Date | null
+    createdByUserId: string | null
+    facilityId: string | null
+  }
+
+  export type GamehubBlockedSlotCountAggregateOutputType = {
+    id: number
+    blockDate: number
+    slotLabel: number
+    reason: number
+    createdAt: number
+    createdByUserId: number
+    facilityId: number
+    _all: number
+  }
+
+
+  export type GamehubBlockedSlotMinAggregateInputType = {
+    id?: true
+    blockDate?: true
+    slotLabel?: true
+    reason?: true
+    createdAt?: true
+    createdByUserId?: true
+    facilityId?: true
+  }
+
+  export type GamehubBlockedSlotMaxAggregateInputType = {
+    id?: true
+    blockDate?: true
+    slotLabel?: true
+    reason?: true
+    createdAt?: true
+    createdByUserId?: true
+    facilityId?: true
+  }
+
+  export type GamehubBlockedSlotCountAggregateInputType = {
+    id?: true
+    blockDate?: true
+    slotLabel?: true
+    reason?: true
+    createdAt?: true
+    createdByUserId?: true
+    facilityId?: true
+    _all?: true
+  }
+
+  export type GamehubBlockedSlotAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GamehubBlockedSlot to aggregate.
+     */
+    where?: GamehubBlockedSlotWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GamehubBlockedSlots to fetch.
+     */
+    orderBy?: GamehubBlockedSlotOrderByWithRelationInput | GamehubBlockedSlotOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: GamehubBlockedSlotWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GamehubBlockedSlots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GamehubBlockedSlots.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned GamehubBlockedSlots
+    **/
+    _count?: true | GamehubBlockedSlotCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: GamehubBlockedSlotMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: GamehubBlockedSlotMaxAggregateInputType
+  }
+
+  export type GetGamehubBlockedSlotAggregateType<T extends GamehubBlockedSlotAggregateArgs> = {
+        [P in keyof T & keyof AggregateGamehubBlockedSlot]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateGamehubBlockedSlot[P]>
+      : GetScalarType<T[P], AggregateGamehubBlockedSlot[P]>
+  }
+
+
+
+
+  export type GamehubBlockedSlotGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GamehubBlockedSlotWhereInput
+    orderBy?: GamehubBlockedSlotOrderByWithAggregationInput | GamehubBlockedSlotOrderByWithAggregationInput[]
+    by: GamehubBlockedSlotScalarFieldEnum[] | GamehubBlockedSlotScalarFieldEnum
+    having?: GamehubBlockedSlotScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: GamehubBlockedSlotCountAggregateInputType | true
+    _min?: GamehubBlockedSlotMinAggregateInputType
+    _max?: GamehubBlockedSlotMaxAggregateInputType
+  }
+
+  export type GamehubBlockedSlotGroupByOutputType = {
+    id: string
+    blockDate: Date
+    slotLabel: string
+    reason: string
+    createdAt: Date
+    createdByUserId: string | null
+    facilityId: string
+    _count: GamehubBlockedSlotCountAggregateOutputType | null
+    _min: GamehubBlockedSlotMinAggregateOutputType | null
+    _max: GamehubBlockedSlotMaxAggregateOutputType | null
+  }
+
+  type GetGamehubBlockedSlotGroupByPayload<T extends GamehubBlockedSlotGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<GamehubBlockedSlotGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof GamehubBlockedSlotGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], GamehubBlockedSlotGroupByOutputType[P]>
+            : GetScalarType<T[P], GamehubBlockedSlotGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type GamehubBlockedSlotSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    blockDate?: boolean
+    slotLabel?: boolean
+    reason?: boolean
+    createdAt?: boolean
+    createdByUserId?: boolean
+    facilityId?: boolean
+    facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["gamehubBlockedSlot"]>
+
+  export type GamehubBlockedSlotSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    blockDate?: boolean
+    slotLabel?: boolean
+    reason?: boolean
+    createdAt?: boolean
+    createdByUserId?: boolean
+    facilityId?: boolean
+    facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["gamehubBlockedSlot"]>
+
+  export type GamehubBlockedSlotSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    blockDate?: boolean
+    slotLabel?: boolean
+    reason?: boolean
+    createdAt?: boolean
+    createdByUserId?: boolean
+    facilityId?: boolean
+    facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["gamehubBlockedSlot"]>
+
+  export type GamehubBlockedSlotSelectScalar = {
+    id?: boolean
+    blockDate?: boolean
+    slotLabel?: boolean
+    reason?: boolean
+    createdAt?: boolean
+    createdByUserId?: boolean
+    facilityId?: boolean
+  }
+
+  export type GamehubBlockedSlotOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "blockDate" | "slotLabel" | "reason" | "createdAt" | "createdByUserId" | "facilityId", ExtArgs["result"]["gamehubBlockedSlot"]>
+  export type GamehubBlockedSlotInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
+  }
+  export type GamehubBlockedSlotIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
+  }
+  export type GamehubBlockedSlotIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
+  }
+
+  export type $GamehubBlockedSlotPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "GamehubBlockedSlot"
+    objects: {
+      facility: Prisma.$GamehubFacilityPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      blockDate: Date
+      slotLabel: string
+      reason: string
+      createdAt: Date
+      createdByUserId: string | null
+      facilityId: string
+    }, ExtArgs["result"]["gamehubBlockedSlot"]>
+    composites: {}
+  }
+
+  type GamehubBlockedSlotGetPayload<S extends boolean | null | undefined | GamehubBlockedSlotDefaultArgs> = $Result.GetResult<Prisma.$GamehubBlockedSlotPayload, S>
+
+  type GamehubBlockedSlotCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<GamehubBlockedSlotFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: GamehubBlockedSlotCountAggregateInputType | true
+    }
+
+  export interface GamehubBlockedSlotDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GamehubBlockedSlot'], meta: { name: 'GamehubBlockedSlot' } }
+    /**
+     * Find zero or one GamehubBlockedSlot that matches the filter.
+     * @param {GamehubBlockedSlotFindUniqueArgs} args - Arguments to find a GamehubBlockedSlot
+     * @example
+     * // Get one GamehubBlockedSlot
+     * const gamehubBlockedSlot = await prisma.gamehubBlockedSlot.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends GamehubBlockedSlotFindUniqueArgs>(args: SelectSubset<T, GamehubBlockedSlotFindUniqueArgs<ExtArgs>>): Prisma__GamehubBlockedSlotClient<$Result.GetResult<Prisma.$GamehubBlockedSlotPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one GamehubBlockedSlot that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {GamehubBlockedSlotFindUniqueOrThrowArgs} args - Arguments to find a GamehubBlockedSlot
+     * @example
+     * // Get one GamehubBlockedSlot
+     * const gamehubBlockedSlot = await prisma.gamehubBlockedSlot.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends GamehubBlockedSlotFindUniqueOrThrowArgs>(args: SelectSubset<T, GamehubBlockedSlotFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GamehubBlockedSlotClient<$Result.GetResult<Prisma.$GamehubBlockedSlotPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GamehubBlockedSlot that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubBlockedSlotFindFirstArgs} args - Arguments to find a GamehubBlockedSlot
+     * @example
+     * // Get one GamehubBlockedSlot
+     * const gamehubBlockedSlot = await prisma.gamehubBlockedSlot.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends GamehubBlockedSlotFindFirstArgs>(args?: SelectSubset<T, GamehubBlockedSlotFindFirstArgs<ExtArgs>>): Prisma__GamehubBlockedSlotClient<$Result.GetResult<Prisma.$GamehubBlockedSlotPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GamehubBlockedSlot that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubBlockedSlotFindFirstOrThrowArgs} args - Arguments to find a GamehubBlockedSlot
+     * @example
+     * // Get one GamehubBlockedSlot
+     * const gamehubBlockedSlot = await prisma.gamehubBlockedSlot.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends GamehubBlockedSlotFindFirstOrThrowArgs>(args?: SelectSubset<T, GamehubBlockedSlotFindFirstOrThrowArgs<ExtArgs>>): Prisma__GamehubBlockedSlotClient<$Result.GetResult<Prisma.$GamehubBlockedSlotPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more GamehubBlockedSlots that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubBlockedSlotFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all GamehubBlockedSlots
+     * const gamehubBlockedSlots = await prisma.gamehubBlockedSlot.findMany()
+     * 
+     * // Get first 10 GamehubBlockedSlots
+     * const gamehubBlockedSlots = await prisma.gamehubBlockedSlot.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const gamehubBlockedSlotWithIdOnly = await prisma.gamehubBlockedSlot.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends GamehubBlockedSlotFindManyArgs>(args?: SelectSubset<T, GamehubBlockedSlotFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamehubBlockedSlotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a GamehubBlockedSlot.
+     * @param {GamehubBlockedSlotCreateArgs} args - Arguments to create a GamehubBlockedSlot.
+     * @example
+     * // Create one GamehubBlockedSlot
+     * const GamehubBlockedSlot = await prisma.gamehubBlockedSlot.create({
+     *   data: {
+     *     // ... data to create a GamehubBlockedSlot
+     *   }
+     * })
+     * 
+     */
+    create<T extends GamehubBlockedSlotCreateArgs>(args: SelectSubset<T, GamehubBlockedSlotCreateArgs<ExtArgs>>): Prisma__GamehubBlockedSlotClient<$Result.GetResult<Prisma.$GamehubBlockedSlotPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many GamehubBlockedSlots.
+     * @param {GamehubBlockedSlotCreateManyArgs} args - Arguments to create many GamehubBlockedSlots.
+     * @example
+     * // Create many GamehubBlockedSlots
+     * const gamehubBlockedSlot = await prisma.gamehubBlockedSlot.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends GamehubBlockedSlotCreateManyArgs>(args?: SelectSubset<T, GamehubBlockedSlotCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many GamehubBlockedSlots and returns the data saved in the database.
+     * @param {GamehubBlockedSlotCreateManyAndReturnArgs} args - Arguments to create many GamehubBlockedSlots.
+     * @example
+     * // Create many GamehubBlockedSlots
+     * const gamehubBlockedSlot = await prisma.gamehubBlockedSlot.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many GamehubBlockedSlots and only return the `id`
+     * const gamehubBlockedSlotWithIdOnly = await prisma.gamehubBlockedSlot.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends GamehubBlockedSlotCreateManyAndReturnArgs>(args?: SelectSubset<T, GamehubBlockedSlotCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamehubBlockedSlotPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a GamehubBlockedSlot.
+     * @param {GamehubBlockedSlotDeleteArgs} args - Arguments to delete one GamehubBlockedSlot.
+     * @example
+     * // Delete one GamehubBlockedSlot
+     * const GamehubBlockedSlot = await prisma.gamehubBlockedSlot.delete({
+     *   where: {
+     *     // ... filter to delete one GamehubBlockedSlot
+     *   }
+     * })
+     * 
+     */
+    delete<T extends GamehubBlockedSlotDeleteArgs>(args: SelectSubset<T, GamehubBlockedSlotDeleteArgs<ExtArgs>>): Prisma__GamehubBlockedSlotClient<$Result.GetResult<Prisma.$GamehubBlockedSlotPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one GamehubBlockedSlot.
+     * @param {GamehubBlockedSlotUpdateArgs} args - Arguments to update one GamehubBlockedSlot.
+     * @example
+     * // Update one GamehubBlockedSlot
+     * const gamehubBlockedSlot = await prisma.gamehubBlockedSlot.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends GamehubBlockedSlotUpdateArgs>(args: SelectSubset<T, GamehubBlockedSlotUpdateArgs<ExtArgs>>): Prisma__GamehubBlockedSlotClient<$Result.GetResult<Prisma.$GamehubBlockedSlotPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more GamehubBlockedSlots.
+     * @param {GamehubBlockedSlotDeleteManyArgs} args - Arguments to filter GamehubBlockedSlots to delete.
+     * @example
+     * // Delete a few GamehubBlockedSlots
+     * const { count } = await prisma.gamehubBlockedSlot.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends GamehubBlockedSlotDeleteManyArgs>(args?: SelectSubset<T, GamehubBlockedSlotDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GamehubBlockedSlots.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubBlockedSlotUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many GamehubBlockedSlots
+     * const gamehubBlockedSlot = await prisma.gamehubBlockedSlot.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends GamehubBlockedSlotUpdateManyArgs>(args: SelectSubset<T, GamehubBlockedSlotUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GamehubBlockedSlots and returns the data updated in the database.
+     * @param {GamehubBlockedSlotUpdateManyAndReturnArgs} args - Arguments to update many GamehubBlockedSlots.
+     * @example
+     * // Update many GamehubBlockedSlots
+     * const gamehubBlockedSlot = await prisma.gamehubBlockedSlot.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more GamehubBlockedSlots and only return the `id`
+     * const gamehubBlockedSlotWithIdOnly = await prisma.gamehubBlockedSlot.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends GamehubBlockedSlotUpdateManyAndReturnArgs>(args: SelectSubset<T, GamehubBlockedSlotUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamehubBlockedSlotPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one GamehubBlockedSlot.
+     * @param {GamehubBlockedSlotUpsertArgs} args - Arguments to update or create a GamehubBlockedSlot.
+     * @example
+     * // Update or create a GamehubBlockedSlot
+     * const gamehubBlockedSlot = await prisma.gamehubBlockedSlot.upsert({
+     *   create: {
+     *     // ... data to create a GamehubBlockedSlot
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the GamehubBlockedSlot we want to update
+     *   }
+     * })
+     */
+    upsert<T extends GamehubBlockedSlotUpsertArgs>(args: SelectSubset<T, GamehubBlockedSlotUpsertArgs<ExtArgs>>): Prisma__GamehubBlockedSlotClient<$Result.GetResult<Prisma.$GamehubBlockedSlotPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of GamehubBlockedSlots.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubBlockedSlotCountArgs} args - Arguments to filter GamehubBlockedSlots to count.
+     * @example
+     * // Count the number of GamehubBlockedSlots
+     * const count = await prisma.gamehubBlockedSlot.count({
+     *   where: {
+     *     // ... the filter for the GamehubBlockedSlots we want to count
+     *   }
+     * })
+    **/
+    count<T extends GamehubBlockedSlotCountArgs>(
+      args?: Subset<T, GamehubBlockedSlotCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], GamehubBlockedSlotCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a GamehubBlockedSlot.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubBlockedSlotAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends GamehubBlockedSlotAggregateArgs>(args: Subset<T, GamehubBlockedSlotAggregateArgs>): Prisma.PrismaPromise<GetGamehubBlockedSlotAggregateType<T>>
+
+    /**
+     * Group by GamehubBlockedSlot.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GamehubBlockedSlotGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends GamehubBlockedSlotGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: GamehubBlockedSlotGroupByArgs['orderBy'] }
+        : { orderBy?: GamehubBlockedSlotGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, GamehubBlockedSlotGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGamehubBlockedSlotGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the GamehubBlockedSlot model
+   */
+  readonly fields: GamehubBlockedSlotFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for GamehubBlockedSlot.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__GamehubBlockedSlotClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    facility<T extends GamehubFacilityDefaultArgs<ExtArgs> = {}>(args?: Subset<T, GamehubFacilityDefaultArgs<ExtArgs>>): Prisma__GamehubFacilityClient<$Result.GetResult<Prisma.$GamehubFacilityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the GamehubBlockedSlot model
+   */
+  interface GamehubBlockedSlotFieldRefs {
+    readonly id: FieldRef<"GamehubBlockedSlot", 'String'>
+    readonly blockDate: FieldRef<"GamehubBlockedSlot", 'DateTime'>
+    readonly slotLabel: FieldRef<"GamehubBlockedSlot", 'String'>
+    readonly reason: FieldRef<"GamehubBlockedSlot", 'String'>
+    readonly createdAt: FieldRef<"GamehubBlockedSlot", 'DateTime'>
+    readonly createdByUserId: FieldRef<"GamehubBlockedSlot", 'String'>
+    readonly facilityId: FieldRef<"GamehubBlockedSlot", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * GamehubBlockedSlot findUnique
+   */
+  export type GamehubBlockedSlotFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubBlockedSlot
+     */
+    select?: GamehubBlockedSlotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubBlockedSlot
+     */
+    omit?: GamehubBlockedSlotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubBlockedSlotInclude<ExtArgs> | null
+    /**
+     * Filter, which GamehubBlockedSlot to fetch.
+     */
+    where: GamehubBlockedSlotWhereUniqueInput
+  }
+
+  /**
+   * GamehubBlockedSlot findUniqueOrThrow
+   */
+  export type GamehubBlockedSlotFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubBlockedSlot
+     */
+    select?: GamehubBlockedSlotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubBlockedSlot
+     */
+    omit?: GamehubBlockedSlotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubBlockedSlotInclude<ExtArgs> | null
+    /**
+     * Filter, which GamehubBlockedSlot to fetch.
+     */
+    where: GamehubBlockedSlotWhereUniqueInput
+  }
+
+  /**
+   * GamehubBlockedSlot findFirst
+   */
+  export type GamehubBlockedSlotFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubBlockedSlot
+     */
+    select?: GamehubBlockedSlotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubBlockedSlot
+     */
+    omit?: GamehubBlockedSlotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubBlockedSlotInclude<ExtArgs> | null
+    /**
+     * Filter, which GamehubBlockedSlot to fetch.
+     */
+    where?: GamehubBlockedSlotWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GamehubBlockedSlots to fetch.
+     */
+    orderBy?: GamehubBlockedSlotOrderByWithRelationInput | GamehubBlockedSlotOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GamehubBlockedSlots.
+     */
+    cursor?: GamehubBlockedSlotWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GamehubBlockedSlots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GamehubBlockedSlots.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GamehubBlockedSlots.
+     */
+    distinct?: GamehubBlockedSlotScalarFieldEnum | GamehubBlockedSlotScalarFieldEnum[]
+  }
+
+  /**
+   * GamehubBlockedSlot findFirstOrThrow
+   */
+  export type GamehubBlockedSlotFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubBlockedSlot
+     */
+    select?: GamehubBlockedSlotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubBlockedSlot
+     */
+    omit?: GamehubBlockedSlotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubBlockedSlotInclude<ExtArgs> | null
+    /**
+     * Filter, which GamehubBlockedSlot to fetch.
+     */
+    where?: GamehubBlockedSlotWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GamehubBlockedSlots to fetch.
+     */
+    orderBy?: GamehubBlockedSlotOrderByWithRelationInput | GamehubBlockedSlotOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GamehubBlockedSlots.
+     */
+    cursor?: GamehubBlockedSlotWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GamehubBlockedSlots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GamehubBlockedSlots.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GamehubBlockedSlots.
+     */
+    distinct?: GamehubBlockedSlotScalarFieldEnum | GamehubBlockedSlotScalarFieldEnum[]
+  }
+
+  /**
+   * GamehubBlockedSlot findMany
+   */
+  export type GamehubBlockedSlotFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubBlockedSlot
+     */
+    select?: GamehubBlockedSlotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubBlockedSlot
+     */
+    omit?: GamehubBlockedSlotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubBlockedSlotInclude<ExtArgs> | null
+    /**
+     * Filter, which GamehubBlockedSlots to fetch.
+     */
+    where?: GamehubBlockedSlotWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GamehubBlockedSlots to fetch.
+     */
+    orderBy?: GamehubBlockedSlotOrderByWithRelationInput | GamehubBlockedSlotOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing GamehubBlockedSlots.
+     */
+    cursor?: GamehubBlockedSlotWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GamehubBlockedSlots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GamehubBlockedSlots.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GamehubBlockedSlots.
+     */
+    distinct?: GamehubBlockedSlotScalarFieldEnum | GamehubBlockedSlotScalarFieldEnum[]
+  }
+
+  /**
+   * GamehubBlockedSlot create
+   */
+  export type GamehubBlockedSlotCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubBlockedSlot
+     */
+    select?: GamehubBlockedSlotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubBlockedSlot
+     */
+    omit?: GamehubBlockedSlotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubBlockedSlotInclude<ExtArgs> | null
+    /**
+     * The data needed to create a GamehubBlockedSlot.
+     */
+    data: XOR<GamehubBlockedSlotCreateInput, GamehubBlockedSlotUncheckedCreateInput>
+  }
+
+  /**
+   * GamehubBlockedSlot createMany
+   */
+  export type GamehubBlockedSlotCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many GamehubBlockedSlots.
+     */
+    data: GamehubBlockedSlotCreateManyInput | GamehubBlockedSlotCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GamehubBlockedSlot createManyAndReturn
+   */
+  export type GamehubBlockedSlotCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubBlockedSlot
+     */
+    select?: GamehubBlockedSlotSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubBlockedSlot
+     */
+    omit?: GamehubBlockedSlotOmit<ExtArgs> | null
+    /**
+     * The data used to create many GamehubBlockedSlots.
+     */
+    data: GamehubBlockedSlotCreateManyInput | GamehubBlockedSlotCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubBlockedSlotIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GamehubBlockedSlot update
+   */
+  export type GamehubBlockedSlotUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubBlockedSlot
+     */
+    select?: GamehubBlockedSlotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubBlockedSlot
+     */
+    omit?: GamehubBlockedSlotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubBlockedSlotInclude<ExtArgs> | null
+    /**
+     * The data needed to update a GamehubBlockedSlot.
+     */
+    data: XOR<GamehubBlockedSlotUpdateInput, GamehubBlockedSlotUncheckedUpdateInput>
+    /**
+     * Choose, which GamehubBlockedSlot to update.
+     */
+    where: GamehubBlockedSlotWhereUniqueInput
+  }
+
+  /**
+   * GamehubBlockedSlot updateMany
+   */
+  export type GamehubBlockedSlotUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update GamehubBlockedSlots.
+     */
+    data: XOR<GamehubBlockedSlotUpdateManyMutationInput, GamehubBlockedSlotUncheckedUpdateManyInput>
+    /**
+     * Filter which GamehubBlockedSlots to update
+     */
+    where?: GamehubBlockedSlotWhereInput
+    /**
+     * Limit how many GamehubBlockedSlots to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * GamehubBlockedSlot updateManyAndReturn
+   */
+  export type GamehubBlockedSlotUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubBlockedSlot
+     */
+    select?: GamehubBlockedSlotSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubBlockedSlot
+     */
+    omit?: GamehubBlockedSlotOmit<ExtArgs> | null
+    /**
+     * The data used to update GamehubBlockedSlots.
+     */
+    data: XOR<GamehubBlockedSlotUpdateManyMutationInput, GamehubBlockedSlotUncheckedUpdateManyInput>
+    /**
+     * Filter which GamehubBlockedSlots to update
+     */
+    where?: GamehubBlockedSlotWhereInput
+    /**
+     * Limit how many GamehubBlockedSlots to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubBlockedSlotIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GamehubBlockedSlot upsert
+   */
+  export type GamehubBlockedSlotUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubBlockedSlot
+     */
+    select?: GamehubBlockedSlotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubBlockedSlot
+     */
+    omit?: GamehubBlockedSlotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubBlockedSlotInclude<ExtArgs> | null
+    /**
+     * The filter to search for the GamehubBlockedSlot to update in case it exists.
+     */
+    where: GamehubBlockedSlotWhereUniqueInput
+    /**
+     * In case the GamehubBlockedSlot found by the `where` argument doesn't exist, create a new GamehubBlockedSlot with this data.
+     */
+    create: XOR<GamehubBlockedSlotCreateInput, GamehubBlockedSlotUncheckedCreateInput>
+    /**
+     * In case the GamehubBlockedSlot was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<GamehubBlockedSlotUpdateInput, GamehubBlockedSlotUncheckedUpdateInput>
+  }
+
+  /**
+   * GamehubBlockedSlot delete
+   */
+  export type GamehubBlockedSlotDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubBlockedSlot
+     */
+    select?: GamehubBlockedSlotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubBlockedSlot
+     */
+    omit?: GamehubBlockedSlotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubBlockedSlotInclude<ExtArgs> | null
+    /**
+     * Filter which GamehubBlockedSlot to delete.
+     */
+    where: GamehubBlockedSlotWhereUniqueInput
+  }
+
+  /**
+   * GamehubBlockedSlot deleteMany
+   */
+  export type GamehubBlockedSlotDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GamehubBlockedSlots to delete
+     */
+    where?: GamehubBlockedSlotWhereInput
+    /**
+     * Limit how many GamehubBlockedSlots to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * GamehubBlockedSlot without action
+   */
+  export type GamehubBlockedSlotDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GamehubBlockedSlot
+     */
+    select?: GamehubBlockedSlotSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GamehubBlockedSlot
+     */
+    omit?: GamehubBlockedSlotOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GamehubBlockedSlotInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Wallet
+   */
+
+  export type AggregateWallet = {
+    _count: WalletCountAggregateOutputType | null
+    _avg: WalletAvgAggregateOutputType | null
+    _sum: WalletSumAggregateOutputType | null
+    _min: WalletMinAggregateOutputType | null
+    _max: WalletMaxAggregateOutputType | null
+  }
+
+  export type WalletAvgAggregateOutputType = {
+    balance: number | null
+    totalEarnings: number | null
+  }
+
+  export type WalletSumAggregateOutputType = {
+    balance: number | null
+    totalEarnings: number | null
+  }
+
+  export type WalletMinAggregateOutputType = {
+    id: string | null
+    balance: number | null
+    totalEarnings: number | null
+    currency: string | null
+    updatedAt: Date | null
+    userId: string | null
+  }
+
+  export type WalletMaxAggregateOutputType = {
+    id: string | null
+    balance: number | null
+    totalEarnings: number | null
+    currency: string | null
+    updatedAt: Date | null
+    userId: string | null
+  }
+
+  export type WalletCountAggregateOutputType = {
+    id: number
+    balance: number
+    totalEarnings: number
+    currency: number
+    updatedAt: number
+    userId: number
+    _all: number
+  }
+
+
+  export type WalletAvgAggregateInputType = {
+    balance?: true
+    totalEarnings?: true
+  }
+
+  export type WalletSumAggregateInputType = {
+    balance?: true
+    totalEarnings?: true
+  }
+
+  export type WalletMinAggregateInputType = {
+    id?: true
+    balance?: true
+    totalEarnings?: true
+    currency?: true
+    updatedAt?: true
+    userId?: true
+  }
+
+  export type WalletMaxAggregateInputType = {
+    id?: true
+    balance?: true
+    totalEarnings?: true
+    currency?: true
+    updatedAt?: true
+    userId?: true
+  }
+
+  export type WalletCountAggregateInputType = {
+    id?: true
+    balance?: true
+    totalEarnings?: true
+    currency?: true
+    updatedAt?: true
+    userId?: true
+    _all?: true
+  }
+
+  export type WalletAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Wallet to aggregate.
+     */
+    where?: WalletWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Wallets to fetch.
+     */
+    orderBy?: WalletOrderByWithRelationInput | WalletOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: WalletWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Wallets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Wallets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Wallets
+    **/
+    _count?: true | WalletCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: WalletAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: WalletSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: WalletMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: WalletMaxAggregateInputType
+  }
+
+  export type GetWalletAggregateType<T extends WalletAggregateArgs> = {
+        [P in keyof T & keyof AggregateWallet]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateWallet[P]>
+      : GetScalarType<T[P], AggregateWallet[P]>
+  }
+
+
+
+
+  export type WalletGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WalletWhereInput
+    orderBy?: WalletOrderByWithAggregationInput | WalletOrderByWithAggregationInput[]
+    by: WalletScalarFieldEnum[] | WalletScalarFieldEnum
+    having?: WalletScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: WalletCountAggregateInputType | true
+    _avg?: WalletAvgAggregateInputType
+    _sum?: WalletSumAggregateInputType
+    _min?: WalletMinAggregateInputType
+    _max?: WalletMaxAggregateInputType
+  }
+
+  export type WalletGroupByOutputType = {
+    id: string
+    balance: number
+    totalEarnings: number
+    currency: string
+    updatedAt: Date
+    userId: string
+    _count: WalletCountAggregateOutputType | null
+    _avg: WalletAvgAggregateOutputType | null
+    _sum: WalletSumAggregateOutputType | null
+    _min: WalletMinAggregateOutputType | null
+    _max: WalletMaxAggregateOutputType | null
+  }
+
+  type GetWalletGroupByPayload<T extends WalletGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<WalletGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof WalletGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], WalletGroupByOutputType[P]>
+            : GetScalarType<T[P], WalletGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type WalletSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    balance?: boolean
+    totalEarnings?: boolean
+    currency?: boolean
+    updatedAt?: boolean
+    userId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    transactions?: boolean | Wallet$transactionsArgs<ExtArgs>
+    _count?: boolean | WalletCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["wallet"]>
+
+  export type WalletSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    balance?: boolean
+    totalEarnings?: boolean
+    currency?: boolean
+    updatedAt?: boolean
+    userId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["wallet"]>
+
+  export type WalletSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    balance?: boolean
+    totalEarnings?: boolean
+    currency?: boolean
+    updatedAt?: boolean
+    userId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["wallet"]>
+
+  export type WalletSelectScalar = {
+    id?: boolean
+    balance?: boolean
+    totalEarnings?: boolean
+    currency?: boolean
+    updatedAt?: boolean
+    userId?: boolean
+  }
+
+  export type WalletOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "balance" | "totalEarnings" | "currency" | "updatedAt" | "userId", ExtArgs["result"]["wallet"]>
+  export type WalletInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    transactions?: boolean | Wallet$transactionsArgs<ExtArgs>
+    _count?: boolean | WalletCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type WalletIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type WalletIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $WalletPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Wallet"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      transactions: Prisma.$WalletTransactionPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      balance: number
+      totalEarnings: number
+      currency: string
+      updatedAt: Date
+      userId: string
+    }, ExtArgs["result"]["wallet"]>
+    composites: {}
+  }
+
+  type WalletGetPayload<S extends boolean | null | undefined | WalletDefaultArgs> = $Result.GetResult<Prisma.$WalletPayload, S>
+
+  type WalletCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<WalletFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: WalletCountAggregateInputType | true
+    }
+
+  export interface WalletDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Wallet'], meta: { name: 'Wallet' } }
+    /**
+     * Find zero or one Wallet that matches the filter.
+     * @param {WalletFindUniqueArgs} args - Arguments to find a Wallet
+     * @example
+     * // Get one Wallet
+     * const wallet = await prisma.wallet.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends WalletFindUniqueArgs>(args: SelectSubset<T, WalletFindUniqueArgs<ExtArgs>>): Prisma__WalletClient<$Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Wallet that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {WalletFindUniqueOrThrowArgs} args - Arguments to find a Wallet
+     * @example
+     * // Get one Wallet
+     * const wallet = await prisma.wallet.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends WalletFindUniqueOrThrowArgs>(args: SelectSubset<T, WalletFindUniqueOrThrowArgs<ExtArgs>>): Prisma__WalletClient<$Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Wallet that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletFindFirstArgs} args - Arguments to find a Wallet
+     * @example
+     * // Get one Wallet
+     * const wallet = await prisma.wallet.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends WalletFindFirstArgs>(args?: SelectSubset<T, WalletFindFirstArgs<ExtArgs>>): Prisma__WalletClient<$Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Wallet that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletFindFirstOrThrowArgs} args - Arguments to find a Wallet
+     * @example
+     * // Get one Wallet
+     * const wallet = await prisma.wallet.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends WalletFindFirstOrThrowArgs>(args?: SelectSubset<T, WalletFindFirstOrThrowArgs<ExtArgs>>): Prisma__WalletClient<$Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Wallets that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Wallets
+     * const wallets = await prisma.wallet.findMany()
+     * 
+     * // Get first 10 Wallets
+     * const wallets = await prisma.wallet.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const walletWithIdOnly = await prisma.wallet.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends WalletFindManyArgs>(args?: SelectSubset<T, WalletFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Wallet.
+     * @param {WalletCreateArgs} args - Arguments to create a Wallet.
+     * @example
+     * // Create one Wallet
+     * const Wallet = await prisma.wallet.create({
+     *   data: {
+     *     // ... data to create a Wallet
+     *   }
+     * })
+     * 
+     */
+    create<T extends WalletCreateArgs>(args: SelectSubset<T, WalletCreateArgs<ExtArgs>>): Prisma__WalletClient<$Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Wallets.
+     * @param {WalletCreateManyArgs} args - Arguments to create many Wallets.
+     * @example
+     * // Create many Wallets
+     * const wallet = await prisma.wallet.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends WalletCreateManyArgs>(args?: SelectSubset<T, WalletCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Wallets and returns the data saved in the database.
+     * @param {WalletCreateManyAndReturnArgs} args - Arguments to create many Wallets.
+     * @example
+     * // Create many Wallets
+     * const wallet = await prisma.wallet.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Wallets and only return the `id`
+     * const walletWithIdOnly = await prisma.wallet.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends WalletCreateManyAndReturnArgs>(args?: SelectSubset<T, WalletCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Wallet.
+     * @param {WalletDeleteArgs} args - Arguments to delete one Wallet.
+     * @example
+     * // Delete one Wallet
+     * const Wallet = await prisma.wallet.delete({
+     *   where: {
+     *     // ... filter to delete one Wallet
+     *   }
+     * })
+     * 
+     */
+    delete<T extends WalletDeleteArgs>(args: SelectSubset<T, WalletDeleteArgs<ExtArgs>>): Prisma__WalletClient<$Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Wallet.
+     * @param {WalletUpdateArgs} args - Arguments to update one Wallet.
+     * @example
+     * // Update one Wallet
+     * const wallet = await prisma.wallet.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends WalletUpdateArgs>(args: SelectSubset<T, WalletUpdateArgs<ExtArgs>>): Prisma__WalletClient<$Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Wallets.
+     * @param {WalletDeleteManyArgs} args - Arguments to filter Wallets to delete.
+     * @example
+     * // Delete a few Wallets
+     * const { count } = await prisma.wallet.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends WalletDeleteManyArgs>(args?: SelectSubset<T, WalletDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Wallets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Wallets
+     * const wallet = await prisma.wallet.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends WalletUpdateManyArgs>(args: SelectSubset<T, WalletUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Wallets and returns the data updated in the database.
+     * @param {WalletUpdateManyAndReturnArgs} args - Arguments to update many Wallets.
+     * @example
+     * // Update many Wallets
+     * const wallet = await prisma.wallet.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Wallets and only return the `id`
+     * const walletWithIdOnly = await prisma.wallet.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends WalletUpdateManyAndReturnArgs>(args: SelectSubset<T, WalletUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Wallet.
+     * @param {WalletUpsertArgs} args - Arguments to update or create a Wallet.
+     * @example
+     * // Update or create a Wallet
+     * const wallet = await prisma.wallet.upsert({
+     *   create: {
+     *     // ... data to create a Wallet
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Wallet we want to update
+     *   }
+     * })
+     */
+    upsert<T extends WalletUpsertArgs>(args: SelectSubset<T, WalletUpsertArgs<ExtArgs>>): Prisma__WalletClient<$Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Wallets.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletCountArgs} args - Arguments to filter Wallets to count.
+     * @example
+     * // Count the number of Wallets
+     * const count = await prisma.wallet.count({
+     *   where: {
+     *     // ... the filter for the Wallets we want to count
+     *   }
+     * })
+    **/
+    count<T extends WalletCountArgs>(
+      args?: Subset<T, WalletCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], WalletCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Wallet.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends WalletAggregateArgs>(args: Subset<T, WalletAggregateArgs>): Prisma.PrismaPromise<GetWalletAggregateType<T>>
+
+    /**
+     * Group by Wallet.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends WalletGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: WalletGroupByArgs['orderBy'] }
+        : { orderBy?: WalletGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, WalletGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetWalletGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Wallet model
+   */
+  readonly fields: WalletFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Wallet.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__WalletClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    transactions<T extends Wallet$transactionsArgs<ExtArgs> = {}>(args?: Subset<T, Wallet$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Wallet model
+   */
+  interface WalletFieldRefs {
+    readonly id: FieldRef<"Wallet", 'String'>
+    readonly balance: FieldRef<"Wallet", 'Float'>
+    readonly totalEarnings: FieldRef<"Wallet", 'Float'>
+    readonly currency: FieldRef<"Wallet", 'String'>
+    readonly updatedAt: FieldRef<"Wallet", 'DateTime'>
+    readonly userId: FieldRef<"Wallet", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Wallet findUnique
+   */
+  export type WalletFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wallet
+     */
+    select?: WalletSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wallet
+     */
+    omit?: WalletOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletInclude<ExtArgs> | null
+    /**
+     * Filter, which Wallet to fetch.
+     */
+    where: WalletWhereUniqueInput
+  }
+
+  /**
+   * Wallet findUniqueOrThrow
+   */
+  export type WalletFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wallet
+     */
+    select?: WalletSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wallet
+     */
+    omit?: WalletOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletInclude<ExtArgs> | null
+    /**
+     * Filter, which Wallet to fetch.
+     */
+    where: WalletWhereUniqueInput
+  }
+
+  /**
+   * Wallet findFirst
+   */
+  export type WalletFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wallet
+     */
+    select?: WalletSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wallet
+     */
+    omit?: WalletOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletInclude<ExtArgs> | null
+    /**
+     * Filter, which Wallet to fetch.
+     */
+    where?: WalletWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Wallets to fetch.
+     */
+    orderBy?: WalletOrderByWithRelationInput | WalletOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Wallets.
+     */
+    cursor?: WalletWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Wallets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Wallets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Wallets.
+     */
+    distinct?: WalletScalarFieldEnum | WalletScalarFieldEnum[]
+  }
+
+  /**
+   * Wallet findFirstOrThrow
+   */
+  export type WalletFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wallet
+     */
+    select?: WalletSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wallet
+     */
+    omit?: WalletOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletInclude<ExtArgs> | null
+    /**
+     * Filter, which Wallet to fetch.
+     */
+    where?: WalletWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Wallets to fetch.
+     */
+    orderBy?: WalletOrderByWithRelationInput | WalletOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Wallets.
+     */
+    cursor?: WalletWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Wallets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Wallets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Wallets.
+     */
+    distinct?: WalletScalarFieldEnum | WalletScalarFieldEnum[]
+  }
+
+  /**
+   * Wallet findMany
+   */
+  export type WalletFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wallet
+     */
+    select?: WalletSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wallet
+     */
+    omit?: WalletOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletInclude<ExtArgs> | null
+    /**
+     * Filter, which Wallets to fetch.
+     */
+    where?: WalletWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Wallets to fetch.
+     */
+    orderBy?: WalletOrderByWithRelationInput | WalletOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Wallets.
+     */
+    cursor?: WalletWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Wallets from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Wallets.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Wallets.
+     */
+    distinct?: WalletScalarFieldEnum | WalletScalarFieldEnum[]
+  }
+
+  /**
+   * Wallet create
+   */
+  export type WalletCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wallet
+     */
+    select?: WalletSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wallet
+     */
+    omit?: WalletOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Wallet.
+     */
+    data: XOR<WalletCreateInput, WalletUncheckedCreateInput>
+  }
+
+  /**
+   * Wallet createMany
+   */
+  export type WalletCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Wallets.
+     */
+    data: WalletCreateManyInput | WalletCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Wallet createManyAndReturn
+   */
+  export type WalletCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wallet
+     */
+    select?: WalletSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wallet
+     */
+    omit?: WalletOmit<ExtArgs> | null
+    /**
+     * The data used to create many Wallets.
+     */
+    data: WalletCreateManyInput | WalletCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Wallet update
+   */
+  export type WalletUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wallet
+     */
+    select?: WalletSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wallet
+     */
+    omit?: WalletOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Wallet.
+     */
+    data: XOR<WalletUpdateInput, WalletUncheckedUpdateInput>
+    /**
+     * Choose, which Wallet to update.
+     */
+    where: WalletWhereUniqueInput
+  }
+
+  /**
+   * Wallet updateMany
+   */
+  export type WalletUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Wallets.
+     */
+    data: XOR<WalletUpdateManyMutationInput, WalletUncheckedUpdateManyInput>
+    /**
+     * Filter which Wallets to update
+     */
+    where?: WalletWhereInput
+    /**
+     * Limit how many Wallets to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Wallet updateManyAndReturn
+   */
+  export type WalletUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wallet
+     */
+    select?: WalletSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wallet
+     */
+    omit?: WalletOmit<ExtArgs> | null
+    /**
+     * The data used to update Wallets.
+     */
+    data: XOR<WalletUpdateManyMutationInput, WalletUncheckedUpdateManyInput>
+    /**
+     * Filter which Wallets to update
+     */
+    where?: WalletWhereInput
+    /**
+     * Limit how many Wallets to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Wallet upsert
+   */
+  export type WalletUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wallet
+     */
+    select?: WalletSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wallet
+     */
+    omit?: WalletOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Wallet to update in case it exists.
+     */
+    where: WalletWhereUniqueInput
+    /**
+     * In case the Wallet found by the `where` argument doesn't exist, create a new Wallet with this data.
+     */
+    create: XOR<WalletCreateInput, WalletUncheckedCreateInput>
+    /**
+     * In case the Wallet was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<WalletUpdateInput, WalletUncheckedUpdateInput>
+  }
+
+  /**
+   * Wallet delete
+   */
+  export type WalletDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wallet
+     */
+    select?: WalletSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wallet
+     */
+    omit?: WalletOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletInclude<ExtArgs> | null
+    /**
+     * Filter which Wallet to delete.
+     */
+    where: WalletWhereUniqueInput
+  }
+
+  /**
+   * Wallet deleteMany
+   */
+  export type WalletDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Wallets to delete
+     */
+    where?: WalletWhereInput
+    /**
+     * Limit how many Wallets to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Wallet.transactions
+   */
+  export type Wallet$transactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WalletTransaction
+     */
+    select?: WalletTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WalletTransaction
+     */
+    omit?: WalletTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletTransactionInclude<ExtArgs> | null
+    where?: WalletTransactionWhereInput
+    orderBy?: WalletTransactionOrderByWithRelationInput | WalletTransactionOrderByWithRelationInput[]
+    cursor?: WalletTransactionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WalletTransactionScalarFieldEnum | WalletTransactionScalarFieldEnum[]
+  }
+
+  /**
+   * Wallet without action
+   */
+  export type WalletDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Wallet
+     */
+    select?: WalletSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Wallet
+     */
+    omit?: WalletOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model WalletTransaction
+   */
+
+  export type AggregateWalletTransaction = {
+    _count: WalletTransactionCountAggregateOutputType | null
+    _avg: WalletTransactionAvgAggregateOutputType | null
+    _sum: WalletTransactionSumAggregateOutputType | null
+    _min: WalletTransactionMinAggregateOutputType | null
+    _max: WalletTransactionMaxAggregateOutputType | null
+  }
+
+  export type WalletTransactionAvgAggregateOutputType = {
+    amount: number | null
+  }
+
+  export type WalletTransactionSumAggregateOutputType = {
+    amount: number | null
+  }
+
+  export type WalletTransactionMinAggregateOutputType = {
+    id: string | null
+    amount: number | null
+    type: string | null
+    description: string | null
+    referenceId: string | null
+    createdAt: Date | null
+    walletId: string | null
+  }
+
+  export type WalletTransactionMaxAggregateOutputType = {
+    id: string | null
+    amount: number | null
+    type: string | null
+    description: string | null
+    referenceId: string | null
+    createdAt: Date | null
+    walletId: string | null
+  }
+
+  export type WalletTransactionCountAggregateOutputType = {
+    id: number
+    amount: number
+    type: number
+    description: number
+    referenceId: number
+    createdAt: number
+    walletId: number
+    _all: number
+  }
+
+
+  export type WalletTransactionAvgAggregateInputType = {
+    amount?: true
+  }
+
+  export type WalletTransactionSumAggregateInputType = {
+    amount?: true
+  }
+
+  export type WalletTransactionMinAggregateInputType = {
+    id?: true
+    amount?: true
+    type?: true
+    description?: true
+    referenceId?: true
+    createdAt?: true
+    walletId?: true
+  }
+
+  export type WalletTransactionMaxAggregateInputType = {
+    id?: true
+    amount?: true
+    type?: true
+    description?: true
+    referenceId?: true
+    createdAt?: true
+    walletId?: true
+  }
+
+  export type WalletTransactionCountAggregateInputType = {
+    id?: true
+    amount?: true
+    type?: true
+    description?: true
+    referenceId?: true
+    createdAt?: true
+    walletId?: true
+    _all?: true
+  }
+
+  export type WalletTransactionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WalletTransaction to aggregate.
+     */
+    where?: WalletTransactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WalletTransactions to fetch.
+     */
+    orderBy?: WalletTransactionOrderByWithRelationInput | WalletTransactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: WalletTransactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WalletTransactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WalletTransactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned WalletTransactions
+    **/
+    _count?: true | WalletTransactionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: WalletTransactionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: WalletTransactionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: WalletTransactionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: WalletTransactionMaxAggregateInputType
+  }
+
+  export type GetWalletTransactionAggregateType<T extends WalletTransactionAggregateArgs> = {
+        [P in keyof T & keyof AggregateWalletTransaction]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateWalletTransaction[P]>
+      : GetScalarType<T[P], AggregateWalletTransaction[P]>
+  }
+
+
+
+
+  export type WalletTransactionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WalletTransactionWhereInput
+    orderBy?: WalletTransactionOrderByWithAggregationInput | WalletTransactionOrderByWithAggregationInput[]
+    by: WalletTransactionScalarFieldEnum[] | WalletTransactionScalarFieldEnum
+    having?: WalletTransactionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: WalletTransactionCountAggregateInputType | true
+    _avg?: WalletTransactionAvgAggregateInputType
+    _sum?: WalletTransactionSumAggregateInputType
+    _min?: WalletTransactionMinAggregateInputType
+    _max?: WalletTransactionMaxAggregateInputType
+  }
+
+  export type WalletTransactionGroupByOutputType = {
+    id: string
+    amount: number
+    type: string
+    description: string | null
+    referenceId: string | null
+    createdAt: Date
+    walletId: string
+    _count: WalletTransactionCountAggregateOutputType | null
+    _avg: WalletTransactionAvgAggregateOutputType | null
+    _sum: WalletTransactionSumAggregateOutputType | null
+    _min: WalletTransactionMinAggregateOutputType | null
+    _max: WalletTransactionMaxAggregateOutputType | null
+  }
+
+  type GetWalletTransactionGroupByPayload<T extends WalletTransactionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<WalletTransactionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof WalletTransactionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], WalletTransactionGroupByOutputType[P]>
+            : GetScalarType<T[P], WalletTransactionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type WalletTransactionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    amount?: boolean
+    type?: boolean
+    description?: boolean
+    referenceId?: boolean
+    createdAt?: boolean
+    walletId?: boolean
+    wallet?: boolean | WalletDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["walletTransaction"]>
+
+  export type WalletTransactionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    amount?: boolean
+    type?: boolean
+    description?: boolean
+    referenceId?: boolean
+    createdAt?: boolean
+    walletId?: boolean
+    wallet?: boolean | WalletDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["walletTransaction"]>
+
+  export type WalletTransactionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    amount?: boolean
+    type?: boolean
+    description?: boolean
+    referenceId?: boolean
+    createdAt?: boolean
+    walletId?: boolean
+    wallet?: boolean | WalletDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["walletTransaction"]>
+
+  export type WalletTransactionSelectScalar = {
+    id?: boolean
+    amount?: boolean
+    type?: boolean
+    description?: boolean
+    referenceId?: boolean
+    createdAt?: boolean
+    walletId?: boolean
+  }
+
+  export type WalletTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "amount" | "type" | "description" | "referenceId" | "createdAt" | "walletId", ExtArgs["result"]["walletTransaction"]>
+  export type WalletTransactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    wallet?: boolean | WalletDefaultArgs<ExtArgs>
+  }
+  export type WalletTransactionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    wallet?: boolean | WalletDefaultArgs<ExtArgs>
+  }
+  export type WalletTransactionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    wallet?: boolean | WalletDefaultArgs<ExtArgs>
+  }
+
+  export type $WalletTransactionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "WalletTransaction"
+    objects: {
+      wallet: Prisma.$WalletPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      amount: number
+      type: string
+      description: string | null
+      referenceId: string | null
+      createdAt: Date
+      walletId: string
+    }, ExtArgs["result"]["walletTransaction"]>
+    composites: {}
+  }
+
+  type WalletTransactionGetPayload<S extends boolean | null | undefined | WalletTransactionDefaultArgs> = $Result.GetResult<Prisma.$WalletTransactionPayload, S>
+
+  type WalletTransactionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<WalletTransactionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: WalletTransactionCountAggregateInputType | true
+    }
+
+  export interface WalletTransactionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['WalletTransaction'], meta: { name: 'WalletTransaction' } }
+    /**
+     * Find zero or one WalletTransaction that matches the filter.
+     * @param {WalletTransactionFindUniqueArgs} args - Arguments to find a WalletTransaction
+     * @example
+     * // Get one WalletTransaction
+     * const walletTransaction = await prisma.walletTransaction.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends WalletTransactionFindUniqueArgs>(args: SelectSubset<T, WalletTransactionFindUniqueArgs<ExtArgs>>): Prisma__WalletTransactionClient<$Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one WalletTransaction that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {WalletTransactionFindUniqueOrThrowArgs} args - Arguments to find a WalletTransaction
+     * @example
+     * // Get one WalletTransaction
+     * const walletTransaction = await prisma.walletTransaction.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends WalletTransactionFindUniqueOrThrowArgs>(args: SelectSubset<T, WalletTransactionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__WalletTransactionClient<$Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WalletTransaction that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletTransactionFindFirstArgs} args - Arguments to find a WalletTransaction
+     * @example
+     * // Get one WalletTransaction
+     * const walletTransaction = await prisma.walletTransaction.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends WalletTransactionFindFirstArgs>(args?: SelectSubset<T, WalletTransactionFindFirstArgs<ExtArgs>>): Prisma__WalletTransactionClient<$Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WalletTransaction that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletTransactionFindFirstOrThrowArgs} args - Arguments to find a WalletTransaction
+     * @example
+     * // Get one WalletTransaction
+     * const walletTransaction = await prisma.walletTransaction.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends WalletTransactionFindFirstOrThrowArgs>(args?: SelectSubset<T, WalletTransactionFindFirstOrThrowArgs<ExtArgs>>): Prisma__WalletTransactionClient<$Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more WalletTransactions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletTransactionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all WalletTransactions
+     * const walletTransactions = await prisma.walletTransaction.findMany()
+     * 
+     * // Get first 10 WalletTransactions
+     * const walletTransactions = await prisma.walletTransaction.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const walletTransactionWithIdOnly = await prisma.walletTransaction.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends WalletTransactionFindManyArgs>(args?: SelectSubset<T, WalletTransactionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a WalletTransaction.
+     * @param {WalletTransactionCreateArgs} args - Arguments to create a WalletTransaction.
+     * @example
+     * // Create one WalletTransaction
+     * const WalletTransaction = await prisma.walletTransaction.create({
+     *   data: {
+     *     // ... data to create a WalletTransaction
+     *   }
+     * })
+     * 
+     */
+    create<T extends WalletTransactionCreateArgs>(args: SelectSubset<T, WalletTransactionCreateArgs<ExtArgs>>): Prisma__WalletTransactionClient<$Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many WalletTransactions.
+     * @param {WalletTransactionCreateManyArgs} args - Arguments to create many WalletTransactions.
+     * @example
+     * // Create many WalletTransactions
+     * const walletTransaction = await prisma.walletTransaction.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends WalletTransactionCreateManyArgs>(args?: SelectSubset<T, WalletTransactionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many WalletTransactions and returns the data saved in the database.
+     * @param {WalletTransactionCreateManyAndReturnArgs} args - Arguments to create many WalletTransactions.
+     * @example
+     * // Create many WalletTransactions
+     * const walletTransaction = await prisma.walletTransaction.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many WalletTransactions and only return the `id`
+     * const walletTransactionWithIdOnly = await prisma.walletTransaction.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends WalletTransactionCreateManyAndReturnArgs>(args?: SelectSubset<T, WalletTransactionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a WalletTransaction.
+     * @param {WalletTransactionDeleteArgs} args - Arguments to delete one WalletTransaction.
+     * @example
+     * // Delete one WalletTransaction
+     * const WalletTransaction = await prisma.walletTransaction.delete({
+     *   where: {
+     *     // ... filter to delete one WalletTransaction
+     *   }
+     * })
+     * 
+     */
+    delete<T extends WalletTransactionDeleteArgs>(args: SelectSubset<T, WalletTransactionDeleteArgs<ExtArgs>>): Prisma__WalletTransactionClient<$Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one WalletTransaction.
+     * @param {WalletTransactionUpdateArgs} args - Arguments to update one WalletTransaction.
+     * @example
+     * // Update one WalletTransaction
+     * const walletTransaction = await prisma.walletTransaction.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends WalletTransactionUpdateArgs>(args: SelectSubset<T, WalletTransactionUpdateArgs<ExtArgs>>): Prisma__WalletTransactionClient<$Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more WalletTransactions.
+     * @param {WalletTransactionDeleteManyArgs} args - Arguments to filter WalletTransactions to delete.
+     * @example
+     * // Delete a few WalletTransactions
+     * const { count } = await prisma.walletTransaction.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends WalletTransactionDeleteManyArgs>(args?: SelectSubset<T, WalletTransactionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WalletTransactions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletTransactionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many WalletTransactions
+     * const walletTransaction = await prisma.walletTransaction.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends WalletTransactionUpdateManyArgs>(args: SelectSubset<T, WalletTransactionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WalletTransactions and returns the data updated in the database.
+     * @param {WalletTransactionUpdateManyAndReturnArgs} args - Arguments to update many WalletTransactions.
+     * @example
+     * // Update many WalletTransactions
+     * const walletTransaction = await prisma.walletTransaction.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more WalletTransactions and only return the `id`
+     * const walletTransactionWithIdOnly = await prisma.walletTransaction.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends WalletTransactionUpdateManyAndReturnArgs>(args: SelectSubset<T, WalletTransactionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one WalletTransaction.
+     * @param {WalletTransactionUpsertArgs} args - Arguments to update or create a WalletTransaction.
+     * @example
+     * // Update or create a WalletTransaction
+     * const walletTransaction = await prisma.walletTransaction.upsert({
+     *   create: {
+     *     // ... data to create a WalletTransaction
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the WalletTransaction we want to update
+     *   }
+     * })
+     */
+    upsert<T extends WalletTransactionUpsertArgs>(args: SelectSubset<T, WalletTransactionUpsertArgs<ExtArgs>>): Prisma__WalletTransactionClient<$Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of WalletTransactions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletTransactionCountArgs} args - Arguments to filter WalletTransactions to count.
+     * @example
+     * // Count the number of WalletTransactions
+     * const count = await prisma.walletTransaction.count({
+     *   where: {
+     *     // ... the filter for the WalletTransactions we want to count
+     *   }
+     * })
+    **/
+    count<T extends WalletTransactionCountArgs>(
+      args?: Subset<T, WalletTransactionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], WalletTransactionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a WalletTransaction.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletTransactionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends WalletTransactionAggregateArgs>(args: Subset<T, WalletTransactionAggregateArgs>): Prisma.PrismaPromise<GetWalletTransactionAggregateType<T>>
+
+    /**
+     * Group by WalletTransaction.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletTransactionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends WalletTransactionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: WalletTransactionGroupByArgs['orderBy'] }
+        : { orderBy?: WalletTransactionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, WalletTransactionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetWalletTransactionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the WalletTransaction model
+   */
+  readonly fields: WalletTransactionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for WalletTransaction.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__WalletTransactionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    wallet<T extends WalletDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WalletDefaultArgs<ExtArgs>>): Prisma__WalletClient<$Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the WalletTransaction model
+   */
+  interface WalletTransactionFieldRefs {
+    readonly id: FieldRef<"WalletTransaction", 'String'>
+    readonly amount: FieldRef<"WalletTransaction", 'Float'>
+    readonly type: FieldRef<"WalletTransaction", 'String'>
+    readonly description: FieldRef<"WalletTransaction", 'String'>
+    readonly referenceId: FieldRef<"WalletTransaction", 'String'>
+    readonly createdAt: FieldRef<"WalletTransaction", 'DateTime'>
+    readonly walletId: FieldRef<"WalletTransaction", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * WalletTransaction findUnique
+   */
+  export type WalletTransactionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WalletTransaction
+     */
+    select?: WalletTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WalletTransaction
+     */
+    omit?: WalletTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletTransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which WalletTransaction to fetch.
+     */
+    where: WalletTransactionWhereUniqueInput
+  }
+
+  /**
+   * WalletTransaction findUniqueOrThrow
+   */
+  export type WalletTransactionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WalletTransaction
+     */
+    select?: WalletTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WalletTransaction
+     */
+    omit?: WalletTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletTransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which WalletTransaction to fetch.
+     */
+    where: WalletTransactionWhereUniqueInput
+  }
+
+  /**
+   * WalletTransaction findFirst
+   */
+  export type WalletTransactionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WalletTransaction
+     */
+    select?: WalletTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WalletTransaction
+     */
+    omit?: WalletTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletTransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which WalletTransaction to fetch.
+     */
+    where?: WalletTransactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WalletTransactions to fetch.
+     */
+    orderBy?: WalletTransactionOrderByWithRelationInput | WalletTransactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WalletTransactions.
+     */
+    cursor?: WalletTransactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WalletTransactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WalletTransactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WalletTransactions.
+     */
+    distinct?: WalletTransactionScalarFieldEnum | WalletTransactionScalarFieldEnum[]
+  }
+
+  /**
+   * WalletTransaction findFirstOrThrow
+   */
+  export type WalletTransactionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WalletTransaction
+     */
+    select?: WalletTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WalletTransaction
+     */
+    omit?: WalletTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletTransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which WalletTransaction to fetch.
+     */
+    where?: WalletTransactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WalletTransactions to fetch.
+     */
+    orderBy?: WalletTransactionOrderByWithRelationInput | WalletTransactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WalletTransactions.
+     */
+    cursor?: WalletTransactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WalletTransactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WalletTransactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WalletTransactions.
+     */
+    distinct?: WalletTransactionScalarFieldEnum | WalletTransactionScalarFieldEnum[]
+  }
+
+  /**
+   * WalletTransaction findMany
+   */
+  export type WalletTransactionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WalletTransaction
+     */
+    select?: WalletTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WalletTransaction
+     */
+    omit?: WalletTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletTransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which WalletTransactions to fetch.
+     */
+    where?: WalletTransactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WalletTransactions to fetch.
+     */
+    orderBy?: WalletTransactionOrderByWithRelationInput | WalletTransactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing WalletTransactions.
+     */
+    cursor?: WalletTransactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WalletTransactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WalletTransactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WalletTransactions.
+     */
+    distinct?: WalletTransactionScalarFieldEnum | WalletTransactionScalarFieldEnum[]
+  }
+
+  /**
+   * WalletTransaction create
+   */
+  export type WalletTransactionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WalletTransaction
+     */
+    select?: WalletTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WalletTransaction
+     */
+    omit?: WalletTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletTransactionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a WalletTransaction.
+     */
+    data: XOR<WalletTransactionCreateInput, WalletTransactionUncheckedCreateInput>
+  }
+
+  /**
+   * WalletTransaction createMany
+   */
+  export type WalletTransactionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many WalletTransactions.
+     */
+    data: WalletTransactionCreateManyInput | WalletTransactionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * WalletTransaction createManyAndReturn
+   */
+  export type WalletTransactionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WalletTransaction
+     */
+    select?: WalletTransactionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WalletTransaction
+     */
+    omit?: WalletTransactionOmit<ExtArgs> | null
+    /**
+     * The data used to create many WalletTransactions.
+     */
+    data: WalletTransactionCreateManyInput | WalletTransactionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletTransactionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WalletTransaction update
+   */
+  export type WalletTransactionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WalletTransaction
+     */
+    select?: WalletTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WalletTransaction
+     */
+    omit?: WalletTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletTransactionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a WalletTransaction.
+     */
+    data: XOR<WalletTransactionUpdateInput, WalletTransactionUncheckedUpdateInput>
+    /**
+     * Choose, which WalletTransaction to update.
+     */
+    where: WalletTransactionWhereUniqueInput
+  }
+
+  /**
+   * WalletTransaction updateMany
+   */
+  export type WalletTransactionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update WalletTransactions.
+     */
+    data: XOR<WalletTransactionUpdateManyMutationInput, WalletTransactionUncheckedUpdateManyInput>
+    /**
+     * Filter which WalletTransactions to update
+     */
+    where?: WalletTransactionWhereInput
+    /**
+     * Limit how many WalletTransactions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * WalletTransaction updateManyAndReturn
+   */
+  export type WalletTransactionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WalletTransaction
+     */
+    select?: WalletTransactionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WalletTransaction
+     */
+    omit?: WalletTransactionOmit<ExtArgs> | null
+    /**
+     * The data used to update WalletTransactions.
+     */
+    data: XOR<WalletTransactionUpdateManyMutationInput, WalletTransactionUncheckedUpdateManyInput>
+    /**
+     * Filter which WalletTransactions to update
+     */
+    where?: WalletTransactionWhereInput
+    /**
+     * Limit how many WalletTransactions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletTransactionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WalletTransaction upsert
+   */
+  export type WalletTransactionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WalletTransaction
+     */
+    select?: WalletTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WalletTransaction
+     */
+    omit?: WalletTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletTransactionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the WalletTransaction to update in case it exists.
+     */
+    where: WalletTransactionWhereUniqueInput
+    /**
+     * In case the WalletTransaction found by the `where` argument doesn't exist, create a new WalletTransaction with this data.
+     */
+    create: XOR<WalletTransactionCreateInput, WalletTransactionUncheckedCreateInput>
+    /**
+     * In case the WalletTransaction was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<WalletTransactionUpdateInput, WalletTransactionUncheckedUpdateInput>
+  }
+
+  /**
+   * WalletTransaction delete
+   */
+  export type WalletTransactionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WalletTransaction
+     */
+    select?: WalletTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WalletTransaction
+     */
+    omit?: WalletTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletTransactionInclude<ExtArgs> | null
+    /**
+     * Filter which WalletTransaction to delete.
+     */
+    where: WalletTransactionWhereUniqueInput
+  }
+
+  /**
+   * WalletTransaction deleteMany
+   */
+  export type WalletTransactionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WalletTransactions to delete
+     */
+    where?: WalletTransactionWhereInput
+    /**
+     * Limit how many WalletTransactions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * WalletTransaction without action
+   */
+  export type WalletTransactionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WalletTransaction
+     */
+    select?: WalletTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WalletTransaction
+     */
+    omit?: WalletTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletTransactionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Payout
+   */
+
+  export type AggregatePayout = {
+    _count: PayoutCountAggregateOutputType | null
+    _avg: PayoutAvgAggregateOutputType | null
+    _sum: PayoutSumAggregateOutputType | null
+    _min: PayoutMinAggregateOutputType | null
+    _max: PayoutMaxAggregateOutputType | null
+  }
+
+  export type PayoutAvgAggregateOutputType = {
+    amount: number | null
+  }
+
+  export type PayoutSumAggregateOutputType = {
+    amount: number | null
+  }
+
+  export type PayoutMinAggregateOutputType = {
+    id: string | null
+    amount: number | null
+    status: string | null
+    bankDetails: string | null
+    transactionId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    userId: string | null
+  }
+
+  export type PayoutMaxAggregateOutputType = {
+    id: string | null
+    amount: number | null
+    status: string | null
+    bankDetails: string | null
+    transactionId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    userId: string | null
+  }
+
+  export type PayoutCountAggregateOutputType = {
+    id: number
+    amount: number
+    status: number
+    bankDetails: number
+    transactionId: number
+    createdAt: number
+    updatedAt: number
+    userId: number
+    _all: number
+  }
+
+
+  export type PayoutAvgAggregateInputType = {
+    amount?: true
+  }
+
+  export type PayoutSumAggregateInputType = {
+    amount?: true
+  }
+
+  export type PayoutMinAggregateInputType = {
+    id?: true
+    amount?: true
+    status?: true
+    bankDetails?: true
+    transactionId?: true
+    createdAt?: true
+    updatedAt?: true
+    userId?: true
+  }
+
+  export type PayoutMaxAggregateInputType = {
+    id?: true
+    amount?: true
+    status?: true
+    bankDetails?: true
+    transactionId?: true
+    createdAt?: true
+    updatedAt?: true
+    userId?: true
+  }
+
+  export type PayoutCountAggregateInputType = {
+    id?: true
+    amount?: true
+    status?: true
+    bankDetails?: true
+    transactionId?: true
+    createdAt?: true
+    updatedAt?: true
+    userId?: true
+    _all?: true
+  }
+
+  export type PayoutAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Payout to aggregate.
+     */
+    where?: PayoutWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Payouts to fetch.
+     */
+    orderBy?: PayoutOrderByWithRelationInput | PayoutOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PayoutWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Payouts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Payouts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Payouts
+    **/
+    _count?: true | PayoutCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PayoutAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PayoutSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PayoutMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PayoutMaxAggregateInputType
+  }
+
+  export type GetPayoutAggregateType<T extends PayoutAggregateArgs> = {
+        [P in keyof T & keyof AggregatePayout]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePayout[P]>
+      : GetScalarType<T[P], AggregatePayout[P]>
+  }
+
+
+
+
+  export type PayoutGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PayoutWhereInput
+    orderBy?: PayoutOrderByWithAggregationInput | PayoutOrderByWithAggregationInput[]
+    by: PayoutScalarFieldEnum[] | PayoutScalarFieldEnum
+    having?: PayoutScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PayoutCountAggregateInputType | true
+    _avg?: PayoutAvgAggregateInputType
+    _sum?: PayoutSumAggregateInputType
+    _min?: PayoutMinAggregateInputType
+    _max?: PayoutMaxAggregateInputType
+  }
+
+  export type PayoutGroupByOutputType = {
+    id: string
+    amount: number
+    status: string
+    bankDetails: string
+    transactionId: string | null
+    createdAt: Date
+    updatedAt: Date
+    userId: string
+    _count: PayoutCountAggregateOutputType | null
+    _avg: PayoutAvgAggregateOutputType | null
+    _sum: PayoutSumAggregateOutputType | null
+    _min: PayoutMinAggregateOutputType | null
+    _max: PayoutMaxAggregateOutputType | null
+  }
+
+  type GetPayoutGroupByPayload<T extends PayoutGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PayoutGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PayoutGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PayoutGroupByOutputType[P]>
+            : GetScalarType<T[P], PayoutGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PayoutSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    amount?: boolean
+    status?: boolean
+    bankDetails?: boolean
+    transactionId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    userId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["payout"]>
+
+  export type PayoutSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    amount?: boolean
+    status?: boolean
+    bankDetails?: boolean
+    transactionId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    userId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["payout"]>
+
+  export type PayoutSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    amount?: boolean
+    status?: boolean
+    bankDetails?: boolean
+    transactionId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    userId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["payout"]>
+
+  export type PayoutSelectScalar = {
+    id?: boolean
+    amount?: boolean
+    status?: boolean
+    bankDetails?: boolean
+    transactionId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    userId?: boolean
+  }
+
+  export type PayoutOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "amount" | "status" | "bankDetails" | "transactionId" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["payout"]>
+  export type PayoutInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type PayoutIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type PayoutIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $PayoutPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Payout"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      amount: number
+      status: string
+      bankDetails: string
+      transactionId: string | null
+      createdAt: Date
+      updatedAt: Date
+      userId: string
+    }, ExtArgs["result"]["payout"]>
+    composites: {}
+  }
+
+  type PayoutGetPayload<S extends boolean | null | undefined | PayoutDefaultArgs> = $Result.GetResult<Prisma.$PayoutPayload, S>
+
+  type PayoutCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PayoutFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PayoutCountAggregateInputType | true
+    }
+
+  export interface PayoutDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Payout'], meta: { name: 'Payout' } }
+    /**
+     * Find zero or one Payout that matches the filter.
+     * @param {PayoutFindUniqueArgs} args - Arguments to find a Payout
+     * @example
+     * // Get one Payout
+     * const payout = await prisma.payout.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PayoutFindUniqueArgs>(args: SelectSubset<T, PayoutFindUniqueArgs<ExtArgs>>): Prisma__PayoutClient<$Result.GetResult<Prisma.$PayoutPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Payout that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PayoutFindUniqueOrThrowArgs} args - Arguments to find a Payout
+     * @example
+     * // Get one Payout
+     * const payout = await prisma.payout.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PayoutFindUniqueOrThrowArgs>(args: SelectSubset<T, PayoutFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PayoutClient<$Result.GetResult<Prisma.$PayoutPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Payout that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PayoutFindFirstArgs} args - Arguments to find a Payout
+     * @example
+     * // Get one Payout
+     * const payout = await prisma.payout.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PayoutFindFirstArgs>(args?: SelectSubset<T, PayoutFindFirstArgs<ExtArgs>>): Prisma__PayoutClient<$Result.GetResult<Prisma.$PayoutPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Payout that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PayoutFindFirstOrThrowArgs} args - Arguments to find a Payout
+     * @example
+     * // Get one Payout
+     * const payout = await prisma.payout.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PayoutFindFirstOrThrowArgs>(args?: SelectSubset<T, PayoutFindFirstOrThrowArgs<ExtArgs>>): Prisma__PayoutClient<$Result.GetResult<Prisma.$PayoutPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Payouts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PayoutFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Payouts
+     * const payouts = await prisma.payout.findMany()
+     * 
+     * // Get first 10 Payouts
+     * const payouts = await prisma.payout.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const payoutWithIdOnly = await prisma.payout.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PayoutFindManyArgs>(args?: SelectSubset<T, PayoutFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PayoutPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Payout.
+     * @param {PayoutCreateArgs} args - Arguments to create a Payout.
+     * @example
+     * // Create one Payout
+     * const Payout = await prisma.payout.create({
+     *   data: {
+     *     // ... data to create a Payout
+     *   }
+     * })
+     * 
+     */
+    create<T extends PayoutCreateArgs>(args: SelectSubset<T, PayoutCreateArgs<ExtArgs>>): Prisma__PayoutClient<$Result.GetResult<Prisma.$PayoutPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Payouts.
+     * @param {PayoutCreateManyArgs} args - Arguments to create many Payouts.
+     * @example
+     * // Create many Payouts
+     * const payout = await prisma.payout.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PayoutCreateManyArgs>(args?: SelectSubset<T, PayoutCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Payouts and returns the data saved in the database.
+     * @param {PayoutCreateManyAndReturnArgs} args - Arguments to create many Payouts.
+     * @example
+     * // Create many Payouts
+     * const payout = await prisma.payout.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Payouts and only return the `id`
+     * const payoutWithIdOnly = await prisma.payout.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PayoutCreateManyAndReturnArgs>(args?: SelectSubset<T, PayoutCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PayoutPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Payout.
+     * @param {PayoutDeleteArgs} args - Arguments to delete one Payout.
+     * @example
+     * // Delete one Payout
+     * const Payout = await prisma.payout.delete({
+     *   where: {
+     *     // ... filter to delete one Payout
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PayoutDeleteArgs>(args: SelectSubset<T, PayoutDeleteArgs<ExtArgs>>): Prisma__PayoutClient<$Result.GetResult<Prisma.$PayoutPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Payout.
+     * @param {PayoutUpdateArgs} args - Arguments to update one Payout.
+     * @example
+     * // Update one Payout
+     * const payout = await prisma.payout.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PayoutUpdateArgs>(args: SelectSubset<T, PayoutUpdateArgs<ExtArgs>>): Prisma__PayoutClient<$Result.GetResult<Prisma.$PayoutPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Payouts.
+     * @param {PayoutDeleteManyArgs} args - Arguments to filter Payouts to delete.
+     * @example
+     * // Delete a few Payouts
+     * const { count } = await prisma.payout.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PayoutDeleteManyArgs>(args?: SelectSubset<T, PayoutDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Payouts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PayoutUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Payouts
+     * const payout = await prisma.payout.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PayoutUpdateManyArgs>(args: SelectSubset<T, PayoutUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Payouts and returns the data updated in the database.
+     * @param {PayoutUpdateManyAndReturnArgs} args - Arguments to update many Payouts.
+     * @example
+     * // Update many Payouts
+     * const payout = await prisma.payout.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Payouts and only return the `id`
+     * const payoutWithIdOnly = await prisma.payout.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PayoutUpdateManyAndReturnArgs>(args: SelectSubset<T, PayoutUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PayoutPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Payout.
+     * @param {PayoutUpsertArgs} args - Arguments to update or create a Payout.
+     * @example
+     * // Update or create a Payout
+     * const payout = await prisma.payout.upsert({
+     *   create: {
+     *     // ... data to create a Payout
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Payout we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PayoutUpsertArgs>(args: SelectSubset<T, PayoutUpsertArgs<ExtArgs>>): Prisma__PayoutClient<$Result.GetResult<Prisma.$PayoutPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Payouts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PayoutCountArgs} args - Arguments to filter Payouts to count.
+     * @example
+     * // Count the number of Payouts
+     * const count = await prisma.payout.count({
+     *   where: {
+     *     // ... the filter for the Payouts we want to count
+     *   }
+     * })
+    **/
+    count<T extends PayoutCountArgs>(
+      args?: Subset<T, PayoutCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PayoutCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Payout.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PayoutAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PayoutAggregateArgs>(args: Subset<T, PayoutAggregateArgs>): Prisma.PrismaPromise<GetPayoutAggregateType<T>>
+
+    /**
+     * Group by Payout.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PayoutGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PayoutGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PayoutGroupByArgs['orderBy'] }
+        : { orderBy?: PayoutGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PayoutGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPayoutGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Payout model
+   */
+  readonly fields: PayoutFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Payout.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PayoutClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Payout model
+   */
+  interface PayoutFieldRefs {
+    readonly id: FieldRef<"Payout", 'String'>
+    readonly amount: FieldRef<"Payout", 'Float'>
+    readonly status: FieldRef<"Payout", 'String'>
+    readonly bankDetails: FieldRef<"Payout", 'String'>
+    readonly transactionId: FieldRef<"Payout", 'String'>
+    readonly createdAt: FieldRef<"Payout", 'DateTime'>
+    readonly updatedAt: FieldRef<"Payout", 'DateTime'>
+    readonly userId: FieldRef<"Payout", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Payout findUnique
+   */
+  export type PayoutFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payout
+     */
+    select?: PayoutSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payout
+     */
+    omit?: PayoutOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutInclude<ExtArgs> | null
+    /**
+     * Filter, which Payout to fetch.
+     */
+    where: PayoutWhereUniqueInput
+  }
+
+  /**
+   * Payout findUniqueOrThrow
+   */
+  export type PayoutFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payout
+     */
+    select?: PayoutSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payout
+     */
+    omit?: PayoutOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutInclude<ExtArgs> | null
+    /**
+     * Filter, which Payout to fetch.
+     */
+    where: PayoutWhereUniqueInput
+  }
+
+  /**
+   * Payout findFirst
+   */
+  export type PayoutFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payout
+     */
+    select?: PayoutSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payout
+     */
+    omit?: PayoutOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutInclude<ExtArgs> | null
+    /**
+     * Filter, which Payout to fetch.
+     */
+    where?: PayoutWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Payouts to fetch.
+     */
+    orderBy?: PayoutOrderByWithRelationInput | PayoutOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Payouts.
+     */
+    cursor?: PayoutWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Payouts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Payouts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Payouts.
+     */
+    distinct?: PayoutScalarFieldEnum | PayoutScalarFieldEnum[]
+  }
+
+  /**
+   * Payout findFirstOrThrow
+   */
+  export type PayoutFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payout
+     */
+    select?: PayoutSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payout
+     */
+    omit?: PayoutOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutInclude<ExtArgs> | null
+    /**
+     * Filter, which Payout to fetch.
+     */
+    where?: PayoutWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Payouts to fetch.
+     */
+    orderBy?: PayoutOrderByWithRelationInput | PayoutOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Payouts.
+     */
+    cursor?: PayoutWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Payouts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Payouts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Payouts.
+     */
+    distinct?: PayoutScalarFieldEnum | PayoutScalarFieldEnum[]
+  }
+
+  /**
+   * Payout findMany
+   */
+  export type PayoutFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payout
+     */
+    select?: PayoutSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payout
+     */
+    omit?: PayoutOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutInclude<ExtArgs> | null
+    /**
+     * Filter, which Payouts to fetch.
+     */
+    where?: PayoutWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Payouts to fetch.
+     */
+    orderBy?: PayoutOrderByWithRelationInput | PayoutOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Payouts.
+     */
+    cursor?: PayoutWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Payouts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Payouts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Payouts.
+     */
+    distinct?: PayoutScalarFieldEnum | PayoutScalarFieldEnum[]
+  }
+
+  /**
+   * Payout create
+   */
+  export type PayoutCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payout
+     */
+    select?: PayoutSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payout
+     */
+    omit?: PayoutOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Payout.
+     */
+    data: XOR<PayoutCreateInput, PayoutUncheckedCreateInput>
+  }
+
+  /**
+   * Payout createMany
+   */
+  export type PayoutCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Payouts.
+     */
+    data: PayoutCreateManyInput | PayoutCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Payout createManyAndReturn
+   */
+  export type PayoutCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payout
+     */
+    select?: PayoutSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payout
+     */
+    omit?: PayoutOmit<ExtArgs> | null
+    /**
+     * The data used to create many Payouts.
+     */
+    data: PayoutCreateManyInput | PayoutCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Payout update
+   */
+  export type PayoutUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payout
+     */
+    select?: PayoutSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payout
+     */
+    omit?: PayoutOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Payout.
+     */
+    data: XOR<PayoutUpdateInput, PayoutUncheckedUpdateInput>
+    /**
+     * Choose, which Payout to update.
+     */
+    where: PayoutWhereUniqueInput
+  }
+
+  /**
+   * Payout updateMany
+   */
+  export type PayoutUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Payouts.
+     */
+    data: XOR<PayoutUpdateManyMutationInput, PayoutUncheckedUpdateManyInput>
+    /**
+     * Filter which Payouts to update
+     */
+    where?: PayoutWhereInput
+    /**
+     * Limit how many Payouts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Payout updateManyAndReturn
+   */
+  export type PayoutUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payout
+     */
+    select?: PayoutSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payout
+     */
+    omit?: PayoutOmit<ExtArgs> | null
+    /**
+     * The data used to update Payouts.
+     */
+    data: XOR<PayoutUpdateManyMutationInput, PayoutUncheckedUpdateManyInput>
+    /**
+     * Filter which Payouts to update
+     */
+    where?: PayoutWhereInput
+    /**
+     * Limit how many Payouts to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Payout upsert
+   */
+  export type PayoutUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payout
+     */
+    select?: PayoutSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payout
+     */
+    omit?: PayoutOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Payout to update in case it exists.
+     */
+    where: PayoutWhereUniqueInput
+    /**
+     * In case the Payout found by the `where` argument doesn't exist, create a new Payout with this data.
+     */
+    create: XOR<PayoutCreateInput, PayoutUncheckedCreateInput>
+    /**
+     * In case the Payout was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PayoutUpdateInput, PayoutUncheckedUpdateInput>
+  }
+
+  /**
+   * Payout delete
+   */
+  export type PayoutDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payout
+     */
+    select?: PayoutSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payout
+     */
+    omit?: PayoutOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutInclude<ExtArgs> | null
+    /**
+     * Filter which Payout to delete.
+     */
+    where: PayoutWhereUniqueInput
+  }
+
+  /**
+   * Payout deleteMany
+   */
+  export type PayoutDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Payouts to delete
+     */
+    where?: PayoutWhereInput
+    /**
+     * Limit how many Payouts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Payout without action
+   */
+  export type PayoutDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payout
+     */
+    select?: PayoutSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payout
+     */
+    omit?: PayoutOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayoutInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -15339,6 +24514,123 @@ export namespace Prisma {
   export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
 
 
+  export const GamehubFacilityScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    type: 'type',
+    location: 'location',
+    venue: 'venue',
+    distance: 'distance',
+    rating: 'rating',
+    reviewsCount: 'reviewsCount',
+    pricePerHour: 'pricePerHour',
+    unit: 'unit',
+    priceRange: 'priceRange',
+    image: 'image',
+    description: 'description',
+    phone: 'phone',
+    openHours: 'openHours',
+    status: 'status',
+    pricingRules: 'pricingRules',
+    amenities: 'amenities',
+    features: 'features',
+    tags: 'tags',
+    gallery: 'gallery',
+    battleModes: 'battleModes',
+    slotTemplate: 'slotTemplate',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    partnerId: 'partnerId'
+  };
+
+  export type GamehubFacilityScalarFieldEnum = (typeof GamehubFacilityScalarFieldEnum)[keyof typeof GamehubFacilityScalarFieldEnum]
+
+
+  export const GamehubReviewScalarFieldEnum: {
+    id: 'id',
+    rating: 'rating',
+    comment: 'comment',
+    userName: 'userName',
+    avatar: 'avatar',
+    helpful: 'helpful',
+    createdAt: 'createdAt',
+    facilityId: 'facilityId'
+  };
+
+  export type GamehubReviewScalarFieldEnum = (typeof GamehubReviewScalarFieldEnum)[keyof typeof GamehubReviewScalarFieldEnum]
+
+
+  export const GamehubBookingScalarFieldEnum: {
+    id: 'id',
+    bookingDate: 'bookingDate',
+    slotLabel: 'slotLabel',
+    totalAmount: 'totalAmount',
+    currency: 'currency',
+    status: 'status',
+    paymentMethod: 'paymentMethod',
+    paymentStatus: 'paymentStatus',
+    transactionId: 'transactionId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    userId: 'userId',
+    facilityId: 'facilityId'
+  };
+
+  export type GamehubBookingScalarFieldEnum = (typeof GamehubBookingScalarFieldEnum)[keyof typeof GamehubBookingScalarFieldEnum]
+
+
+  export const GamehubBlockedSlotScalarFieldEnum: {
+    id: 'id',
+    blockDate: 'blockDate',
+    slotLabel: 'slotLabel',
+    reason: 'reason',
+    createdAt: 'createdAt',
+    createdByUserId: 'createdByUserId',
+    facilityId: 'facilityId'
+  };
+
+  export type GamehubBlockedSlotScalarFieldEnum = (typeof GamehubBlockedSlotScalarFieldEnum)[keyof typeof GamehubBlockedSlotScalarFieldEnum]
+
+
+  export const WalletScalarFieldEnum: {
+    id: 'id',
+    balance: 'balance',
+    totalEarnings: 'totalEarnings',
+    currency: 'currency',
+    updatedAt: 'updatedAt',
+    userId: 'userId'
+  };
+
+  export type WalletScalarFieldEnum = (typeof WalletScalarFieldEnum)[keyof typeof WalletScalarFieldEnum]
+
+
+  export const WalletTransactionScalarFieldEnum: {
+    id: 'id',
+    amount: 'amount',
+    type: 'type',
+    description: 'description',
+    referenceId: 'referenceId',
+    createdAt: 'createdAt',
+    walletId: 'walletId'
+  };
+
+  export type WalletTransactionScalarFieldEnum = (typeof WalletTransactionScalarFieldEnum)[keyof typeof WalletTransactionScalarFieldEnum]
+
+
+  export const PayoutScalarFieldEnum: {
+    id: 'id',
+    amount: 'amount',
+    status: 'status',
+    bankDetails: 'bankDetails',
+    transactionId: 'transactionId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    userId: 'userId'
+  };
+
+  export type PayoutScalarFieldEnum = (typeof PayoutScalarFieldEnum)[keyof typeof PayoutScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -15450,8 +24742,12 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     events?: EventListRelationFilter
     bookings?: BookingListRelationFilter
+    gamehubBookings?: GamehubBookingListRelationFilter
     notifications?: NotificationListRelationFilter
     reviews?: ReviewListRelationFilter
+    gamehubFacilities?: GamehubFacilityListRelationFilter
+    wallet?: XOR<WalletNullableScalarRelationFilter, WalletWhereInput> | null
+    payouts?: PayoutListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -15467,8 +24763,12 @@ export namespace Prisma {
     updatedAt?: SortOrder
     events?: EventOrderByRelationAggregateInput
     bookings?: BookingOrderByRelationAggregateInput
+    gamehubBookings?: GamehubBookingOrderByRelationAggregateInput
     notifications?: NotificationOrderByRelationAggregateInput
     reviews?: ReviewOrderByRelationAggregateInput
+    gamehubFacilities?: GamehubFacilityOrderByRelationAggregateInput
+    wallet?: WalletOrderByWithRelationInput
+    payouts?: PayoutOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -15487,8 +24787,12 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     events?: EventListRelationFilter
     bookings?: BookingListRelationFilter
+    gamehubBookings?: GamehubBookingListRelationFilter
     notifications?: NotificationListRelationFilter
     reviews?: ReviewListRelationFilter
+    gamehubFacilities?: GamehubFacilityListRelationFilter
+    wallet?: XOR<WalletNullableScalarRelationFilter, WalletWhereInput> | null
+    payouts?: PayoutListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -16387,6 +25691,618 @@ export namespace Prisma {
     eventId?: StringWithAggregatesFilter<"Review"> | string
   }
 
+  export type GamehubFacilityWhereInput = {
+    AND?: GamehubFacilityWhereInput | GamehubFacilityWhereInput[]
+    OR?: GamehubFacilityWhereInput[]
+    NOT?: GamehubFacilityWhereInput | GamehubFacilityWhereInput[]
+    id?: StringFilter<"GamehubFacility"> | string
+    name?: StringFilter<"GamehubFacility"> | string
+    type?: StringFilter<"GamehubFacility"> | string
+    location?: StringFilter<"GamehubFacility"> | string
+    venue?: StringFilter<"GamehubFacility"> | string
+    distance?: StringFilter<"GamehubFacility"> | string
+    rating?: FloatFilter<"GamehubFacility"> | number
+    reviewsCount?: IntFilter<"GamehubFacility"> | number
+    pricePerHour?: FloatFilter<"GamehubFacility"> | number
+    unit?: StringFilter<"GamehubFacility"> | string
+    priceRange?: StringFilter<"GamehubFacility"> | string
+    image?: StringFilter<"GamehubFacility"> | string
+    description?: StringFilter<"GamehubFacility"> | string
+    phone?: StringFilter<"GamehubFacility"> | string
+    openHours?: StringFilter<"GamehubFacility"> | string
+    status?: StringFilter<"GamehubFacility"> | string
+    pricingRules?: StringFilter<"GamehubFacility"> | string
+    amenities?: StringFilter<"GamehubFacility"> | string
+    features?: StringFilter<"GamehubFacility"> | string
+    tags?: StringFilter<"GamehubFacility"> | string
+    gallery?: StringFilter<"GamehubFacility"> | string
+    battleModes?: StringFilter<"GamehubFacility"> | string
+    slotTemplate?: StringFilter<"GamehubFacility"> | string
+    createdAt?: DateTimeFilter<"GamehubFacility"> | Date | string
+    updatedAt?: DateTimeFilter<"GamehubFacility"> | Date | string
+    partnerId?: StringNullableFilter<"GamehubFacility"> | string | null
+    partner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    reviews?: GamehubReviewListRelationFilter
+    bookings?: GamehubBookingListRelationFilter
+    blockedSlots?: GamehubBlockedSlotListRelationFilter
+  }
+
+  export type GamehubFacilityOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    type?: SortOrder
+    location?: SortOrder
+    venue?: SortOrder
+    distance?: SortOrder
+    rating?: SortOrder
+    reviewsCount?: SortOrder
+    pricePerHour?: SortOrder
+    unit?: SortOrder
+    priceRange?: SortOrder
+    image?: SortOrder
+    description?: SortOrder
+    phone?: SortOrder
+    openHours?: SortOrder
+    status?: SortOrder
+    pricingRules?: SortOrder
+    amenities?: SortOrder
+    features?: SortOrder
+    tags?: SortOrder
+    gallery?: SortOrder
+    battleModes?: SortOrder
+    slotTemplate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    partnerId?: SortOrderInput | SortOrder
+    partner?: UserOrderByWithRelationInput
+    reviews?: GamehubReviewOrderByRelationAggregateInput
+    bookings?: GamehubBookingOrderByRelationAggregateInput
+    blockedSlots?: GamehubBlockedSlotOrderByRelationAggregateInput
+  }
+
+  export type GamehubFacilityWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: GamehubFacilityWhereInput | GamehubFacilityWhereInput[]
+    OR?: GamehubFacilityWhereInput[]
+    NOT?: GamehubFacilityWhereInput | GamehubFacilityWhereInput[]
+    name?: StringFilter<"GamehubFacility"> | string
+    type?: StringFilter<"GamehubFacility"> | string
+    location?: StringFilter<"GamehubFacility"> | string
+    venue?: StringFilter<"GamehubFacility"> | string
+    distance?: StringFilter<"GamehubFacility"> | string
+    rating?: FloatFilter<"GamehubFacility"> | number
+    reviewsCount?: IntFilter<"GamehubFacility"> | number
+    pricePerHour?: FloatFilter<"GamehubFacility"> | number
+    unit?: StringFilter<"GamehubFacility"> | string
+    priceRange?: StringFilter<"GamehubFacility"> | string
+    image?: StringFilter<"GamehubFacility"> | string
+    description?: StringFilter<"GamehubFacility"> | string
+    phone?: StringFilter<"GamehubFacility"> | string
+    openHours?: StringFilter<"GamehubFacility"> | string
+    status?: StringFilter<"GamehubFacility"> | string
+    pricingRules?: StringFilter<"GamehubFacility"> | string
+    amenities?: StringFilter<"GamehubFacility"> | string
+    features?: StringFilter<"GamehubFacility"> | string
+    tags?: StringFilter<"GamehubFacility"> | string
+    gallery?: StringFilter<"GamehubFacility"> | string
+    battleModes?: StringFilter<"GamehubFacility"> | string
+    slotTemplate?: StringFilter<"GamehubFacility"> | string
+    createdAt?: DateTimeFilter<"GamehubFacility"> | Date | string
+    updatedAt?: DateTimeFilter<"GamehubFacility"> | Date | string
+    partnerId?: StringNullableFilter<"GamehubFacility"> | string | null
+    partner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    reviews?: GamehubReviewListRelationFilter
+    bookings?: GamehubBookingListRelationFilter
+    blockedSlots?: GamehubBlockedSlotListRelationFilter
+  }, "id">
+
+  export type GamehubFacilityOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    type?: SortOrder
+    location?: SortOrder
+    venue?: SortOrder
+    distance?: SortOrder
+    rating?: SortOrder
+    reviewsCount?: SortOrder
+    pricePerHour?: SortOrder
+    unit?: SortOrder
+    priceRange?: SortOrder
+    image?: SortOrder
+    description?: SortOrder
+    phone?: SortOrder
+    openHours?: SortOrder
+    status?: SortOrder
+    pricingRules?: SortOrder
+    amenities?: SortOrder
+    features?: SortOrder
+    tags?: SortOrder
+    gallery?: SortOrder
+    battleModes?: SortOrder
+    slotTemplate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    partnerId?: SortOrderInput | SortOrder
+    _count?: GamehubFacilityCountOrderByAggregateInput
+    _avg?: GamehubFacilityAvgOrderByAggregateInput
+    _max?: GamehubFacilityMaxOrderByAggregateInput
+    _min?: GamehubFacilityMinOrderByAggregateInput
+    _sum?: GamehubFacilitySumOrderByAggregateInput
+  }
+
+  export type GamehubFacilityScalarWhereWithAggregatesInput = {
+    AND?: GamehubFacilityScalarWhereWithAggregatesInput | GamehubFacilityScalarWhereWithAggregatesInput[]
+    OR?: GamehubFacilityScalarWhereWithAggregatesInput[]
+    NOT?: GamehubFacilityScalarWhereWithAggregatesInput | GamehubFacilityScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"GamehubFacility"> | string
+    name?: StringWithAggregatesFilter<"GamehubFacility"> | string
+    type?: StringWithAggregatesFilter<"GamehubFacility"> | string
+    location?: StringWithAggregatesFilter<"GamehubFacility"> | string
+    venue?: StringWithAggregatesFilter<"GamehubFacility"> | string
+    distance?: StringWithAggregatesFilter<"GamehubFacility"> | string
+    rating?: FloatWithAggregatesFilter<"GamehubFacility"> | number
+    reviewsCount?: IntWithAggregatesFilter<"GamehubFacility"> | number
+    pricePerHour?: FloatWithAggregatesFilter<"GamehubFacility"> | number
+    unit?: StringWithAggregatesFilter<"GamehubFacility"> | string
+    priceRange?: StringWithAggregatesFilter<"GamehubFacility"> | string
+    image?: StringWithAggregatesFilter<"GamehubFacility"> | string
+    description?: StringWithAggregatesFilter<"GamehubFacility"> | string
+    phone?: StringWithAggregatesFilter<"GamehubFacility"> | string
+    openHours?: StringWithAggregatesFilter<"GamehubFacility"> | string
+    status?: StringWithAggregatesFilter<"GamehubFacility"> | string
+    pricingRules?: StringWithAggregatesFilter<"GamehubFacility"> | string
+    amenities?: StringWithAggregatesFilter<"GamehubFacility"> | string
+    features?: StringWithAggregatesFilter<"GamehubFacility"> | string
+    tags?: StringWithAggregatesFilter<"GamehubFacility"> | string
+    gallery?: StringWithAggregatesFilter<"GamehubFacility"> | string
+    battleModes?: StringWithAggregatesFilter<"GamehubFacility"> | string
+    slotTemplate?: StringWithAggregatesFilter<"GamehubFacility"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"GamehubFacility"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"GamehubFacility"> | Date | string
+    partnerId?: StringNullableWithAggregatesFilter<"GamehubFacility"> | string | null
+  }
+
+  export type GamehubReviewWhereInput = {
+    AND?: GamehubReviewWhereInput | GamehubReviewWhereInput[]
+    OR?: GamehubReviewWhereInput[]
+    NOT?: GamehubReviewWhereInput | GamehubReviewWhereInput[]
+    id?: StringFilter<"GamehubReview"> | string
+    rating?: IntFilter<"GamehubReview"> | number
+    comment?: StringFilter<"GamehubReview"> | string
+    userName?: StringFilter<"GamehubReview"> | string
+    avatar?: StringFilter<"GamehubReview"> | string
+    helpful?: IntFilter<"GamehubReview"> | number
+    createdAt?: DateTimeFilter<"GamehubReview"> | Date | string
+    facilityId?: StringFilter<"GamehubReview"> | string
+    facility?: XOR<GamehubFacilityScalarRelationFilter, GamehubFacilityWhereInput>
+  }
+
+  export type GamehubReviewOrderByWithRelationInput = {
+    id?: SortOrder
+    rating?: SortOrder
+    comment?: SortOrder
+    userName?: SortOrder
+    avatar?: SortOrder
+    helpful?: SortOrder
+    createdAt?: SortOrder
+    facilityId?: SortOrder
+    facility?: GamehubFacilityOrderByWithRelationInput
+  }
+
+  export type GamehubReviewWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: GamehubReviewWhereInput | GamehubReviewWhereInput[]
+    OR?: GamehubReviewWhereInput[]
+    NOT?: GamehubReviewWhereInput | GamehubReviewWhereInput[]
+    rating?: IntFilter<"GamehubReview"> | number
+    comment?: StringFilter<"GamehubReview"> | string
+    userName?: StringFilter<"GamehubReview"> | string
+    avatar?: StringFilter<"GamehubReview"> | string
+    helpful?: IntFilter<"GamehubReview"> | number
+    createdAt?: DateTimeFilter<"GamehubReview"> | Date | string
+    facilityId?: StringFilter<"GamehubReview"> | string
+    facility?: XOR<GamehubFacilityScalarRelationFilter, GamehubFacilityWhereInput>
+  }, "id">
+
+  export type GamehubReviewOrderByWithAggregationInput = {
+    id?: SortOrder
+    rating?: SortOrder
+    comment?: SortOrder
+    userName?: SortOrder
+    avatar?: SortOrder
+    helpful?: SortOrder
+    createdAt?: SortOrder
+    facilityId?: SortOrder
+    _count?: GamehubReviewCountOrderByAggregateInput
+    _avg?: GamehubReviewAvgOrderByAggregateInput
+    _max?: GamehubReviewMaxOrderByAggregateInput
+    _min?: GamehubReviewMinOrderByAggregateInput
+    _sum?: GamehubReviewSumOrderByAggregateInput
+  }
+
+  export type GamehubReviewScalarWhereWithAggregatesInput = {
+    AND?: GamehubReviewScalarWhereWithAggregatesInput | GamehubReviewScalarWhereWithAggregatesInput[]
+    OR?: GamehubReviewScalarWhereWithAggregatesInput[]
+    NOT?: GamehubReviewScalarWhereWithAggregatesInput | GamehubReviewScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"GamehubReview"> | string
+    rating?: IntWithAggregatesFilter<"GamehubReview"> | number
+    comment?: StringWithAggregatesFilter<"GamehubReview"> | string
+    userName?: StringWithAggregatesFilter<"GamehubReview"> | string
+    avatar?: StringWithAggregatesFilter<"GamehubReview"> | string
+    helpful?: IntWithAggregatesFilter<"GamehubReview"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"GamehubReview"> | Date | string
+    facilityId?: StringWithAggregatesFilter<"GamehubReview"> | string
+  }
+
+  export type GamehubBookingWhereInput = {
+    AND?: GamehubBookingWhereInput | GamehubBookingWhereInput[]
+    OR?: GamehubBookingWhereInput[]
+    NOT?: GamehubBookingWhereInput | GamehubBookingWhereInput[]
+    id?: StringFilter<"GamehubBooking"> | string
+    bookingDate?: DateTimeFilter<"GamehubBooking"> | Date | string
+    slotLabel?: StringFilter<"GamehubBooking"> | string
+    totalAmount?: FloatFilter<"GamehubBooking"> | number
+    currency?: StringFilter<"GamehubBooking"> | string
+    status?: StringFilter<"GamehubBooking"> | string
+    paymentMethod?: StringFilter<"GamehubBooking"> | string
+    paymentStatus?: StringFilter<"GamehubBooking"> | string
+    transactionId?: StringFilter<"GamehubBooking"> | string
+    createdAt?: DateTimeFilter<"GamehubBooking"> | Date | string
+    updatedAt?: DateTimeFilter<"GamehubBooking"> | Date | string
+    userId?: StringFilter<"GamehubBooking"> | string
+    facilityId?: StringFilter<"GamehubBooking"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    facility?: XOR<GamehubFacilityScalarRelationFilter, GamehubFacilityWhereInput>
+  }
+
+  export type GamehubBookingOrderByWithRelationInput = {
+    id?: SortOrder
+    bookingDate?: SortOrder
+    slotLabel?: SortOrder
+    totalAmount?: SortOrder
+    currency?: SortOrder
+    status?: SortOrder
+    paymentMethod?: SortOrder
+    paymentStatus?: SortOrder
+    transactionId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+    facilityId?: SortOrder
+    user?: UserOrderByWithRelationInput
+    facility?: GamehubFacilityOrderByWithRelationInput
+  }
+
+  export type GamehubBookingWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    transactionId?: string
+    AND?: GamehubBookingWhereInput | GamehubBookingWhereInput[]
+    OR?: GamehubBookingWhereInput[]
+    NOT?: GamehubBookingWhereInput | GamehubBookingWhereInput[]
+    bookingDate?: DateTimeFilter<"GamehubBooking"> | Date | string
+    slotLabel?: StringFilter<"GamehubBooking"> | string
+    totalAmount?: FloatFilter<"GamehubBooking"> | number
+    currency?: StringFilter<"GamehubBooking"> | string
+    status?: StringFilter<"GamehubBooking"> | string
+    paymentMethod?: StringFilter<"GamehubBooking"> | string
+    paymentStatus?: StringFilter<"GamehubBooking"> | string
+    createdAt?: DateTimeFilter<"GamehubBooking"> | Date | string
+    updatedAt?: DateTimeFilter<"GamehubBooking"> | Date | string
+    userId?: StringFilter<"GamehubBooking"> | string
+    facilityId?: StringFilter<"GamehubBooking"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    facility?: XOR<GamehubFacilityScalarRelationFilter, GamehubFacilityWhereInput>
+  }, "id" | "transactionId">
+
+  export type GamehubBookingOrderByWithAggregationInput = {
+    id?: SortOrder
+    bookingDate?: SortOrder
+    slotLabel?: SortOrder
+    totalAmount?: SortOrder
+    currency?: SortOrder
+    status?: SortOrder
+    paymentMethod?: SortOrder
+    paymentStatus?: SortOrder
+    transactionId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+    facilityId?: SortOrder
+    _count?: GamehubBookingCountOrderByAggregateInput
+    _avg?: GamehubBookingAvgOrderByAggregateInput
+    _max?: GamehubBookingMaxOrderByAggregateInput
+    _min?: GamehubBookingMinOrderByAggregateInput
+    _sum?: GamehubBookingSumOrderByAggregateInput
+  }
+
+  export type GamehubBookingScalarWhereWithAggregatesInput = {
+    AND?: GamehubBookingScalarWhereWithAggregatesInput | GamehubBookingScalarWhereWithAggregatesInput[]
+    OR?: GamehubBookingScalarWhereWithAggregatesInput[]
+    NOT?: GamehubBookingScalarWhereWithAggregatesInput | GamehubBookingScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"GamehubBooking"> | string
+    bookingDate?: DateTimeWithAggregatesFilter<"GamehubBooking"> | Date | string
+    slotLabel?: StringWithAggregatesFilter<"GamehubBooking"> | string
+    totalAmount?: FloatWithAggregatesFilter<"GamehubBooking"> | number
+    currency?: StringWithAggregatesFilter<"GamehubBooking"> | string
+    status?: StringWithAggregatesFilter<"GamehubBooking"> | string
+    paymentMethod?: StringWithAggregatesFilter<"GamehubBooking"> | string
+    paymentStatus?: StringWithAggregatesFilter<"GamehubBooking"> | string
+    transactionId?: StringWithAggregatesFilter<"GamehubBooking"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"GamehubBooking"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"GamehubBooking"> | Date | string
+    userId?: StringWithAggregatesFilter<"GamehubBooking"> | string
+    facilityId?: StringWithAggregatesFilter<"GamehubBooking"> | string
+  }
+
+  export type GamehubBlockedSlotWhereInput = {
+    AND?: GamehubBlockedSlotWhereInput | GamehubBlockedSlotWhereInput[]
+    OR?: GamehubBlockedSlotWhereInput[]
+    NOT?: GamehubBlockedSlotWhereInput | GamehubBlockedSlotWhereInput[]
+    id?: StringFilter<"GamehubBlockedSlot"> | string
+    blockDate?: DateTimeFilter<"GamehubBlockedSlot"> | Date | string
+    slotLabel?: StringFilter<"GamehubBlockedSlot"> | string
+    reason?: StringFilter<"GamehubBlockedSlot"> | string
+    createdAt?: DateTimeFilter<"GamehubBlockedSlot"> | Date | string
+    createdByUserId?: StringNullableFilter<"GamehubBlockedSlot"> | string | null
+    facilityId?: StringFilter<"GamehubBlockedSlot"> | string
+    facility?: XOR<GamehubFacilityScalarRelationFilter, GamehubFacilityWhereInput>
+  }
+
+  export type GamehubBlockedSlotOrderByWithRelationInput = {
+    id?: SortOrder
+    blockDate?: SortOrder
+    slotLabel?: SortOrder
+    reason?: SortOrder
+    createdAt?: SortOrder
+    createdByUserId?: SortOrderInput | SortOrder
+    facilityId?: SortOrder
+    facility?: GamehubFacilityOrderByWithRelationInput
+  }
+
+  export type GamehubBlockedSlotWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: GamehubBlockedSlotWhereInput | GamehubBlockedSlotWhereInput[]
+    OR?: GamehubBlockedSlotWhereInput[]
+    NOT?: GamehubBlockedSlotWhereInput | GamehubBlockedSlotWhereInput[]
+    blockDate?: DateTimeFilter<"GamehubBlockedSlot"> | Date | string
+    slotLabel?: StringFilter<"GamehubBlockedSlot"> | string
+    reason?: StringFilter<"GamehubBlockedSlot"> | string
+    createdAt?: DateTimeFilter<"GamehubBlockedSlot"> | Date | string
+    createdByUserId?: StringNullableFilter<"GamehubBlockedSlot"> | string | null
+    facilityId?: StringFilter<"GamehubBlockedSlot"> | string
+    facility?: XOR<GamehubFacilityScalarRelationFilter, GamehubFacilityWhereInput>
+  }, "id">
+
+  export type GamehubBlockedSlotOrderByWithAggregationInput = {
+    id?: SortOrder
+    blockDate?: SortOrder
+    slotLabel?: SortOrder
+    reason?: SortOrder
+    createdAt?: SortOrder
+    createdByUserId?: SortOrderInput | SortOrder
+    facilityId?: SortOrder
+    _count?: GamehubBlockedSlotCountOrderByAggregateInput
+    _max?: GamehubBlockedSlotMaxOrderByAggregateInput
+    _min?: GamehubBlockedSlotMinOrderByAggregateInput
+  }
+
+  export type GamehubBlockedSlotScalarWhereWithAggregatesInput = {
+    AND?: GamehubBlockedSlotScalarWhereWithAggregatesInput | GamehubBlockedSlotScalarWhereWithAggregatesInput[]
+    OR?: GamehubBlockedSlotScalarWhereWithAggregatesInput[]
+    NOT?: GamehubBlockedSlotScalarWhereWithAggregatesInput | GamehubBlockedSlotScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"GamehubBlockedSlot"> | string
+    blockDate?: DateTimeWithAggregatesFilter<"GamehubBlockedSlot"> | Date | string
+    slotLabel?: StringWithAggregatesFilter<"GamehubBlockedSlot"> | string
+    reason?: StringWithAggregatesFilter<"GamehubBlockedSlot"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"GamehubBlockedSlot"> | Date | string
+    createdByUserId?: StringNullableWithAggregatesFilter<"GamehubBlockedSlot"> | string | null
+    facilityId?: StringWithAggregatesFilter<"GamehubBlockedSlot"> | string
+  }
+
+  export type WalletWhereInput = {
+    AND?: WalletWhereInput | WalletWhereInput[]
+    OR?: WalletWhereInput[]
+    NOT?: WalletWhereInput | WalletWhereInput[]
+    id?: StringFilter<"Wallet"> | string
+    balance?: FloatFilter<"Wallet"> | number
+    totalEarnings?: FloatFilter<"Wallet"> | number
+    currency?: StringFilter<"Wallet"> | string
+    updatedAt?: DateTimeFilter<"Wallet"> | Date | string
+    userId?: StringFilter<"Wallet"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    transactions?: WalletTransactionListRelationFilter
+  }
+
+  export type WalletOrderByWithRelationInput = {
+    id?: SortOrder
+    balance?: SortOrder
+    totalEarnings?: SortOrder
+    currency?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+    user?: UserOrderByWithRelationInput
+    transactions?: WalletTransactionOrderByRelationAggregateInput
+  }
+
+  export type WalletWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId?: string
+    AND?: WalletWhereInput | WalletWhereInput[]
+    OR?: WalletWhereInput[]
+    NOT?: WalletWhereInput | WalletWhereInput[]
+    balance?: FloatFilter<"Wallet"> | number
+    totalEarnings?: FloatFilter<"Wallet"> | number
+    currency?: StringFilter<"Wallet"> | string
+    updatedAt?: DateTimeFilter<"Wallet"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    transactions?: WalletTransactionListRelationFilter
+  }, "id" | "userId">
+
+  export type WalletOrderByWithAggregationInput = {
+    id?: SortOrder
+    balance?: SortOrder
+    totalEarnings?: SortOrder
+    currency?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+    _count?: WalletCountOrderByAggregateInput
+    _avg?: WalletAvgOrderByAggregateInput
+    _max?: WalletMaxOrderByAggregateInput
+    _min?: WalletMinOrderByAggregateInput
+    _sum?: WalletSumOrderByAggregateInput
+  }
+
+  export type WalletScalarWhereWithAggregatesInput = {
+    AND?: WalletScalarWhereWithAggregatesInput | WalletScalarWhereWithAggregatesInput[]
+    OR?: WalletScalarWhereWithAggregatesInput[]
+    NOT?: WalletScalarWhereWithAggregatesInput | WalletScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Wallet"> | string
+    balance?: FloatWithAggregatesFilter<"Wallet"> | number
+    totalEarnings?: FloatWithAggregatesFilter<"Wallet"> | number
+    currency?: StringWithAggregatesFilter<"Wallet"> | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Wallet"> | Date | string
+    userId?: StringWithAggregatesFilter<"Wallet"> | string
+  }
+
+  export type WalletTransactionWhereInput = {
+    AND?: WalletTransactionWhereInput | WalletTransactionWhereInput[]
+    OR?: WalletTransactionWhereInput[]
+    NOT?: WalletTransactionWhereInput | WalletTransactionWhereInput[]
+    id?: StringFilter<"WalletTransaction"> | string
+    amount?: FloatFilter<"WalletTransaction"> | number
+    type?: StringFilter<"WalletTransaction"> | string
+    description?: StringNullableFilter<"WalletTransaction"> | string | null
+    referenceId?: StringNullableFilter<"WalletTransaction"> | string | null
+    createdAt?: DateTimeFilter<"WalletTransaction"> | Date | string
+    walletId?: StringFilter<"WalletTransaction"> | string
+    wallet?: XOR<WalletScalarRelationFilter, WalletWhereInput>
+  }
+
+  export type WalletTransactionOrderByWithRelationInput = {
+    id?: SortOrder
+    amount?: SortOrder
+    type?: SortOrder
+    description?: SortOrderInput | SortOrder
+    referenceId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    walletId?: SortOrder
+    wallet?: WalletOrderByWithRelationInput
+  }
+
+  export type WalletTransactionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: WalletTransactionWhereInput | WalletTransactionWhereInput[]
+    OR?: WalletTransactionWhereInput[]
+    NOT?: WalletTransactionWhereInput | WalletTransactionWhereInput[]
+    amount?: FloatFilter<"WalletTransaction"> | number
+    type?: StringFilter<"WalletTransaction"> | string
+    description?: StringNullableFilter<"WalletTransaction"> | string | null
+    referenceId?: StringNullableFilter<"WalletTransaction"> | string | null
+    createdAt?: DateTimeFilter<"WalletTransaction"> | Date | string
+    walletId?: StringFilter<"WalletTransaction"> | string
+    wallet?: XOR<WalletScalarRelationFilter, WalletWhereInput>
+  }, "id">
+
+  export type WalletTransactionOrderByWithAggregationInput = {
+    id?: SortOrder
+    amount?: SortOrder
+    type?: SortOrder
+    description?: SortOrderInput | SortOrder
+    referenceId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    walletId?: SortOrder
+    _count?: WalletTransactionCountOrderByAggregateInput
+    _avg?: WalletTransactionAvgOrderByAggregateInput
+    _max?: WalletTransactionMaxOrderByAggregateInput
+    _min?: WalletTransactionMinOrderByAggregateInput
+    _sum?: WalletTransactionSumOrderByAggregateInput
+  }
+
+  export type WalletTransactionScalarWhereWithAggregatesInput = {
+    AND?: WalletTransactionScalarWhereWithAggregatesInput | WalletTransactionScalarWhereWithAggregatesInput[]
+    OR?: WalletTransactionScalarWhereWithAggregatesInput[]
+    NOT?: WalletTransactionScalarWhereWithAggregatesInput | WalletTransactionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"WalletTransaction"> | string
+    amount?: FloatWithAggregatesFilter<"WalletTransaction"> | number
+    type?: StringWithAggregatesFilter<"WalletTransaction"> | string
+    description?: StringNullableWithAggregatesFilter<"WalletTransaction"> | string | null
+    referenceId?: StringNullableWithAggregatesFilter<"WalletTransaction"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"WalletTransaction"> | Date | string
+    walletId?: StringWithAggregatesFilter<"WalletTransaction"> | string
+  }
+
+  export type PayoutWhereInput = {
+    AND?: PayoutWhereInput | PayoutWhereInput[]
+    OR?: PayoutWhereInput[]
+    NOT?: PayoutWhereInput | PayoutWhereInput[]
+    id?: StringFilter<"Payout"> | string
+    amount?: FloatFilter<"Payout"> | number
+    status?: StringFilter<"Payout"> | string
+    bankDetails?: StringFilter<"Payout"> | string
+    transactionId?: StringNullableFilter<"Payout"> | string | null
+    createdAt?: DateTimeFilter<"Payout"> | Date | string
+    updatedAt?: DateTimeFilter<"Payout"> | Date | string
+    userId?: StringFilter<"Payout"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type PayoutOrderByWithRelationInput = {
+    id?: SortOrder
+    amount?: SortOrder
+    status?: SortOrder
+    bankDetails?: SortOrder
+    transactionId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type PayoutWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    transactionId?: string
+    AND?: PayoutWhereInput | PayoutWhereInput[]
+    OR?: PayoutWhereInput[]
+    NOT?: PayoutWhereInput | PayoutWhereInput[]
+    amount?: FloatFilter<"Payout"> | number
+    status?: StringFilter<"Payout"> | string
+    bankDetails?: StringFilter<"Payout"> | string
+    createdAt?: DateTimeFilter<"Payout"> | Date | string
+    updatedAt?: DateTimeFilter<"Payout"> | Date | string
+    userId?: StringFilter<"Payout"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "transactionId">
+
+  export type PayoutOrderByWithAggregationInput = {
+    id?: SortOrder
+    amount?: SortOrder
+    status?: SortOrder
+    bankDetails?: SortOrder
+    transactionId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+    _count?: PayoutCountOrderByAggregateInput
+    _avg?: PayoutAvgOrderByAggregateInput
+    _max?: PayoutMaxOrderByAggregateInput
+    _min?: PayoutMinOrderByAggregateInput
+    _sum?: PayoutSumOrderByAggregateInput
+  }
+
+  export type PayoutScalarWhereWithAggregatesInput = {
+    AND?: PayoutScalarWhereWithAggregatesInput | PayoutScalarWhereWithAggregatesInput[]
+    OR?: PayoutScalarWhereWithAggregatesInput[]
+    NOT?: PayoutScalarWhereWithAggregatesInput | PayoutScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Payout"> | string
+    amount?: FloatWithAggregatesFilter<"Payout"> | number
+    status?: StringWithAggregatesFilter<"Payout"> | string
+    bankDetails?: StringWithAggregatesFilter<"Payout"> | string
+    transactionId?: StringNullableWithAggregatesFilter<"Payout"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Payout"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Payout"> | Date | string
+    userId?: StringWithAggregatesFilter<"Payout"> | string
+  }
+
   export type UserCreateInput = {
     id?: string
     name: string
@@ -16400,8 +26316,12 @@ export namespace Prisma {
     updatedAt?: Date | string
     events?: EventCreateNestedManyWithoutPartnerInput
     bookings?: BookingCreateNestedManyWithoutUserInput
+    gamehubBookings?: GamehubBookingCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    gamehubFacilities?: GamehubFacilityCreateNestedManyWithoutPartnerInput
+    wallet?: WalletCreateNestedOneWithoutUserInput
+    payouts?: PayoutCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -16417,8 +26337,12 @@ export namespace Prisma {
     updatedAt?: Date | string
     events?: EventUncheckedCreateNestedManyWithoutPartnerInput
     bookings?: BookingUncheckedCreateNestedManyWithoutUserInput
+    gamehubBookings?: GamehubBookingUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    gamehubFacilities?: GamehubFacilityUncheckedCreateNestedManyWithoutPartnerInput
+    wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
+    payouts?: PayoutUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -16434,8 +26358,12 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     events?: EventUpdateManyWithoutPartnerNestedInput
     bookings?: BookingUpdateManyWithoutUserNestedInput
+    gamehubBookings?: GamehubBookingUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    gamehubFacilities?: GamehubFacilityUpdateManyWithoutPartnerNestedInput
+    wallet?: WalletUpdateOneWithoutUserNestedInput
+    payouts?: PayoutUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -16451,8 +26379,12 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     events?: EventUncheckedUpdateManyWithoutPartnerNestedInput
     bookings?: BookingUncheckedUpdateManyWithoutUserNestedInput
+    gamehubBookings?: GamehubBookingUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    gamehubFacilities?: GamehubFacilityUncheckedUpdateManyWithoutPartnerNestedInput
+    wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
+    payouts?: PayoutUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -17433,6 +27365,686 @@ export namespace Prisma {
     eventId?: StringFieldUpdateOperationsInput | string
   }
 
+  export type GamehubFacilityCreateInput = {
+    id?: string
+    name: string
+    type: string
+    location: string
+    venue: string
+    distance?: string
+    rating?: number
+    reviewsCount?: number
+    pricePerHour?: number
+    unit?: string
+    priceRange?: string
+    image: string
+    description?: string
+    phone?: string
+    openHours?: string
+    status?: string
+    pricingRules?: string
+    amenities?: string
+    features?: string
+    tags?: string
+    gallery?: string
+    battleModes?: string
+    slotTemplate?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    partner?: UserCreateNestedOneWithoutGamehubFacilitiesInput
+    reviews?: GamehubReviewCreateNestedManyWithoutFacilityInput
+    bookings?: GamehubBookingCreateNestedManyWithoutFacilityInput
+    blockedSlots?: GamehubBlockedSlotCreateNestedManyWithoutFacilityInput
+  }
+
+  export type GamehubFacilityUncheckedCreateInput = {
+    id?: string
+    name: string
+    type: string
+    location: string
+    venue: string
+    distance?: string
+    rating?: number
+    reviewsCount?: number
+    pricePerHour?: number
+    unit?: string
+    priceRange?: string
+    image: string
+    description?: string
+    phone?: string
+    openHours?: string
+    status?: string
+    pricingRules?: string
+    amenities?: string
+    features?: string
+    tags?: string
+    gallery?: string
+    battleModes?: string
+    slotTemplate?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    partnerId?: string | null
+    reviews?: GamehubReviewUncheckedCreateNestedManyWithoutFacilityInput
+    bookings?: GamehubBookingUncheckedCreateNestedManyWithoutFacilityInput
+    blockedSlots?: GamehubBlockedSlotUncheckedCreateNestedManyWithoutFacilityInput
+  }
+
+  export type GamehubFacilityUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    venue?: StringFieldUpdateOperationsInput | string
+    distance?: StringFieldUpdateOperationsInput | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewsCount?: IntFieldUpdateOperationsInput | number
+    pricePerHour?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    priceRange?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    openHours?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    pricingRules?: StringFieldUpdateOperationsInput | string
+    amenities?: StringFieldUpdateOperationsInput | string
+    features?: StringFieldUpdateOperationsInput | string
+    tags?: StringFieldUpdateOperationsInput | string
+    gallery?: StringFieldUpdateOperationsInput | string
+    battleModes?: StringFieldUpdateOperationsInput | string
+    slotTemplate?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partner?: UserUpdateOneWithoutGamehubFacilitiesNestedInput
+    reviews?: GamehubReviewUpdateManyWithoutFacilityNestedInput
+    bookings?: GamehubBookingUpdateManyWithoutFacilityNestedInput
+    blockedSlots?: GamehubBlockedSlotUpdateManyWithoutFacilityNestedInput
+  }
+
+  export type GamehubFacilityUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    venue?: StringFieldUpdateOperationsInput | string
+    distance?: StringFieldUpdateOperationsInput | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewsCount?: IntFieldUpdateOperationsInput | number
+    pricePerHour?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    priceRange?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    openHours?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    pricingRules?: StringFieldUpdateOperationsInput | string
+    amenities?: StringFieldUpdateOperationsInput | string
+    features?: StringFieldUpdateOperationsInput | string
+    tags?: StringFieldUpdateOperationsInput | string
+    gallery?: StringFieldUpdateOperationsInput | string
+    battleModes?: StringFieldUpdateOperationsInput | string
+    slotTemplate?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    reviews?: GamehubReviewUncheckedUpdateManyWithoutFacilityNestedInput
+    bookings?: GamehubBookingUncheckedUpdateManyWithoutFacilityNestedInput
+    blockedSlots?: GamehubBlockedSlotUncheckedUpdateManyWithoutFacilityNestedInput
+  }
+
+  export type GamehubFacilityCreateManyInput = {
+    id?: string
+    name: string
+    type: string
+    location: string
+    venue: string
+    distance?: string
+    rating?: number
+    reviewsCount?: number
+    pricePerHour?: number
+    unit?: string
+    priceRange?: string
+    image: string
+    description?: string
+    phone?: string
+    openHours?: string
+    status?: string
+    pricingRules?: string
+    amenities?: string
+    features?: string
+    tags?: string
+    gallery?: string
+    battleModes?: string
+    slotTemplate?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    partnerId?: string | null
+  }
+
+  export type GamehubFacilityUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    venue?: StringFieldUpdateOperationsInput | string
+    distance?: StringFieldUpdateOperationsInput | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewsCount?: IntFieldUpdateOperationsInput | number
+    pricePerHour?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    priceRange?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    openHours?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    pricingRules?: StringFieldUpdateOperationsInput | string
+    amenities?: StringFieldUpdateOperationsInput | string
+    features?: StringFieldUpdateOperationsInput | string
+    tags?: StringFieldUpdateOperationsInput | string
+    gallery?: StringFieldUpdateOperationsInput | string
+    battleModes?: StringFieldUpdateOperationsInput | string
+    slotTemplate?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GamehubFacilityUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    venue?: StringFieldUpdateOperationsInput | string
+    distance?: StringFieldUpdateOperationsInput | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewsCount?: IntFieldUpdateOperationsInput | number
+    pricePerHour?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    priceRange?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    openHours?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    pricingRules?: StringFieldUpdateOperationsInput | string
+    amenities?: StringFieldUpdateOperationsInput | string
+    features?: StringFieldUpdateOperationsInput | string
+    tags?: StringFieldUpdateOperationsInput | string
+    gallery?: StringFieldUpdateOperationsInput | string
+    battleModes?: StringFieldUpdateOperationsInput | string
+    slotTemplate?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partnerId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type GamehubReviewCreateInput = {
+    id?: string
+    rating: number
+    comment: string
+    userName: string
+    avatar?: string
+    helpful?: number
+    createdAt?: Date | string
+    facility: GamehubFacilityCreateNestedOneWithoutReviewsInput
+  }
+
+  export type GamehubReviewUncheckedCreateInput = {
+    id?: string
+    rating: number
+    comment: string
+    userName: string
+    avatar?: string
+    helpful?: number
+    createdAt?: Date | string
+    facilityId: string
+  }
+
+  export type GamehubReviewUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: StringFieldUpdateOperationsInput | string
+    userName?: StringFieldUpdateOperationsInput | string
+    avatar?: StringFieldUpdateOperationsInput | string
+    helpful?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    facility?: GamehubFacilityUpdateOneRequiredWithoutReviewsNestedInput
+  }
+
+  export type GamehubReviewUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: StringFieldUpdateOperationsInput | string
+    userName?: StringFieldUpdateOperationsInput | string
+    avatar?: StringFieldUpdateOperationsInput | string
+    helpful?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    facilityId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GamehubReviewCreateManyInput = {
+    id?: string
+    rating: number
+    comment: string
+    userName: string
+    avatar?: string
+    helpful?: number
+    createdAt?: Date | string
+    facilityId: string
+  }
+
+  export type GamehubReviewUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: StringFieldUpdateOperationsInput | string
+    userName?: StringFieldUpdateOperationsInput | string
+    avatar?: StringFieldUpdateOperationsInput | string
+    helpful?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GamehubReviewUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: StringFieldUpdateOperationsInput | string
+    userName?: StringFieldUpdateOperationsInput | string
+    avatar?: StringFieldUpdateOperationsInput | string
+    helpful?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    facilityId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GamehubBookingCreateInput = {
+    id?: string
+    bookingDate: Date | string
+    slotLabel: string
+    totalAmount: number
+    currency?: string
+    status?: string
+    paymentMethod?: string
+    paymentStatus?: string
+    transactionId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutGamehubBookingsInput
+    facility: GamehubFacilityCreateNestedOneWithoutBookingsInput
+  }
+
+  export type GamehubBookingUncheckedCreateInput = {
+    id?: string
+    bookingDate: Date | string
+    slotLabel: string
+    totalAmount: number
+    currency?: string
+    status?: string
+    paymentMethod?: string
+    paymentStatus?: string
+    transactionId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userId: string
+    facilityId: string
+  }
+
+  export type GamehubBookingUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    slotLabel?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    transactionId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutGamehubBookingsNestedInput
+    facility?: GamehubFacilityUpdateOneRequiredWithoutBookingsNestedInput
+  }
+
+  export type GamehubBookingUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    slotLabel?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    transactionId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+    facilityId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GamehubBookingCreateManyInput = {
+    id?: string
+    bookingDate: Date | string
+    slotLabel: string
+    totalAmount: number
+    currency?: string
+    status?: string
+    paymentMethod?: string
+    paymentStatus?: string
+    transactionId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userId: string
+    facilityId: string
+  }
+
+  export type GamehubBookingUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    slotLabel?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    transactionId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GamehubBookingUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    slotLabel?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    transactionId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+    facilityId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GamehubBlockedSlotCreateInput = {
+    id?: string
+    blockDate: Date | string
+    slotLabel: string
+    reason?: string
+    createdAt?: Date | string
+    createdByUserId?: string | null
+    facility: GamehubFacilityCreateNestedOneWithoutBlockedSlotsInput
+  }
+
+  export type GamehubBlockedSlotUncheckedCreateInput = {
+    id?: string
+    blockDate: Date | string
+    slotLabel: string
+    reason?: string
+    createdAt?: Date | string
+    createdByUserId?: string | null
+    facilityId: string
+  }
+
+  export type GamehubBlockedSlotUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    blockDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    slotLabel?: StringFieldUpdateOperationsInput | string
+    reason?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    facility?: GamehubFacilityUpdateOneRequiredWithoutBlockedSlotsNestedInput
+  }
+
+  export type GamehubBlockedSlotUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    blockDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    slotLabel?: StringFieldUpdateOperationsInput | string
+    reason?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    facilityId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GamehubBlockedSlotCreateManyInput = {
+    id?: string
+    blockDate: Date | string
+    slotLabel: string
+    reason?: string
+    createdAt?: Date | string
+    createdByUserId?: string | null
+    facilityId: string
+  }
+
+  export type GamehubBlockedSlotUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    blockDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    slotLabel?: StringFieldUpdateOperationsInput | string
+    reason?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type GamehubBlockedSlotUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    blockDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    slotLabel?: StringFieldUpdateOperationsInput | string
+    reason?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    facilityId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type WalletCreateInput = {
+    id?: string
+    balance?: number
+    totalEarnings?: number
+    currency?: string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutWalletInput
+    transactions?: WalletTransactionCreateNestedManyWithoutWalletInput
+  }
+
+  export type WalletUncheckedCreateInput = {
+    id?: string
+    balance?: number
+    totalEarnings?: number
+    currency?: string
+    updatedAt?: Date | string
+    userId: string
+    transactions?: WalletTransactionUncheckedCreateNestedManyWithoutWalletInput
+  }
+
+  export type WalletUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    balance?: FloatFieldUpdateOperationsInput | number
+    totalEarnings?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutWalletNestedInput
+    transactions?: WalletTransactionUpdateManyWithoutWalletNestedInput
+  }
+
+  export type WalletUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    balance?: FloatFieldUpdateOperationsInput | number
+    totalEarnings?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+    transactions?: WalletTransactionUncheckedUpdateManyWithoutWalletNestedInput
+  }
+
+  export type WalletCreateManyInput = {
+    id?: string
+    balance?: number
+    totalEarnings?: number
+    currency?: string
+    updatedAt?: Date | string
+    userId: string
+  }
+
+  export type WalletUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    balance?: FloatFieldUpdateOperationsInput | number
+    totalEarnings?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WalletUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    balance?: FloatFieldUpdateOperationsInput | number
+    totalEarnings?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type WalletTransactionCreateInput = {
+    id?: string
+    amount: number
+    type?: string
+    description?: string | null
+    referenceId?: string | null
+    createdAt?: Date | string
+    wallet: WalletCreateNestedOneWithoutTransactionsInput
+  }
+
+  export type WalletTransactionUncheckedCreateInput = {
+    id?: string
+    amount: number
+    type?: string
+    description?: string | null
+    referenceId?: string | null
+    createdAt?: Date | string
+    walletId: string
+  }
+
+  export type WalletTransactionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    referenceId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    wallet?: WalletUpdateOneRequiredWithoutTransactionsNestedInput
+  }
+
+  export type WalletTransactionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    referenceId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    walletId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type WalletTransactionCreateManyInput = {
+    id?: string
+    amount: number
+    type?: string
+    description?: string | null
+    referenceId?: string | null
+    createdAt?: Date | string
+    walletId: string
+  }
+
+  export type WalletTransactionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    referenceId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WalletTransactionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    referenceId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    walletId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PayoutCreateInput = {
+    id?: string
+    amount: number
+    status?: string
+    bankDetails?: string
+    transactionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutPayoutsInput
+  }
+
+  export type PayoutUncheckedCreateInput = {
+    id?: string
+    amount: number
+    status?: string
+    bankDetails?: string
+    transactionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userId: string
+  }
+
+  export type PayoutUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    bankDetails?: StringFieldUpdateOperationsInput | string
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPayoutsNestedInput
+  }
+
+  export type PayoutUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    bankDetails?: StringFieldUpdateOperationsInput | string
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PayoutCreateManyInput = {
+    id?: string
+    amount: number
+    status?: string
+    bankDetails?: string
+    transactionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userId: string
+  }
+
+  export type PayoutUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    bankDetails?: StringFieldUpdateOperationsInput | string
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PayoutUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    bankDetails?: StringFieldUpdateOperationsInput | string
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -17486,6 +28098,12 @@ export namespace Prisma {
     none?: BookingWhereInput
   }
 
+  export type GamehubBookingListRelationFilter = {
+    every?: GamehubBookingWhereInput
+    some?: GamehubBookingWhereInput
+    none?: GamehubBookingWhereInput
+  }
+
   export type NotificationListRelationFilter = {
     every?: NotificationWhereInput
     some?: NotificationWhereInput
@@ -17496,6 +28114,23 @@ export namespace Prisma {
     every?: ReviewWhereInput
     some?: ReviewWhereInput
     none?: ReviewWhereInput
+  }
+
+  export type GamehubFacilityListRelationFilter = {
+    every?: GamehubFacilityWhereInput
+    some?: GamehubFacilityWhereInput
+    none?: GamehubFacilityWhereInput
+  }
+
+  export type WalletNullableScalarRelationFilter = {
+    is?: WalletWhereInput | null
+    isNot?: WalletWhereInput | null
+  }
+
+  export type PayoutListRelationFilter = {
+    every?: PayoutWhereInput
+    some?: PayoutWhereInput
+    none?: PayoutWhereInput
   }
 
   export type SortOrderInput = {
@@ -17511,11 +28146,23 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type GamehubBookingOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type NotificationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type ReviewOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type GamehubFacilityOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PayoutOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -18325,6 +28972,395 @@ export namespace Prisma {
     rating?: SortOrder
   }
 
+  export type UserNullableScalarRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
+  export type GamehubReviewListRelationFilter = {
+    every?: GamehubReviewWhereInput
+    some?: GamehubReviewWhereInput
+    none?: GamehubReviewWhereInput
+  }
+
+  export type GamehubBlockedSlotListRelationFilter = {
+    every?: GamehubBlockedSlotWhereInput
+    some?: GamehubBlockedSlotWhereInput
+    none?: GamehubBlockedSlotWhereInput
+  }
+
+  export type GamehubReviewOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type GamehubBlockedSlotOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type GamehubFacilityCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    type?: SortOrder
+    location?: SortOrder
+    venue?: SortOrder
+    distance?: SortOrder
+    rating?: SortOrder
+    reviewsCount?: SortOrder
+    pricePerHour?: SortOrder
+    unit?: SortOrder
+    priceRange?: SortOrder
+    image?: SortOrder
+    description?: SortOrder
+    phone?: SortOrder
+    openHours?: SortOrder
+    status?: SortOrder
+    pricingRules?: SortOrder
+    amenities?: SortOrder
+    features?: SortOrder
+    tags?: SortOrder
+    gallery?: SortOrder
+    battleModes?: SortOrder
+    slotTemplate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    partnerId?: SortOrder
+  }
+
+  export type GamehubFacilityAvgOrderByAggregateInput = {
+    rating?: SortOrder
+    reviewsCount?: SortOrder
+    pricePerHour?: SortOrder
+  }
+
+  export type GamehubFacilityMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    type?: SortOrder
+    location?: SortOrder
+    venue?: SortOrder
+    distance?: SortOrder
+    rating?: SortOrder
+    reviewsCount?: SortOrder
+    pricePerHour?: SortOrder
+    unit?: SortOrder
+    priceRange?: SortOrder
+    image?: SortOrder
+    description?: SortOrder
+    phone?: SortOrder
+    openHours?: SortOrder
+    status?: SortOrder
+    pricingRules?: SortOrder
+    amenities?: SortOrder
+    features?: SortOrder
+    tags?: SortOrder
+    gallery?: SortOrder
+    battleModes?: SortOrder
+    slotTemplate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    partnerId?: SortOrder
+  }
+
+  export type GamehubFacilityMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    type?: SortOrder
+    location?: SortOrder
+    venue?: SortOrder
+    distance?: SortOrder
+    rating?: SortOrder
+    reviewsCount?: SortOrder
+    pricePerHour?: SortOrder
+    unit?: SortOrder
+    priceRange?: SortOrder
+    image?: SortOrder
+    description?: SortOrder
+    phone?: SortOrder
+    openHours?: SortOrder
+    status?: SortOrder
+    pricingRules?: SortOrder
+    amenities?: SortOrder
+    features?: SortOrder
+    tags?: SortOrder
+    gallery?: SortOrder
+    battleModes?: SortOrder
+    slotTemplate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    partnerId?: SortOrder
+  }
+
+  export type GamehubFacilitySumOrderByAggregateInput = {
+    rating?: SortOrder
+    reviewsCount?: SortOrder
+    pricePerHour?: SortOrder
+  }
+
+  export type GamehubFacilityScalarRelationFilter = {
+    is?: GamehubFacilityWhereInput
+    isNot?: GamehubFacilityWhereInput
+  }
+
+  export type GamehubReviewCountOrderByAggregateInput = {
+    id?: SortOrder
+    rating?: SortOrder
+    comment?: SortOrder
+    userName?: SortOrder
+    avatar?: SortOrder
+    helpful?: SortOrder
+    createdAt?: SortOrder
+    facilityId?: SortOrder
+  }
+
+  export type GamehubReviewAvgOrderByAggregateInput = {
+    rating?: SortOrder
+    helpful?: SortOrder
+  }
+
+  export type GamehubReviewMaxOrderByAggregateInput = {
+    id?: SortOrder
+    rating?: SortOrder
+    comment?: SortOrder
+    userName?: SortOrder
+    avatar?: SortOrder
+    helpful?: SortOrder
+    createdAt?: SortOrder
+    facilityId?: SortOrder
+  }
+
+  export type GamehubReviewMinOrderByAggregateInput = {
+    id?: SortOrder
+    rating?: SortOrder
+    comment?: SortOrder
+    userName?: SortOrder
+    avatar?: SortOrder
+    helpful?: SortOrder
+    createdAt?: SortOrder
+    facilityId?: SortOrder
+  }
+
+  export type GamehubReviewSumOrderByAggregateInput = {
+    rating?: SortOrder
+    helpful?: SortOrder
+  }
+
+  export type GamehubBookingCountOrderByAggregateInput = {
+    id?: SortOrder
+    bookingDate?: SortOrder
+    slotLabel?: SortOrder
+    totalAmount?: SortOrder
+    currency?: SortOrder
+    status?: SortOrder
+    paymentMethod?: SortOrder
+    paymentStatus?: SortOrder
+    transactionId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+    facilityId?: SortOrder
+  }
+
+  export type GamehubBookingAvgOrderByAggregateInput = {
+    totalAmount?: SortOrder
+  }
+
+  export type GamehubBookingMaxOrderByAggregateInput = {
+    id?: SortOrder
+    bookingDate?: SortOrder
+    slotLabel?: SortOrder
+    totalAmount?: SortOrder
+    currency?: SortOrder
+    status?: SortOrder
+    paymentMethod?: SortOrder
+    paymentStatus?: SortOrder
+    transactionId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+    facilityId?: SortOrder
+  }
+
+  export type GamehubBookingMinOrderByAggregateInput = {
+    id?: SortOrder
+    bookingDate?: SortOrder
+    slotLabel?: SortOrder
+    totalAmount?: SortOrder
+    currency?: SortOrder
+    status?: SortOrder
+    paymentMethod?: SortOrder
+    paymentStatus?: SortOrder
+    transactionId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+    facilityId?: SortOrder
+  }
+
+  export type GamehubBookingSumOrderByAggregateInput = {
+    totalAmount?: SortOrder
+  }
+
+  export type GamehubBlockedSlotCountOrderByAggregateInput = {
+    id?: SortOrder
+    blockDate?: SortOrder
+    slotLabel?: SortOrder
+    reason?: SortOrder
+    createdAt?: SortOrder
+    createdByUserId?: SortOrder
+    facilityId?: SortOrder
+  }
+
+  export type GamehubBlockedSlotMaxOrderByAggregateInput = {
+    id?: SortOrder
+    blockDate?: SortOrder
+    slotLabel?: SortOrder
+    reason?: SortOrder
+    createdAt?: SortOrder
+    createdByUserId?: SortOrder
+    facilityId?: SortOrder
+  }
+
+  export type GamehubBlockedSlotMinOrderByAggregateInput = {
+    id?: SortOrder
+    blockDate?: SortOrder
+    slotLabel?: SortOrder
+    reason?: SortOrder
+    createdAt?: SortOrder
+    createdByUserId?: SortOrder
+    facilityId?: SortOrder
+  }
+
+  export type WalletTransactionListRelationFilter = {
+    every?: WalletTransactionWhereInput
+    some?: WalletTransactionWhereInput
+    none?: WalletTransactionWhereInput
+  }
+
+  export type WalletTransactionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type WalletCountOrderByAggregateInput = {
+    id?: SortOrder
+    balance?: SortOrder
+    totalEarnings?: SortOrder
+    currency?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type WalletAvgOrderByAggregateInput = {
+    balance?: SortOrder
+    totalEarnings?: SortOrder
+  }
+
+  export type WalletMaxOrderByAggregateInput = {
+    id?: SortOrder
+    balance?: SortOrder
+    totalEarnings?: SortOrder
+    currency?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type WalletMinOrderByAggregateInput = {
+    id?: SortOrder
+    balance?: SortOrder
+    totalEarnings?: SortOrder
+    currency?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type WalletSumOrderByAggregateInput = {
+    balance?: SortOrder
+    totalEarnings?: SortOrder
+  }
+
+  export type WalletScalarRelationFilter = {
+    is?: WalletWhereInput
+    isNot?: WalletWhereInput
+  }
+
+  export type WalletTransactionCountOrderByAggregateInput = {
+    id?: SortOrder
+    amount?: SortOrder
+    type?: SortOrder
+    description?: SortOrder
+    referenceId?: SortOrder
+    createdAt?: SortOrder
+    walletId?: SortOrder
+  }
+
+  export type WalletTransactionAvgOrderByAggregateInput = {
+    amount?: SortOrder
+  }
+
+  export type WalletTransactionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    amount?: SortOrder
+    type?: SortOrder
+    description?: SortOrder
+    referenceId?: SortOrder
+    createdAt?: SortOrder
+    walletId?: SortOrder
+  }
+
+  export type WalletTransactionMinOrderByAggregateInput = {
+    id?: SortOrder
+    amount?: SortOrder
+    type?: SortOrder
+    description?: SortOrder
+    referenceId?: SortOrder
+    createdAt?: SortOrder
+    walletId?: SortOrder
+  }
+
+  export type WalletTransactionSumOrderByAggregateInput = {
+    amount?: SortOrder
+  }
+
+  export type PayoutCountOrderByAggregateInput = {
+    id?: SortOrder
+    amount?: SortOrder
+    status?: SortOrder
+    bankDetails?: SortOrder
+    transactionId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type PayoutAvgOrderByAggregateInput = {
+    amount?: SortOrder
+  }
+
+  export type PayoutMaxOrderByAggregateInput = {
+    id?: SortOrder
+    amount?: SortOrder
+    status?: SortOrder
+    bankDetails?: SortOrder
+    transactionId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type PayoutMinOrderByAggregateInput = {
+    id?: SortOrder
+    amount?: SortOrder
+    status?: SortOrder
+    bankDetails?: SortOrder
+    transactionId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type PayoutSumOrderByAggregateInput = {
+    amount?: SortOrder
+  }
+
   export type EventCreateNestedManyWithoutPartnerInput = {
     create?: XOR<EventCreateWithoutPartnerInput, EventUncheckedCreateWithoutPartnerInput> | EventCreateWithoutPartnerInput[] | EventUncheckedCreateWithoutPartnerInput[]
     connectOrCreate?: EventCreateOrConnectWithoutPartnerInput | EventCreateOrConnectWithoutPartnerInput[]
@@ -18337,6 +29373,13 @@ export namespace Prisma {
     connectOrCreate?: BookingCreateOrConnectWithoutUserInput | BookingCreateOrConnectWithoutUserInput[]
     createMany?: BookingCreateManyUserInputEnvelope
     connect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
+  }
+
+  export type GamehubBookingCreateNestedManyWithoutUserInput = {
+    create?: XOR<GamehubBookingCreateWithoutUserInput, GamehubBookingUncheckedCreateWithoutUserInput> | GamehubBookingCreateWithoutUserInput[] | GamehubBookingUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: GamehubBookingCreateOrConnectWithoutUserInput | GamehubBookingCreateOrConnectWithoutUserInput[]
+    createMany?: GamehubBookingCreateManyUserInputEnvelope
+    connect?: GamehubBookingWhereUniqueInput | GamehubBookingWhereUniqueInput[]
   }
 
   export type NotificationCreateNestedManyWithoutUserInput = {
@@ -18353,6 +29396,26 @@ export namespace Prisma {
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
   }
 
+  export type GamehubFacilityCreateNestedManyWithoutPartnerInput = {
+    create?: XOR<GamehubFacilityCreateWithoutPartnerInput, GamehubFacilityUncheckedCreateWithoutPartnerInput> | GamehubFacilityCreateWithoutPartnerInput[] | GamehubFacilityUncheckedCreateWithoutPartnerInput[]
+    connectOrCreate?: GamehubFacilityCreateOrConnectWithoutPartnerInput | GamehubFacilityCreateOrConnectWithoutPartnerInput[]
+    createMany?: GamehubFacilityCreateManyPartnerInputEnvelope
+    connect?: GamehubFacilityWhereUniqueInput | GamehubFacilityWhereUniqueInput[]
+  }
+
+  export type WalletCreateNestedOneWithoutUserInput = {
+    create?: XOR<WalletCreateWithoutUserInput, WalletUncheckedCreateWithoutUserInput>
+    connectOrCreate?: WalletCreateOrConnectWithoutUserInput
+    connect?: WalletWhereUniqueInput
+  }
+
+  export type PayoutCreateNestedManyWithoutUserInput = {
+    create?: XOR<PayoutCreateWithoutUserInput, PayoutUncheckedCreateWithoutUserInput> | PayoutCreateWithoutUserInput[] | PayoutUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PayoutCreateOrConnectWithoutUserInput | PayoutCreateOrConnectWithoutUserInput[]
+    createMany?: PayoutCreateManyUserInputEnvelope
+    connect?: PayoutWhereUniqueInput | PayoutWhereUniqueInput[]
+  }
+
   export type EventUncheckedCreateNestedManyWithoutPartnerInput = {
     create?: XOR<EventCreateWithoutPartnerInput, EventUncheckedCreateWithoutPartnerInput> | EventCreateWithoutPartnerInput[] | EventUncheckedCreateWithoutPartnerInput[]
     connectOrCreate?: EventCreateOrConnectWithoutPartnerInput | EventCreateOrConnectWithoutPartnerInput[]
@@ -18367,6 +29430,13 @@ export namespace Prisma {
     connect?: BookingWhereUniqueInput | BookingWhereUniqueInput[]
   }
 
+  export type GamehubBookingUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<GamehubBookingCreateWithoutUserInput, GamehubBookingUncheckedCreateWithoutUserInput> | GamehubBookingCreateWithoutUserInput[] | GamehubBookingUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: GamehubBookingCreateOrConnectWithoutUserInput | GamehubBookingCreateOrConnectWithoutUserInput[]
+    createMany?: GamehubBookingCreateManyUserInputEnvelope
+    connect?: GamehubBookingWhereUniqueInput | GamehubBookingWhereUniqueInput[]
+  }
+
   export type NotificationUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
     connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
@@ -18379,6 +29449,26 @@ export namespace Prisma {
     connectOrCreate?: ReviewCreateOrConnectWithoutUserInput | ReviewCreateOrConnectWithoutUserInput[]
     createMany?: ReviewCreateManyUserInputEnvelope
     connect?: ReviewWhereUniqueInput | ReviewWhereUniqueInput[]
+  }
+
+  export type GamehubFacilityUncheckedCreateNestedManyWithoutPartnerInput = {
+    create?: XOR<GamehubFacilityCreateWithoutPartnerInput, GamehubFacilityUncheckedCreateWithoutPartnerInput> | GamehubFacilityCreateWithoutPartnerInput[] | GamehubFacilityUncheckedCreateWithoutPartnerInput[]
+    connectOrCreate?: GamehubFacilityCreateOrConnectWithoutPartnerInput | GamehubFacilityCreateOrConnectWithoutPartnerInput[]
+    createMany?: GamehubFacilityCreateManyPartnerInputEnvelope
+    connect?: GamehubFacilityWhereUniqueInput | GamehubFacilityWhereUniqueInput[]
+  }
+
+  export type WalletUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<WalletCreateWithoutUserInput, WalletUncheckedCreateWithoutUserInput>
+    connectOrCreate?: WalletCreateOrConnectWithoutUserInput
+    connect?: WalletWhereUniqueInput
+  }
+
+  export type PayoutUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<PayoutCreateWithoutUserInput, PayoutUncheckedCreateWithoutUserInput> | PayoutCreateWithoutUserInput[] | PayoutUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PayoutCreateOrConnectWithoutUserInput | PayoutCreateOrConnectWithoutUserInput[]
+    createMany?: PayoutCreateManyUserInputEnvelope
+    connect?: PayoutWhereUniqueInput | PayoutWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -18421,6 +29511,20 @@ export namespace Prisma {
     deleteMany?: BookingScalarWhereInput | BookingScalarWhereInput[]
   }
 
+  export type GamehubBookingUpdateManyWithoutUserNestedInput = {
+    create?: XOR<GamehubBookingCreateWithoutUserInput, GamehubBookingUncheckedCreateWithoutUserInput> | GamehubBookingCreateWithoutUserInput[] | GamehubBookingUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: GamehubBookingCreateOrConnectWithoutUserInput | GamehubBookingCreateOrConnectWithoutUserInput[]
+    upsert?: GamehubBookingUpsertWithWhereUniqueWithoutUserInput | GamehubBookingUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: GamehubBookingCreateManyUserInputEnvelope
+    set?: GamehubBookingWhereUniqueInput | GamehubBookingWhereUniqueInput[]
+    disconnect?: GamehubBookingWhereUniqueInput | GamehubBookingWhereUniqueInput[]
+    delete?: GamehubBookingWhereUniqueInput | GamehubBookingWhereUniqueInput[]
+    connect?: GamehubBookingWhereUniqueInput | GamehubBookingWhereUniqueInput[]
+    update?: GamehubBookingUpdateWithWhereUniqueWithoutUserInput | GamehubBookingUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: GamehubBookingUpdateManyWithWhereWithoutUserInput | GamehubBookingUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: GamehubBookingScalarWhereInput | GamehubBookingScalarWhereInput[]
+  }
+
   export type NotificationUpdateManyWithoutUserNestedInput = {
     create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
     connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
@@ -18447,6 +29551,44 @@ export namespace Prisma {
     update?: ReviewUpdateWithWhereUniqueWithoutUserInput | ReviewUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ReviewUpdateManyWithWhereWithoutUserInput | ReviewUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
+  }
+
+  export type GamehubFacilityUpdateManyWithoutPartnerNestedInput = {
+    create?: XOR<GamehubFacilityCreateWithoutPartnerInput, GamehubFacilityUncheckedCreateWithoutPartnerInput> | GamehubFacilityCreateWithoutPartnerInput[] | GamehubFacilityUncheckedCreateWithoutPartnerInput[]
+    connectOrCreate?: GamehubFacilityCreateOrConnectWithoutPartnerInput | GamehubFacilityCreateOrConnectWithoutPartnerInput[]
+    upsert?: GamehubFacilityUpsertWithWhereUniqueWithoutPartnerInput | GamehubFacilityUpsertWithWhereUniqueWithoutPartnerInput[]
+    createMany?: GamehubFacilityCreateManyPartnerInputEnvelope
+    set?: GamehubFacilityWhereUniqueInput | GamehubFacilityWhereUniqueInput[]
+    disconnect?: GamehubFacilityWhereUniqueInput | GamehubFacilityWhereUniqueInput[]
+    delete?: GamehubFacilityWhereUniqueInput | GamehubFacilityWhereUniqueInput[]
+    connect?: GamehubFacilityWhereUniqueInput | GamehubFacilityWhereUniqueInput[]
+    update?: GamehubFacilityUpdateWithWhereUniqueWithoutPartnerInput | GamehubFacilityUpdateWithWhereUniqueWithoutPartnerInput[]
+    updateMany?: GamehubFacilityUpdateManyWithWhereWithoutPartnerInput | GamehubFacilityUpdateManyWithWhereWithoutPartnerInput[]
+    deleteMany?: GamehubFacilityScalarWhereInput | GamehubFacilityScalarWhereInput[]
+  }
+
+  export type WalletUpdateOneWithoutUserNestedInput = {
+    create?: XOR<WalletCreateWithoutUserInput, WalletUncheckedCreateWithoutUserInput>
+    connectOrCreate?: WalletCreateOrConnectWithoutUserInput
+    upsert?: WalletUpsertWithoutUserInput
+    disconnect?: WalletWhereInput | boolean
+    delete?: WalletWhereInput | boolean
+    connect?: WalletWhereUniqueInput
+    update?: XOR<XOR<WalletUpdateToOneWithWhereWithoutUserInput, WalletUpdateWithoutUserInput>, WalletUncheckedUpdateWithoutUserInput>
+  }
+
+  export type PayoutUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PayoutCreateWithoutUserInput, PayoutUncheckedCreateWithoutUserInput> | PayoutCreateWithoutUserInput[] | PayoutUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PayoutCreateOrConnectWithoutUserInput | PayoutCreateOrConnectWithoutUserInput[]
+    upsert?: PayoutUpsertWithWhereUniqueWithoutUserInput | PayoutUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PayoutCreateManyUserInputEnvelope
+    set?: PayoutWhereUniqueInput | PayoutWhereUniqueInput[]
+    disconnect?: PayoutWhereUniqueInput | PayoutWhereUniqueInput[]
+    delete?: PayoutWhereUniqueInput | PayoutWhereUniqueInput[]
+    connect?: PayoutWhereUniqueInput | PayoutWhereUniqueInput[]
+    update?: PayoutUpdateWithWhereUniqueWithoutUserInput | PayoutUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PayoutUpdateManyWithWhereWithoutUserInput | PayoutUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PayoutScalarWhereInput | PayoutScalarWhereInput[]
   }
 
   export type EventUncheckedUpdateManyWithoutPartnerNestedInput = {
@@ -18477,6 +29619,20 @@ export namespace Prisma {
     deleteMany?: BookingScalarWhereInput | BookingScalarWhereInput[]
   }
 
+  export type GamehubBookingUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<GamehubBookingCreateWithoutUserInput, GamehubBookingUncheckedCreateWithoutUserInput> | GamehubBookingCreateWithoutUserInput[] | GamehubBookingUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: GamehubBookingCreateOrConnectWithoutUserInput | GamehubBookingCreateOrConnectWithoutUserInput[]
+    upsert?: GamehubBookingUpsertWithWhereUniqueWithoutUserInput | GamehubBookingUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: GamehubBookingCreateManyUserInputEnvelope
+    set?: GamehubBookingWhereUniqueInput | GamehubBookingWhereUniqueInput[]
+    disconnect?: GamehubBookingWhereUniqueInput | GamehubBookingWhereUniqueInput[]
+    delete?: GamehubBookingWhereUniqueInput | GamehubBookingWhereUniqueInput[]
+    connect?: GamehubBookingWhereUniqueInput | GamehubBookingWhereUniqueInput[]
+    update?: GamehubBookingUpdateWithWhereUniqueWithoutUserInput | GamehubBookingUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: GamehubBookingUpdateManyWithWhereWithoutUserInput | GamehubBookingUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: GamehubBookingScalarWhereInput | GamehubBookingScalarWhereInput[]
+  }
+
   export type NotificationUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
     connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
@@ -18503,6 +29659,44 @@ export namespace Prisma {
     update?: ReviewUpdateWithWhereUniqueWithoutUserInput | ReviewUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ReviewUpdateManyWithWhereWithoutUserInput | ReviewUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ReviewScalarWhereInput | ReviewScalarWhereInput[]
+  }
+
+  export type GamehubFacilityUncheckedUpdateManyWithoutPartnerNestedInput = {
+    create?: XOR<GamehubFacilityCreateWithoutPartnerInput, GamehubFacilityUncheckedCreateWithoutPartnerInput> | GamehubFacilityCreateWithoutPartnerInput[] | GamehubFacilityUncheckedCreateWithoutPartnerInput[]
+    connectOrCreate?: GamehubFacilityCreateOrConnectWithoutPartnerInput | GamehubFacilityCreateOrConnectWithoutPartnerInput[]
+    upsert?: GamehubFacilityUpsertWithWhereUniqueWithoutPartnerInput | GamehubFacilityUpsertWithWhereUniqueWithoutPartnerInput[]
+    createMany?: GamehubFacilityCreateManyPartnerInputEnvelope
+    set?: GamehubFacilityWhereUniqueInput | GamehubFacilityWhereUniqueInput[]
+    disconnect?: GamehubFacilityWhereUniqueInput | GamehubFacilityWhereUniqueInput[]
+    delete?: GamehubFacilityWhereUniqueInput | GamehubFacilityWhereUniqueInput[]
+    connect?: GamehubFacilityWhereUniqueInput | GamehubFacilityWhereUniqueInput[]
+    update?: GamehubFacilityUpdateWithWhereUniqueWithoutPartnerInput | GamehubFacilityUpdateWithWhereUniqueWithoutPartnerInput[]
+    updateMany?: GamehubFacilityUpdateManyWithWhereWithoutPartnerInput | GamehubFacilityUpdateManyWithWhereWithoutPartnerInput[]
+    deleteMany?: GamehubFacilityScalarWhereInput | GamehubFacilityScalarWhereInput[]
+  }
+
+  export type WalletUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<WalletCreateWithoutUserInput, WalletUncheckedCreateWithoutUserInput>
+    connectOrCreate?: WalletCreateOrConnectWithoutUserInput
+    upsert?: WalletUpsertWithoutUserInput
+    disconnect?: WalletWhereInput | boolean
+    delete?: WalletWhereInput | boolean
+    connect?: WalletWhereUniqueInput
+    update?: XOR<XOR<WalletUpdateToOneWithWhereWithoutUserInput, WalletUpdateWithoutUserInput>, WalletUncheckedUpdateWithoutUserInput>
+  }
+
+  export type PayoutUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PayoutCreateWithoutUserInput, PayoutUncheckedCreateWithoutUserInput> | PayoutCreateWithoutUserInput[] | PayoutUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PayoutCreateOrConnectWithoutUserInput | PayoutCreateOrConnectWithoutUserInput[]
+    upsert?: PayoutUpsertWithWhereUniqueWithoutUserInput | PayoutUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PayoutCreateManyUserInputEnvelope
+    set?: PayoutWhereUniqueInput | PayoutWhereUniqueInput[]
+    disconnect?: PayoutWhereUniqueInput | PayoutWhereUniqueInput[]
+    delete?: PayoutWhereUniqueInput | PayoutWhereUniqueInput[]
+    connect?: PayoutWhereUniqueInput | PayoutWhereUniqueInput[]
+    update?: PayoutUpdateWithWhereUniqueWithoutUserInput | PayoutUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PayoutUpdateManyWithWhereWithoutUserInput | PayoutUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PayoutScalarWhereInput | PayoutScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutEventsInput = {
@@ -19199,6 +30393,288 @@ export namespace Prisma {
     update?: XOR<XOR<EventUpdateToOneWithWhereWithoutReviewsInput, EventUpdateWithoutReviewsInput>, EventUncheckedUpdateWithoutReviewsInput>
   }
 
+  export type UserCreateNestedOneWithoutGamehubFacilitiesInput = {
+    create?: XOR<UserCreateWithoutGamehubFacilitiesInput, UserUncheckedCreateWithoutGamehubFacilitiesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutGamehubFacilitiesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type GamehubReviewCreateNestedManyWithoutFacilityInput = {
+    create?: XOR<GamehubReviewCreateWithoutFacilityInput, GamehubReviewUncheckedCreateWithoutFacilityInput> | GamehubReviewCreateWithoutFacilityInput[] | GamehubReviewUncheckedCreateWithoutFacilityInput[]
+    connectOrCreate?: GamehubReviewCreateOrConnectWithoutFacilityInput | GamehubReviewCreateOrConnectWithoutFacilityInput[]
+    createMany?: GamehubReviewCreateManyFacilityInputEnvelope
+    connect?: GamehubReviewWhereUniqueInput | GamehubReviewWhereUniqueInput[]
+  }
+
+  export type GamehubBookingCreateNestedManyWithoutFacilityInput = {
+    create?: XOR<GamehubBookingCreateWithoutFacilityInput, GamehubBookingUncheckedCreateWithoutFacilityInput> | GamehubBookingCreateWithoutFacilityInput[] | GamehubBookingUncheckedCreateWithoutFacilityInput[]
+    connectOrCreate?: GamehubBookingCreateOrConnectWithoutFacilityInput | GamehubBookingCreateOrConnectWithoutFacilityInput[]
+    createMany?: GamehubBookingCreateManyFacilityInputEnvelope
+    connect?: GamehubBookingWhereUniqueInput | GamehubBookingWhereUniqueInput[]
+  }
+
+  export type GamehubBlockedSlotCreateNestedManyWithoutFacilityInput = {
+    create?: XOR<GamehubBlockedSlotCreateWithoutFacilityInput, GamehubBlockedSlotUncheckedCreateWithoutFacilityInput> | GamehubBlockedSlotCreateWithoutFacilityInput[] | GamehubBlockedSlotUncheckedCreateWithoutFacilityInput[]
+    connectOrCreate?: GamehubBlockedSlotCreateOrConnectWithoutFacilityInput | GamehubBlockedSlotCreateOrConnectWithoutFacilityInput[]
+    createMany?: GamehubBlockedSlotCreateManyFacilityInputEnvelope
+    connect?: GamehubBlockedSlotWhereUniqueInput | GamehubBlockedSlotWhereUniqueInput[]
+  }
+
+  export type GamehubReviewUncheckedCreateNestedManyWithoutFacilityInput = {
+    create?: XOR<GamehubReviewCreateWithoutFacilityInput, GamehubReviewUncheckedCreateWithoutFacilityInput> | GamehubReviewCreateWithoutFacilityInput[] | GamehubReviewUncheckedCreateWithoutFacilityInput[]
+    connectOrCreate?: GamehubReviewCreateOrConnectWithoutFacilityInput | GamehubReviewCreateOrConnectWithoutFacilityInput[]
+    createMany?: GamehubReviewCreateManyFacilityInputEnvelope
+    connect?: GamehubReviewWhereUniqueInput | GamehubReviewWhereUniqueInput[]
+  }
+
+  export type GamehubBookingUncheckedCreateNestedManyWithoutFacilityInput = {
+    create?: XOR<GamehubBookingCreateWithoutFacilityInput, GamehubBookingUncheckedCreateWithoutFacilityInput> | GamehubBookingCreateWithoutFacilityInput[] | GamehubBookingUncheckedCreateWithoutFacilityInput[]
+    connectOrCreate?: GamehubBookingCreateOrConnectWithoutFacilityInput | GamehubBookingCreateOrConnectWithoutFacilityInput[]
+    createMany?: GamehubBookingCreateManyFacilityInputEnvelope
+    connect?: GamehubBookingWhereUniqueInput | GamehubBookingWhereUniqueInput[]
+  }
+
+  export type GamehubBlockedSlotUncheckedCreateNestedManyWithoutFacilityInput = {
+    create?: XOR<GamehubBlockedSlotCreateWithoutFacilityInput, GamehubBlockedSlotUncheckedCreateWithoutFacilityInput> | GamehubBlockedSlotCreateWithoutFacilityInput[] | GamehubBlockedSlotUncheckedCreateWithoutFacilityInput[]
+    connectOrCreate?: GamehubBlockedSlotCreateOrConnectWithoutFacilityInput | GamehubBlockedSlotCreateOrConnectWithoutFacilityInput[]
+    createMany?: GamehubBlockedSlotCreateManyFacilityInputEnvelope
+    connect?: GamehubBlockedSlotWhereUniqueInput | GamehubBlockedSlotWhereUniqueInput[]
+  }
+
+  export type UserUpdateOneWithoutGamehubFacilitiesNestedInput = {
+    create?: XOR<UserCreateWithoutGamehubFacilitiesInput, UserUncheckedCreateWithoutGamehubFacilitiesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutGamehubFacilitiesInput
+    upsert?: UserUpsertWithoutGamehubFacilitiesInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutGamehubFacilitiesInput, UserUpdateWithoutGamehubFacilitiesInput>, UserUncheckedUpdateWithoutGamehubFacilitiesInput>
+  }
+
+  export type GamehubReviewUpdateManyWithoutFacilityNestedInput = {
+    create?: XOR<GamehubReviewCreateWithoutFacilityInput, GamehubReviewUncheckedCreateWithoutFacilityInput> | GamehubReviewCreateWithoutFacilityInput[] | GamehubReviewUncheckedCreateWithoutFacilityInput[]
+    connectOrCreate?: GamehubReviewCreateOrConnectWithoutFacilityInput | GamehubReviewCreateOrConnectWithoutFacilityInput[]
+    upsert?: GamehubReviewUpsertWithWhereUniqueWithoutFacilityInput | GamehubReviewUpsertWithWhereUniqueWithoutFacilityInput[]
+    createMany?: GamehubReviewCreateManyFacilityInputEnvelope
+    set?: GamehubReviewWhereUniqueInput | GamehubReviewWhereUniqueInput[]
+    disconnect?: GamehubReviewWhereUniqueInput | GamehubReviewWhereUniqueInput[]
+    delete?: GamehubReviewWhereUniqueInput | GamehubReviewWhereUniqueInput[]
+    connect?: GamehubReviewWhereUniqueInput | GamehubReviewWhereUniqueInput[]
+    update?: GamehubReviewUpdateWithWhereUniqueWithoutFacilityInput | GamehubReviewUpdateWithWhereUniqueWithoutFacilityInput[]
+    updateMany?: GamehubReviewUpdateManyWithWhereWithoutFacilityInput | GamehubReviewUpdateManyWithWhereWithoutFacilityInput[]
+    deleteMany?: GamehubReviewScalarWhereInput | GamehubReviewScalarWhereInput[]
+  }
+
+  export type GamehubBookingUpdateManyWithoutFacilityNestedInput = {
+    create?: XOR<GamehubBookingCreateWithoutFacilityInput, GamehubBookingUncheckedCreateWithoutFacilityInput> | GamehubBookingCreateWithoutFacilityInput[] | GamehubBookingUncheckedCreateWithoutFacilityInput[]
+    connectOrCreate?: GamehubBookingCreateOrConnectWithoutFacilityInput | GamehubBookingCreateOrConnectWithoutFacilityInput[]
+    upsert?: GamehubBookingUpsertWithWhereUniqueWithoutFacilityInput | GamehubBookingUpsertWithWhereUniqueWithoutFacilityInput[]
+    createMany?: GamehubBookingCreateManyFacilityInputEnvelope
+    set?: GamehubBookingWhereUniqueInput | GamehubBookingWhereUniqueInput[]
+    disconnect?: GamehubBookingWhereUniqueInput | GamehubBookingWhereUniqueInput[]
+    delete?: GamehubBookingWhereUniqueInput | GamehubBookingWhereUniqueInput[]
+    connect?: GamehubBookingWhereUniqueInput | GamehubBookingWhereUniqueInput[]
+    update?: GamehubBookingUpdateWithWhereUniqueWithoutFacilityInput | GamehubBookingUpdateWithWhereUniqueWithoutFacilityInput[]
+    updateMany?: GamehubBookingUpdateManyWithWhereWithoutFacilityInput | GamehubBookingUpdateManyWithWhereWithoutFacilityInput[]
+    deleteMany?: GamehubBookingScalarWhereInput | GamehubBookingScalarWhereInput[]
+  }
+
+  export type GamehubBlockedSlotUpdateManyWithoutFacilityNestedInput = {
+    create?: XOR<GamehubBlockedSlotCreateWithoutFacilityInput, GamehubBlockedSlotUncheckedCreateWithoutFacilityInput> | GamehubBlockedSlotCreateWithoutFacilityInput[] | GamehubBlockedSlotUncheckedCreateWithoutFacilityInput[]
+    connectOrCreate?: GamehubBlockedSlotCreateOrConnectWithoutFacilityInput | GamehubBlockedSlotCreateOrConnectWithoutFacilityInput[]
+    upsert?: GamehubBlockedSlotUpsertWithWhereUniqueWithoutFacilityInput | GamehubBlockedSlotUpsertWithWhereUniqueWithoutFacilityInput[]
+    createMany?: GamehubBlockedSlotCreateManyFacilityInputEnvelope
+    set?: GamehubBlockedSlotWhereUniqueInput | GamehubBlockedSlotWhereUniqueInput[]
+    disconnect?: GamehubBlockedSlotWhereUniqueInput | GamehubBlockedSlotWhereUniqueInput[]
+    delete?: GamehubBlockedSlotWhereUniqueInput | GamehubBlockedSlotWhereUniqueInput[]
+    connect?: GamehubBlockedSlotWhereUniqueInput | GamehubBlockedSlotWhereUniqueInput[]
+    update?: GamehubBlockedSlotUpdateWithWhereUniqueWithoutFacilityInput | GamehubBlockedSlotUpdateWithWhereUniqueWithoutFacilityInput[]
+    updateMany?: GamehubBlockedSlotUpdateManyWithWhereWithoutFacilityInput | GamehubBlockedSlotUpdateManyWithWhereWithoutFacilityInput[]
+    deleteMany?: GamehubBlockedSlotScalarWhereInput | GamehubBlockedSlotScalarWhereInput[]
+  }
+
+  export type GamehubReviewUncheckedUpdateManyWithoutFacilityNestedInput = {
+    create?: XOR<GamehubReviewCreateWithoutFacilityInput, GamehubReviewUncheckedCreateWithoutFacilityInput> | GamehubReviewCreateWithoutFacilityInput[] | GamehubReviewUncheckedCreateWithoutFacilityInput[]
+    connectOrCreate?: GamehubReviewCreateOrConnectWithoutFacilityInput | GamehubReviewCreateOrConnectWithoutFacilityInput[]
+    upsert?: GamehubReviewUpsertWithWhereUniqueWithoutFacilityInput | GamehubReviewUpsertWithWhereUniqueWithoutFacilityInput[]
+    createMany?: GamehubReviewCreateManyFacilityInputEnvelope
+    set?: GamehubReviewWhereUniqueInput | GamehubReviewWhereUniqueInput[]
+    disconnect?: GamehubReviewWhereUniqueInput | GamehubReviewWhereUniqueInput[]
+    delete?: GamehubReviewWhereUniqueInput | GamehubReviewWhereUniqueInput[]
+    connect?: GamehubReviewWhereUniqueInput | GamehubReviewWhereUniqueInput[]
+    update?: GamehubReviewUpdateWithWhereUniqueWithoutFacilityInput | GamehubReviewUpdateWithWhereUniqueWithoutFacilityInput[]
+    updateMany?: GamehubReviewUpdateManyWithWhereWithoutFacilityInput | GamehubReviewUpdateManyWithWhereWithoutFacilityInput[]
+    deleteMany?: GamehubReviewScalarWhereInput | GamehubReviewScalarWhereInput[]
+  }
+
+  export type GamehubBookingUncheckedUpdateManyWithoutFacilityNestedInput = {
+    create?: XOR<GamehubBookingCreateWithoutFacilityInput, GamehubBookingUncheckedCreateWithoutFacilityInput> | GamehubBookingCreateWithoutFacilityInput[] | GamehubBookingUncheckedCreateWithoutFacilityInput[]
+    connectOrCreate?: GamehubBookingCreateOrConnectWithoutFacilityInput | GamehubBookingCreateOrConnectWithoutFacilityInput[]
+    upsert?: GamehubBookingUpsertWithWhereUniqueWithoutFacilityInput | GamehubBookingUpsertWithWhereUniqueWithoutFacilityInput[]
+    createMany?: GamehubBookingCreateManyFacilityInputEnvelope
+    set?: GamehubBookingWhereUniqueInput | GamehubBookingWhereUniqueInput[]
+    disconnect?: GamehubBookingWhereUniqueInput | GamehubBookingWhereUniqueInput[]
+    delete?: GamehubBookingWhereUniqueInput | GamehubBookingWhereUniqueInput[]
+    connect?: GamehubBookingWhereUniqueInput | GamehubBookingWhereUniqueInput[]
+    update?: GamehubBookingUpdateWithWhereUniqueWithoutFacilityInput | GamehubBookingUpdateWithWhereUniqueWithoutFacilityInput[]
+    updateMany?: GamehubBookingUpdateManyWithWhereWithoutFacilityInput | GamehubBookingUpdateManyWithWhereWithoutFacilityInput[]
+    deleteMany?: GamehubBookingScalarWhereInput | GamehubBookingScalarWhereInput[]
+  }
+
+  export type GamehubBlockedSlotUncheckedUpdateManyWithoutFacilityNestedInput = {
+    create?: XOR<GamehubBlockedSlotCreateWithoutFacilityInput, GamehubBlockedSlotUncheckedCreateWithoutFacilityInput> | GamehubBlockedSlotCreateWithoutFacilityInput[] | GamehubBlockedSlotUncheckedCreateWithoutFacilityInput[]
+    connectOrCreate?: GamehubBlockedSlotCreateOrConnectWithoutFacilityInput | GamehubBlockedSlotCreateOrConnectWithoutFacilityInput[]
+    upsert?: GamehubBlockedSlotUpsertWithWhereUniqueWithoutFacilityInput | GamehubBlockedSlotUpsertWithWhereUniqueWithoutFacilityInput[]
+    createMany?: GamehubBlockedSlotCreateManyFacilityInputEnvelope
+    set?: GamehubBlockedSlotWhereUniqueInput | GamehubBlockedSlotWhereUniqueInput[]
+    disconnect?: GamehubBlockedSlotWhereUniqueInput | GamehubBlockedSlotWhereUniqueInput[]
+    delete?: GamehubBlockedSlotWhereUniqueInput | GamehubBlockedSlotWhereUniqueInput[]
+    connect?: GamehubBlockedSlotWhereUniqueInput | GamehubBlockedSlotWhereUniqueInput[]
+    update?: GamehubBlockedSlotUpdateWithWhereUniqueWithoutFacilityInput | GamehubBlockedSlotUpdateWithWhereUniqueWithoutFacilityInput[]
+    updateMany?: GamehubBlockedSlotUpdateManyWithWhereWithoutFacilityInput | GamehubBlockedSlotUpdateManyWithWhereWithoutFacilityInput[]
+    deleteMany?: GamehubBlockedSlotScalarWhereInput | GamehubBlockedSlotScalarWhereInput[]
+  }
+
+  export type GamehubFacilityCreateNestedOneWithoutReviewsInput = {
+    create?: XOR<GamehubFacilityCreateWithoutReviewsInput, GamehubFacilityUncheckedCreateWithoutReviewsInput>
+    connectOrCreate?: GamehubFacilityCreateOrConnectWithoutReviewsInput
+    connect?: GamehubFacilityWhereUniqueInput
+  }
+
+  export type GamehubFacilityUpdateOneRequiredWithoutReviewsNestedInput = {
+    create?: XOR<GamehubFacilityCreateWithoutReviewsInput, GamehubFacilityUncheckedCreateWithoutReviewsInput>
+    connectOrCreate?: GamehubFacilityCreateOrConnectWithoutReviewsInput
+    upsert?: GamehubFacilityUpsertWithoutReviewsInput
+    connect?: GamehubFacilityWhereUniqueInput
+    update?: XOR<XOR<GamehubFacilityUpdateToOneWithWhereWithoutReviewsInput, GamehubFacilityUpdateWithoutReviewsInput>, GamehubFacilityUncheckedUpdateWithoutReviewsInput>
+  }
+
+  export type UserCreateNestedOneWithoutGamehubBookingsInput = {
+    create?: XOR<UserCreateWithoutGamehubBookingsInput, UserUncheckedCreateWithoutGamehubBookingsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutGamehubBookingsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type GamehubFacilityCreateNestedOneWithoutBookingsInput = {
+    create?: XOR<GamehubFacilityCreateWithoutBookingsInput, GamehubFacilityUncheckedCreateWithoutBookingsInput>
+    connectOrCreate?: GamehubFacilityCreateOrConnectWithoutBookingsInput
+    connect?: GamehubFacilityWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutGamehubBookingsNestedInput = {
+    create?: XOR<UserCreateWithoutGamehubBookingsInput, UserUncheckedCreateWithoutGamehubBookingsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutGamehubBookingsInput
+    upsert?: UserUpsertWithoutGamehubBookingsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutGamehubBookingsInput, UserUpdateWithoutGamehubBookingsInput>, UserUncheckedUpdateWithoutGamehubBookingsInput>
+  }
+
+  export type GamehubFacilityUpdateOneRequiredWithoutBookingsNestedInput = {
+    create?: XOR<GamehubFacilityCreateWithoutBookingsInput, GamehubFacilityUncheckedCreateWithoutBookingsInput>
+    connectOrCreate?: GamehubFacilityCreateOrConnectWithoutBookingsInput
+    upsert?: GamehubFacilityUpsertWithoutBookingsInput
+    connect?: GamehubFacilityWhereUniqueInput
+    update?: XOR<XOR<GamehubFacilityUpdateToOneWithWhereWithoutBookingsInput, GamehubFacilityUpdateWithoutBookingsInput>, GamehubFacilityUncheckedUpdateWithoutBookingsInput>
+  }
+
+  export type GamehubFacilityCreateNestedOneWithoutBlockedSlotsInput = {
+    create?: XOR<GamehubFacilityCreateWithoutBlockedSlotsInput, GamehubFacilityUncheckedCreateWithoutBlockedSlotsInput>
+    connectOrCreate?: GamehubFacilityCreateOrConnectWithoutBlockedSlotsInput
+    connect?: GamehubFacilityWhereUniqueInput
+  }
+
+  export type GamehubFacilityUpdateOneRequiredWithoutBlockedSlotsNestedInput = {
+    create?: XOR<GamehubFacilityCreateWithoutBlockedSlotsInput, GamehubFacilityUncheckedCreateWithoutBlockedSlotsInput>
+    connectOrCreate?: GamehubFacilityCreateOrConnectWithoutBlockedSlotsInput
+    upsert?: GamehubFacilityUpsertWithoutBlockedSlotsInput
+    connect?: GamehubFacilityWhereUniqueInput
+    update?: XOR<XOR<GamehubFacilityUpdateToOneWithWhereWithoutBlockedSlotsInput, GamehubFacilityUpdateWithoutBlockedSlotsInput>, GamehubFacilityUncheckedUpdateWithoutBlockedSlotsInput>
+  }
+
+  export type UserCreateNestedOneWithoutWalletInput = {
+    create?: XOR<UserCreateWithoutWalletInput, UserUncheckedCreateWithoutWalletInput>
+    connectOrCreate?: UserCreateOrConnectWithoutWalletInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type WalletTransactionCreateNestedManyWithoutWalletInput = {
+    create?: XOR<WalletTransactionCreateWithoutWalletInput, WalletTransactionUncheckedCreateWithoutWalletInput> | WalletTransactionCreateWithoutWalletInput[] | WalletTransactionUncheckedCreateWithoutWalletInput[]
+    connectOrCreate?: WalletTransactionCreateOrConnectWithoutWalletInput | WalletTransactionCreateOrConnectWithoutWalletInput[]
+    createMany?: WalletTransactionCreateManyWalletInputEnvelope
+    connect?: WalletTransactionWhereUniqueInput | WalletTransactionWhereUniqueInput[]
+  }
+
+  export type WalletTransactionUncheckedCreateNestedManyWithoutWalletInput = {
+    create?: XOR<WalletTransactionCreateWithoutWalletInput, WalletTransactionUncheckedCreateWithoutWalletInput> | WalletTransactionCreateWithoutWalletInput[] | WalletTransactionUncheckedCreateWithoutWalletInput[]
+    connectOrCreate?: WalletTransactionCreateOrConnectWithoutWalletInput | WalletTransactionCreateOrConnectWithoutWalletInput[]
+    createMany?: WalletTransactionCreateManyWalletInputEnvelope
+    connect?: WalletTransactionWhereUniqueInput | WalletTransactionWhereUniqueInput[]
+  }
+
+  export type UserUpdateOneRequiredWithoutWalletNestedInput = {
+    create?: XOR<UserCreateWithoutWalletInput, UserUncheckedCreateWithoutWalletInput>
+    connectOrCreate?: UserCreateOrConnectWithoutWalletInput
+    upsert?: UserUpsertWithoutWalletInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutWalletInput, UserUpdateWithoutWalletInput>, UserUncheckedUpdateWithoutWalletInput>
+  }
+
+  export type WalletTransactionUpdateManyWithoutWalletNestedInput = {
+    create?: XOR<WalletTransactionCreateWithoutWalletInput, WalletTransactionUncheckedCreateWithoutWalletInput> | WalletTransactionCreateWithoutWalletInput[] | WalletTransactionUncheckedCreateWithoutWalletInput[]
+    connectOrCreate?: WalletTransactionCreateOrConnectWithoutWalletInput | WalletTransactionCreateOrConnectWithoutWalletInput[]
+    upsert?: WalletTransactionUpsertWithWhereUniqueWithoutWalletInput | WalletTransactionUpsertWithWhereUniqueWithoutWalletInput[]
+    createMany?: WalletTransactionCreateManyWalletInputEnvelope
+    set?: WalletTransactionWhereUniqueInput | WalletTransactionWhereUniqueInput[]
+    disconnect?: WalletTransactionWhereUniqueInput | WalletTransactionWhereUniqueInput[]
+    delete?: WalletTransactionWhereUniqueInput | WalletTransactionWhereUniqueInput[]
+    connect?: WalletTransactionWhereUniqueInput | WalletTransactionWhereUniqueInput[]
+    update?: WalletTransactionUpdateWithWhereUniqueWithoutWalletInput | WalletTransactionUpdateWithWhereUniqueWithoutWalletInput[]
+    updateMany?: WalletTransactionUpdateManyWithWhereWithoutWalletInput | WalletTransactionUpdateManyWithWhereWithoutWalletInput[]
+    deleteMany?: WalletTransactionScalarWhereInput | WalletTransactionScalarWhereInput[]
+  }
+
+  export type WalletTransactionUncheckedUpdateManyWithoutWalletNestedInput = {
+    create?: XOR<WalletTransactionCreateWithoutWalletInput, WalletTransactionUncheckedCreateWithoutWalletInput> | WalletTransactionCreateWithoutWalletInput[] | WalletTransactionUncheckedCreateWithoutWalletInput[]
+    connectOrCreate?: WalletTransactionCreateOrConnectWithoutWalletInput | WalletTransactionCreateOrConnectWithoutWalletInput[]
+    upsert?: WalletTransactionUpsertWithWhereUniqueWithoutWalletInput | WalletTransactionUpsertWithWhereUniqueWithoutWalletInput[]
+    createMany?: WalletTransactionCreateManyWalletInputEnvelope
+    set?: WalletTransactionWhereUniqueInput | WalletTransactionWhereUniqueInput[]
+    disconnect?: WalletTransactionWhereUniqueInput | WalletTransactionWhereUniqueInput[]
+    delete?: WalletTransactionWhereUniqueInput | WalletTransactionWhereUniqueInput[]
+    connect?: WalletTransactionWhereUniqueInput | WalletTransactionWhereUniqueInput[]
+    update?: WalletTransactionUpdateWithWhereUniqueWithoutWalletInput | WalletTransactionUpdateWithWhereUniqueWithoutWalletInput[]
+    updateMany?: WalletTransactionUpdateManyWithWhereWithoutWalletInput | WalletTransactionUpdateManyWithWhereWithoutWalletInput[]
+    deleteMany?: WalletTransactionScalarWhereInput | WalletTransactionScalarWhereInput[]
+  }
+
+  export type WalletCreateNestedOneWithoutTransactionsInput = {
+    create?: XOR<WalletCreateWithoutTransactionsInput, WalletUncheckedCreateWithoutTransactionsInput>
+    connectOrCreate?: WalletCreateOrConnectWithoutTransactionsInput
+    connect?: WalletWhereUniqueInput
+  }
+
+  export type WalletUpdateOneRequiredWithoutTransactionsNestedInput = {
+    create?: XOR<WalletCreateWithoutTransactionsInput, WalletUncheckedCreateWithoutTransactionsInput>
+    connectOrCreate?: WalletCreateOrConnectWithoutTransactionsInput
+    upsert?: WalletUpsertWithoutTransactionsInput
+    connect?: WalletWhereUniqueInput
+    update?: XOR<XOR<WalletUpdateToOneWithWhereWithoutTransactionsInput, WalletUpdateWithoutTransactionsInput>, WalletUncheckedUpdateWithoutTransactionsInput>
+  }
+
+  export type UserCreateNestedOneWithoutPayoutsInput = {
+    create?: XOR<UserCreateWithoutPayoutsInput, UserUncheckedCreateWithoutPayoutsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPayoutsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutPayoutsNestedInput = {
+    create?: XOR<UserCreateWithoutPayoutsInput, UserUncheckedCreateWithoutPayoutsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPayoutsInput
+    upsert?: UserUpsertWithoutPayoutsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPayoutsInput, UserUpdateWithoutPayoutsInput>, UserUncheckedUpdateWithoutPayoutsInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -19562,6 +31038,46 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type GamehubBookingCreateWithoutUserInput = {
+    id?: string
+    bookingDate: Date | string
+    slotLabel: string
+    totalAmount: number
+    currency?: string
+    status?: string
+    paymentMethod?: string
+    paymentStatus?: string
+    transactionId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    facility: GamehubFacilityCreateNestedOneWithoutBookingsInput
+  }
+
+  export type GamehubBookingUncheckedCreateWithoutUserInput = {
+    id?: string
+    bookingDate: Date | string
+    slotLabel: string
+    totalAmount: number
+    currency?: string
+    status?: string
+    paymentMethod?: string
+    paymentStatus?: string
+    transactionId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    facilityId: string
+  }
+
+  export type GamehubBookingCreateOrConnectWithoutUserInput = {
+    where: GamehubBookingWhereUniqueInput
+    create: XOR<GamehubBookingCreateWithoutUserInput, GamehubBookingUncheckedCreateWithoutUserInput>
+  }
+
+  export type GamehubBookingCreateManyUserInputEnvelope = {
+    data: GamehubBookingCreateManyUserInput | GamehubBookingCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type NotificationCreateWithoutUserInput = {
     id?: string
     title: string
@@ -19613,6 +31129,131 @@ export namespace Prisma {
 
   export type ReviewCreateManyUserInputEnvelope = {
     data: ReviewCreateManyUserInput | ReviewCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type GamehubFacilityCreateWithoutPartnerInput = {
+    id?: string
+    name: string
+    type: string
+    location: string
+    venue: string
+    distance?: string
+    rating?: number
+    reviewsCount?: number
+    pricePerHour?: number
+    unit?: string
+    priceRange?: string
+    image: string
+    description?: string
+    phone?: string
+    openHours?: string
+    status?: string
+    pricingRules?: string
+    amenities?: string
+    features?: string
+    tags?: string
+    gallery?: string
+    battleModes?: string
+    slotTemplate?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reviews?: GamehubReviewCreateNestedManyWithoutFacilityInput
+    bookings?: GamehubBookingCreateNestedManyWithoutFacilityInput
+    blockedSlots?: GamehubBlockedSlotCreateNestedManyWithoutFacilityInput
+  }
+
+  export type GamehubFacilityUncheckedCreateWithoutPartnerInput = {
+    id?: string
+    name: string
+    type: string
+    location: string
+    venue: string
+    distance?: string
+    rating?: number
+    reviewsCount?: number
+    pricePerHour?: number
+    unit?: string
+    priceRange?: string
+    image: string
+    description?: string
+    phone?: string
+    openHours?: string
+    status?: string
+    pricingRules?: string
+    amenities?: string
+    features?: string
+    tags?: string
+    gallery?: string
+    battleModes?: string
+    slotTemplate?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reviews?: GamehubReviewUncheckedCreateNestedManyWithoutFacilityInput
+    bookings?: GamehubBookingUncheckedCreateNestedManyWithoutFacilityInput
+    blockedSlots?: GamehubBlockedSlotUncheckedCreateNestedManyWithoutFacilityInput
+  }
+
+  export type GamehubFacilityCreateOrConnectWithoutPartnerInput = {
+    where: GamehubFacilityWhereUniqueInput
+    create: XOR<GamehubFacilityCreateWithoutPartnerInput, GamehubFacilityUncheckedCreateWithoutPartnerInput>
+  }
+
+  export type GamehubFacilityCreateManyPartnerInputEnvelope = {
+    data: GamehubFacilityCreateManyPartnerInput | GamehubFacilityCreateManyPartnerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type WalletCreateWithoutUserInput = {
+    id?: string
+    balance?: number
+    totalEarnings?: number
+    currency?: string
+    updatedAt?: Date | string
+    transactions?: WalletTransactionCreateNestedManyWithoutWalletInput
+  }
+
+  export type WalletUncheckedCreateWithoutUserInput = {
+    id?: string
+    balance?: number
+    totalEarnings?: number
+    currency?: string
+    updatedAt?: Date | string
+    transactions?: WalletTransactionUncheckedCreateNestedManyWithoutWalletInput
+  }
+
+  export type WalletCreateOrConnectWithoutUserInput = {
+    where: WalletWhereUniqueInput
+    create: XOR<WalletCreateWithoutUserInput, WalletUncheckedCreateWithoutUserInput>
+  }
+
+  export type PayoutCreateWithoutUserInput = {
+    id?: string
+    amount: number
+    status?: string
+    bankDetails?: string
+    transactionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PayoutUncheckedCreateWithoutUserInput = {
+    id?: string
+    amount: number
+    status?: string
+    bankDetails?: string
+    transactionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PayoutCreateOrConnectWithoutUserInput = {
+    where: PayoutWhereUniqueInput
+    create: XOR<PayoutCreateWithoutUserInput, PayoutUncheckedCreateWithoutUserInput>
+  }
+
+  export type PayoutCreateManyUserInputEnvelope = {
+    data: PayoutCreateManyUserInput | PayoutCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -19704,6 +31345,41 @@ export namespace Prisma {
     showId?: StringNullableFilter<"Booking"> | string | null
   }
 
+  export type GamehubBookingUpsertWithWhereUniqueWithoutUserInput = {
+    where: GamehubBookingWhereUniqueInput
+    update: XOR<GamehubBookingUpdateWithoutUserInput, GamehubBookingUncheckedUpdateWithoutUserInput>
+    create: XOR<GamehubBookingCreateWithoutUserInput, GamehubBookingUncheckedCreateWithoutUserInput>
+  }
+
+  export type GamehubBookingUpdateWithWhereUniqueWithoutUserInput = {
+    where: GamehubBookingWhereUniqueInput
+    data: XOR<GamehubBookingUpdateWithoutUserInput, GamehubBookingUncheckedUpdateWithoutUserInput>
+  }
+
+  export type GamehubBookingUpdateManyWithWhereWithoutUserInput = {
+    where: GamehubBookingScalarWhereInput
+    data: XOR<GamehubBookingUpdateManyMutationInput, GamehubBookingUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type GamehubBookingScalarWhereInput = {
+    AND?: GamehubBookingScalarWhereInput | GamehubBookingScalarWhereInput[]
+    OR?: GamehubBookingScalarWhereInput[]
+    NOT?: GamehubBookingScalarWhereInput | GamehubBookingScalarWhereInput[]
+    id?: StringFilter<"GamehubBooking"> | string
+    bookingDate?: DateTimeFilter<"GamehubBooking"> | Date | string
+    slotLabel?: StringFilter<"GamehubBooking"> | string
+    totalAmount?: FloatFilter<"GamehubBooking"> | number
+    currency?: StringFilter<"GamehubBooking"> | string
+    status?: StringFilter<"GamehubBooking"> | string
+    paymentMethod?: StringFilter<"GamehubBooking"> | string
+    paymentStatus?: StringFilter<"GamehubBooking"> | string
+    transactionId?: StringFilter<"GamehubBooking"> | string
+    createdAt?: DateTimeFilter<"GamehubBooking"> | Date | string
+    updatedAt?: DateTimeFilter<"GamehubBooking"> | Date | string
+    userId?: StringFilter<"GamehubBooking"> | string
+    facilityId?: StringFilter<"GamehubBooking"> | string
+  }
+
   export type NotificationUpsertWithWhereUniqueWithoutUserInput = {
     where: NotificationWhereUniqueInput
     update: XOR<NotificationUpdateWithoutUserInput, NotificationUncheckedUpdateWithoutUserInput>
@@ -19761,6 +31437,113 @@ export namespace Prisma {
     eventId?: StringFilter<"Review"> | string
   }
 
+  export type GamehubFacilityUpsertWithWhereUniqueWithoutPartnerInput = {
+    where: GamehubFacilityWhereUniqueInput
+    update: XOR<GamehubFacilityUpdateWithoutPartnerInput, GamehubFacilityUncheckedUpdateWithoutPartnerInput>
+    create: XOR<GamehubFacilityCreateWithoutPartnerInput, GamehubFacilityUncheckedCreateWithoutPartnerInput>
+  }
+
+  export type GamehubFacilityUpdateWithWhereUniqueWithoutPartnerInput = {
+    where: GamehubFacilityWhereUniqueInput
+    data: XOR<GamehubFacilityUpdateWithoutPartnerInput, GamehubFacilityUncheckedUpdateWithoutPartnerInput>
+  }
+
+  export type GamehubFacilityUpdateManyWithWhereWithoutPartnerInput = {
+    where: GamehubFacilityScalarWhereInput
+    data: XOR<GamehubFacilityUpdateManyMutationInput, GamehubFacilityUncheckedUpdateManyWithoutPartnerInput>
+  }
+
+  export type GamehubFacilityScalarWhereInput = {
+    AND?: GamehubFacilityScalarWhereInput | GamehubFacilityScalarWhereInput[]
+    OR?: GamehubFacilityScalarWhereInput[]
+    NOT?: GamehubFacilityScalarWhereInput | GamehubFacilityScalarWhereInput[]
+    id?: StringFilter<"GamehubFacility"> | string
+    name?: StringFilter<"GamehubFacility"> | string
+    type?: StringFilter<"GamehubFacility"> | string
+    location?: StringFilter<"GamehubFacility"> | string
+    venue?: StringFilter<"GamehubFacility"> | string
+    distance?: StringFilter<"GamehubFacility"> | string
+    rating?: FloatFilter<"GamehubFacility"> | number
+    reviewsCount?: IntFilter<"GamehubFacility"> | number
+    pricePerHour?: FloatFilter<"GamehubFacility"> | number
+    unit?: StringFilter<"GamehubFacility"> | string
+    priceRange?: StringFilter<"GamehubFacility"> | string
+    image?: StringFilter<"GamehubFacility"> | string
+    description?: StringFilter<"GamehubFacility"> | string
+    phone?: StringFilter<"GamehubFacility"> | string
+    openHours?: StringFilter<"GamehubFacility"> | string
+    status?: StringFilter<"GamehubFacility"> | string
+    pricingRules?: StringFilter<"GamehubFacility"> | string
+    amenities?: StringFilter<"GamehubFacility"> | string
+    features?: StringFilter<"GamehubFacility"> | string
+    tags?: StringFilter<"GamehubFacility"> | string
+    gallery?: StringFilter<"GamehubFacility"> | string
+    battleModes?: StringFilter<"GamehubFacility"> | string
+    slotTemplate?: StringFilter<"GamehubFacility"> | string
+    createdAt?: DateTimeFilter<"GamehubFacility"> | Date | string
+    updatedAt?: DateTimeFilter<"GamehubFacility"> | Date | string
+    partnerId?: StringNullableFilter<"GamehubFacility"> | string | null
+  }
+
+  export type WalletUpsertWithoutUserInput = {
+    update: XOR<WalletUpdateWithoutUserInput, WalletUncheckedUpdateWithoutUserInput>
+    create: XOR<WalletCreateWithoutUserInput, WalletUncheckedCreateWithoutUserInput>
+    where?: WalletWhereInput
+  }
+
+  export type WalletUpdateToOneWithWhereWithoutUserInput = {
+    where?: WalletWhereInput
+    data: XOR<WalletUpdateWithoutUserInput, WalletUncheckedUpdateWithoutUserInput>
+  }
+
+  export type WalletUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    balance?: FloatFieldUpdateOperationsInput | number
+    totalEarnings?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    transactions?: WalletTransactionUpdateManyWithoutWalletNestedInput
+  }
+
+  export type WalletUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    balance?: FloatFieldUpdateOperationsInput | number
+    totalEarnings?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    transactions?: WalletTransactionUncheckedUpdateManyWithoutWalletNestedInput
+  }
+
+  export type PayoutUpsertWithWhereUniqueWithoutUserInput = {
+    where: PayoutWhereUniqueInput
+    update: XOR<PayoutUpdateWithoutUserInput, PayoutUncheckedUpdateWithoutUserInput>
+    create: XOR<PayoutCreateWithoutUserInput, PayoutUncheckedCreateWithoutUserInput>
+  }
+
+  export type PayoutUpdateWithWhereUniqueWithoutUserInput = {
+    where: PayoutWhereUniqueInput
+    data: XOR<PayoutUpdateWithoutUserInput, PayoutUncheckedUpdateWithoutUserInput>
+  }
+
+  export type PayoutUpdateManyWithWhereWithoutUserInput = {
+    where: PayoutScalarWhereInput
+    data: XOR<PayoutUpdateManyMutationInput, PayoutUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type PayoutScalarWhereInput = {
+    AND?: PayoutScalarWhereInput | PayoutScalarWhereInput[]
+    OR?: PayoutScalarWhereInput[]
+    NOT?: PayoutScalarWhereInput | PayoutScalarWhereInput[]
+    id?: StringFilter<"Payout"> | string
+    amount?: FloatFilter<"Payout"> | number
+    status?: StringFilter<"Payout"> | string
+    bankDetails?: StringFilter<"Payout"> | string
+    transactionId?: StringNullableFilter<"Payout"> | string | null
+    createdAt?: DateTimeFilter<"Payout"> | Date | string
+    updatedAt?: DateTimeFilter<"Payout"> | Date | string
+    userId?: StringFilter<"Payout"> | string
+  }
+
   export type UserCreateWithoutEventsInput = {
     id?: string
     name: string
@@ -19773,8 +31556,12 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     bookings?: BookingCreateNestedManyWithoutUserInput
+    gamehubBookings?: GamehubBookingCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    gamehubFacilities?: GamehubFacilityCreateNestedManyWithoutPartnerInput
+    wallet?: WalletCreateNestedOneWithoutUserInput
+    payouts?: PayoutCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutEventsInput = {
@@ -19789,8 +31576,12 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     bookings?: BookingUncheckedCreateNestedManyWithoutUserInput
+    gamehubBookings?: GamehubBookingUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    gamehubFacilities?: GamehubFacilityUncheckedCreateNestedManyWithoutPartnerInput
+    wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
+    payouts?: PayoutUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutEventsInput = {
@@ -19961,8 +31752,12 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bookings?: BookingUpdateManyWithoutUserNestedInput
+    gamehubBookings?: GamehubBookingUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    gamehubFacilities?: GamehubFacilityUpdateManyWithoutPartnerNestedInput
+    wallet?: WalletUpdateOneWithoutUserNestedInput
+    payouts?: PayoutUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutEventsInput = {
@@ -19977,8 +31772,12 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bookings?: BookingUncheckedUpdateManyWithoutUserNestedInput
+    gamehubBookings?: GamehubBookingUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    gamehubFacilities?: GamehubFacilityUncheckedUpdateManyWithoutPartnerNestedInput
+    wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
+    payouts?: PayoutUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type BookingUpsertWithWhereUniqueWithoutEventInput = {
@@ -20311,8 +32110,12 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     events?: EventCreateNestedManyWithoutPartnerInput
+    gamehubBookings?: GamehubBookingCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    gamehubFacilities?: GamehubFacilityCreateNestedManyWithoutPartnerInput
+    wallet?: WalletCreateNestedOneWithoutUserInput
+    payouts?: PayoutCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutBookingsInput = {
@@ -20327,8 +32130,12 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     events?: EventUncheckedCreateNestedManyWithoutPartnerInput
+    gamehubBookings?: GamehubBookingUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    gamehubFacilities?: GamehubFacilityUncheckedCreateNestedManyWithoutPartnerInput
+    wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
+    payouts?: PayoutUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutBookingsInput = {
@@ -20546,8 +32353,12 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     events?: EventUpdateManyWithoutPartnerNestedInput
+    gamehubBookings?: GamehubBookingUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    gamehubFacilities?: GamehubFacilityUpdateManyWithoutPartnerNestedInput
+    wallet?: WalletUpdateOneWithoutUserNestedInput
+    payouts?: PayoutUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBookingsInput = {
@@ -20562,8 +32373,12 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     events?: EventUncheckedUpdateManyWithoutPartnerNestedInput
+    gamehubBookings?: GamehubBookingUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    gamehubFacilities?: GamehubFacilityUncheckedUpdateManyWithoutPartnerNestedInput
+    wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
+    payouts?: PayoutUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type EventUpsertWithoutBookingsInput = {
@@ -21548,7 +33363,11 @@ export namespace Prisma {
     updatedAt?: Date | string
     events?: EventCreateNestedManyWithoutPartnerInput
     bookings?: BookingCreateNestedManyWithoutUserInput
+    gamehubBookings?: GamehubBookingCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
+    gamehubFacilities?: GamehubFacilityCreateNestedManyWithoutPartnerInput
+    wallet?: WalletCreateNestedOneWithoutUserInput
+    payouts?: PayoutCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -21564,7 +33383,11 @@ export namespace Prisma {
     updatedAt?: Date | string
     events?: EventUncheckedCreateNestedManyWithoutPartnerInput
     bookings?: BookingUncheckedCreateNestedManyWithoutUserInput
+    gamehubBookings?: GamehubBookingUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    gamehubFacilities?: GamehubFacilityUncheckedCreateNestedManyWithoutPartnerInput
+    wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
+    payouts?: PayoutUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -21596,7 +33419,11 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     events?: EventUpdateManyWithoutPartnerNestedInput
     bookings?: BookingUpdateManyWithoutUserNestedInput
+    gamehubBookings?: GamehubBookingUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
+    gamehubFacilities?: GamehubFacilityUpdateManyWithoutPartnerNestedInput
+    wallet?: WalletUpdateOneWithoutUserNestedInput
+    payouts?: PayoutUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -21612,7 +33439,11 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     events?: EventUncheckedUpdateManyWithoutPartnerNestedInput
     bookings?: BookingUncheckedUpdateManyWithoutUserNestedInput
+    gamehubBookings?: GamehubBookingUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    gamehubFacilities?: GamehubFacilityUncheckedUpdateManyWithoutPartnerNestedInput
+    wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
+    payouts?: PayoutUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutReviewsInput = {
@@ -21628,7 +33459,11 @@ export namespace Prisma {
     updatedAt?: Date | string
     events?: EventCreateNestedManyWithoutPartnerInput
     bookings?: BookingCreateNestedManyWithoutUserInput
+    gamehubBookings?: GamehubBookingCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    gamehubFacilities?: GamehubFacilityCreateNestedManyWithoutPartnerInput
+    wallet?: WalletCreateNestedOneWithoutUserInput
+    payouts?: PayoutCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReviewsInput = {
@@ -21644,7 +33479,11 @@ export namespace Prisma {
     updatedAt?: Date | string
     events?: EventUncheckedCreateNestedManyWithoutPartnerInput
     bookings?: BookingUncheckedCreateNestedManyWithoutUserInput
+    gamehubBookings?: GamehubBookingUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    gamehubFacilities?: GamehubFacilityUncheckedCreateNestedManyWithoutPartnerInput
+    wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
+    payouts?: PayoutUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewsInput = {
@@ -21759,7 +33598,11 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     events?: EventUpdateManyWithoutPartnerNestedInput
     bookings?: BookingUpdateManyWithoutUserNestedInput
+    gamehubBookings?: GamehubBookingUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    gamehubFacilities?: GamehubFacilityUpdateManyWithoutPartnerNestedInput
+    wallet?: WalletUpdateOneWithoutUserNestedInput
+    payouts?: PayoutUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewsInput = {
@@ -21775,7 +33618,11 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     events?: EventUncheckedUpdateManyWithoutPartnerNestedInput
     bookings?: BookingUncheckedUpdateManyWithoutUserNestedInput
+    gamehubBookings?: GamehubBookingUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    gamehubFacilities?: GamehubFacilityUncheckedUpdateManyWithoutPartnerNestedInput
+    wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
+    payouts?: PayoutUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type EventUpsertWithoutReviewsInput = {
@@ -21867,6 +33714,1092 @@ export namespace Prisma {
     tiers?: TierUncheckedUpdateManyWithoutEventNestedInput
   }
 
+  export type UserCreateWithoutGamehubFacilitiesInput = {
+    id?: string
+    name: string
+    email: string
+    password: string
+    phone?: string | null
+    avatar?: string | null
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    events?: EventCreateNestedManyWithoutPartnerInput
+    bookings?: BookingCreateNestedManyWithoutUserInput
+    gamehubBookings?: GamehubBookingCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
+    wallet?: WalletCreateNestedOneWithoutUserInput
+    payouts?: PayoutCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutGamehubFacilitiesInput = {
+    id?: string
+    name: string
+    email: string
+    password: string
+    phone?: string | null
+    avatar?: string | null
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    events?: EventUncheckedCreateNestedManyWithoutPartnerInput
+    bookings?: BookingUncheckedCreateNestedManyWithoutUserInput
+    gamehubBookings?: GamehubBookingUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
+    payouts?: PayoutUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutGamehubFacilitiesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutGamehubFacilitiesInput, UserUncheckedCreateWithoutGamehubFacilitiesInput>
+  }
+
+  export type GamehubReviewCreateWithoutFacilityInput = {
+    id?: string
+    rating: number
+    comment: string
+    userName: string
+    avatar?: string
+    helpful?: number
+    createdAt?: Date | string
+  }
+
+  export type GamehubReviewUncheckedCreateWithoutFacilityInput = {
+    id?: string
+    rating: number
+    comment: string
+    userName: string
+    avatar?: string
+    helpful?: number
+    createdAt?: Date | string
+  }
+
+  export type GamehubReviewCreateOrConnectWithoutFacilityInput = {
+    where: GamehubReviewWhereUniqueInput
+    create: XOR<GamehubReviewCreateWithoutFacilityInput, GamehubReviewUncheckedCreateWithoutFacilityInput>
+  }
+
+  export type GamehubReviewCreateManyFacilityInputEnvelope = {
+    data: GamehubReviewCreateManyFacilityInput | GamehubReviewCreateManyFacilityInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type GamehubBookingCreateWithoutFacilityInput = {
+    id?: string
+    bookingDate: Date | string
+    slotLabel: string
+    totalAmount: number
+    currency?: string
+    status?: string
+    paymentMethod?: string
+    paymentStatus?: string
+    transactionId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutGamehubBookingsInput
+  }
+
+  export type GamehubBookingUncheckedCreateWithoutFacilityInput = {
+    id?: string
+    bookingDate: Date | string
+    slotLabel: string
+    totalAmount: number
+    currency?: string
+    status?: string
+    paymentMethod?: string
+    paymentStatus?: string
+    transactionId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userId: string
+  }
+
+  export type GamehubBookingCreateOrConnectWithoutFacilityInput = {
+    where: GamehubBookingWhereUniqueInput
+    create: XOR<GamehubBookingCreateWithoutFacilityInput, GamehubBookingUncheckedCreateWithoutFacilityInput>
+  }
+
+  export type GamehubBookingCreateManyFacilityInputEnvelope = {
+    data: GamehubBookingCreateManyFacilityInput | GamehubBookingCreateManyFacilityInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type GamehubBlockedSlotCreateWithoutFacilityInput = {
+    id?: string
+    blockDate: Date | string
+    slotLabel: string
+    reason?: string
+    createdAt?: Date | string
+    createdByUserId?: string | null
+  }
+
+  export type GamehubBlockedSlotUncheckedCreateWithoutFacilityInput = {
+    id?: string
+    blockDate: Date | string
+    slotLabel: string
+    reason?: string
+    createdAt?: Date | string
+    createdByUserId?: string | null
+  }
+
+  export type GamehubBlockedSlotCreateOrConnectWithoutFacilityInput = {
+    where: GamehubBlockedSlotWhereUniqueInput
+    create: XOR<GamehubBlockedSlotCreateWithoutFacilityInput, GamehubBlockedSlotUncheckedCreateWithoutFacilityInput>
+  }
+
+  export type GamehubBlockedSlotCreateManyFacilityInputEnvelope = {
+    data: GamehubBlockedSlotCreateManyFacilityInput | GamehubBlockedSlotCreateManyFacilityInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutGamehubFacilitiesInput = {
+    update: XOR<UserUpdateWithoutGamehubFacilitiesInput, UserUncheckedUpdateWithoutGamehubFacilitiesInput>
+    create: XOR<UserCreateWithoutGamehubFacilitiesInput, UserUncheckedCreateWithoutGamehubFacilitiesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutGamehubFacilitiesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutGamehubFacilitiesInput, UserUncheckedUpdateWithoutGamehubFacilitiesInput>
+  }
+
+  export type UserUpdateWithoutGamehubFacilitiesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    events?: EventUpdateManyWithoutPartnerNestedInput
+    bookings?: BookingUpdateManyWithoutUserNestedInput
+    gamehubBookings?: GamehubBookingUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
+    wallet?: WalletUpdateOneWithoutUserNestedInput
+    payouts?: PayoutUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutGamehubFacilitiesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    events?: EventUncheckedUpdateManyWithoutPartnerNestedInput
+    bookings?: BookingUncheckedUpdateManyWithoutUserNestedInput
+    gamehubBookings?: GamehubBookingUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
+    payouts?: PayoutUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type GamehubReviewUpsertWithWhereUniqueWithoutFacilityInput = {
+    where: GamehubReviewWhereUniqueInput
+    update: XOR<GamehubReviewUpdateWithoutFacilityInput, GamehubReviewUncheckedUpdateWithoutFacilityInput>
+    create: XOR<GamehubReviewCreateWithoutFacilityInput, GamehubReviewUncheckedCreateWithoutFacilityInput>
+  }
+
+  export type GamehubReviewUpdateWithWhereUniqueWithoutFacilityInput = {
+    where: GamehubReviewWhereUniqueInput
+    data: XOR<GamehubReviewUpdateWithoutFacilityInput, GamehubReviewUncheckedUpdateWithoutFacilityInput>
+  }
+
+  export type GamehubReviewUpdateManyWithWhereWithoutFacilityInput = {
+    where: GamehubReviewScalarWhereInput
+    data: XOR<GamehubReviewUpdateManyMutationInput, GamehubReviewUncheckedUpdateManyWithoutFacilityInput>
+  }
+
+  export type GamehubReviewScalarWhereInput = {
+    AND?: GamehubReviewScalarWhereInput | GamehubReviewScalarWhereInput[]
+    OR?: GamehubReviewScalarWhereInput[]
+    NOT?: GamehubReviewScalarWhereInput | GamehubReviewScalarWhereInput[]
+    id?: StringFilter<"GamehubReview"> | string
+    rating?: IntFilter<"GamehubReview"> | number
+    comment?: StringFilter<"GamehubReview"> | string
+    userName?: StringFilter<"GamehubReview"> | string
+    avatar?: StringFilter<"GamehubReview"> | string
+    helpful?: IntFilter<"GamehubReview"> | number
+    createdAt?: DateTimeFilter<"GamehubReview"> | Date | string
+    facilityId?: StringFilter<"GamehubReview"> | string
+  }
+
+  export type GamehubBookingUpsertWithWhereUniqueWithoutFacilityInput = {
+    where: GamehubBookingWhereUniqueInput
+    update: XOR<GamehubBookingUpdateWithoutFacilityInput, GamehubBookingUncheckedUpdateWithoutFacilityInput>
+    create: XOR<GamehubBookingCreateWithoutFacilityInput, GamehubBookingUncheckedCreateWithoutFacilityInput>
+  }
+
+  export type GamehubBookingUpdateWithWhereUniqueWithoutFacilityInput = {
+    where: GamehubBookingWhereUniqueInput
+    data: XOR<GamehubBookingUpdateWithoutFacilityInput, GamehubBookingUncheckedUpdateWithoutFacilityInput>
+  }
+
+  export type GamehubBookingUpdateManyWithWhereWithoutFacilityInput = {
+    where: GamehubBookingScalarWhereInput
+    data: XOR<GamehubBookingUpdateManyMutationInput, GamehubBookingUncheckedUpdateManyWithoutFacilityInput>
+  }
+
+  export type GamehubBlockedSlotUpsertWithWhereUniqueWithoutFacilityInput = {
+    where: GamehubBlockedSlotWhereUniqueInput
+    update: XOR<GamehubBlockedSlotUpdateWithoutFacilityInput, GamehubBlockedSlotUncheckedUpdateWithoutFacilityInput>
+    create: XOR<GamehubBlockedSlotCreateWithoutFacilityInput, GamehubBlockedSlotUncheckedCreateWithoutFacilityInput>
+  }
+
+  export type GamehubBlockedSlotUpdateWithWhereUniqueWithoutFacilityInput = {
+    where: GamehubBlockedSlotWhereUniqueInput
+    data: XOR<GamehubBlockedSlotUpdateWithoutFacilityInput, GamehubBlockedSlotUncheckedUpdateWithoutFacilityInput>
+  }
+
+  export type GamehubBlockedSlotUpdateManyWithWhereWithoutFacilityInput = {
+    where: GamehubBlockedSlotScalarWhereInput
+    data: XOR<GamehubBlockedSlotUpdateManyMutationInput, GamehubBlockedSlotUncheckedUpdateManyWithoutFacilityInput>
+  }
+
+  export type GamehubBlockedSlotScalarWhereInput = {
+    AND?: GamehubBlockedSlotScalarWhereInput | GamehubBlockedSlotScalarWhereInput[]
+    OR?: GamehubBlockedSlotScalarWhereInput[]
+    NOT?: GamehubBlockedSlotScalarWhereInput | GamehubBlockedSlotScalarWhereInput[]
+    id?: StringFilter<"GamehubBlockedSlot"> | string
+    blockDate?: DateTimeFilter<"GamehubBlockedSlot"> | Date | string
+    slotLabel?: StringFilter<"GamehubBlockedSlot"> | string
+    reason?: StringFilter<"GamehubBlockedSlot"> | string
+    createdAt?: DateTimeFilter<"GamehubBlockedSlot"> | Date | string
+    createdByUserId?: StringNullableFilter<"GamehubBlockedSlot"> | string | null
+    facilityId?: StringFilter<"GamehubBlockedSlot"> | string
+  }
+
+  export type GamehubFacilityCreateWithoutReviewsInput = {
+    id?: string
+    name: string
+    type: string
+    location: string
+    venue: string
+    distance?: string
+    rating?: number
+    reviewsCount?: number
+    pricePerHour?: number
+    unit?: string
+    priceRange?: string
+    image: string
+    description?: string
+    phone?: string
+    openHours?: string
+    status?: string
+    pricingRules?: string
+    amenities?: string
+    features?: string
+    tags?: string
+    gallery?: string
+    battleModes?: string
+    slotTemplate?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    partner?: UserCreateNestedOneWithoutGamehubFacilitiesInput
+    bookings?: GamehubBookingCreateNestedManyWithoutFacilityInput
+    blockedSlots?: GamehubBlockedSlotCreateNestedManyWithoutFacilityInput
+  }
+
+  export type GamehubFacilityUncheckedCreateWithoutReviewsInput = {
+    id?: string
+    name: string
+    type: string
+    location: string
+    venue: string
+    distance?: string
+    rating?: number
+    reviewsCount?: number
+    pricePerHour?: number
+    unit?: string
+    priceRange?: string
+    image: string
+    description?: string
+    phone?: string
+    openHours?: string
+    status?: string
+    pricingRules?: string
+    amenities?: string
+    features?: string
+    tags?: string
+    gallery?: string
+    battleModes?: string
+    slotTemplate?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    partnerId?: string | null
+    bookings?: GamehubBookingUncheckedCreateNestedManyWithoutFacilityInput
+    blockedSlots?: GamehubBlockedSlotUncheckedCreateNestedManyWithoutFacilityInput
+  }
+
+  export type GamehubFacilityCreateOrConnectWithoutReviewsInput = {
+    where: GamehubFacilityWhereUniqueInput
+    create: XOR<GamehubFacilityCreateWithoutReviewsInput, GamehubFacilityUncheckedCreateWithoutReviewsInput>
+  }
+
+  export type GamehubFacilityUpsertWithoutReviewsInput = {
+    update: XOR<GamehubFacilityUpdateWithoutReviewsInput, GamehubFacilityUncheckedUpdateWithoutReviewsInput>
+    create: XOR<GamehubFacilityCreateWithoutReviewsInput, GamehubFacilityUncheckedCreateWithoutReviewsInput>
+    where?: GamehubFacilityWhereInput
+  }
+
+  export type GamehubFacilityUpdateToOneWithWhereWithoutReviewsInput = {
+    where?: GamehubFacilityWhereInput
+    data: XOR<GamehubFacilityUpdateWithoutReviewsInput, GamehubFacilityUncheckedUpdateWithoutReviewsInput>
+  }
+
+  export type GamehubFacilityUpdateWithoutReviewsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    venue?: StringFieldUpdateOperationsInput | string
+    distance?: StringFieldUpdateOperationsInput | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewsCount?: IntFieldUpdateOperationsInput | number
+    pricePerHour?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    priceRange?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    openHours?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    pricingRules?: StringFieldUpdateOperationsInput | string
+    amenities?: StringFieldUpdateOperationsInput | string
+    features?: StringFieldUpdateOperationsInput | string
+    tags?: StringFieldUpdateOperationsInput | string
+    gallery?: StringFieldUpdateOperationsInput | string
+    battleModes?: StringFieldUpdateOperationsInput | string
+    slotTemplate?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partner?: UserUpdateOneWithoutGamehubFacilitiesNestedInput
+    bookings?: GamehubBookingUpdateManyWithoutFacilityNestedInput
+    blockedSlots?: GamehubBlockedSlotUpdateManyWithoutFacilityNestedInput
+  }
+
+  export type GamehubFacilityUncheckedUpdateWithoutReviewsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    venue?: StringFieldUpdateOperationsInput | string
+    distance?: StringFieldUpdateOperationsInput | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewsCount?: IntFieldUpdateOperationsInput | number
+    pricePerHour?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    priceRange?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    openHours?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    pricingRules?: StringFieldUpdateOperationsInput | string
+    amenities?: StringFieldUpdateOperationsInput | string
+    features?: StringFieldUpdateOperationsInput | string
+    tags?: StringFieldUpdateOperationsInput | string
+    gallery?: StringFieldUpdateOperationsInput | string
+    battleModes?: StringFieldUpdateOperationsInput | string
+    slotTemplate?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    bookings?: GamehubBookingUncheckedUpdateManyWithoutFacilityNestedInput
+    blockedSlots?: GamehubBlockedSlotUncheckedUpdateManyWithoutFacilityNestedInput
+  }
+
+  export type UserCreateWithoutGamehubBookingsInput = {
+    id?: string
+    name: string
+    email: string
+    password: string
+    phone?: string | null
+    avatar?: string | null
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    events?: EventCreateNestedManyWithoutPartnerInput
+    bookings?: BookingCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
+    gamehubFacilities?: GamehubFacilityCreateNestedManyWithoutPartnerInput
+    wallet?: WalletCreateNestedOneWithoutUserInput
+    payouts?: PayoutCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutGamehubBookingsInput = {
+    id?: string
+    name: string
+    email: string
+    password: string
+    phone?: string | null
+    avatar?: string | null
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    events?: EventUncheckedCreateNestedManyWithoutPartnerInput
+    bookings?: BookingUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    gamehubFacilities?: GamehubFacilityUncheckedCreateNestedManyWithoutPartnerInput
+    wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
+    payouts?: PayoutUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutGamehubBookingsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutGamehubBookingsInput, UserUncheckedCreateWithoutGamehubBookingsInput>
+  }
+
+  export type GamehubFacilityCreateWithoutBookingsInput = {
+    id?: string
+    name: string
+    type: string
+    location: string
+    venue: string
+    distance?: string
+    rating?: number
+    reviewsCount?: number
+    pricePerHour?: number
+    unit?: string
+    priceRange?: string
+    image: string
+    description?: string
+    phone?: string
+    openHours?: string
+    status?: string
+    pricingRules?: string
+    amenities?: string
+    features?: string
+    tags?: string
+    gallery?: string
+    battleModes?: string
+    slotTemplate?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    partner?: UserCreateNestedOneWithoutGamehubFacilitiesInput
+    reviews?: GamehubReviewCreateNestedManyWithoutFacilityInput
+    blockedSlots?: GamehubBlockedSlotCreateNestedManyWithoutFacilityInput
+  }
+
+  export type GamehubFacilityUncheckedCreateWithoutBookingsInput = {
+    id?: string
+    name: string
+    type: string
+    location: string
+    venue: string
+    distance?: string
+    rating?: number
+    reviewsCount?: number
+    pricePerHour?: number
+    unit?: string
+    priceRange?: string
+    image: string
+    description?: string
+    phone?: string
+    openHours?: string
+    status?: string
+    pricingRules?: string
+    amenities?: string
+    features?: string
+    tags?: string
+    gallery?: string
+    battleModes?: string
+    slotTemplate?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    partnerId?: string | null
+    reviews?: GamehubReviewUncheckedCreateNestedManyWithoutFacilityInput
+    blockedSlots?: GamehubBlockedSlotUncheckedCreateNestedManyWithoutFacilityInput
+  }
+
+  export type GamehubFacilityCreateOrConnectWithoutBookingsInput = {
+    where: GamehubFacilityWhereUniqueInput
+    create: XOR<GamehubFacilityCreateWithoutBookingsInput, GamehubFacilityUncheckedCreateWithoutBookingsInput>
+  }
+
+  export type UserUpsertWithoutGamehubBookingsInput = {
+    update: XOR<UserUpdateWithoutGamehubBookingsInput, UserUncheckedUpdateWithoutGamehubBookingsInput>
+    create: XOR<UserCreateWithoutGamehubBookingsInput, UserUncheckedCreateWithoutGamehubBookingsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutGamehubBookingsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutGamehubBookingsInput, UserUncheckedUpdateWithoutGamehubBookingsInput>
+  }
+
+  export type UserUpdateWithoutGamehubBookingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    events?: EventUpdateManyWithoutPartnerNestedInput
+    bookings?: BookingUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
+    gamehubFacilities?: GamehubFacilityUpdateManyWithoutPartnerNestedInput
+    wallet?: WalletUpdateOneWithoutUserNestedInput
+    payouts?: PayoutUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutGamehubBookingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    events?: EventUncheckedUpdateManyWithoutPartnerNestedInput
+    bookings?: BookingUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    gamehubFacilities?: GamehubFacilityUncheckedUpdateManyWithoutPartnerNestedInput
+    wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
+    payouts?: PayoutUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type GamehubFacilityUpsertWithoutBookingsInput = {
+    update: XOR<GamehubFacilityUpdateWithoutBookingsInput, GamehubFacilityUncheckedUpdateWithoutBookingsInput>
+    create: XOR<GamehubFacilityCreateWithoutBookingsInput, GamehubFacilityUncheckedCreateWithoutBookingsInput>
+    where?: GamehubFacilityWhereInput
+  }
+
+  export type GamehubFacilityUpdateToOneWithWhereWithoutBookingsInput = {
+    where?: GamehubFacilityWhereInput
+    data: XOR<GamehubFacilityUpdateWithoutBookingsInput, GamehubFacilityUncheckedUpdateWithoutBookingsInput>
+  }
+
+  export type GamehubFacilityUpdateWithoutBookingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    venue?: StringFieldUpdateOperationsInput | string
+    distance?: StringFieldUpdateOperationsInput | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewsCount?: IntFieldUpdateOperationsInput | number
+    pricePerHour?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    priceRange?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    openHours?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    pricingRules?: StringFieldUpdateOperationsInput | string
+    amenities?: StringFieldUpdateOperationsInput | string
+    features?: StringFieldUpdateOperationsInput | string
+    tags?: StringFieldUpdateOperationsInput | string
+    gallery?: StringFieldUpdateOperationsInput | string
+    battleModes?: StringFieldUpdateOperationsInput | string
+    slotTemplate?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partner?: UserUpdateOneWithoutGamehubFacilitiesNestedInput
+    reviews?: GamehubReviewUpdateManyWithoutFacilityNestedInput
+    blockedSlots?: GamehubBlockedSlotUpdateManyWithoutFacilityNestedInput
+  }
+
+  export type GamehubFacilityUncheckedUpdateWithoutBookingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    venue?: StringFieldUpdateOperationsInput | string
+    distance?: StringFieldUpdateOperationsInput | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewsCount?: IntFieldUpdateOperationsInput | number
+    pricePerHour?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    priceRange?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    openHours?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    pricingRules?: StringFieldUpdateOperationsInput | string
+    amenities?: StringFieldUpdateOperationsInput | string
+    features?: StringFieldUpdateOperationsInput | string
+    tags?: StringFieldUpdateOperationsInput | string
+    gallery?: StringFieldUpdateOperationsInput | string
+    battleModes?: StringFieldUpdateOperationsInput | string
+    slotTemplate?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    reviews?: GamehubReviewUncheckedUpdateManyWithoutFacilityNestedInput
+    blockedSlots?: GamehubBlockedSlotUncheckedUpdateManyWithoutFacilityNestedInput
+  }
+
+  export type GamehubFacilityCreateWithoutBlockedSlotsInput = {
+    id?: string
+    name: string
+    type: string
+    location: string
+    venue: string
+    distance?: string
+    rating?: number
+    reviewsCount?: number
+    pricePerHour?: number
+    unit?: string
+    priceRange?: string
+    image: string
+    description?: string
+    phone?: string
+    openHours?: string
+    status?: string
+    pricingRules?: string
+    amenities?: string
+    features?: string
+    tags?: string
+    gallery?: string
+    battleModes?: string
+    slotTemplate?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    partner?: UserCreateNestedOneWithoutGamehubFacilitiesInput
+    reviews?: GamehubReviewCreateNestedManyWithoutFacilityInput
+    bookings?: GamehubBookingCreateNestedManyWithoutFacilityInput
+  }
+
+  export type GamehubFacilityUncheckedCreateWithoutBlockedSlotsInput = {
+    id?: string
+    name: string
+    type: string
+    location: string
+    venue: string
+    distance?: string
+    rating?: number
+    reviewsCount?: number
+    pricePerHour?: number
+    unit?: string
+    priceRange?: string
+    image: string
+    description?: string
+    phone?: string
+    openHours?: string
+    status?: string
+    pricingRules?: string
+    amenities?: string
+    features?: string
+    tags?: string
+    gallery?: string
+    battleModes?: string
+    slotTemplate?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    partnerId?: string | null
+    reviews?: GamehubReviewUncheckedCreateNestedManyWithoutFacilityInput
+    bookings?: GamehubBookingUncheckedCreateNestedManyWithoutFacilityInput
+  }
+
+  export type GamehubFacilityCreateOrConnectWithoutBlockedSlotsInput = {
+    where: GamehubFacilityWhereUniqueInput
+    create: XOR<GamehubFacilityCreateWithoutBlockedSlotsInput, GamehubFacilityUncheckedCreateWithoutBlockedSlotsInput>
+  }
+
+  export type GamehubFacilityUpsertWithoutBlockedSlotsInput = {
+    update: XOR<GamehubFacilityUpdateWithoutBlockedSlotsInput, GamehubFacilityUncheckedUpdateWithoutBlockedSlotsInput>
+    create: XOR<GamehubFacilityCreateWithoutBlockedSlotsInput, GamehubFacilityUncheckedCreateWithoutBlockedSlotsInput>
+    where?: GamehubFacilityWhereInput
+  }
+
+  export type GamehubFacilityUpdateToOneWithWhereWithoutBlockedSlotsInput = {
+    where?: GamehubFacilityWhereInput
+    data: XOR<GamehubFacilityUpdateWithoutBlockedSlotsInput, GamehubFacilityUncheckedUpdateWithoutBlockedSlotsInput>
+  }
+
+  export type GamehubFacilityUpdateWithoutBlockedSlotsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    venue?: StringFieldUpdateOperationsInput | string
+    distance?: StringFieldUpdateOperationsInput | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewsCount?: IntFieldUpdateOperationsInput | number
+    pricePerHour?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    priceRange?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    openHours?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    pricingRules?: StringFieldUpdateOperationsInput | string
+    amenities?: StringFieldUpdateOperationsInput | string
+    features?: StringFieldUpdateOperationsInput | string
+    tags?: StringFieldUpdateOperationsInput | string
+    gallery?: StringFieldUpdateOperationsInput | string
+    battleModes?: StringFieldUpdateOperationsInput | string
+    slotTemplate?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partner?: UserUpdateOneWithoutGamehubFacilitiesNestedInput
+    reviews?: GamehubReviewUpdateManyWithoutFacilityNestedInput
+    bookings?: GamehubBookingUpdateManyWithoutFacilityNestedInput
+  }
+
+  export type GamehubFacilityUncheckedUpdateWithoutBlockedSlotsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    venue?: StringFieldUpdateOperationsInput | string
+    distance?: StringFieldUpdateOperationsInput | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewsCount?: IntFieldUpdateOperationsInput | number
+    pricePerHour?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    priceRange?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    openHours?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    pricingRules?: StringFieldUpdateOperationsInput | string
+    amenities?: StringFieldUpdateOperationsInput | string
+    features?: StringFieldUpdateOperationsInput | string
+    tags?: StringFieldUpdateOperationsInput | string
+    gallery?: StringFieldUpdateOperationsInput | string
+    battleModes?: StringFieldUpdateOperationsInput | string
+    slotTemplate?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    reviews?: GamehubReviewUncheckedUpdateManyWithoutFacilityNestedInput
+    bookings?: GamehubBookingUncheckedUpdateManyWithoutFacilityNestedInput
+  }
+
+  export type UserCreateWithoutWalletInput = {
+    id?: string
+    name: string
+    email: string
+    password: string
+    phone?: string | null
+    avatar?: string | null
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    events?: EventCreateNestedManyWithoutPartnerInput
+    bookings?: BookingCreateNestedManyWithoutUserInput
+    gamehubBookings?: GamehubBookingCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
+    gamehubFacilities?: GamehubFacilityCreateNestedManyWithoutPartnerInput
+    payouts?: PayoutCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutWalletInput = {
+    id?: string
+    name: string
+    email: string
+    password: string
+    phone?: string | null
+    avatar?: string | null
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    events?: EventUncheckedCreateNestedManyWithoutPartnerInput
+    bookings?: BookingUncheckedCreateNestedManyWithoutUserInput
+    gamehubBookings?: GamehubBookingUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    gamehubFacilities?: GamehubFacilityUncheckedCreateNestedManyWithoutPartnerInput
+    payouts?: PayoutUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutWalletInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutWalletInput, UserUncheckedCreateWithoutWalletInput>
+  }
+
+  export type WalletTransactionCreateWithoutWalletInput = {
+    id?: string
+    amount: number
+    type?: string
+    description?: string | null
+    referenceId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type WalletTransactionUncheckedCreateWithoutWalletInput = {
+    id?: string
+    amount: number
+    type?: string
+    description?: string | null
+    referenceId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type WalletTransactionCreateOrConnectWithoutWalletInput = {
+    where: WalletTransactionWhereUniqueInput
+    create: XOR<WalletTransactionCreateWithoutWalletInput, WalletTransactionUncheckedCreateWithoutWalletInput>
+  }
+
+  export type WalletTransactionCreateManyWalletInputEnvelope = {
+    data: WalletTransactionCreateManyWalletInput | WalletTransactionCreateManyWalletInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutWalletInput = {
+    update: XOR<UserUpdateWithoutWalletInput, UserUncheckedUpdateWithoutWalletInput>
+    create: XOR<UserCreateWithoutWalletInput, UserUncheckedCreateWithoutWalletInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutWalletInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutWalletInput, UserUncheckedUpdateWithoutWalletInput>
+  }
+
+  export type UserUpdateWithoutWalletInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    events?: EventUpdateManyWithoutPartnerNestedInput
+    bookings?: BookingUpdateManyWithoutUserNestedInput
+    gamehubBookings?: GamehubBookingUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
+    gamehubFacilities?: GamehubFacilityUpdateManyWithoutPartnerNestedInput
+    payouts?: PayoutUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutWalletInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    events?: EventUncheckedUpdateManyWithoutPartnerNestedInput
+    bookings?: BookingUncheckedUpdateManyWithoutUserNestedInput
+    gamehubBookings?: GamehubBookingUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    gamehubFacilities?: GamehubFacilityUncheckedUpdateManyWithoutPartnerNestedInput
+    payouts?: PayoutUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type WalletTransactionUpsertWithWhereUniqueWithoutWalletInput = {
+    where: WalletTransactionWhereUniqueInput
+    update: XOR<WalletTransactionUpdateWithoutWalletInput, WalletTransactionUncheckedUpdateWithoutWalletInput>
+    create: XOR<WalletTransactionCreateWithoutWalletInput, WalletTransactionUncheckedCreateWithoutWalletInput>
+  }
+
+  export type WalletTransactionUpdateWithWhereUniqueWithoutWalletInput = {
+    where: WalletTransactionWhereUniqueInput
+    data: XOR<WalletTransactionUpdateWithoutWalletInput, WalletTransactionUncheckedUpdateWithoutWalletInput>
+  }
+
+  export type WalletTransactionUpdateManyWithWhereWithoutWalletInput = {
+    where: WalletTransactionScalarWhereInput
+    data: XOR<WalletTransactionUpdateManyMutationInput, WalletTransactionUncheckedUpdateManyWithoutWalletInput>
+  }
+
+  export type WalletTransactionScalarWhereInput = {
+    AND?: WalletTransactionScalarWhereInput | WalletTransactionScalarWhereInput[]
+    OR?: WalletTransactionScalarWhereInput[]
+    NOT?: WalletTransactionScalarWhereInput | WalletTransactionScalarWhereInput[]
+    id?: StringFilter<"WalletTransaction"> | string
+    amount?: FloatFilter<"WalletTransaction"> | number
+    type?: StringFilter<"WalletTransaction"> | string
+    description?: StringNullableFilter<"WalletTransaction"> | string | null
+    referenceId?: StringNullableFilter<"WalletTransaction"> | string | null
+    createdAt?: DateTimeFilter<"WalletTransaction"> | Date | string
+    walletId?: StringFilter<"WalletTransaction"> | string
+  }
+
+  export type WalletCreateWithoutTransactionsInput = {
+    id?: string
+    balance?: number
+    totalEarnings?: number
+    currency?: string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutWalletInput
+  }
+
+  export type WalletUncheckedCreateWithoutTransactionsInput = {
+    id?: string
+    balance?: number
+    totalEarnings?: number
+    currency?: string
+    updatedAt?: Date | string
+    userId: string
+  }
+
+  export type WalletCreateOrConnectWithoutTransactionsInput = {
+    where: WalletWhereUniqueInput
+    create: XOR<WalletCreateWithoutTransactionsInput, WalletUncheckedCreateWithoutTransactionsInput>
+  }
+
+  export type WalletUpsertWithoutTransactionsInput = {
+    update: XOR<WalletUpdateWithoutTransactionsInput, WalletUncheckedUpdateWithoutTransactionsInput>
+    create: XOR<WalletCreateWithoutTransactionsInput, WalletUncheckedCreateWithoutTransactionsInput>
+    where?: WalletWhereInput
+  }
+
+  export type WalletUpdateToOneWithWhereWithoutTransactionsInput = {
+    where?: WalletWhereInput
+    data: XOR<WalletUpdateWithoutTransactionsInput, WalletUncheckedUpdateWithoutTransactionsInput>
+  }
+
+  export type WalletUpdateWithoutTransactionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    balance?: FloatFieldUpdateOperationsInput | number
+    totalEarnings?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutWalletNestedInput
+  }
+
+  export type WalletUncheckedUpdateWithoutTransactionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    balance?: FloatFieldUpdateOperationsInput | number
+    totalEarnings?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type UserCreateWithoutPayoutsInput = {
+    id?: string
+    name: string
+    email: string
+    password: string
+    phone?: string | null
+    avatar?: string | null
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    events?: EventCreateNestedManyWithoutPartnerInput
+    bookings?: BookingCreateNestedManyWithoutUserInput
+    gamehubBookings?: GamehubBookingCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    reviews?: ReviewCreateNestedManyWithoutUserInput
+    gamehubFacilities?: GamehubFacilityCreateNestedManyWithoutPartnerInput
+    wallet?: WalletCreateNestedOneWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutPayoutsInput = {
+    id?: string
+    name: string
+    email: string
+    password: string
+    phone?: string | null
+    avatar?: string | null
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    events?: EventUncheckedCreateNestedManyWithoutPartnerInput
+    bookings?: BookingUncheckedCreateNestedManyWithoutUserInput
+    gamehubBookings?: GamehubBookingUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
+    gamehubFacilities?: GamehubFacilityUncheckedCreateNestedManyWithoutPartnerInput
+    wallet?: WalletUncheckedCreateNestedOneWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutPayoutsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPayoutsInput, UserUncheckedCreateWithoutPayoutsInput>
+  }
+
+  export type UserUpsertWithoutPayoutsInput = {
+    update: XOR<UserUpdateWithoutPayoutsInput, UserUncheckedUpdateWithoutPayoutsInput>
+    create: XOR<UserCreateWithoutPayoutsInput, UserUncheckedCreateWithoutPayoutsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutPayoutsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutPayoutsInput, UserUncheckedUpdateWithoutPayoutsInput>
+  }
+
+  export type UserUpdateWithoutPayoutsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    events?: EventUpdateManyWithoutPartnerNestedInput
+    bookings?: BookingUpdateManyWithoutUserNestedInput
+    gamehubBookings?: GamehubBookingUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUpdateManyWithoutUserNestedInput
+    gamehubFacilities?: GamehubFacilityUpdateManyWithoutPartnerNestedInput
+    wallet?: WalletUpdateOneWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutPayoutsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    events?: EventUncheckedUpdateManyWithoutPartnerNestedInput
+    bookings?: BookingUncheckedUpdateManyWithoutUserNestedInput
+    gamehubBookings?: GamehubBookingUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
+    gamehubFacilities?: GamehubFacilityUncheckedUpdateManyWithoutPartnerNestedInput
+    wallet?: WalletUncheckedUpdateOneWithoutUserNestedInput
+  }
+
   export type EventCreateManyPartnerInput = {
     id?: string
     title: string
@@ -21915,6 +34848,21 @@ export namespace Prisma {
     showId?: string | null
   }
 
+  export type GamehubBookingCreateManyUserInput = {
+    id?: string
+    bookingDate: Date | string
+    slotLabel: string
+    totalAmount: number
+    currency?: string
+    status?: string
+    paymentMethod?: string
+    paymentStatus?: string
+    transactionId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    facilityId: string
+  }
+
   export type NotificationCreateManyUserInput = {
     id?: string
     title: string
@@ -21930,6 +34878,44 @@ export namespace Prisma {
     comment?: string | null
     createdAt?: Date | string
     eventId: string
+  }
+
+  export type GamehubFacilityCreateManyPartnerInput = {
+    id?: string
+    name: string
+    type: string
+    location: string
+    venue: string
+    distance?: string
+    rating?: number
+    reviewsCount?: number
+    pricePerHour?: number
+    unit?: string
+    priceRange?: string
+    image: string
+    description?: string
+    phone?: string
+    openHours?: string
+    status?: string
+    pricingRules?: string
+    amenities?: string
+    features?: string
+    tags?: string
+    gallery?: string
+    battleModes?: string
+    slotTemplate?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PayoutCreateManyUserInput = {
+    id?: string
+    amount: number
+    status?: string
+    bankDetails?: string
+    transactionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type EventUpdateWithoutPartnerInput = {
@@ -22090,6 +35076,51 @@ export namespace Prisma {
     showId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type GamehubBookingUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    slotLabel?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    transactionId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    facility?: GamehubFacilityUpdateOneRequiredWithoutBookingsNestedInput
+  }
+
+  export type GamehubBookingUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    slotLabel?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    transactionId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    facilityId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GamehubBookingUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    slotLabel?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    transactionId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    facilityId?: StringFieldUpdateOperationsInput | string
+  }
+
   export type NotificationUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
@@ -22139,6 +35170,126 @@ export namespace Prisma {
     comment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     eventId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GamehubFacilityUpdateWithoutPartnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    venue?: StringFieldUpdateOperationsInput | string
+    distance?: StringFieldUpdateOperationsInput | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewsCount?: IntFieldUpdateOperationsInput | number
+    pricePerHour?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    priceRange?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    openHours?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    pricingRules?: StringFieldUpdateOperationsInput | string
+    amenities?: StringFieldUpdateOperationsInput | string
+    features?: StringFieldUpdateOperationsInput | string
+    tags?: StringFieldUpdateOperationsInput | string
+    gallery?: StringFieldUpdateOperationsInput | string
+    battleModes?: StringFieldUpdateOperationsInput | string
+    slotTemplate?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviews?: GamehubReviewUpdateManyWithoutFacilityNestedInput
+    bookings?: GamehubBookingUpdateManyWithoutFacilityNestedInput
+    blockedSlots?: GamehubBlockedSlotUpdateManyWithoutFacilityNestedInput
+  }
+
+  export type GamehubFacilityUncheckedUpdateWithoutPartnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    venue?: StringFieldUpdateOperationsInput | string
+    distance?: StringFieldUpdateOperationsInput | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewsCount?: IntFieldUpdateOperationsInput | number
+    pricePerHour?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    priceRange?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    openHours?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    pricingRules?: StringFieldUpdateOperationsInput | string
+    amenities?: StringFieldUpdateOperationsInput | string
+    features?: StringFieldUpdateOperationsInput | string
+    tags?: StringFieldUpdateOperationsInput | string
+    gallery?: StringFieldUpdateOperationsInput | string
+    battleModes?: StringFieldUpdateOperationsInput | string
+    slotTemplate?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviews?: GamehubReviewUncheckedUpdateManyWithoutFacilityNestedInput
+    bookings?: GamehubBookingUncheckedUpdateManyWithoutFacilityNestedInput
+    blockedSlots?: GamehubBlockedSlotUncheckedUpdateManyWithoutFacilityNestedInput
+  }
+
+  export type GamehubFacilityUncheckedUpdateManyWithoutPartnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    venue?: StringFieldUpdateOperationsInput | string
+    distance?: StringFieldUpdateOperationsInput | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewsCount?: IntFieldUpdateOperationsInput | number
+    pricePerHour?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    priceRange?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    openHours?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    pricingRules?: StringFieldUpdateOperationsInput | string
+    amenities?: StringFieldUpdateOperationsInput | string
+    features?: StringFieldUpdateOperationsInput | string
+    tags?: StringFieldUpdateOperationsInput | string
+    gallery?: StringFieldUpdateOperationsInput | string
+    battleModes?: StringFieldUpdateOperationsInput | string
+    slotTemplate?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PayoutUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    bankDetails?: StringFieldUpdateOperationsInput | string
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PayoutUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    bankDetails?: StringFieldUpdateOperationsInput | string
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PayoutUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    bankDetails?: StringFieldUpdateOperationsInput | string
+    transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type BookingCreateManyEventInput = {
@@ -22507,6 +35658,178 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
     eventId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GamehubReviewCreateManyFacilityInput = {
+    id?: string
+    rating: number
+    comment: string
+    userName: string
+    avatar?: string
+    helpful?: number
+    createdAt?: Date | string
+  }
+
+  export type GamehubBookingCreateManyFacilityInput = {
+    id?: string
+    bookingDate: Date | string
+    slotLabel: string
+    totalAmount: number
+    currency?: string
+    status?: string
+    paymentMethod?: string
+    paymentStatus?: string
+    transactionId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userId: string
+  }
+
+  export type GamehubBlockedSlotCreateManyFacilityInput = {
+    id?: string
+    blockDate: Date | string
+    slotLabel: string
+    reason?: string
+    createdAt?: Date | string
+    createdByUserId?: string | null
+  }
+
+  export type GamehubReviewUpdateWithoutFacilityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: StringFieldUpdateOperationsInput | string
+    userName?: StringFieldUpdateOperationsInput | string
+    avatar?: StringFieldUpdateOperationsInput | string
+    helpful?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GamehubReviewUncheckedUpdateWithoutFacilityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: StringFieldUpdateOperationsInput | string
+    userName?: StringFieldUpdateOperationsInput | string
+    avatar?: StringFieldUpdateOperationsInput | string
+    helpful?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GamehubReviewUncheckedUpdateManyWithoutFacilityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rating?: IntFieldUpdateOperationsInput | number
+    comment?: StringFieldUpdateOperationsInput | string
+    userName?: StringFieldUpdateOperationsInput | string
+    avatar?: StringFieldUpdateOperationsInput | string
+    helpful?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GamehubBookingUpdateWithoutFacilityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    slotLabel?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    transactionId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutGamehubBookingsNestedInput
+  }
+
+  export type GamehubBookingUncheckedUpdateWithoutFacilityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    slotLabel?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    transactionId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GamehubBookingUncheckedUpdateManyWithoutFacilityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    slotLabel?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    transactionId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GamehubBlockedSlotUpdateWithoutFacilityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    blockDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    slotLabel?: StringFieldUpdateOperationsInput | string
+    reason?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type GamehubBlockedSlotUncheckedUpdateWithoutFacilityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    blockDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    slotLabel?: StringFieldUpdateOperationsInput | string
+    reason?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type GamehubBlockedSlotUncheckedUpdateManyWithoutFacilityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    blockDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    slotLabel?: StringFieldUpdateOperationsInput | string
+    reason?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type WalletTransactionCreateManyWalletInput = {
+    id?: string
+    amount: number
+    type?: string
+    description?: string | null
+    referenceId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type WalletTransactionUpdateWithoutWalletInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    referenceId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WalletTransactionUncheckedUpdateWithoutWalletInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    referenceId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WalletTransactionUncheckedUpdateManyWithoutWalletInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    referenceId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

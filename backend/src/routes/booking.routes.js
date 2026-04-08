@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const prisma = require('../lib/prisma');
-const { authenticateToken } = require('../middleware/auth');
+const { authenticateToken, requireAdmin } = require('../middleware/auth');
 const {
   SeatLockError,
   assertLockOwnership,
@@ -14,6 +14,7 @@ const {
   clearIdempotentRequest,
   completeIdempotentRequest,
 } = require('../services/idempotency.service');
+const { validate, seatLockSchema, bookingConfirmSchema } = require('../middleware/validator');
 const { emitSeatStateUpdate } = require('../lib/realtime');
 
 function rowLabelToIndex(rowLabel) {
@@ -126,8 +127,8 @@ router.get('/', authenticateToken, async (req, res) => {
   }
 });
 
-// GET /api/bookings/all - Admin: list ALL bookings without auth restriction
-router.get('/all', async (req, res) => {
+// GET /api/bookings/all - Admin: list ALL bookings (SECURED)
+router.get('/all', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { status, search, page = 1, limit = 20 } = req.query;
     const where = {};
@@ -172,7 +173,7 @@ router.get('/all', async (req, res) => {
 });
 
 // POST /api/bookings/seat-locks - lock seats for the current user
-router.post('/seat-locks', authenticateToken, async (req, res) => {
+router.post('/seat-locks', authenticateToken, validate(seatLockSchema), async (req, res) => {
   try {
     const { eventId, seatNumbers = [] } = req.body;
     const userId = req.user.id;
@@ -293,7 +294,7 @@ router.post('/seat-locks/release', authenticateToken, async (req, res) => {
 });
 
 // POST /api/bookings/seat-bookings/confirm - confirm locked seats after payment
-router.post('/seat-bookings/confirm', authenticateToken, async (req, res) => {
+router.post('/seat-bookings/confirm', authenticateToken, validate(bookingConfirmSchema), async (req, res) => {
   const { eventId, seatNumbers = [], totalAmount, paymentMethod = 'MOCK' } = req.body;
   const userId = req.user.id;
   const idempotencyKey = idempotencyKeyFromRequest(req);
@@ -374,9 +375,12 @@ router.post('/seat-bookings/confirm', authenticateToken, async (req, res) => {
         throw new Error('Not enough available seats');
       }
 
-      const finalAmount = Number.isFinite(parseFloat(totalAmount))
-        ? parseFloat(totalAmount)
-        : parseFloat(event.price) * normalizedSeats.length;
+      const finalAmount = parseFloat(event.price) * normalizedSeats.length;
+      
+      // Verification log if client tried to send a different amount
+      if (totalAmount && Math.abs(parseFloat(totalAmount) - finalAmount) > 0.01) {
+        console.warn(`[Security] User ${userId} attempted to pay ${totalAmount} for seats costing ${finalAmount}`);
+      }
 
       const createdBooking = await tx.booking.create({
         data: {
@@ -448,7 +452,7 @@ router.post('/seat-bookings/confirm', authenticateToken, async (req, res) => {
 });
 
 // POST /api/bookings/shows/:showId/seat-locks - lock seats in a specific show
-router.post('/shows/:showId/seat-locks', authenticateToken, async (req, res) => {
+router.post('/shows/:showId/seat-locks', authenticateToken, validate(seatLockSchema), async (req, res) => {
   try {
     const { showId } = req.params;
     const { seatNumbers = [] } = req.body;
@@ -551,7 +555,7 @@ router.post('/shows/:showId/seat-locks/release', authenticateToken, async (req, 
 });
 
 // POST /api/bookings/shows/:showId/seat-bookings/confirm - confirm show seats after payment
-router.post('/shows/:showId/seat-bookings/confirm', authenticateToken, async (req, res) => {
+router.post('/shows/:showId/seat-bookings/confirm', authenticateToken, validate(bookingConfirmSchema), async (req, res) => {
   const { showId } = req.params;
   const { seatNumbers = [], totalAmount, paymentMethod = 'MOCK' } = req.body;
   const userId = req.user.id;
@@ -618,9 +622,12 @@ router.post('/shows/:showId/seat-bookings/confirm', authenticateToken, async (re
         throw new Error(`Seat ${unavailableSeat.seatCode} is no longer available`);
       }
 
-      const finalAmount = Number.isFinite(parseFloat(totalAmount))
-        ? parseFloat(totalAmount)
-        : show.seats.reduce((sum, seat) => sum + (seat.price || show.event.price || 0), 0);
+      const finalAmount = show.seats.reduce((sum, seat) => sum + (seat.price || show.event.price || 0), 0);
+
+      // Verification log if client tried to send a different amount
+      if (totalAmount && Math.abs(parseFloat(totalAmount) - finalAmount) > 0.01) {
+        console.warn(`[Security] User ${userId} attempted to pay ${totalAmount} for show seats costing ${finalAmount}`);
+      }
 
       const createdBooking = await tx.booking.create({
         data: {

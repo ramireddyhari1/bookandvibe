@@ -25,8 +25,12 @@ model User {
 
   events        Event[]
   bookings      Booking[]
+  gamehubBookings GamehubBooking[]
   notifications Notification[]
   reviews       Review[]
+  gamehubFacilities GamehubFacility[]
+  wallet            Wallet?
+  payouts           Payout[]
 }
 
 // ─── Event Model ──────────────────────────────────────────────────────────────
@@ -217,4 +221,145 @@ model Review {
   event   Event  @relation(fields: [eventId], references: [id])
 
   @@unique([userId, eventId])
+}
+
+// ─── GameHub Facility Model ─────────────────────────────────────────────────
+model GamehubFacility {
+  id           String   @id @default(uuid())
+  name         String
+  type         String
+  location     String
+  venue        String
+  distance     String   @default("0 km away")
+  rating       Float    @default(0)
+  reviewsCount Int      @default(0)
+  pricePerHour Float    @default(0)
+  unit         String   @default("hr")
+  priceRange   String   @default("")
+  image        String
+  description  String   @default("")
+  phone        String   @default("")
+  openHours    String   @default("")
+  status       String   @default("ACTIVE")
+  pricingRules String   @default("[]")
+  amenities    String   @default("[]")
+  features     String   @default("[]")
+  tags         String   @default("[]")
+  gallery      String   @default("[]")
+  battleModes  String   @default("[]")
+  slotTemplate String   @default("[]")
+  availableSports String @default("[]")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  partnerId    String?
+  partner      User?    @relation(fields: [partnerId], references: [id], onDelete: SetNull)
+
+  reviews  GamehubReview[]
+  bookings GamehubBooking[]
+  blockedSlots GamehubBlockedSlot[]
+
+  @@index([location])
+  @@index([type])
+  @@index([rating])
+  @@index([pricePerHour])
+  @@index([partnerId])
+}
+
+// ─── GameHub Review Model ───────────────────────────────────────────────────
+model GamehubReview {
+  id         String   @id @default(uuid())
+  rating     Int
+  comment    String
+  userName   String
+  avatar     String   @default("U")
+  helpful    Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  facilityId String
+  facility   GamehubFacility @relation(fields: [facilityId], references: [id], onDelete: Cascade)
+
+  @@index([facilityId, createdAt])
+}
+
+// ─── GameHub Booking Model ──────────────────────────────────────────────────
+model GamehubBooking {
+  id            String   @id @default(uuid())
+  bookingDate   DateTime
+  slotLabel     String
+  totalAmount   Float
+  currency      String   @default("INR")
+  status        String   @default("CONFIRMED")
+  paymentMethod String   @default("MOCK")
+  paymentStatus String   @default("SUCCESS")
+  transactionId String   @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  userId     String
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  facilityId String
+  facility   GamehubFacility @relation(fields: [facilityId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([facilityId, bookingDate])
+  @@index([status])
+}
+
+// ─── GameHub Blocked Slot Model ─────────────────────────────────────────────
+model GamehubBlockedSlot {
+  id              String   @id @default(uuid())
+  blockDate       DateTime
+  slotLabel       String
+  reason          String   @default("Blocked by admin")
+  createdAt       DateTime @default(now())
+  createdByUserId String?
+
+  facilityId String
+  facility   GamehubFacility @relation(fields: [facilityId], references: [id], onDelete: Cascade)
+
+  @@index([facilityId, blockDate])
+  @@index([facilityId, blockDate, slotLabel])
+}
+
+// ─── Financial & Partner Earnings Models ────────────────────────────────────
+
+model Wallet {
+  id            String   @id @default(uuid())
+  balance       Float    @default(0)
+  totalEarnings Float    @default(0)
+  currency      String   @default("INR")
+  updatedAt     DateTime @updatedAt
+
+  userId       String              @unique
+  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions WalletTransaction[]
+}
+
+model WalletTransaction {
+  id          String   @id @default(uuid())
+  amount      Float
+  type        String   @default("EARNING") // EARNING, PAYOUT, REFUND
+  description String?
+  referenceId String?  // Optional reference to Booking or Payout ID
+  createdAt   DateTime @default(now())
+
+  walletId String
+  wallet   Wallet @relation(fields: [walletId], references: [id], onDelete: Cascade)
+
+  @@index([walletId, createdAt])
+}
+
+model Payout {
+  id            String   @id @default(uuid())
+  amount        Float
+  status        String   @default("PENDING") // PENDING, PROCESSING, COMPLETED, FAILED
+  bankDetails   String   @default("{}")      // JSON string for bank info
+  transactionId String?  @unique             // Reference to external bank transaction
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
 }

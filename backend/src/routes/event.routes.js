@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const prisma = require('../lib/prisma');
+const { authenticateToken, requireAdmin, requireAdminOrPartner } = require('../middleware/auth');
 
 const BOOKING_FORMATS = ['SEAT', 'TIER', 'HYBRID'];
 const VISIBILITY_TYPES = ['PUBLIC', 'PRIVATE', 'INVITE_ONLY'];
@@ -146,6 +147,38 @@ async function loadEventForValidation(eventId) {
   return event;
 }
 
+function isAdminUser(user) {
+  return String(user?.role || '').toUpperCase() === 'ADMIN';
+}
+
+async function resolvePartnerIdOrThrow(partnerId) {
+  const partner = await prisma.user.findUnique({
+    where: { id: String(partnerId || '') },
+    select: { id: true, role: true, status: true },
+  });
+  if (!partner) throw new Error('Partner not found');
+  if (String(partner.role || '').toUpperCase() !== 'PARTNER') {
+    throw new Error('Selected user is not a PARTNER');
+  }
+  if (String(partner.status || '').toUpperCase() !== 'ACTIVE') {
+    throw new Error('Selected partner is not ACTIVE');
+  }
+  return partner.id;
+}
+
+async function loadEventForManagement(eventId) {
+  return prisma.event.findUnique({
+    where: { id: eventId },
+    select: { id: true, partnerId: true },
+  });
+}
+
+function hasEventManagementAccess(user, event) {
+  if (!user || !event) return false;
+  if (isAdminUser(user)) return true;
+  return String(event.partnerId) === String(user.id);
+}
+
 // GET /api/events - List all events (with search, filters, pagination)
 router.get('/', async (req, res) => {
   try {
@@ -275,8 +308,95 @@ router.get('/stats', async (req, res) => {
   }
 });
 
+// GET /api/events/manage/list - Admin/Partner scoped event list for dashboard management
+router.get('/manage/list', authenticateToken, requireAdminOrPartner, async (req, res) => {
+  try {
+    const { search, category, city, minPrice, maxPrice, sort, page = 1, limit = 20 } = req.query;
+
+    const where = {};
+    if (!isAdminUser(req.user)) {
+      where.partnerId = req.user.id;
+    }
+
+    if (search) {
+      where.OR = [
+        { title: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+        { venue: { contains: search, mode: 'insensitive' } },
+        { location: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+    if (category && category !== 'ALL') where.category = category;
+    if (city) where.location = { contains: city, mode: 'insensitive' };
+    if (minPrice || maxPrice) {
+      where.price = {};
+      if (minPrice) where.price.gte = parseFloat(minPrice);
+      if (maxPrice) where.price.lte = parseFloat(maxPrice);
+    }
+
+    let orderBy = { createdAt: 'desc' };
+    if (sort === 'price_asc') orderBy = { price: 'asc' };
+    if (sort === 'price_desc') orderBy = { price: 'desc' };
+    if (sort === 'date') orderBy = { date: 'asc' };
+    if (sort === 'popular') orderBy = { bookings: { _count: 'desc' } };
+
+    const skip = (parseInt(page, 10) - 1) * parseInt(limit, 10);
+
+    const [events, total] = await Promise.all([
+      prisma.event.findMany({
+        where,
+        orderBy,
+        skip,
+        take: parseInt(limit, 10),
+        include: {
+          tiers: true,
+          _count: { select: { bookings: true, reviews: true } },
+        },
+      }),
+      prisma.event.count({ where }),
+    ]);
+
+    return res.json({
+      message: 'Success',
+      data: events,
+      pagination: {
+        total,
+        page: parseInt(page, 10),
+        limit: parseInt(limit, 10),
+        totalPages: Math.ceil(total / parseInt(limit, 10)),
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+// GET /api/events/manage/:id - Admin/Partner scoped event detail for edit forms
+router.get('/manage/:id', authenticateToken, requireAdminOrPartner, async (req, res) => {
+  try {
+    const managedEvent = await loadEventForManagement(req.params.id);
+    if (!managedEvent) return res.status(404).json({ error: 'Event not found' });
+    if (!hasEventManagementAccess(req.user, managedEvent)) {
+      return res.status(403).json({ error: 'You do not have permission to manage this event' });
+    }
+
+    const event = await prisma.event.findUnique({
+      where: { id: req.params.id },
+      include: {
+        tiers: { orderBy: { price: 'desc' } },
+        _count: { select: { bookings: true, reviews: true } },
+      },
+    });
+
+    if (!event) return res.status(404).json({ error: 'Event not found' });
+    return res.json({ message: 'Success', data: event });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
 // POST /api/events/:id/shows - Create a show with optional seat inventory
-router.post('/:id/shows', async (req, res) => {
+router.post('/:id/shows', authenticateToken, requireAdminOrPartner, async (req, res) => {
   try {
     const eventId = req.params.id;
     const {
@@ -293,8 +413,11 @@ router.post('/:id/shows', async (req, res) => {
       return res.status(400).json({ error: 'showDate and startTime are required' });
     }
 
-    const event = await prisma.event.findUnique({ where: { id: eventId }, select: { id: true } });
+    const event = await loadEventForManagement(eventId);
     if (!event) return res.status(404).json({ error: 'Event not found' });
+    if (!hasEventManagementAccess(req.user, event)) {
+      return res.status(403).json({ error: 'You do not have permission to manage this event' });
+    }
 
     const normalizedSeats = [...new Set((seats || [])
       .map((seat) => ({
@@ -422,22 +545,12 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST /api/events - Create event with tiers
-router.post('/', async (req, res) => {
+router.post('/', authenticateToken, requireAdminOrPartner, async (req, res) => {
   try {
-    let partnerId = req.body.partnerId;
-    if (!partnerId) {
-      const adminUser = await prisma.user.upsert({
-        where: { email: 'admin@bookandvibe.com' },
-        update: {},
-        create: {
-          name: 'System Admin',
-          email: 'admin@bookandvibe.com',
-          password: 'mock_password',
-          role: 'ADMIN'
-        }
-      });
-      partnerId = adminUser.id;
-    }
+    const requestedPartnerId = req.body.partnerId;
+    const partnerId = isAdminUser(req.user)
+      ? (requestedPartnerId ? await resolvePartnerIdOrThrow(requestedPartnerId) : req.user.id)
+      : req.user.id;
 
     const bookingFormat = normalizeEnum(req.body.bookingFormat, BOOKING_FORMATS, 'HYBRID');
     const visibility = normalizeEnum(req.body.visibility, VISIBILITY_TYPES, 'PUBLIC');
@@ -534,8 +647,14 @@ router.post('/', async (req, res) => {
 });
 
 // PUT /api/events/:id - Update event
-router.put('/:id', async (req, res) => {
+router.put('/:id', authenticateToken, requireAdminOrPartner, async (req, res) => {
   try {
+    const managedEvent = await loadEventForManagement(req.params.id);
+    if (!managedEvent) return res.status(404).json({ error: 'Event not found' });
+    if (!hasEventManagementAccess(req.user, managedEvent)) {
+      return res.status(403).json({ error: 'You do not have permission to manage this event' });
+    }
+
     const updateData = {};
     const fields = [
       'title',
@@ -571,6 +690,10 @@ router.put('/:id', async (req, res) => {
       updateData.seatsPerRow = parseInt(req.body.seating.seatsPerRow) || null;
       updateData.numberedSeats = req.body.seating.hasNumberedSeats ?? true;
       updateData.seatSelection = req.body.seating.allowSeatSelection ?? true;
+    }
+
+    if (isAdminUser(req.user) && req.body.partnerId !== undefined) {
+      updateData.partnerId = await resolvePartnerIdOrThrow(req.body.partnerId);
     }
 
     if (updateData.visibility === 'PUBLIC') {
@@ -634,9 +757,37 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// POST /api/events/:id/validate-publish - Validate event readiness
-router.post('/:id/validate-publish', async (req, res) => {
+router.patch('/:id/assign-partner', authenticateToken, requireAdmin, async (req, res) => {
   try {
+    const managedEvent = await loadEventForManagement(req.params.id);
+    if (!managedEvent) return res.status(404).json({ error: 'Event not found' });
+
+    const partnerId = await resolvePartnerIdOrThrow(req.body?.partnerId);
+    const updated = await prisma.event.update({
+      where: { id: req.params.id },
+      data: { partnerId },
+      include: {
+        tiers: true,
+        _count: { select: { bookings: true, reviews: true } },
+        partner: { select: { id: true, name: true, email: true } },
+      },
+    });
+
+    return res.json({ message: 'Event partner assignment updated', data: updated });
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+});
+
+// POST /api/events/:id/validate-publish - Validate event readiness
+router.post('/:id/validate-publish', authenticateToken, requireAdminOrPartner, async (req, res) => {
+  try {
+    const managedEvent = await loadEventForManagement(req.params.id);
+    if (!managedEvent) return res.status(404).json({ error: 'Event not found' });
+    if (!hasEventManagementAccess(req.user, managedEvent)) {
+      return res.status(403).json({ error: 'You do not have permission to manage this event' });
+    }
+
     const event = await loadEventForValidation(req.params.id);
     if (!event) return res.status(404).json({ error: 'Event not found' });
 
@@ -648,8 +799,14 @@ router.post('/:id/validate-publish', async (req, res) => {
 });
 
 // POST /api/events/:id/publish - Publish only if fully valid
-router.post('/:id/publish', async (req, res) => {
+router.post('/:id/publish', authenticateToken, requireAdminOrPartner, async (req, res) => {
   try {
+    const managedEvent = await loadEventForManagement(req.params.id);
+    if (!managedEvent) return res.status(404).json({ error: 'Event not found' });
+    if (!hasEventManagementAccess(req.user, managedEvent)) {
+      return res.status(403).json({ error: 'You do not have permission to manage this event' });
+    }
+
     const event = await loadEventForValidation(req.params.id);
     if (!event) return res.status(404).json({ error: 'Event not found' });
 
@@ -675,8 +832,14 @@ router.post('/:id/publish', async (req, res) => {
 });
 
 // POST /api/events/:id/unpublish - Move event back to draft
-router.post('/:id/unpublish', async (req, res) => {
+router.post('/:id/unpublish', authenticateToken, requireAdminOrPartner, async (req, res) => {
   try {
+    const managedEvent = await loadEventForManagement(req.params.id);
+    if (!managedEvent) return res.status(404).json({ error: 'Event not found' });
+    if (!hasEventManagementAccess(req.user, managedEvent)) {
+      return res.status(403).json({ error: 'You do not have permission to manage this event' });
+    }
+
     const updated = await prisma.event.update({
       where: { id: req.params.id },
       data: {
@@ -694,8 +857,14 @@ router.post('/:id/unpublish', async (req, res) => {
 });
 
 // DELETE /api/events/:id - Delete event (cascades to tiers)
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authenticateToken, requireAdminOrPartner, async (req, res) => {
   try {
+    const managedEvent = await loadEventForManagement(req.params.id);
+    if (!managedEvent) return res.status(404).json({ error: 'Event not found' });
+    if (!hasEventManagementAccess(req.user, managedEvent)) {
+      return res.status(403).json({ error: 'You do not have permission to manage this event' });
+    }
+
     await prisma.event.delete({
       where: { id: req.params.id }
     });

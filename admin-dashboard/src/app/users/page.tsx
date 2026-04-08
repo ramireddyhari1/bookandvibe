@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Calendar, Search, Shield, Users as UsersIcon } from "lucide-react";
 
 type UserRecord = {
@@ -23,6 +24,7 @@ function toTitle(value: string): string {
 }
 
 export default function UsersPage() {
+  const router = useRouter();
   const [users, setUsers] = useState<UserRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -30,14 +32,67 @@ export default function UsersPage() {
   const [roleFilter, setRoleFilter] = useState("All");
   const [statusFilter, setStatusFilter] = useState("All");
 
+  function clearDashboardSession() {
+    localStorage.removeItem("admin_dash_token");
+    localStorage.removeItem("admin_dash_role");
+    localStorage.removeItem("admin_dash_user");
+    document.cookie = "admin_dash_token=; path=/; max-age=0; samesite=lax";
+    document.cookie = "admin_dash_role=; path=/; max-age=0; samesite=lax";
+  }
+
   useEffect(() => {
     async function fetchUsers() {
       setLoading(true);
       setError("");
       try {
-        const response = await fetch(`${API_BASE}/users`);
+        const token = localStorage.getItem("admin_dash_token") || localStorage.getItem("token") || "";
+        if (!token) {
+          setError("Session expired. Please login again.");
+          setUsers([]);
+          setLoading(false);
+          router.replace("/login");
+          return;
+        }
+
+        const sessionRes = await fetch(`${API_BASE}/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+          cache: "no-store",
+        });
+        const sessionPayload = await sessionRes.json().catch(() => ({}));
+        if (!sessionRes.ok) {
+          if ([401, 403, 404].includes(sessionRes.status)) {
+            clearDashboardSession();
+            setError("Session expired. Please login again.");
+            setUsers([]);
+            setLoading(false);
+            router.replace("/login");
+            return;
+          }
+          throw new Error(sessionPayload?.error || "Unable to verify session");
+        }
+
+        const role = String(sessionPayload?.user?.role || "").toUpperCase();
+        if (role !== "ADMIN" && role !== "PARTNER") {
+          setError("Only ADMIN or PARTNER can view users data.");
+          setUsers([]);
+          setLoading(false);
+          return;
+        }
+
+        const response = await fetch(`${API_BASE}/users`, {
+          headers: { Authorization: `Bearer ${token}` },
+          cache: "no-store",
+        });
         const payload = await response.json();
         if (!response.ok) {
+          if ([401, 403, 404].includes(response.status)) {
+            clearDashboardSession();
+            setError("Session expired. Please login again.");
+            setUsers([]);
+            setLoading(false);
+            router.replace("/login");
+            return;
+          }
           throw new Error(payload?.error || "Failed to fetch users");
         }
         setUsers(Array.isArray(payload?.data) ? payload.data : []);
@@ -50,7 +105,7 @@ export default function UsersPage() {
     }
 
     fetchUsers();
-  }, []);
+  }, [router]);
 
   const filteredUsers = useMemo(() => {
     return users.filter((user) => {
@@ -81,57 +136,57 @@ export default function UsersPage() {
   return (
     <div className="max-w-7xl mx-auto space-y-8">
       <header>
-        <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Users Management</h1>
-        <p className="text-slate-500 mt-1 font-medium">Live user data from backend</p>
+        <h1 className="text-3xl font-black text-slate-900 tracking-tight uppercase">User Directory</h1>
+        <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600/60 mt-1">Platform-wide account management and insights</p>
       </header>
 
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-xl border border-slate-100">
-          <p className="text-xs text-slate-400 font-bold uppercase">Total Users</p>
-          <p className="text-2xl font-extrabold mt-1">{stats.total}</p>
+        <div className="dash-card bg-white p-5 rounded-2xl border border-emerald-50 shadow-sm transition-all hover:bg-emerald-50/30">
+          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400/80">Total Users</p>
+          <p className="text-3xl font-black mt-1 text-slate-900 tracking-tight">{stats.total}</p>
         </div>
-        <div className="bg-white p-4 rounded-xl border border-slate-100">
-          <p className="text-xs text-slate-400 font-bold uppercase">Active Users</p>
-          <p className="text-2xl font-extrabold mt-1">{stats.active}</p>
+        <div className="dash-card bg-white p-5 rounded-2xl border border-emerald-50 shadow-sm transition-all hover:bg-emerald-50/30">
+          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400/80">Active</p>
+          <p className="text-3xl font-black mt-1 text-emerald-600 tracking-tight">{stats.active}</p>
         </div>
-        <div className="bg-white p-4 rounded-xl border border-slate-100">
-          <p className="text-xs text-slate-400 font-bold uppercase">Suspended</p>
-          <p className="text-2xl font-extrabold mt-1">{stats.suspended}</p>
+        <div className="dash-card bg-white p-5 rounded-2xl border border-emerald-50 shadow-sm transition-all hover:bg-emerald-50/30">
+          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400/80">Suspended</p>
+          <p className="text-3xl font-black mt-1 text-red-500 tracking-tight">{stats.suspended}</p>
         </div>
-        <div className="bg-white p-4 rounded-xl border border-slate-100">
-          <p className="text-xs text-slate-400 font-bold uppercase">New This Month</p>
-          <p className="text-2xl font-extrabold mt-1">{stats.newThisMonth}</p>
+        <div className="dash-card bg-white p-5 rounded-2xl border border-emerald-50 shadow-sm transition-all hover:bg-emerald-50/30">
+          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400/80">Growth (MTD)</p>
+          <p className="text-3xl font-black mt-1 text-teal-600 tracking-tight">+{stats.newThisMonth}</p>
         </div>
       </section>
 
-      <section className="bg-white rounded-2xl border border-slate-100 p-4 grid grid-cols-1 md:grid-cols-4 gap-3">
-        <div className="md:col-span-2 flex items-center gap-2 bg-slate-50 rounded-xl px-3 py-2 border border-slate-200">
-          <Search size={16} className="text-slate-400" />
+      <section className="dash-card bg-white rounded-3xl border border-emerald-50 p-5 grid grid-cols-1 md:grid-cols-4 gap-4 shadow-sm">
+        <div className="md:col-span-2 flex items-center gap-3 bg-emerald-50/30 rounded-2xl px-4 py-3 border border-emerald-50/50 focus-within:border-emerald-200 focus-within:bg-white transition-all">
+          <Search size={18} className="text-emerald-600/40" />
           <input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search users by name or email"
-            className="bg-transparent w-full outline-none text-sm"
+            placeholder="Search users by name or email..."
+            className="bg-transparent w-full outline-none text-sm font-bold text-slate-900 placeholder:text-emerald-900/30"
           />
         </div>
 
         <select
           value={roleFilter}
           onChange={(e) => setRoleFilter(e.target.value)}
-          className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm"
+          className="rounded-2xl border border-emerald-50/50 bg-emerald-50/20 px-4 py-3 text-sm font-black uppercase tracking-wider text-emerald-800 outline-none focus:bg-white focus:border-emerald-200 transition-all cursor-pointer"
         >
           {roleOptions.map((option) => (
-            <option key={option} value={option}>{option}</option>
+            <option key={option} value={option}>{option === "All" ? "Every Role" : option}</option>
           ))}
         </select>
 
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm"
+          className="rounded-2xl border border-emerald-50/50 bg-emerald-50/20 px-4 py-3 text-sm font-black uppercase tracking-wider text-emerald-800 outline-none focus:bg-white focus:border-emerald-200 transition-all cursor-pointer"
         >
           {statusOptions.map((option) => (
-            <option key={option} value={option}>{option}</option>
+            <option key={option} value={option}>{option === "All" ? "Any Status" : option}</option>
           ))}
         </select>
       </section>
@@ -158,23 +213,27 @@ export default function UsersPage() {
               </thead>
               <tbody>
                 {filteredUsers.map((user) => (
-                  <tr key={user.id} className="border-t border-slate-100">
-                    <td className="p-3">
-                      <div className="font-semibold text-slate-900">{user.name}</div>
-                      <div className="text-xs text-slate-400">{user.email}</div>
+                  <tr key={user.id} className="border-t border-emerald-50 transition-all hover:bg-emerald-50/30">
+                    <td className="p-4">
+                      <div className="font-black text-slate-800">{user.name}</div>
+                      <div className="text-[11px] font-bold text-emerald-600/60">{user.email}</div>
                     </td>
-                    <td className="p-3">
-                      <span className="inline-flex items-center gap-1 text-xs font-bold">
+                    <td className="p-4">
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider ${user.role === "ADMIN" ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-600"}`}>
                         {toTitle(user.role) === "Admin" ? <Shield size={12} /> : <UsersIcon size={12} />}
                         {toTitle(user.role)}
                       </span>
                     </td>
-                    <td className="p-3">{toTitle(user.status)}</td>
-                    <td className="p-3">{user._count?.bookings || 0}</td>
-                    <td className="p-3 font-bold">INR {Math.round(user.totalSpent || 0).toLocaleString()}</td>
-                    <td className="p-3 text-slate-500">
-                      <span className="inline-flex items-center gap-1">
-                        <Calendar size={12} />
+                    <td className="p-4">
+                      <span className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${user.status === "ACTIVE" ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-700"}`}>
+                        {toTitle(user.status)}
+                      </span>
+                    </td>
+                    <td className="p-4 font-black text-slate-900">{user._count?.bookings || 0}</td>
+                    <td className="p-4 font-black text-emerald-600">₹{Math.round(user.totalSpent || 0).toLocaleString()}</td>
+                    <td className="p-4 text-slate-400 font-bold">
+                      <span className="inline-flex items-center gap-1.5">
+                        <Calendar size={13} className="text-emerald-400/60" />
                         {new Date(user.createdAt).toLocaleDateString("en-IN")}
                       </span>
                     </td>

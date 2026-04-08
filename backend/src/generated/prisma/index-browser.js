@@ -263,6 +263,102 @@ exports.Prisma.ReviewScalarFieldEnum = {
   eventId: 'eventId'
 };
 
+exports.Prisma.GamehubFacilityScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  type: 'type',
+  location: 'location',
+  venue: 'venue',
+  distance: 'distance',
+  rating: 'rating',
+  reviewsCount: 'reviewsCount',
+  pricePerHour: 'pricePerHour',
+  unit: 'unit',
+  priceRange: 'priceRange',
+  image: 'image',
+  description: 'description',
+  phone: 'phone',
+  openHours: 'openHours',
+  status: 'status',
+  pricingRules: 'pricingRules',
+  amenities: 'amenities',
+  features: 'features',
+  tags: 'tags',
+  gallery: 'gallery',
+  battleModes: 'battleModes',
+  slotTemplate: 'slotTemplate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  partnerId: 'partnerId'
+};
+
+exports.Prisma.GamehubReviewScalarFieldEnum = {
+  id: 'id',
+  rating: 'rating',
+  comment: 'comment',
+  userName: 'userName',
+  avatar: 'avatar',
+  helpful: 'helpful',
+  createdAt: 'createdAt',
+  facilityId: 'facilityId'
+};
+
+exports.Prisma.GamehubBookingScalarFieldEnum = {
+  id: 'id',
+  bookingDate: 'bookingDate',
+  slotLabel: 'slotLabel',
+  totalAmount: 'totalAmount',
+  currency: 'currency',
+  status: 'status',
+  paymentMethod: 'paymentMethod',
+  paymentStatus: 'paymentStatus',
+  transactionId: 'transactionId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId',
+  facilityId: 'facilityId'
+};
+
+exports.Prisma.GamehubBlockedSlotScalarFieldEnum = {
+  id: 'id',
+  blockDate: 'blockDate',
+  slotLabel: 'slotLabel',
+  reason: 'reason',
+  createdAt: 'createdAt',
+  createdByUserId: 'createdByUserId',
+  facilityId: 'facilityId'
+};
+
+exports.Prisma.WalletScalarFieldEnum = {
+  id: 'id',
+  balance: 'balance',
+  totalEarnings: 'totalEarnings',
+  currency: 'currency',
+  updatedAt: 'updatedAt',
+  userId: 'userId'
+};
+
+exports.Prisma.WalletTransactionScalarFieldEnum = {
+  id: 'id',
+  amount: 'amount',
+  type: 'type',
+  description: 'description',
+  referenceId: 'referenceId',
+  createdAt: 'createdAt',
+  walletId: 'walletId'
+};
+
+exports.Prisma.PayoutScalarFieldEnum = {
+  id: 'id',
+  amount: 'amount',
+  status: 'status',
+  bankDetails: 'bankDetails',
+  transactionId: 'transactionId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -290,7 +386,14 @@ exports.Prisma.ModelName = {
   BookingItem: 'BookingItem',
   Payment: 'Payment',
   Notification: 'Notification',
-  Review: 'Review'
+  Review: 'Review',
+  GamehubFacility: 'GamehubFacility',
+  GamehubReview: 'GamehubReview',
+  GamehubBooking: 'GamehubBooking',
+  GamehubBlockedSlot: 'GamehubBlockedSlot',
+  Wallet: 'Wallet',
+  WalletTransaction: 'WalletTransaction',
+  Payout: 'Payout'
 };
 
 /**

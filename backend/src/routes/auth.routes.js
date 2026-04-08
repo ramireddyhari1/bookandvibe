@@ -5,9 +5,28 @@ const jwt = require('jsonwebtoken');
 const prisma = require('../lib/prisma');
 const { authenticateToken, JWT_SECRET } = require('../middleware/auth');
 const { sendMail } = require('../lib/mailer');
+const { validate, registerSchema, loginSchema } = require('../middleware/validator');
+
+function handleAuthRouteError(res, err, fallbackMessage) {
+  const message = String(err?.message || '');
+  const isDbUnavailable = message.includes("Can't reach database server") || message.includes('P1001');
+
+  if (isDbUnavailable) {
+    return res.status(503).json({
+      code: 'DB_UNAVAILABLE',
+      error: 'Login service is temporarily unavailable. Please try again in a moment.',
+    });
+  }
+
+  console.error('[auth.routes] Unexpected error:', err);
+  return res.status(500).json({
+    code: 'AUTH_INTERNAL_ERROR',
+    error: fallbackMessage,
+  });
+}
 
 // POST /api/auth/register
-router.post('/register', async (req, res) => {
+router.post('/register', validate(registerSchema), async (req, res) => {
   try {
     const { name, email, password } = req.body;
     
@@ -54,12 +73,12 @@ router.post('/register', async (req, res) => {
       user: { id: newUser.id, name: newUser.name, email: newUser.email, role: newUser.role } 
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return handleAuthRouteError(res, err, 'Registration failed. Please try again later.');
   }
 });
 
 // POST /api/auth/login
-router.post('/login', async (req, res) => {
+router.post('/login', validate(loginSchema), async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -86,7 +105,7 @@ router.post('/login', async (req, res) => {
       user: { id: user.id, name: user.name, email: user.email, role: user.role } 
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return handleAuthRouteError(res, err, 'Login failed. Please try again later.');
   }
 });
 
@@ -105,7 +124,7 @@ router.get('/me', authenticateToken, async (req, res) => {
       user: { id: user.id, name: user.name, email: user.email, role: user.role } 
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return handleAuthRouteError(res, err, 'Unable to fetch user profile. Please try again later.');
   }
 });
 

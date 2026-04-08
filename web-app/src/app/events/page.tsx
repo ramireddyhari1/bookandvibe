@@ -27,6 +27,7 @@ import {
   X,
 } from "lucide-react";
 import { useLocation } from "@/context/LocationContext";
+import { API_URL } from "@/lib/api";
 
 // Real event data is fetched from the API via useEffect below.
 
@@ -94,7 +95,7 @@ export default function EventsPage() {
         if (priceRange.min > 0) params.append("minPrice", priceRange.min.toString());
         if (priceRange.max !== Infinity) params.append("maxPrice", priceRange.max.toString());
 
-        const response = await fetch(`http://localhost:5000/api/events?${params.toString()}`, { cache: "no-store" });
+        const response = await fetch(`${API_URL}/events?${params.toString()}`, { cache: "no-store" });
         if (!response.ok) throw new Error("Failed to fetch events");
         const json = await response.json();
         setEvents(json.data || []);

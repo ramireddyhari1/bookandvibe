@@ -2,17 +2,29 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import {
+  Activity,
   ArrowLeft,
+  Award,
   Calendar,
-  CheckCircle2,
+  ChevronRight,
   Clock,
+  Gamepad2,
+  Heart,
+  Info,
   MapPin,
   Phone,
+  Share2,
+  ShieldCheck,
   Star,
+  Target,
+  Trophy,
   Users,
+  Zap
 } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { API_URL } from "@/lib/api";
 
 type Review = {
   id: number;
@@ -45,10 +57,79 @@ type Facility = {
   reviews?: Review[];
 };
 
-const API_BASE = "http://localhost:5000/api";
+type AvailabilitySlot = {
+  label: string;
+  status: "AVAILABLE" | "LOCKED" | "BOOKED" | "BLOCKED";
+  lockedByCurrentUser: boolean;
+};
+
+const MOCK_FACILITIES: Facility[] = [
+  {
+    type: "Multiple Sports",
+    location: "Mumbai",
+    venue: "D.No: 12-468/E/4, Near Highway",
+    distance: "0.16 Kms",
+    rating: 4.20,
+    reviewsCount: 99,
+    pricePerHour: 1200,
+    unit: "hr",
+    image: "https://images.unsplash.com/photo-1544919982-b61976f0ba43?auto=format&fit=crop&q=80&w=800",
+    description: "Experience world-class sports at Our Zone Sports Arena. We offer top-tier facilities for Cricket, Football, Badminton, and Table Tennis, with professional coaching available.",
+    phone: "+91 98765 43210",
+    openHours: "6:00 AM - 11:00 PM",
+    amenities: ["Parking", "Water", "Washrooms", "Changing Room", "Floodlights"],
+    gallery: [
+      "https://images.unsplash.com/photo-1544919982-b61976f0ba43?auto=format&fit=crop&q=80&w=800",
+      "https://images.unsplash.com/photo-1529900748604-07564a03e7a6?auto=format&fit=crop&q=80&w=800",
+      "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80&w=800"
+    ],
+    slotTemplate: [
+      { label: "06:00 AM", isBooked: false },
+      { label: "07:00 AM", isBooked: true },
+      { label: "08:00 AM", isBooked: false },
+      { label: "09:00 AM", isBooked: false },
+      { label: "05:00 PM", isBooked: false },
+      { label: "06:00 PM", isBooked: false },
+      { label: "07:00 PM", isBooked: true },
+      { label: "08:00 PM", isBooked: false }
+    ]
+  },
+  {
+    id: "mock-2",
+    name: "Sai Sandeep Badminton Club",
+    type: "Badminton",
+    location: "Mumbai",
+    venue: "Pappula Mill Rd, Yanam",
+    distance: "6.62 Kms",
+    rating: 4.44,
+    reviewsCount: 16,
+    pricePerHour: 350,
+    unit: "hr",
+    image: "https://images.unsplash.com/photo-1626225967045-944080928956?auto=format&fit=crop&q=80&w=800",
+    description: "Premium badminton courts with professional flooring and lighting. Perfect for players of all levels.",
+    phone: "+91 88776 65544",
+    openHours: "5:00 AM - 10:00 PM",
+    amenities: ["Water", "Washrooms", "Shuttles Available"],
+    gallery: [
+      "https://images.unsplash.com/photo-1626225967045-944080928956?auto=format&fit=crop&q=80&w=800"
+    ],
+    slotTemplate: [
+      { label: "06:00 AM", isBooked: false },
+      { label: "07:00 AM", isBooked: false }
+    ]
+  }
+];
+
+const API_BASE = API_URL;
+
+function todayDateString() {
+  return new Date().toISOString().slice(0, 10);
+}
 
 export default function FacilityDetailPage() {
   const params = useParams();
+  const router = useRouter();
+  const { token, isAuthenticated, user } = useAuth();
   const facilityId = String(params.id || "");
 
   const [facility, setFacility] = useState<Facility | null>(null);
@@ -58,193 +139,550 @@ export default function FacilityDetailPage() {
   const [error, setError] = useState("");
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [activeGalleryImg, setActiveGalleryImg] = useState(0);
+  const [availabilitySlots, setAvailabilitySlots] = useState<AvailabilitySlot[]>([]);
+  const [bookingDate, setBookingDate] = useState(todayDateString());
+  const [selectedSport, setSelectedSport] = useState("");
+  const [selectedCourt, setSelectedCourt] = useState("");
+  const [duration, setDuration] = useState(1);
+  const [bookingLoading, setBookingLoading] = useState(false);
+  const [bookingError, setBookingError] = useState("");
+  const [bookingSuccess, setBookingSuccess] = useState("");
+
+  const sportsList = useMemo(() => {
+    if (!facility) return [];
+    // Prioritize dynamic availableSports from Admin
+    if (Array.isArray(facility.availableSports) && facility.availableSports.length > 0) {
+      return facility.availableSports;
+    }
+    // Fallback to legacy type-based parsing
+    if (facility.type === "Multiple Sports" || facility.type.includes("&")) {
+      return ["Badminton", "Football", "Table Tennis", "Box Cricket"];
+    }
+    return [facility.type];
+  }, [facility]);
+
+  useEffect(() => {
+     if (sportsList.length > 0 && !selectedSport) {
+        setSelectedSport(sportsList[0]);
+     }
+  }, [sportsList, selectedSport]);
+
+  const courtsList = useMemo(() => ["Wooden Court 1", "Synthetic Court 2", "Premium Court 3"], []);
+
+  useEffect(() => {
+     if (!selectedCourt && courtsList.length > 0) {
+        setSelectedCourt(courtsList[0]);
+     }
+  }, [selectedCourt, courtsList]);
 
   useEffect(() => {
     async function loadDetails() {
       setLoading(true);
       setError("");
       try {
-        const [facilityRes, listRes] = await Promise.all([
+        const [facilityRes, listRes, availabilityRes] = await Promise.all([
           fetch(`${API_BASE}/gamehub/facilities/${facilityId}`),
           fetch(`${API_BASE}/gamehub/facilities`),
+          fetch(`${API_BASE}/gamehub/facilities/${facilityId}/availability?date=${bookingDate}${user?.id ? `&userId=${user.id}` : ""}`),
         ]);
 
         const facilityPayload = await facilityRes.json();
         const listPayload = await listRes.json();
+        const availabilityPayload = await availabilityRes.json();
 
-        if (!facilityRes.ok) {
-          throw new Error(facilityPayload?.error || "Failed to fetch facility");
+        if (facilityRes.ok) {
+          setFacility(facilityPayload.data);
+          setReviews(Array.isArray(facilityPayload?.data?.reviews) ? facilityPayload.data.reviews : []);
+        } else {
+          // Fallback to finding in MOCK data
+          const found = MOCK_FACILITIES.find((f: any) => f.id === facilityId);
+          if (found) {
+            setFacility(found);
+            setReviews([]);
+            // Mock slots if API fails
+            setAvailabilitySlots(found.slotTemplate.map(s => ({label: s.label, status: s.isBooked ? "BOOKED" : "AVAILABLE", lockedByCurrentUser: false})));
+          } else {
+            throw new Error("Facility not found");
+          }
         }
 
-        setFacility(facilityPayload.data);
-        setReviews(Array.isArray(facilityPayload?.data?.reviews) ? facilityPayload.data.reviews : []);
-        setAllFacilities(Array.isArray(listPayload?.data) ? listPayload.data : []);
+        setAllFacilities(Array.isArray(listPayload?.data) ? listPayload.data : MOCK_FACILITIES);
       } catch (err) {
-        const message = err instanceof Error ? err.message : "Failed to load facility";
-        setError(message);
+        // Final fallback if everything fails
+        const found = MOCK_FACILITIES.find((f: any) => f.id === facilityId);
+        if (found) {
+          setFacility(found);
+          setReviews([]);
+          setAvailabilitySlots(found.slotTemplate.map(s => ({label: s.label, status: s.isBooked ? "BOOKED" : "AVAILABLE", lockedByCurrentUser: false})));
+          setAllFacilities(MOCK_FACILITIES);
+        } else {
+          setError(err instanceof Error ? err.message : "Failed to load facility");
+        }
       } finally {
         setLoading(false);
       }
     }
 
     loadDetails();
-  }, [facilityId]);
+  }, [facilityId, bookingDate, user?.id]);
 
   const similarFacilities = useMemo(() => {
     return allFacilities.filter((f) => f.id !== facilityId).slice(0, 3);
   }, [allFacilities, facilityId]);
 
-  const totalStars = (rating: number) => Math.round(rating);
+  async function handleConfirmBooking() {
+    if (!selectedSlot) return;
+    if (!isAuthenticated || !token) {
+      setBookingError("Please login first to book this slot.");
+      return;
+    }
 
-  if (loading) {
-    return <div className="min-h-screen flex items-center justify-center text-slate-500">Loading facility...</div>;
+    setBookingLoading(true);
+    setBookingError("");
+    setBookingSuccess("");
+
+    try {
+      const lockRes = await fetch(`${API_BASE}/gamehub/bookings/lock`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ facilityId, slotLabel: selectedSlot, date: bookingDate }),
+      });
+      if (!lockRes.ok) throw new Error("Unable to lock slot");
+
+      const confirmRes = await fetch(`${API_BASE}/gamehub/bookings/confirm`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}`, "idempotency-key": Date.now().toString() },
+        body: JSON.stringify({ facilityId, slotLabel: selectedSlot, date: bookingDate, paymentMethod: "MOCK" }),
+      });
+      if (!confirmRes.ok) throw new Error("Unable to confirm booking");
+
+      setBookingSuccess(`Booking confirmed for ${selectedSlot}!`);
+      setSelectedSlot(null);
+      // Refresh slots
+      const refreshRes = await fetch(`${API_BASE}/gamehub/facilities/${facilityId}/availability?date=${bookingDate}`);
+      const refreshPayload = await refreshRes.json();
+      setAvailabilitySlots(refreshPayload.data?.slots || []);
+    } catch (err) {
+      setBookingError(err instanceof Error ? err.message : "Booking failed");
+    } finally {
+      setBookingLoading(false);
+    }
   }
 
-  if (error || !facility) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-        <p className="text-red-500 font-semibold">{error || "Facility not found"}</p>
-        <Link href="/gamehub" className="text-rose-600 font-bold">Back to GameHub</Link>
-      </div>
-    );
-  }
+  if (loading) return <div className="min-h-screen flex items-center justify-center bg-gray-50"><div className="w-12 h-12 border-4 border-[#42B460] border-t-transparent rounded-full animate-spin"></div></div>;
+  if (error || !facility) return (
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gray-50">
+      <h2 className="text-2xl font-bold text-gray-800 mb-4">Venue not found</h2>
+      <button onClick={() => router.push("/gamehub")} className="px-6 py-3 bg-[#42B460] text-white rounded-xl font-bold">Return to GameHub</button>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-100 via-rose-50 to-white text-[#1c222b] pb-24 font-sans">
-      <div className="relative w-full h-[52vh] min-h-[380px] max-h-[560px] overflow-hidden">
-        <img
-          src={facility.gallery[activeGalleryImg] || facility.image}
-          alt={facility.name}
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/20" />
-
-        <div className="absolute top-28 left-0 right-0 px-4 sm:px-6 lg:px-12 max-w-[1400px] mx-auto flex justify-between items-center z-20">
-          <Link href="/gamehub" className="bg-white/15 backdrop-blur border border-white/30 text-white px-4 py-2 rounded-xl font-bold text-sm inline-flex items-center gap-2">
-            <ArrowLeft size={16} /> Back
-          </Link>
-        </div>
-
-        <div className="absolute bottom-0 left-0 right-0 px-4 sm:px-6 lg:px-12 max-w-[1400px] mx-auto pb-8 z-20">
-          <span className="bg-rose-500 text-white px-3 py-1 rounded-full text-xs font-bold uppercase">{facility.type}</span>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-white mt-3">{facility.name}</h1>
-          <div className="mt-3 flex flex-wrap items-center gap-4 text-white/90 text-sm font-semibold">
-            <span className="inline-flex items-center gap-1"><MapPin size={14} /> {facility.venue}</span>
-            <span className="inline-flex items-center gap-1"><Clock size={14} /> {facility.openHours}</span>
-            <span className="inline-flex items-center gap-1"><Star size={14} className="fill-yellow-400 text-yellow-400" /> {facility.rating} ({facility.reviewsCount})</span>
-          </div>
-        </div>
+    <div className="min-h-screen bg-[#F8F9FA] pb-20 pt-20">
+      {/* Sticky Top Navigation */}
+      <div className="fixed top-0 left-0 right-0 z-[100] bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between md:hidden">
+        <button onClick={() => router.back()} className="text-gray-900"><ArrowLeft size={24} /></button>
+        <span className="font-bold text-[15px] truncate max-w-[200px]">{facility.name}</span>
+        <button className="text-gray-900"><Share2 size={20} /></button>
       </div>
 
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 -mt-6 relative z-30">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white rounded-2xl border border-slate-100 p-6">
-              <h2 className="text-xl font-extrabold mb-3">About Facility</h2>
-              <p className="text-slate-600 text-sm leading-7">{facility.description}</p>
-            </div>
+      <div className="max-w-[1200px] mx-auto px-6">
+        {/* Desktop Breadcrumbs */}
+        <div className="hidden md:flex items-center gap-2 text-[13px] text-gray-400 py-6 mb-2">
+          <Link href="/gamehub" className="hover:text-[#42B460] transition-colors">GameHub</Link>
+          <ChevronRight size={14} />
+          <span className="text-gray-500 font-medium">{facility.name}</span>
+        </div>
 
-            <div className="bg-white rounded-2xl border border-slate-100 p-6">
-              <h2 className="text-xl font-extrabold mb-3">Amenities</h2>
-              <div className="flex flex-wrap gap-2">
-                {facility.amenities.map((item) => (
-                  <span key={item} className="bg-rose-50 border border-rose-100 text-rose-700 px-3 py-1.5 rounded-full text-xs font-bold">
-                    {item}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl border border-slate-100 p-6">
-              <h2 className="text-xl font-extrabold mb-4">Reviews</h2>
-              {reviews.length === 0 ? (
-                <p className="text-slate-500 text-sm">No reviews yet.</p>
-              ) : (
-                <div className="space-y-4">
-                  {reviews.map((review) => (
-                    <div key={review.id} className="border border-slate-100 rounded-xl p-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="font-bold text-sm">{review.name}</p>
-                          <p className="text-xs text-slate-400">{review.date}</p>
-                        </div>
-                        <div className="text-xs font-bold text-amber-600">{review.rating}/5</div>
-                      </div>
-                      <p className="text-sm text-slate-600 mt-2">{review.text}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+        {/* Gallery Section - Premium Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 h-[300px] md:h-[500px] mb-8 rounded-3xl overflow-hidden shadow-sm group">
+          <div className="md:col-span-8 relative overflow-hidden">
+            <img 
+              src={facility.gallery[activeGalleryImg] || facility.image} 
+              alt="Venue" 
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+            />
           </div>
-
-          <div className="space-y-6">
-            <div className="bg-white rounded-2xl border border-slate-100 p-6">
-              <p className="text-xs text-slate-400 font-bold uppercase">Price</p>
-              <p className="text-3xl font-extrabold mt-1">INR {facility.pricePerHour}</p>
-              <p className="text-sm text-slate-500 font-semibold">per {facility.unit}</p>
-
-              <h3 className="text-sm font-extrabold mt-5 mb-3">Slots</h3>
-              <div className="grid grid-cols-2 gap-2">
-                {facility.slotTemplate.map((slot) => (
-                  <button
-                    key={slot.label}
-                    disabled={slot.isBooked}
-                    onClick={() => setSelectedSlot(slot.label)}
-                    className={`px-3 py-2 rounded-lg text-xs font-bold border ${
-                      slot.isBooked
-                        ? "bg-slate-100 text-slate-400 border-slate-200"
-                        : selectedSlot === slot.label
-                        ? "bg-rose-500 text-white border-rose-500"
-                        : "bg-white text-slate-700 border-slate-200"
-                    }`}
-                  >
-                    {slot.label}
-                  </button>
-                ))}
-              </div>
-
-              <button
-                disabled={!selectedSlot}
-                className="mt-5 w-full bg-rose-500 disabled:bg-slate-300 text-white py-3 rounded-xl font-bold"
-              >
-                {selectedSlot ? "Proceed to Booking" : "Select Slot"}
-              </button>
-
-              <div className="mt-4 text-sm text-slate-600 inline-flex items-center gap-2">
-                <Phone size={14} /> {facility.phone}
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl border border-slate-100 p-6">
-              <h3 className="text-sm font-extrabold mb-3">Gallery</h3>
-              <div className="grid grid-cols-3 gap-2">
-                {facility.gallery.map((img, idx) => (
-                  <button key={img} onClick={() => setActiveGalleryImg(idx)}>
-                    <img src={img} alt="gallery" className={`w-full h-20 rounded-lg object-cover border ${idx === activeGalleryImg ? "border-rose-500" : "border-slate-200"}`} />
-                  </button>
-                ))}
-              </div>
-            </div>
+          <div className="hidden md:grid md:col-span-4 grid-rows-2 gap-4">
+             {facility.gallery.slice(1, 3).map((img, i) => (
+                <div key={i} className="relative overflow-hidden cursor-pointer" onClick={() => setActiveGalleryImg(i + 1)}>
+                  <img src={img} alt="Gallery" className="w-full h-full object-cover hover:opacity-90 transition-opacity" />
+                </div>
+             ))}
+             {facility.gallery.length > 3 && (
+               <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-md text-white border border-white/20 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider cursor-pointer hover:bg-black/80 transition-colors">
+                  View all {facility.gallery.length} photos
+               </div>
+             )}
           </div>
         </div>
 
-        {similarFacilities.length > 0 && (
-          <section className="mt-14">
-            <h2 className="text-2xl font-extrabold mb-4">Similar Facilities</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-              {similarFacilities.map((item) => (
-                <Link key={item.id} href={`/gamehub/${item.id}`} className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
-                  <img src={item.image} alt={item.name} className="w-full h-36 object-cover" />
-                  <div className="p-4">
-                    <p className="font-extrabold text-sm">{item.name}</p>
-                    <p className="text-xs text-slate-500 mt-1">{item.venue}</p>
-                    <p className="text-sm font-bold mt-2">INR {item.pricePerHour} / {item.unit}</p>
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+          {/* Left Column: Details */}
+          <div className="lg:col-span-8 space-y-8">
+            {/* Header Info */}
+            <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden">
+               <div className="absolute top-0 left-0 w-2 h-full bg-[#42B460]" />
+               <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <span className="inline-block bg-[#42B460]/10 text-[#42B460] px-3 py-1 rounded-lg text-[11px] font-black uppercase tracking-widest mb-3">
+                      {facility.type}
+                    </span>
+                    <h1 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight leading-tight mb-2">
+                      {facility.name}
+                    </h1>
+                    <div className="flex items-center gap-4 text-gray-500 text-sm font-medium">
+                       <span className="flex items-center gap-1.5"><MapPin size={16} className="text-[#42B460]" /> {facility.venue}</span>
+                       <span className="flex items-center gap-1.5"><Clock size={16} className="text-[#42B460]" /> {facility.openHours}</span>
+                    </div>
                   </div>
-                </Link>
-              ))}
+                  <div className="flex flex-col items-end gap-2 text-right">
+                     <div className="flex items-center gap-1.5 bg-[#42B460] text-white px-3 py-1.5 rounded-xl">
+                        <Star size={18} fill="currentColor" />
+                        <span className="text-lg font-black">{facility.rating}</span>
+                     </div>
+                     <span className="text-xs text-gray-400 font-bold uppercase tracking-tighter">{facility.reviewsCount} REVIEWS</span>
+                  </div>
+               </div>
+               
+               <div className="flex flex-col gap-6 pt-6 border-t border-gray-50 mt-6">
+                  <div>
+                    <div className="flex items-center gap-2 mb-4">
+                       <h3 className="text-sm font-black text-gray-900 uppercase tracking-wide">Sports Available</h3>
+                       <span className="text-[11px] text-gray-400 font-medium">(Click on sports to view price chart)</span>
+                    </div>
+                     <div className="flex flex-wrap gap-3">
+                       {sportsList.map((sport) => (
+                         <div 
+                           key={sport} 
+                           onClick={() => {
+                             setSelectedSport(sport);
+                             document.getElementById('booking-card')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                           }}
+                           className={`flex flex-col items-center justify-center p-4 rounded-xl border transition-all cursor-pointer min-w-[100px] group ${
+                             selectedSport === sport 
+                               ? 'border-[#42B460] bg-[#42B460]/5 shadow-md' 
+                               : 'border-gray-100 bg-white shadow-sm hover:border-[#42B460] hover:shadow-md'
+                           }`}
+                         >
+                            <div className={`w-10 h-10 flex items-center justify-center transition-colors mb-2 ${
+                              selectedSport === sport ? 'text-[#42B460]' : 'text-gray-600 group-hover:text-[#42B460]'
+                            }`}>
+                               {sport.includes("Badminton") && <Activity size={24} />}
+                               {sport.includes("Football") && <Target size={24} />}
+                               {sport.includes("Table Tennis") && <Trophy size={24} />}
+                               {(sport.includes("Cricket") || sport.includes("Box")) && <Award size={24} />}
+                               {/* Fallback icon for other sports */}
+                               {!["Badminton", "Football", "Table Tennis", "Box", "Cricket"].some(s => sport.includes(s)) && <Zap size={24} />}
+                            </div>
+                            <span className={`text-[12px] font-black tracking-tight ${
+                              selectedSport === sport ? 'text-[#42B460]' : 'text-gray-700'
+                            }`}>{sport}</span>
+                         </div>
+                       ))}
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <button className="flex-1 md:flex-none border border-gray-200 text-gray-700 font-bold px-6 py-3 rounded-2xl flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors">
+                      <Share2 size={18} /> Share
+                    </button>
+                    <button className="flex-1 md:flex-none border border-gray-200 text-gray-700 font-bold px-6 py-3 rounded-2xl flex items-center justify-center gap-2 hover:bg-gray-50 transition-colors">
+                      <Heart size={18} /> Favorite
+                    </button>
+                  </div>
+               </div>
             </div>
-          </section>
+
+            {/* About Section */}
+            <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
+               <h2 className="text-xl font-black mb-6 flex items-center gap-2 uppercase tracking-wide">
+                 <Info size={20} className="text-[#42B460]" /> About this Venue
+               </h2>
+               <p className="text-gray-600 leading-relaxed text-[15px] font-medium whitespace-pre-line">
+                 {facility.description}
+               </p>
+            </div>
+
+            {/* Amenities Grid */}
+            <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
+               <h2 className="text-xl font-black mb-6 flex items-center gap-2 uppercase tracking-wide">
+                 <Zap size={20} className="text-[#42B460]" /> Amenities
+               </h2>
+               <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
+                  {facility.amenities.map((item, idx) => (
+                    <div key={idx} className="flex items-center gap-3">
+                       <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-[#42B460] border border-gray-100">
+                          <ShieldCheck size={20} />
+                       </div>
+                       <span className="text-[14px] font-bold text-gray-700">{item}</span>
+                    </div>
+                  ))}
+               </div>
+            </div>
+
+            {/* Location / Contact */}
+            <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+               <h2 className="text-xl font-black mb-6 flex items-center gap-2 uppercase tracking-wide">
+                 <MapPin size={20} className="text-[#42B460]" /> Location & Contact
+               </h2>
+               <div className="relative w-full h-[250px] bg-gray-100 rounded-2xl mb-6 overflow-hidden border border-gray-200">
+                 <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center">
+                       <MapPin size={40} className="text-[#42B460] mx-auto mb-2 opacity-50" />
+                       <span className="text-[12px] font-bold text-gray-400">Interactive Map View Placeholder</span>
+                    </div>
+                 </div>
+               </div>
+               <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-gray-50 p-6 rounded-2xl">
+                  <div className="flex items-center gap-4">
+                     <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-[#42B460] shadow-sm">
+                        <Phone size={20} />
+                     </div>
+                     <div>
+                        <p className="text-xs text-gray-400 font-bold uppercase mb-0.5">Contact Venue</p>
+                        <p className="text-lg font-black text-gray-900">{facility.phone}</p>
+                     </div>
+                  </div>
+                  <button className="w-full md:w-auto px-8 py-3 bg-white border border-gray-200 text-gray-900 font-bold rounded-2xl shadow-sm hover:shadow-md transition-all">
+                    Get Directions
+                  </button>
+               </div>
+            </div>
+          </div>
+
+          {/* Right Column: Sticky Booking Card */}
+          <div className="lg:col-span-4" id="booking-card">
+             <div className="sticky top-28 space-y-6">
+                 <div className="bg-[#1c222b] text-white p-8 rounded-[32px] shadow-2xl relative overflow-hidden border border-white/5">
+                    <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#42B460]/20 rounded-full blur-3xl" />
+                    
+                    <div className="flex items-center justify-between mb-8">
+                       <div>
+                          <p className="text-[10px] font-black text-[#42B460] uppercase tracking-widest mb-1">Total Amount</p>
+                          <div className="flex items-baseline gap-1.5">
+                             <span className="text-3xl font-black">₹{facility.pricePerHour * duration}</span>
+                             <span className="text-gray-400 font-bold text-xs">/ {duration} {duration === 1 ? 'Hr' : 'Hrs'}</span>
+                          </div>
+                       </div>
+                       <div className="bg-white/5 p-2 rounded-xl border border-white/10">
+                          <Activity size={20} className="text-[#42B460]" />
+                       </div>
+                    </div>
+
+                    <div className="space-y-5">
+                       {/* Sport Selection */}
+                       <div>
+                          <label className="text-[10px] font-black uppercase text-gray-500 tracking-widest block mb-2">Sport</label>
+                          <div className="relative group">
+                             <select 
+                               value={selectedSport} 
+                               onChange={(e) => setSelectedSport(e.target.value)}
+                               className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 font-bold text-sm appearance-none outline-none focus:border-[#42B460] transition-all cursor-pointer z-10 relative sport-select"
+                             >
+                               {sportsList.map(sport => (
+                                 <option key={sport} value={sport} className="bg-[#1c222b]">{sport}</option>
+                               ))}
+                             </select>
+                             <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500 z-20">
+                                <ChevronRight size={16} className="rotate-90" />
+                             </div>
+                             <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none text-[#42B460] z-20">
+                                {selectedSport.includes("Badminton") && <Activity size={18} />}
+                                {selectedSport.includes("Football") && <Target size={18} />}
+                                {selectedSport.includes("Table Tennis") && <Trophy size={18} />}
+                                {(selectedSport.includes("Box") || selectedSport.includes("Cricket")) && <Award size={18} />}
+                                {!["Badminton", "Football", "Table Tennis", "Box", "Cricket"].some(s => selectedSport.includes(s)) && <Zap size={18} />}
+                             </div>
+                             <style jsx>{`
+                               .sport-select { padding-left: 2.75rem; }
+                             `}</style>
+                          </div>
+                       </div>
+
+                       {/* Date Picker */}
+                       <div>
+                          <label className="text-[10px] font-black uppercase text-gray-500 tracking-widest block mb-2">Date</label>
+                          <div className="relative">
+                             <input 
+                               type="date"
+                               value={bookingDate}
+                               onChange={(e) => setBookingDate(e.target.value)}
+                               className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 font-bold text-sm appearance-none outline-none focus:border-[#42B460] transition-all cursor-pointer color-scheme-dark z-10 relative"
+                             />
+                             <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[#42B460] z-20">
+                                <Calendar size={18} />
+                             </div>
+                             <style jsx>{`
+                               input[type="date"]::-webkit-calendar-picker-indicator {
+                                 position: absolute;
+                                 top: 0;
+                                 left: 0;
+                                 right: 0;
+                                 bottom: 0;
+                                 width: auto;
+                                 height: auto;
+                                 color: transparent;
+                                 background: transparent;
+                               }
+                               .color-scheme-dark { color-scheme: dark; }
+                             `}</style>
+                          </div>
+                       </div>
+
+                       {/* Court Selection */}
+                       <div>
+                          <label className="text-[10px] font-black uppercase text-gray-500 tracking-widest block mb-2">Select Court</label>
+                          <div className="relative">
+                            <select 
+                              value={selectedCourt} 
+                              onChange={(e) => setSelectedCourt(e.target.value)}
+                              className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 font-bold text-sm appearance-none outline-none focus:border-[#42B460] transition-colors cursor-pointer"
+                            >
+                              {courtsList.map(court => (
+                                <option key={court} value={court} className="bg-[#1c222b]">{court}</option>
+                              ))}
+                            </select>
+                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                               <ChevronRight size={16} className="rotate-90" />
+                            </div>
+                          </div>
+                       </div>
+
+                       <div className="grid grid-cols-2 gap-4">
+                          {/* Start Time Dropdown */}
+                          <div>
+                             <label className="text-[10px] font-black uppercase text-gray-500 tracking-widest block mb-2">Start Time</label>
+                             <div className="relative">
+                               <select 
+                                 value={selectedSlot || ""} 
+                                 onChange={(e) => setSelectedSlot(e.target.value)}
+                                 className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 font-bold text-sm appearance-none outline-none focus:border-[#42B460] transition-colors cursor-pointer"
+                               >
+                                 <option value="" className="bg-[#1c222b]">Select</option>
+                                 {(availabilitySlots.length ? availabilitySlots : facility.slotTemplate.map(s => ({label: s.label, status: s.isBooked ? "BOOKED" : "AVAILABLE", lockedByCurrentUser: false}))).map((slot) => (
+                                   <option 
+                                     key={slot.label} 
+                                     value={slot.label} 
+                                     disabled={slot.status !== "AVAILABLE"}
+                                     className={`${slot.status === "AVAILABLE" ? 'bg-[#1c222b]' : 'bg-[#1c222b] text-gray-600'}`}
+                                   >
+                                     {slot.label} {slot.status !== "AVAILABLE" ? ' (Full)' : ''}
+                                   </option>
+                                 ))}
+                               </select>
+                               <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                                 <ChevronRight size={14} className="rotate-90" />
+                               </div>
+                             </div>
+                          </div>
+
+                          {/* Duration Stepper */}
+                          <div>
+                             <label className="text-[10px] font-black uppercase text-gray-500 tracking-widest block mb-2">Duration</label>
+                             <div className="flex items-center bg-white/5 border border-white/10 rounded-2xl overflow-hidden h-full">
+                                <button 
+                                  onClick={() => setDuration(Math.max(1, duration - 1))}
+                                  className="w-10 h-full hover:bg-white/10 transition-colors flex items-center justify-center border-r border-white/5 text-xl font-light"
+                                >
+                                  -
+                                </button>
+                                <span className="flex-1 text-center font-black text-sm">{duration} Hr</span>
+                                <button 
+                                  onClick={() => setDuration(Math.min(4, duration + 1))}
+                                  className="w-10 h-full hover:bg-white/10 transition-colors flex items-center justify-center border-l border-white/5 text-xl font-light"
+                                >
+                                  +
+                                </button>
+                             </div>
+                          </div>
+                       </div>
+
+                       <div className="pt-4">
+                          <button
+                            disabled={!selectedSlot || bookingLoading}
+                            onClick={handleConfirmBooking}
+                            className="w-full bg-[#42B460] hover:bg-[#38A354] disabled:bg-gray-800 disabled:text-gray-600 text-white py-4 rounded-2xl font-black text-[15px] transition-all transform hover:-translate-y-1 active:translate-y-0 shadow-xl shadow-[#42B460]/30 flex items-center justify-center gap-3 uppercase tracking-wider"
+                          >
+                            {bookingLoading ? (
+                               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                            ) : (
+                               <>Confirm & Add <ChevronRight size={20} /></>
+                            )}
+                          </button>
+                       </div>
+
+                       {bookingError && (
+                          <div className="bg-red-500/10 border border-red-500/20 text-red-100 p-4 rounded-2xl text-[12px] font-bold flex items-center gap-3">
+                             <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                             {bookingError}
+                          </div>
+                       )}
+                       {bookingSuccess && (
+                          <div className="bg-[#42B460]/10 border border-[#42B460]/20 text-[#42B460] p-4 rounded-2xl text-[12px] font-bold">
+                             {bookingSuccess}
+                          </div>
+                       )}
+                    </div>
+                 </div>
+
+                <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+                   <div className="flex items-center gap-4 mb-4">
+                      <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-[#42B460]">
+                        <Users size={18} />
+                      </div>
+                      <span className="text-sm font-bold text-gray-700">Players currently active at this venue</span>
+                   </div>
+                   <div className="flex -space-x-2">
+                      {[1, 2, 3, 4].map(i => (
+                        <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-gray-100 flex items-center justify-center overflow-hidden">
+                           <img src={`https://i.pravatar.cc/100?u=${i}`} alt="user" />
+                        </div>
+                      ))}
+                      <div className="w-8 h-8 rounded-full border-2 border-white bg-[#42B460]/10 text-[#42B460] text-[10px] font-black flex items-center justify-center">
+                        +12
+                      </div>
+                   </div>
+                </div>
+             </div>
+          </div>
+        </div>
+
+        {/* Similar Venues Section */}
+        {similarFacilities.length > 0 && (
+          <div className="mt-20">
+             <div className="flex items-center justify-between mb-8">
+                <h2 className="text-2xl font-black text-gray-900 tracking-tight">VIBE WITH SIMILAR VENUES</h2>
+                <Link href="/gamehub" className="text-[#42B460] font-black text-sm hover:underline flex items-center gap-1">
+                   Show all <ChevronRight size={16} />
+                </Link>
+             </div>
+             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {similarFacilities.map((item) => (
+                  <Link key={item.id} href={`/gamehub/${item.id}`} className="group bg-white rounded-3xl border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-500 hover:-translate-y-1">
+                    <div className="relative h-48 overflow-hidden">
+                      <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                      <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg flex items-center gap-1">
+                         <Star size={12} className="text-[#42B460] fill-[#42B460]" />
+                         <span className="text-[11px] font-black text-gray-900">{item.rating}</span>
+                      </div>
+                    </div>
+                    <div className="p-6">
+                      <p className="text-[11px] font-black text-[#42B460] uppercase tracking-widest mb-1">{item.type}</p>
+                      <h3 className="text-lg font-black text-gray-900 mb-1 group-hover:text-[#42B460] transition-colors">{item.name}</h3>
+                      <p className="text-xs text-gray-400 font-bold mb-4 line-clamp-1">{item.venue}</p>
+                      <div className="flex items-center justify-between pt-4 border-t border-gray-50">
+                         <p className="text-[15px] font-black text-gray-900">₹{item.pricePerHour}<span className="text-[11px] text-gray-400 font-bold uppercase ml-1">/{item.unit}</span></p>
+                         <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-[#42B460]/10 group-hover:text-[#42B460] transition-colors">
+                            <ChevronRight size={18} />
+                         </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+             </div>
+          </div>
         )}
       </div>
     </div>

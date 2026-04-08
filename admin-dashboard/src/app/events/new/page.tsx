@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   AlertCircle,
   ArrowLeft,
@@ -54,12 +54,25 @@ const DEFAULT_TIERS: Tier[] = [
 
 export default function CreateEventPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const eventIdFromQuery = String(searchParams.get("eventId") || "");
 
   const [activeStep, setActiveStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [draftId, setDraftId] = useState("");
   const [globalError, setGlobalError] = useState("");
   const [reviewIssues, setReviewIssues] = useState<string[]>([]);
+  const [authToken, setAuthToken] = useState("");
+  const [hasManagerAccess, setHasManagerAccess] = useState(false);
+  const [accessChecked, setAccessChecked] = useState(false);
+
+  function clearDashboardSession() {
+    localStorage.removeItem("admin_dash_token");
+    localStorage.removeItem("admin_dash_role");
+    localStorage.removeItem("admin_dash_user");
+    document.cookie = "admin_dash_token=; path=/; max-age=0; samesite=lax";
+    document.cookie = "admin_dash_role=; path=/; max-age=0; samesite=lax";
+  }
 
   const [bookingFormat, setBookingFormat] = useState<BookingFormat>("HYBRID");
 
@@ -290,11 +303,15 @@ export default function CreateEventPage() {
   };
 
   const persistDraft = async () => {
+    if (!hasManagerAccess || !authToken) {
+      throw new Error("Log in as ADMIN or PARTNER to manage events.");
+    }
+
     const payload = buildPayload();
     if (draftId) {
       const res = await fetch(`${API_BASE}/events/${draftId}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders(),
         body: JSON.stringify(payload),
       });
       if (!res.ok) {
@@ -306,7 +323,7 @@ export default function CreateEventPage() {
 
     const res = await fetch(`${API_BASE}/events`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: authHeaders(),
       body: JSON.stringify(payload),
     });
 
@@ -356,6 +373,7 @@ export default function CreateEventPage() {
 
       const validateRes = await fetch(`${API_BASE}/events/${eventId}/validate-publish`, {
         method: "POST",
+        headers: authHeaders(),
       });
       const validateData = await validateRes.json().catch(() => ({}));
       if (!validateRes.ok) {
@@ -371,6 +389,7 @@ export default function CreateEventPage() {
 
       const publishRes = await fetch(`${API_BASE}/events/${eventId}/publish`, {
         method: "POST",
+        headers: authHeaders(),
       });
       const publishData = await publishRes.json().catch(() => ({}));
       if (!publishRes.ok) {
@@ -439,6 +458,152 @@ export default function CreateEventPage() {
     ],
   ];
 
+  function authHeaders(): Record<string, string> {
+    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    if (authToken) headers.Authorization = `Bearer ${authToken}`;
+    return headers;
+  }
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function verifyAccessAndMaybeLoad() {
+      const token = localStorage.getItem("admin_dash_token") || localStorage.getItem("token") || "";
+      if (!token) {
+        if (mounted) {
+          setHasManagerAccess(false);
+          setGlobalError("Log in as ADMIN or PARTNER to manage events.");
+          setAccessChecked(true);
+        }
+        return;
+      }
+
+      try {
+        const sessionRes = await fetch(`${API_BASE}/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+          cache: "no-store",
+        });
+        const sessionPayload = await sessionRes.json().catch(() => ({}));
+        if (!sessionRes.ok && [401, 403, 404].includes(sessionRes.status)) {
+          clearDashboardSession();
+          if (mounted) {
+            setHasManagerAccess(false);
+            setGlobalError("Session expired. Please login again as ADMIN or PARTNER.");
+            setAccessChecked(true);
+          }
+          router.replace("/login");
+          return;
+        }
+        const role = String(sessionPayload?.user?.role || "").toUpperCase();
+        const isManager = sessionRes.ok && (role === "ADMIN" || role === "PARTNER");
+
+        if (!isManager) {
+          if (mounted) {
+            setHasManagerAccess(false);
+            setGlobalError("Current account cannot manage events. Use ADMIN or PARTNER.");
+            setAccessChecked(true);
+          }
+          return;
+        }
+
+        if (mounted) {
+          setAuthToken(token);
+          setHasManagerAccess(true);
+          setAccessChecked(true);
+        }
+
+        if (!eventIdFromQuery) return;
+
+        const eventRes = await fetch(`${API_BASE}/events/manage/${eventIdFromQuery}`, {
+          headers: { Authorization: `Bearer ${token}` },
+          cache: "no-store",
+        });
+        const eventPayload = await eventRes.json().catch(() => ({}));
+        if (!eventRes.ok) {
+          if ([401, 403, 404].includes(eventRes.status)) {
+            clearDashboardSession();
+            if (mounted) {
+              setGlobalError("Session expired. Please login again as ADMIN or PARTNER.");
+              setAccessChecked(true);
+            }
+            router.replace("/login");
+            return;
+          }
+          throw new Error(eventPayload?.error || "Failed to load event for editing");
+        }
+
+        const event = eventPayload?.data;
+        if (!event || !mounted) return;
+
+        const parsedImages = (() => {
+          try {
+            const arr = JSON.parse(event.images || "[]");
+            return Array.isArray(arr) ? arr : [];
+          } catch {
+            return [];
+          }
+        })();
+
+        setDraftId(event.id);
+        setBookingFormat((event.bookingFormat || "HYBRID") as BookingFormat);
+        setEventDetails({
+          title: event.title || "",
+          description: event.description || "",
+          category: event.category || "MUSIC",
+          location: event.location || "",
+          venue: event.venue || "",
+          image: parsedImages[0] || "",
+        });
+        setSchedule({
+          date: event.date ? String(event.date).slice(0, 10) : "",
+          time: event.time || "",
+          bookingStartAt: event.bookingStartAt ? new Date(event.bookingStartAt).toISOString().slice(0, 16) : "",
+          bookingEndAt: event.bookingEndAt ? new Date(event.bookingEndAt).toISOString().slice(0, 16) : "",
+        });
+        setSeatConfig({
+          totalCapacity: String(event.totalSlots || ""),
+          seatLayout: event.seatLayout || "standard",
+          rows: event.seatRows ? String(event.seatRows) : "",
+          seatsPerRow: event.seatsPerRow ? String(event.seatsPerRow) : "",
+          hasNumberedSeats: event.numberedSeats !== false,
+          allowSeatSelection: event.seatSelection !== false,
+        });
+        setPricing({
+          currency: event.currency || "INR",
+          taxPercent: String(event.taxPercent ?? "0"),
+          platformFeeType: (event.platformFeeType || "PERCENT") as PlatformFeeType,
+          platformFeeValue: String(event.platformFeeValue ?? "0"),
+          visibility: (event.visibility || "PUBLIC") as VisibilityType,
+          accessCode: event.accessCode || "",
+          featured: Boolean(event.featured),
+        });
+        setTiers(
+          Array.isArray(event.tiers) && event.tiers.length
+            ? event.tiers.map((tier: { id: string; name: string; price: number; quantity: number; description: string; color: string }) => ({
+                id: tier.id,
+                name: tier.name || "",
+                price: String(tier.price ?? ""),
+                quantity: String(tier.quantity ?? ""),
+                description: tier.description || "",
+                color: tier.color || "rose",
+              }))
+            : DEFAULT_TIERS
+        );
+      } catch (loadErr) {
+        if (mounted) {
+          setGlobalError(loadErr instanceof Error ? loadErr.message : "Failed to load event editor");
+          setAccessChecked(true);
+        }
+      }
+    }
+
+    verifyAccessAndMaybeLoad();
+
+    return () => {
+      mounted = false;
+    };
+  }, [eventIdFromQuery, router]);
+
   return (
     <div className="mx-auto max-w-6xl space-y-6">
       <header className="flex items-center justify-between">
@@ -451,17 +616,19 @@ export default function CreateEventPage() {
             <ArrowLeft size={18} />
           </button>
           <div>
-            <h1 className="text-2xl font-extrabold text-slate-900">District-Style Event Creation</h1>
+            <h1 className="text-2xl font-extrabold text-slate-900">
+              {eventIdFromQuery ? "District-Style Event Editor" : "District-Style Event Creation"}
+            </h1>
             <p className="text-sm font-medium text-slate-500">Mandatory guided flow with publish gate and compliance checks</p>
           </div>
         </div>
         <button
           type="button"
           onClick={handleSaveDraft}
-          disabled={loading}
+          disabled={loading || !hasManagerAccess || !accessChecked}
           className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-50 disabled:opacity-60"
         >
-          Save Draft
+          {eventIdFromQuery ? "Save Changes" : "Save Draft"}
         </button>
       </header>
 
@@ -980,7 +1147,7 @@ export default function CreateEventPage() {
               <button
                 type="button"
                 onClick={nextStep}
-                disabled={loading}
+                disabled={loading || !hasManagerAccess || !accessChecked}
                 className="rounded-xl bg-teal-600 px-5 py-2 text-sm font-bold text-white transition hover:bg-teal-700 disabled:opacity-60"
               >
                 Next
@@ -990,7 +1157,7 @@ export default function CreateEventPage() {
               <button
                 type="button"
                 onClick={handlePublish}
-                disabled={loading}
+                disabled={loading || !hasManagerAccess || !accessChecked}
                 className="rounded-xl bg-emerald-600 px-5 py-2 text-sm font-bold text-white transition hover:bg-emerald-700 disabled:opacity-60"
               >
                 {loading ? "Publishing..." : "Publish Event"}

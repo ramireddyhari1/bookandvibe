@@ -17,6 +17,7 @@ import {
   Zap,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { API_URL } from "@/lib/api";
 
 type PaymentState = "IDLE" | "PROCESSING" | "SUCCESS";
 
@@ -69,7 +70,7 @@ export default function EventDetailsPage() {
       setError("");
 
       try {
-        const response = await fetch(`http://localhost:5000/api/events/${eventId}`, { cache: "no-store" });
+        const response = await fetch(`${API_URL}/events/${eventId}`, { cache: "no-store" });
         if (!response.ok) {
           throw new Error("Event not found in API");
         }
@@ -158,7 +159,7 @@ export default function EventDetailsPage() {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:5000/api/bookings", {
+      const response = await fetch(`${API_URL}/bookings`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

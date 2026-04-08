@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Gamepad2, MapPin, Search, Star, Users, Ticket, Sparkles, ArrowUpRight, RefreshCw } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Gamepad2, MapPin, Search, Star, Users, Ticket, Sparkles, ArrowUpRight, RefreshCw, Plus, Pencil, Trash2, X } from "lucide-react";
 
 type GameHubFacility = {
   id: string;
@@ -12,24 +13,507 @@ type GameHubFacility = {
   venue: string;
   rating: number;
   priceRange: string;
+  pricePerHour?: number;
+  unit?: string;
+  distance?: string;
+  description?: string;
+  phone?: string;
+  openHours?: string;
+  status?: "ACTIVE" | "INACTIVE" | "MAINTENANCE";
+  pricingRules?: Array<{ type: string; time?: string; day?: string; price: number }>;
   features?: string[];
   amenities?: string[];
   image?: string;
   tags?: string[];
+  gallery?: string[];
+  battleModes?: Array<{ name: string; players: string; duration: string }>;
+  slotTemplate?: Array<{ label: string; isBooked?: boolean }>;
+  availableSports?: string[];
+  partnerId?: string | null;
+  partner?: { id: string; name: string; email: string } | null;
+};
+
+type PartnerOption = {
+  id: string;
+  name: string;
+  email: string;
+};
+
+type CalendarDay = {
+  date: string;
+  bookingCount: number;
+  blockedCount: number;
+  bookings: Array<{ id: string; slotLabel: string; status: string }>;
+  blocks: Array<{ id: string; slotLabel: string; reason: string; createdAt: string }>;
+};
+
+type CalendarGridCell = {
+  date: string;
+  inCurrentMonth: boolean;
+};
+
+type FacilityFormState = {
+  name: string;
+  type: string;
+  location: string;
+  venue: string;
+  distance: string;
+  rating: string;
+  priceRange: string;
+  pricePerHour: string;
+  unit: string;
+  image: string;
+  description: string;
+  phone: string;
+  openHours: string;
+  amenities: string;
+  features: string;
+  tags: string;
+  gallery: string;
+  pricingRules: string;
+  slotTemplate: string;
+  availableSports: string;
+  slotStartHour: string;
+  slotEndHour: string;
+  slotInterval: string;
+  peakStartHour: string;
+  peakEndHour: string;
+  peakPrice: string;
+  weekendPrice: string;
+  status: "ACTIVE" | "INACTIVE" | "MAINTENANCE";
 };
 
 const API_BASE = "http://localhost:5000/api";
+const defaultImage = "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1200";
+const WEEKDAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+const emptyFormState: FacilityFormState = {
+  name: "",
+  type: "",
+  location: "",
+  venue: "",
+  distance: "0 km away",
+  rating: "4.5",
+  priceRange: "INR 500 / hr",
+  pricePerHour: "500",
+  unit: "hr",
+  image: defaultImage,
+  description: "",
+  phone: "",
+  openHours: "6:00 AM - 10:00 PM",
+  amenities: "",
+  features: "",
+  tags: "",
+  gallery: "",
+  pricingRules: "",
+  slotTemplate: "",
+  availableSports: "",
+  slotStartHour: "6",
+  slotEndHour: "22",
+  slotInterval: "60",
+  peakStartHour: "18",
+  peakEndHour: "22",
+  peakPrice: "800",
+  weekendPrice: "1000",
+  status: "ACTIVE",
+};
+
+function listToCsv(input?: string[]) {
+  return (input || []).join(", ");
+}
+
+function csvToList(input: string) {
+  return input
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function mapFacilityToForm(facility: GameHubFacility): FacilityFormState {
+  return {
+    name: facility.name || "",
+    type: facility.type || "",
+    location: facility.location || "",
+    venue: facility.venue || "",
+    distance: facility.distance || "0 km away",
+    rating: String(facility.rating ?? ""),
+    priceRange: facility.priceRange || "",
+    pricePerHour: String(facility.pricePerHour ?? ""),
+    unit: facility.unit || "hr",
+    image: facility.image || defaultImage,
+    description: facility.description || "",
+    phone: facility.phone || "",
+    openHours: facility.openHours || "",
+    amenities: listToCsv(facility.amenities),
+    features: listToCsv(facility.features),
+    tags: listToCsv(facility.tags),
+    gallery: listToCsv(facility.gallery),
+    pricingRules: JSON.stringify(facility.pricingRules || [], null, 2),
+    slotTemplate: JSON.stringify(facility.slotTemplate || [], null, 2),
+    availableSports: listToCsv(facility.availableSports),
+    slotStartHour: "6",
+    slotEndHour: "22",
+    slotInterval: "60",
+    peakStartHour: "18",
+    peakEndHour: "22",
+    peakPrice: "800",
+    weekendPrice: "1000",
+    status: facility.status || "ACTIVE",
+  };
+}
 
 export default function GameHubAdminPage() {
+  const router = useRouter();
   const [facilities, setFacilities] = useState<GameHubFacility[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
+  const [editorMode, setEditorMode] = useState<"create" | "edit">("create");
+  const [editingFacilityId, setEditingFacilityId] = useState<string | null>(null);
+  const [formState, setFormState] = useState<FacilityFormState>(emptyFormState);
+  const [actionLoading, setActionLoading] = useState(false);
+  const [actionError, setActionError] = useState("");
+  const [actionMessage, setActionMessage] = useState("");
+  const [calendarMonth, setCalendarMonth] = useState(currentMonthString());
+  const [selectedCalendarFacilityId, setSelectedCalendarFacilityId] = useState("");
+  const [calendarDays, setCalendarDays] = useState<CalendarDay[]>([]);
+  const [calendarLoading, setCalendarLoading] = useState(false);
+  const [blockDate, setBlockDate] = useState(todayDateString());
+  const [blockReason, setBlockReason] = useState("Maintenance");
+  const [blockSlotsInput, setBlockSlotsInput] = useState("");
+  const [authToken, setAuthToken] = useState("");
+  const [adminChecked, setAdminChecked] = useState(false);
+  const [hasAdminAccess, setHasAdminAccess] = useState(false);
+  const [currentRole, setCurrentRole] = useState("");
+  const [partners, setPartners] = useState<PartnerOption[]>([]);
+  const [authError, setAuthError] = useState("");
+  const [selectedDate, setSelectedDate] = useState(`${currentMonthString()}-01`);
+
+  function clearDashboardSession() {
+    localStorage.removeItem("admin_dash_token");
+    localStorage.removeItem("admin_dash_role");
+    localStorage.removeItem("admin_dash_user");
+    document.cookie = "admin_dash_token=; path=/; max-age=0; samesite=lax";
+    document.cookie = "admin_dash_role=; path=/; max-age=0; samesite=lax";
+  }
+
+  const selectedDay = useMemo(() => {
+    return (
+      calendarDays.find((day) => day.date === selectedDate) || {
+        date: selectedDate,
+        bookingCount: 0,
+        blockedCount: 0,
+        bookings: [],
+        blocks: [],
+      }
+    );
+  }, [calendarDays, selectedDate]);
+
+  const daysByDate = useMemo(() => {
+    return new Map(calendarDays.map((day) => [day.date, day]));
+  }, [calendarDays]);
+
+  const monthGrid = useMemo(() => buildMonthGrid(calendarMonth), [calendarMonth]);
+
+  function authHeaders(includeJson = false): Record<string, string> {
+    const headers: Record<string, string> = {};
+    if (includeJson) {
+      headers["Content-Type"] = "application/json";
+    }
+    if (authToken) {
+      headers.Authorization = `Bearer ${authToken}`;
+    }
+    return headers;
+  }
+
+  function openCreateEditor() {
+    setEditorMode("create");
+    setEditingFacilityId(null);
+    setFormState(emptyFormState);
+    setActionError("");
+    setActionMessage("");
+    setIsEditorOpen(true);
+  }
+
+  function openEditEditor(facility: GameHubFacility) {
+    setEditorMode("edit");
+    setEditingFacilityId(facility.id);
+    setFormState(mapFacilityToForm(facility));
+    setActionError("");
+    setActionMessage("");
+    setIsEditorOpen(true);
+  }
+
+  function closeEditor() {
+    setIsEditorOpen(false);
+    setEditingFacilityId(null);
+    setActionError("");
+  }
+
+  function handleFormChange(field: keyof FacilityFormState, value: string) {
+    setFormState((prev) => ({ ...prev, [field]: value }));
+  }
+
+  async function generateSlotsFromPreset() {
+    if (!hasAdminAccess) {
+      setActionError("Admin or Partner login required to generate slots");
+      return;
+    }
+
+    setActionError("");
+    try {
+      const response = await fetch(`${API_BASE}/gamehub/facilities/slot-template/generate`, {
+        method: "POST",
+        headers: authHeaders(true),
+        body: JSON.stringify({
+          startHour: Number(formState.slotStartHour || 6),
+          endHour: Number(formState.slotEndHour || 22),
+          intervalMinutes: Number(formState.slotInterval || 60),
+          basePrice: Number(formState.pricePerHour || 500),
+          peakStartHour: Number(formState.peakStartHour || 18),
+          peakEndHour: Number(formState.peakEndHour || 22),
+          peakPrice: Number(formState.peakPrice || 800),
+          weekendPrice: Number(formState.weekendPrice || 1000),
+        }),
+      });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload?.error || "Failed to generate slots");
+
+      setFormState((prev) => ({
+        ...prev,
+        slotTemplate: JSON.stringify(payload?.data || [], null, 2),
+        pricingRules: JSON.stringify([
+          {
+            type: "PEAK",
+            time: `${prev.peakStartHour}:00-${prev.peakEndHour}:00`,
+            price: Number(prev.peakPrice || 0),
+          },
+          {
+            type: "WEEKEND",
+            day: "SAT,SUN",
+            price: Number(prev.weekendPrice || 0),
+          },
+        ], null, 2),
+      }));
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : "Failed to generate slots");
+    }
+  }
+
+  async function handleSubmitFacility(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!hasAdminAccess) {
+      setActionError("Admin or Partner login required to save facilities");
+      return;
+    }
+
+    setActionLoading(true);
+    setActionError("");
+    setActionMessage("");
+
+    let parsedPricingRules: Array<{ type: string; time?: string; day?: string; price: number }> = [];
+    let parsedSlotTemplate: Array<{ label: string; isBooked?: boolean; price?: number; weekendPrice?: number }> = [];
+
+    try {
+      parsedPricingRules = formState.pricingRules.trim() ? JSON.parse(formState.pricingRules) : [];
+      parsedSlotTemplate = formState.slotTemplate.trim() ? JSON.parse(formState.slotTemplate) : [];
+    } catch (_) {
+      setActionLoading(false);
+      setActionError("Pricing rules / slot template must be valid JSON");
+      return;
+    }
+
+    const payload = {
+      name: formState.name.trim(),
+      type: formState.type.trim(),
+      location: formState.location.trim(),
+      venue: formState.venue.trim(),
+      distance: formState.distance.trim(),
+      rating: Number(formState.rating || 0),
+      priceRange: formState.priceRange.trim(),
+      pricePerHour: Number(formState.pricePerHour || 0),
+      unit: formState.unit.trim() || "hr",
+      image: formState.image.trim() || defaultImage,
+      description: formState.description.trim(),
+      phone: formState.phone.trim(),
+      openHours: formState.openHours.trim(),
+      status: formState.status,
+      pricingRules: Array.isArray(parsedPricingRules) ? parsedPricingRules : [],
+      amenities: csvToList(formState.amenities),
+      features: csvToList(formState.features),
+      tags: csvToList(formState.tags),
+      gallery: csvToList(formState.gallery),
+      battleModes: [],
+      slotTemplate: Array.isArray(parsedSlotTemplate) ? parsedSlotTemplate : [],
+      availableSports: csvToList(formState.availableSports),
+    };
+
+    try {
+      const isEdit = editorMode === "edit";
+      const endpoint = isEdit ? `${API_BASE}/gamehub/facilities/${editingFacilityId}` : `${API_BASE}/gamehub/facilities`;
+      const method = isEdit ? "PATCH" : "POST";
+
+      const response = await fetch(endpoint, {
+        method,
+        headers: authHeaders(true),
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data?.error || "Failed to save facility");
+
+      const facility = data?.data as GameHubFacility;
+      if (isEdit && editingFacilityId) {
+        setFacilities((prev) => prev.map((item) => (item.id === editingFacilityId ? { ...item, ...facility } : item)));
+        setActionMessage("Facility updated successfully.");
+      } else {
+        setFacilities((prev) => [facility, ...prev]);
+        setActionMessage("Facility created successfully.");
+      }
+
+      setIsEditorOpen(false);
+      setFormState(emptyFormState);
+      setEditingFacilityId(null);
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : "Failed to save facility");
+    } finally {
+      setActionLoading(false);
+    }
+  }
+
+  async function handleDeleteFacility(facility: GameHubFacility) {
+    if (!hasAdminAccess) {
+      setActionError("Admin or Partner login required to delete facilities");
+      return;
+    }
+
+    const isConfirmed = window.confirm(`Delete \"${facility.name}\"? This action cannot be undone.`);
+    if (!isConfirmed) return;
+
+    setActionLoading(true);
+    setActionError("");
+    setActionMessage("");
+
+    try {
+      const response = await fetch(`${API_BASE}/gamehub/facilities/${facility.id}`, {
+        method: "DELETE",
+        headers: authHeaders(),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data?.error || "Failed to delete facility");
+
+      setFacilities((prev) => prev.filter((item) => item.id !== facility.id));
+      setActionMessage("Facility deleted successfully.");
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : "Failed to delete facility");
+    } finally {
+      setActionLoading(false);
+    }
+  }
+
+  async function handleAssignFacilityPartner(facilityId: string, partnerId: string) {
+    if (currentRole !== "ADMIN") return;
+
+    setActionError("");
+    setActionMessage("");
+
+    try {
+      const response = await fetch(`${API_BASE}/gamehub/facilities/${facilityId}/assign-partner`, {
+        method: "PATCH",
+        headers: authHeaders(true),
+        body: JSON.stringify({ partnerId }),
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload?.error || "Failed to assign facility partner");
+
+      const updated = payload?.data as GameHubFacility;
+      setFacilities((prev) => prev.map((item) => (item.id === facilityId ? { ...item, ...updated } : item)));
+      setActionMessage("Facility partner updated successfully.");
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : "Failed to assign facility partner");
+    }
+  }
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function verifyAdminSession() {
+      const token = localStorage.getItem("admin_dash_token") || localStorage.getItem("token") || "";
+      if (!token) {
+        if (mounted) {
+          setAuthToken("");
+          setHasAdminAccess(false);
+          setAuthError("No dashboard session token found. Log in as ADMIN or PARTNER to manage GameHub operations.");
+          setAdminChecked(true);
+        }
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+          cache: "no-store",
+        });
+        const payload = await response.json().catch(() => ({}));
+
+        if (!response.ok && [401, 403, 404].includes(response.status)) {
+          clearDashboardSession();
+          if (mounted) {
+            setHasAdminAccess(false);
+            setAuthError("Session expired. Please login again as ADMIN or PARTNER.");
+            setAdminChecked(true);
+          }
+          router.replace("/login");
+          return;
+        }
+
+        const normalizedRole = String(payload?.user?.role || "").toUpperCase();
+        const isAdmin = Boolean(response.ok && (normalizedRole === "ADMIN" || normalizedRole === "PARTNER"));
+        if (mounted) {
+          setAuthToken(token);
+          setHasAdminAccess(isAdmin);
+          setCurrentRole(normalizedRole);
+          setAuthError(isAdmin ? "" : "Current account is not ADMIN/PARTNER. Protected actions are disabled.");
+          setAdminChecked(true);
+        }
+
+        if (mounted && normalizedRole === "ADMIN") {
+          const partnerRes = await fetch(`${API_BASE}/users/partners?status=ACTIVE&limit=200`, {
+            headers: { Authorization: `Bearer ${token}` },
+            cache: "no-store",
+          });
+          const partnerPayload = await partnerRes.json().catch(() => ({}));
+          if (partnerRes.ok) {
+            setPartners(Array.isArray(partnerPayload?.data) ? partnerPayload.data : []);
+          }
+        }
+      } catch (_) {
+        if (mounted) {
+          setHasAdminAccess(false);
+          setAuthError("Unable to verify admin session. Protected actions are disabled.");
+          setAdminChecked(true);
+        }
+      }
+    }
+
+    verifyAdminSession();
+
+    return () => {
+      mounted = false;
+    };
+  }, [router]);
 
   useEffect(() => {
     let mounted = true;
 
     const loadFacilities = async () => {
+      if (!adminChecked || !hasAdminAccess || !authToken) {
+        setFacilities([]);
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
       setError("");
 
@@ -37,7 +521,10 @@ export default function GameHubAdminPage() {
         const params = new URLSearchParams();
         if (search.trim()) params.set("search", search.trim());
 
-        const response = await fetch(`${API_BASE}/gamehub/facilities?${params.toString()}`, { cache: "no-store" });
+        const response = await fetch(`${API_BASE}/gamehub/facilities/manage/list?${params.toString()}`, {
+          cache: "no-store",
+          headers: authHeaders(),
+        });
         if (!response.ok) throw new Error("Failed to load GameHub facilities");
 
         const payload = await response.json();
@@ -57,7 +544,141 @@ export default function GameHubAdminPage() {
       mounted = false;
       window.clearTimeout(timer);
     };
-  }, [search]);
+  }, [search, adminChecked, hasAdminAccess, authToken]);
+
+  useEffect(() => {
+    if (!selectedCalendarFacilityId && facilities.length > 0) {
+      setSelectedCalendarFacilityId(facilities[0].id);
+    }
+  }, [facilities, selectedCalendarFacilityId]);
+
+  useEffect(() => {
+    setSelectedDate(`${calendarMonth}-01`);
+  }, [calendarMonth]);
+
+  useEffect(() => {
+    setBlockDate(selectedDate);
+  }, [selectedDate]);
+
+  useEffect(() => {
+    async function loadCalendar() {
+      if (!adminChecked || !hasAdminAccess) {
+        setCalendarDays([]);
+        return;
+      }
+
+      if (!selectedCalendarFacilityId || !calendarMonth) {
+        setCalendarDays([]);
+        return;
+      }
+
+      setCalendarLoading(true);
+      setActionError("");
+      try {
+        const response = await fetch(`${API_BASE}/gamehub/facilities/${selectedCalendarFacilityId}/calendar?month=${calendarMonth}`, {
+          headers: authHeaders(),
+        });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload?.error || "Failed to load calendar");
+
+        setCalendarDays(Array.isArray(payload?.data?.days) ? payload.data.days : []);
+      } catch (err) {
+        setActionError(err instanceof Error ? err.message : "Failed to load calendar");
+      } finally {
+        setCalendarLoading(false);
+      }
+    }
+
+    loadCalendar();
+  }, [selectedCalendarFacilityId, calendarMonth, adminChecked, hasAdminAccess, authToken]);
+
+  async function handleBlockSlots(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!hasAdminAccess) {
+      setActionError("Admin or Partner login required to block slots");
+      return;
+    }
+
+    if (!selectedCalendarFacilityId) {
+      setActionError("Select a facility before blocking slots");
+      return;
+    }
+
+    setActionLoading(true);
+    setActionError("");
+    setActionMessage("");
+
+    try {
+      const slotLabels = blockSlotsInput
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean);
+
+      const response = await fetch(`${API_BASE}/gamehub/facilities/${selectedCalendarFacilityId}/block-slots`, {
+        method: "POST",
+        headers: authHeaders(true),
+        body: JSON.stringify({
+          date: blockDate,
+          slotLabels,
+          reason: blockReason,
+        }),
+      });
+
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload?.error || "Failed to block slots");
+
+      setActionMessage("Slots blocked successfully.");
+      setBlockSlotsInput("");
+
+      const refreshed = await fetch(`${API_BASE}/gamehub/facilities/${selectedCalendarFacilityId}/calendar?month=${calendarMonth}`, {
+        headers: authHeaders(),
+      });
+      const refreshedPayload = await refreshed.json();
+      if (refreshed.ok) {
+        setCalendarDays(Array.isArray(refreshedPayload?.data?.days) ? refreshedPayload.data.days : []);
+      }
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : "Failed to block slots");
+    } finally {
+      setActionLoading(false);
+    }
+  }
+
+  async function handleUnblockSlot(blockId: string) {
+    if (!hasAdminAccess) {
+      setActionError("Admin or Partner login required to unblock slots");
+      return;
+    }
+
+    if (!selectedCalendarFacilityId) return;
+
+    setActionLoading(true);
+    setActionError("");
+    setActionMessage("");
+
+    try {
+      const response = await fetch(`${API_BASE}/gamehub/facilities/${selectedCalendarFacilityId}/block-slots/${blockId}`, {
+        method: "DELETE",
+        headers: authHeaders(),
+      });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload?.error || "Failed to unblock slot");
+
+      setActionMessage("Blocked slot removed.");
+
+      const refreshed = await fetch(`${API_BASE}/gamehub/facilities/${selectedCalendarFacilityId}/calendar?month=${calendarMonth}`, {
+        headers: authHeaders(),
+      });
+      const refreshedPayload = await refreshed.json();
+      if (refreshed.ok) {
+        setCalendarDays(Array.isArray(refreshedPayload?.data?.days) ? refreshedPayload.data.days : []);
+      }
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : "Failed to unblock slot");
+    } finally {
+      setActionLoading(false);
+    }
+  }
 
   const stats = useMemo(() => {
     const total = facilities.length;
@@ -70,16 +691,19 @@ export default function GameHubAdminPage() {
 
   return (
     <div className="mx-auto max-w-7xl space-y-8">
-      <section className="rounded-[2rem] border border-slate-200 bg-gradient-to-br from-slate-950 via-slate-900 to-rose-950 p-8 text-white shadow-2xl shadow-slate-200/40">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+      <section className="dash-card overflow-hidden bg-white border-emerald-100 p-8 shadow-sm relative">
+        <div className="pointer-events-none absolute -right-20 -top-20 h-96 w-96 rounded-full bg-gradient-to-br from-emerald-400/20 via-teal-300/10 to-emerald-200/5 blur-3xl opacity-70" />
+        <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl space-y-4">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-white/75">
-              <Gamepad2 size={14} /> GameHub Control Center
+            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600">
+              <Gamepad2 size={14} /> GameHub Operations
             </div>
             <div>
-              <h1 className="text-3xl font-black tracking-tight md:text-5xl">Manage every GameHub section from one place</h1>
-              <p className="mt-3 max-w-2xl text-sm font-medium leading-6 text-white/70 md:text-base">
-                Review facilities, monitor ratings, open public pages, and keep the GameHub catalog organized for the web app.
+              <h1 className="text-3xl font-black tracking-tighter md:text-5xl text-slate-900 uppercase">
+                Unified Control for GameHub Facilities
+              </h1>
+              <p className="mt-4 max-w-2xl text-sm font-bold leading-relaxed text-slate-500/80 md:text-base">
+                Monitor live availability, manage facility metadata, and execute operational blocks from one professional command center.
               </p>
             </div>
           </div>
@@ -87,49 +711,164 @@ export default function GameHubAdminPage() {
           <button
             type="button"
             onClick={() => window.location.reload()}
-            className="inline-flex items-center gap-2 self-start rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-sm font-bold text-white transition hover:bg-white/15"
+            className="inline-flex items-center gap-2 self-start rounded-2xl border border-emerald-100 bg-white px-5 py-3 text-xs font-black uppercase tracking-widest text-emerald-700 transition hover:bg-emerald-50 hover:shadow-lg shadow-emerald-100/50"
           >
-            <RefreshCw size={16} /> Refresh
+            <RefreshCw size={16} /> Sync Live Data
           </button>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-3">
           {[
-            { label: "Facilities", value: stats.total, icon: Ticket },
-            { label: "Featured", value: stats.featured, icon: Sparkles },
-            { label: "Average Rating", value: stats.avgRating, icon: Star },
+            { label: "Total Facilities", value: stats.total, icon: Ticket, color: "text-emerald-600", bg: "bg-emerald-50" },
+            { label: "Featured Assets", value: stats.featured, icon: Sparkles, color: "text-teal-600", bg: "bg-teal-50" },
+            { label: "Community Rating", value: stats.avgRating, icon: Star, color: "text-amber-600", bg: "bg-amber-50" },
           ].map((item) => {
             const Icon = item.icon;
             return (
-              <div key={item.label} className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur">
-                <div className="flex items-center gap-3 text-white/70">
-                  <Icon size={18} />
-                  <span className="text-sm font-semibold">{item.label}</span>
+              <div key={item.label} className={`rounded-3xl border border-emerald-50 ${item.bg} p-6 transition-all hover:scale-[1.02]`}>
+                <div className="flex items-center gap-3 opacity-60">
+                  <Icon size={18} className={item.color} />
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900">{item.label}</span>
                 </div>
-                <div className="mt-3 text-3xl font-black text-white">{item.value}</div>
+                <div className="mt-3 text-4xl font-black text-slate-900">{item.value}</div>
               </div>
             );
           })}
         </div>
       </section>
 
-      <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="dash-card bg-white p-7 rounded-3xl border border-emerald-100 shadow-sm">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h2 className="text-2xl font-extrabold text-slate-900">GameHub Facilities</h2>
-            <p className="mt-1 text-sm font-medium text-slate-500">Search and inspect the content shown in the public GameHub area.</p>
+            <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tighter">Facilities Catalog</h2>
+            <p className="mt-1 text-xs font-bold uppercase tracking-widest text-emerald-600/60">Search and inspect live facility inventory</p>
           </div>
 
-          <label className="flex w-full max-w-md items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-500 md:w-auto">
-            <Search size={16} />
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search facilities..."
-              className="w-full bg-transparent outline-none placeholder:text-slate-400"
-            />
-          </label>
+          <div className="flex w-full flex-col gap-3 md:w-auto md:flex-row">
+            <label className="flex w-full max-w-md items-center gap-3 rounded-2xl border border-emerald-50/50 bg-emerald-50/20 px-4 py-3 text-sm font-bold focus-within:bg-white focus-within:border-emerald-200 transition-all md:w-auto">
+              <Search size={18} className="text-emerald-600/40" />
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search resources..."
+                className="w-full bg-transparent outline-none placeholder:text-emerald-900/30 text-slate-900"
+              />
+            </label>
+
+            <button
+              type="button"
+              onClick={openCreateEditor}
+              className="btn-primary-glow inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-4 text-sm font-black uppercase tracking-widest shadow-lg shadow-emerald-100 transition-all hover:scale-[1.02]"
+            >
+              <Plus size={18} strokeWidth={3} /> Add Facility
+            </button>
+          </div>
         </div>
+
+        {actionError ? (
+          <div className="mt-5 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+            {actionError}
+          </div>
+        ) : null}
+        {authError ? (
+          <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-800">
+            {authError}
+          </div>
+        ) : null}
+        {actionMessage ? (
+          <div className="mt-5 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+            {actionMessage}
+          </div>
+        ) : null}
+
+        {isEditorOpen ? (
+          <div className="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-5">
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <h3 className="text-lg font-extrabold text-slate-900">
+                {editorMode === "create" ? "Add New Facility" : "Edit Facility"}
+              </h3>
+              <button
+                type="button"
+                onClick={closeEditor}
+                className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-600"
+              >
+                <span className="inline-flex items-center gap-1"><X size={14} /> Close</span>
+              </button>
+            </div>
+
+                disabled={!hasAdminAccess}
+            <form onSubmit={handleSubmitFacility} className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <select value={formState.status} onChange={(e) => handleFormChange("status", e.target.value)} className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm">
+                <option value="ACTIVE">ACTIVE</option>
+                <option value="INACTIVE">INACTIVE</option>
+                <option value="MAINTENANCE">MAINTENANCE</option>
+              </select>
+              <input value={formState.name} onChange={(e) => handleFormChange("name", e.target.value)} required placeholder="Name" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
+              <input value={formState.type} onChange={(e) => handleFormChange("type", e.target.value)} required placeholder="Type (e.g. Cricket Nets)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
+              <input value={formState.availableSports} onChange={(e) => handleFormChange("availableSports", e.target.value)} placeholder="Sports Available (e.g. Badminton, Football)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
+              <input value={formState.location} onChange={(e) => handleFormChange("location", e.target.value)} required placeholder="Location" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
+              <input value={formState.venue} onChange={(e) => handleFormChange("venue", e.target.value)} required placeholder="Venue" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
+              <input value={formState.distance} onChange={(e) => handleFormChange("distance", e.target.value)} placeholder="Distance" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
+              <input value={formState.rating} onChange={(e) => handleFormChange("rating", e.target.value)} type="number" min="0" max="5" step="0.1" placeholder="Rating" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
+              <input value={formState.priceRange} onChange={(e) => handleFormChange("priceRange", e.target.value)} placeholder="Price Range" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
+              <div className="grid grid-cols-2 gap-3">
+                <input value={formState.pricePerHour} onChange={(e) => handleFormChange("pricePerHour", e.target.value)} type="number" min="0" step="1" placeholder="Price" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
+                <input value={formState.unit} onChange={(e) => handleFormChange("unit", e.target.value)} placeholder="Unit" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
+              </div>
+              <input value={formState.image} onChange={(e) => handleFormChange("image", e.target.value)} placeholder="Cover Image URL" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" />
+              <input value={formState.gallery} onChange={(e) => handleFormChange("gallery", e.target.value)} placeholder="Gallery URLs (comma separated)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" />
+              {csvToList(formState.gallery).length > 0 ? (
+                <div className="grid grid-cols-3 gap-2 md:col-span-2">
+                  {csvToList(formState.gallery).slice(0, 6).map((url) => (
+                    <img key={url} src={url} alt="gallery preview" className="h-20 w-full rounded-lg border border-slate-200 object-cover" />
+                  ))}
+                </div>
+              ) : null}
+              <textarea value={formState.description} onChange={(e) => handleFormChange("description", e.target.value)} placeholder="Description" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" rows={3} />
+              <input value={formState.phone} onChange={(e) => handleFormChange("phone", e.target.value)} placeholder="Phone" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
+              <input value={formState.openHours} onChange={(e) => handleFormChange("openHours", e.target.value)} placeholder="Open Hours" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
+              <input value={formState.amenities} onChange={(e) => handleFormChange("amenities", e.target.value)} placeholder="Amenities (comma separated)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" />
+              <input value={formState.features} onChange={(e) => handleFormChange("features", e.target.value)} placeholder="Features (comma separated)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" />
+              <input value={formState.tags} onChange={(e) => handleFormChange("tags", e.target.value)} placeholder="Tags (comma separated)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" />
+
+              <div className="rounded-2xl border border-slate-200 bg-white p-4 md:col-span-2">
+                <p className="text-sm font-extrabold text-slate-900">Slot Generator</p>
+                <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-4">
+                  <input value={formState.slotStartHour} onChange={(e) => handleFormChange("slotStartHour", e.target.value)} type="number" min="0" max="23" placeholder="Start Hour" className="rounded-xl border border-slate-300 px-3 py-2 text-sm" />
+                  <input value={formState.slotEndHour} onChange={(e) => handleFormChange("slotEndHour", e.target.value)} type="number" min="1" max="24" placeholder="End Hour" className="rounded-xl border border-slate-300 px-3 py-2 text-sm" />
+                  <input value={formState.slotInterval} onChange={(e) => handleFormChange("slotInterval", e.target.value)} type="number" min="15" step="15" placeholder="Interval" className="rounded-xl border border-slate-300 px-3 py-2 text-sm" />
+                  <input value={formState.peakPrice} onChange={(e) => handleFormChange("peakPrice", e.target.value)} type="number" min="0" placeholder="Peak Price" className="rounded-xl border border-slate-300 px-3 py-2 text-sm" />
+                  <input value={formState.peakStartHour} onChange={(e) => handleFormChange("peakStartHour", e.target.value)} type="number" min="0" max="23" placeholder="Peak Start" className="rounded-xl border border-slate-300 px-3 py-2 text-sm" />
+                  <input value={formState.peakEndHour} onChange={(e) => handleFormChange("peakEndHour", e.target.value)} type="number" min="1" max="24" placeholder="Peak End" className="rounded-xl border border-slate-300 px-3 py-2 text-sm" />
+                  <input value={formState.weekendPrice} onChange={(e) => handleFormChange("weekendPrice", e.target.value)} type="number" min="0" placeholder="Weekend Price" className="rounded-xl border border-slate-300 px-3 py-2 text-sm" />
+                  <button type="button" onClick={generateSlotsFromPreset} className="rounded-xl bg-rose-100 px-3 py-2 text-sm font-bold text-rose-700">
+                    Generate Slots
+                  </button>
+                </div>
+              </div>
+
+              <textarea value={formState.pricingRules} onChange={(e) => handleFormChange("pricingRules", e.target.value)} placeholder="Pricing Rules JSON" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" rows={5} />
+              <textarea value={formState.slotTemplate} onChange={(e) => handleFormChange("slotTemplate", e.target.value)} placeholder="Slot Template JSON" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" rows={6} />
+
+              <div className="md:col-span-2 mt-2 flex items-center gap-3">
+                <button
+                  type="submit"
+                  disabled={actionLoading}
+                  className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-extrabold text-white disabled:opacity-60"
+                >
+                  {actionLoading ? "Saving..." : editorMode === "create" ? "Create Facility" : "Save Changes"}
+                </button>
+                <button
+                  type="button"
+                  onClick={closeEditor}
+                  className="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-bold text-slate-600"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        ) : null}
 
         {loading ? (
           <div className="py-16 text-center text-sm font-semibold text-slate-500">Loading GameHub facilities...</div>
@@ -167,6 +906,18 @@ export default function GameHubAdminPage() {
                     </span>
                   </div>
 
+                  <div className="flex items-center gap-2">
+                    <span className={`rounded-full px-2.5 py-1 text-[11px] font-extrabold ${
+                      facility.status === "MAINTENANCE"
+                        ? "bg-amber-100 text-amber-700"
+                        : facility.status === "INACTIVE"
+                        ? "bg-red-100 text-red-700"
+                        : "bg-emerald-100 text-emerald-700"
+                    }`}>
+                      {facility.status || "ACTIVE"}
+                    </span>
+                  </div>
+
                   <div className="flex items-center gap-4 text-sm font-semibold text-slate-600">
                     <span className="inline-flex items-center gap-1.5"><Star size={14} className="text-amber-500" /> {facility.rating}</span>
                     <span className="inline-flex items-center gap-1.5"><Users size={14} className="text-slate-400" /> {facility.priceRange}</span>
@@ -180,14 +931,50 @@ export default function GameHubAdminPage() {
                     ))}
                   </div>
 
+                  {currentRole === "ADMIN" ? (
+                    <div>
+                      <label className="text-[11px] font-bold uppercase tracking-wide text-slate-500">Assigned Partner</label>
+                      <select
+                        value={facility.partnerId || ""}
+                        onChange={(e) => handleAssignFacilityPartner(facility.id, e.target.value)}
+                        className="mt-1 w-full rounded-xl border border-slate-300 bg-white px-2 py-2 text-xs font-semibold"
+                      >
+                        <option value="" disabled>Select partner</option>
+                        {partners.map((partner) => (
+                          <option key={partner.id} value={partner.id}>
+                            {partner.name} ({partner.email})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  ) : null}
+
                   <div className="flex items-center justify-between pt-1">
-                    <Link
-                      href={`http://localhost:3000/gamehub/${facility.id}`}
-                      target="_blank"
-                      className="inline-flex items-center gap-2 rounded-2xl bg-slate-900 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-black"
-                    >
-                      Open Public Page <ArrowUpRight size={16} />
-                    </Link>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Link
+                        href={`http://localhost:3000/gamehub/${facility.id}`}
+                        target="_blank"
+                        className="inline-flex items-center gap-2 rounded-2xl bg-slate-900 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-black"
+                      >
+                        Open Public Page <ArrowUpRight size={16} />
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => openEditEditor(facility)}
+                        disabled={!hasAdminAccess}
+                        className="inline-flex items-center gap-1 rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-700"
+                      >
+                        <Pencil size={13} /> Edit
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteFacility(facility)}
+                        disabled={actionLoading || !hasAdminAccess}
+                        className="inline-flex items-center gap-1 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs font-bold text-red-700 disabled:opacity-60"
+                      >
+                        <Trash2 size={13} /> Delete
+                      </button>
+                    </div>
                     <span className="text-xs font-bold uppercase tracking-wide text-slate-400">Synced</span>
                   </div>
                 </div>
@@ -196,6 +983,173 @@ export default function GameHubAdminPage() {
           </div>
         )}
       </section>
+
+      <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2 className="text-2xl font-extrabold text-slate-900">Booking Calendar & Slot Blocking</h2>
+            <p className="mt-1 text-sm font-medium text-slate-500">Monitor monthly activity and block slots for maintenance or tournaments.</p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+            <select
+              value={selectedCalendarFacilityId}
+              onChange={(e) => setSelectedCalendarFacilityId(e.target.value)}
+              className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm"
+            >
+              {facilities.map((facility) => (
+                <option key={facility.id} value={facility.id}>{facility.name}</option>
+              ))}
+            </select>
+            <input
+              type="month"
+              value={calendarMonth}
+              onChange={(e) => setCalendarMonth(e.target.value)}
+              className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm"
+            />
+          </div>
+        </div>
+
+        <form onSubmit={handleBlockSlots} className="mt-5 grid grid-cols-1 gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 md:grid-cols-4">
+          <input type="date" value={blockDate} onChange={(e) => setBlockDate(e.target.value)} className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" required />
+          <input value={blockReason} onChange={(e) => setBlockReason(e.target.value)} placeholder="Reason" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" required />
+          <input value={blockSlotsInput} onChange={(e) => setBlockSlotsInput(e.target.value)} placeholder="Slots CSV (empty = full day)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" />
+          <button type="submit" disabled={actionLoading || !hasAdminAccess} className="rounded-xl bg-amber-500 px-4 py-2 text-sm font-extrabold text-white disabled:opacity-60 md:col-span-4">
+            {actionLoading ? "Updating..." : "Block Slots"}
+          </button>
+        </form>
+
+        {calendarLoading ? <div className="mt-5 text-sm font-semibold text-slate-500">Loading calendar...</div> : null}
+
+        {!calendarLoading ? (
+          <div className="mt-5 grid grid-cols-1 gap-5 xl:grid-cols-[1.7fr_1fr]">
+            <div className="rounded-2xl border border-slate-200 bg-white p-4">
+              <div className="mb-3 grid grid-cols-7 gap-2">
+                {WEEKDAY_LABELS.map((label) => (
+                  <div key={label} className="text-center text-xs font-bold uppercase tracking-wide text-slate-400">
+                    {label}
+                  </div>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-7 gap-2">
+                {monthGrid.map((cell) => {
+                  const day = daysByDate.get(cell.date);
+                  const isSelected = cell.date === selectedDate;
+                  const dayNumber = Number(cell.date.slice(-2));
+
+                  return (
+                    <button
+                      key={cell.date}
+                      type="button"
+                      onClick={() => setSelectedDate(cell.date)}
+                      className={`min-h-[88px] rounded-xl border p-2 text-left transition ${
+                        isSelected
+                          ? "border-rose-400 bg-rose-50"
+                          : cell.inCurrentMonth
+                          ? "border-slate-200 bg-white hover:border-slate-300"
+                          : "border-slate-100 bg-slate-50 text-slate-400"
+                      }`}
+                    >
+                      <p className="text-xs font-bold">{dayNumber}</p>
+                      <div className="mt-2 space-y-1 text-[11px]">
+                        {day?.bookingCount ? (
+                          <p className="inline-flex rounded-full bg-emerald-100 px-2 py-0.5 font-bold text-emerald-700">B {day.bookingCount}</p>
+                        ) : null}
+                        {day?.blockedCount ? (
+                          <p className="inline-flex rounded-full bg-amber-100 px-2 py-0.5 font-bold text-amber-700">X {day.blockedCount}</p>
+                        ) : null}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <article className="rounded-2xl border border-slate-200 bg-white p-4">
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-sm font-extrabold text-slate-900">{selectedDay.date}</p>
+                <div className="flex items-center gap-2 text-xs font-bold">
+                  <span className="rounded-full bg-emerald-100 px-2 py-1 text-emerald-700">Bookings: {selectedDay.bookingCount}</span>
+                  <span className="rounded-full bg-amber-100 px-2 py-1 text-amber-700">Blocked: {selectedDay.blockedCount}</span>
+                </div>
+              </div>
+
+              {selectedDay.bookingCount === 0 && selectedDay.blockedCount === 0 ? (
+                <div className="mt-4 rounded-xl border border-dashed border-slate-200 bg-slate-50 p-3 text-xs font-semibold text-slate-500">
+                  No bookings or blocked slots for this day.
+                </div>
+              ) : null}
+
+              {selectedDay.bookings.length > 0 ? (
+                <div className="mt-4 space-y-1 text-xs text-slate-600">
+                  {selectedDay.bookings.map((booking) => (
+                    <div key={booking.id} className="rounded-lg bg-emerald-50 px-2 py-1 font-semibold text-emerald-700">
+                      {booking.slotLabel}
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+
+              {selectedDay.blocks.length > 0 ? (
+                <div className="mt-4 space-y-2 text-xs">
+                  {selectedDay.blocks.map((block) => (
+                    <div key={block.id} className="rounded-lg border border-amber-200 bg-amber-50 px-2 py-2">
+                      <p className="font-bold text-amber-800">{block.slotLabel === "*" ? "Full Day" : block.slotLabel}</p>
+                      <p className="text-amber-700">{block.reason}</p>
+                      <button
+                        type="button"
+                        disabled={!hasAdminAccess || actionLoading}
+                        onClick={() => handleUnblockSlot(block.id)}
+                        className="mt-1 rounded-md bg-white px-2 py-1 font-bold text-amber-700 disabled:opacity-50"
+                      >
+                        Unblock
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+            </article>
+          </div>
+        ) : null}
+      </section>
     </div>
   );
+}
+
+function currentMonthString() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+}
+
+function todayDateString() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function buildMonthGrid(month: string): CalendarGridCell[] {
+  const [yearText, monthText] = String(month || "").split("-");
+  const year = Number(yearText);
+  const monthIndex = Number(monthText) - 1;
+
+  if (!Number.isInteger(year) || !Number.isInteger(monthIndex) || monthIndex < 0 || monthIndex > 11) {
+    return [];
+  }
+
+  const firstOfMonth = new Date(Date.UTC(year, monthIndex, 1));
+  const startDay = firstOfMonth.getUTCDay();
+  const startDate = new Date(firstOfMonth);
+  startDate.setUTCDate(startDate.getUTCDate() - startDay);
+
+  const cells: CalendarGridCell[] = [];
+  for (let i = 0; i < 42; i += 1) {
+    const cursor = new Date(startDate);
+    cursor.setUTCDate(startDate.getUTCDate() + i);
+    const cursorMonthIndex = cursor.getUTCMonth();
+    cells.push({
+      date: cursor.toISOString().slice(0, 10),
+      inCurrentMonth: cursorMonthIndex === monthIndex,
+    });
+  }
+
+  return cells;
 }

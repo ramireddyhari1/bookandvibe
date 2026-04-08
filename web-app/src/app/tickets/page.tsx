@@ -2,13 +2,14 @@
 import { useEffect, useState } from "react";
 import { QrCode, Calendar, MapPin, Clock, Ticket } from "lucide-react";
 import Link from "next/link";
+import { API_URL } from "@/lib/api";
 
 export default function MyTicketsPage() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/bookings")
+    fetch(`${API_URL}/bookings`)
       .then(res => res.json())
       .then(data => setBookings(data.data || []))
       .catch(err => console.error(err))

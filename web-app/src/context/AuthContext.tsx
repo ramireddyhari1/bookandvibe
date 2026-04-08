@@ -1,6 +1,7 @@
 "use client";
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { API_URL } from "@/lib/api";
 
 type User = { id: string; name: string; email: string; role: string } | null;
 
@@ -25,7 +26,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const storedToken = localStorage.getItem("token");
       if (storedToken) {
         try {
-          const res = await fetch("http://localhost:5000/api/auth/me", {
+          const res = await fetch(`${API_URL}/auth/me`, {
             headers: { Authorization: `Bearer ${storedToken}` }
           });
           if (res.ok) {
