@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Calendar, Search, Ticket } from "lucide-react";
 
+import { fetchApi } from "@/lib/api";
+
 type BookingRecord = {
   id: string;
   status: string;
@@ -13,8 +15,6 @@ type BookingRecord = {
   event?: { title?: string };
   payment?: { method?: string };
 };
-
-const API_BASE = "http://localhost:5000/api";
 
 function formatStatus(status: string): string {
   const value = String(status || "").toUpperCase();
@@ -38,11 +38,7 @@ export default function BookingsPage() {
       setLoading(true);
       setError("");
       try {
-        const response = await fetch(`${API_BASE}/bookings/all`);
-        const payload = await response.json();
-        if (!response.ok) {
-          throw new Error(payload?.error || "Failed to fetch bookings");
-        }
+        const payload = await fetchApi("/bookings/manage/list");
         setBookings(Array.isArray(payload?.data) ? payload.data : []);
       } catch (err) {
         const message = err instanceof Error ? err.message : "Failed to fetch bookings";

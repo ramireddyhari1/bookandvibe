@@ -4,7 +4,8 @@ import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, ShieldCheck, Users } from "lucide-react";
 
-const API_BASE = "http://localhost:5000/api";
+import { fetchApi } from "@/lib/api";
+
 const ALLOWED_ROLES = new Set(["ADMIN", "PARTNER"]);
 
 type LoginUser = {
@@ -42,20 +43,11 @@ export default function AdminLoginPage() {
     setError("");
 
     try {
-      const response = await fetch(`${API_BASE}/auth/login`, {
+      const payload = await fetchApi("/auth/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        requiresAuth: false,
         body: JSON.stringify({ email: email.trim(), password }),
       });
-
-      const payload = await response.json().catch(() => null);
-      if (!response.ok) {
-        const serverCode = String(payload?.code || "");
-        if (serverCode === "DB_UNAVAILABLE") {
-          throw new Error("Database is offline. Start PostgreSQL and try again.");
-        }
-        throw new Error(payload?.error || "Login failed");
-      }
 
       const token = String(payload?.token || "");
       const user = payload?.user as LoginUser | undefined;

@@ -23,29 +23,33 @@ type SessionUser = {
   name: string;
   email: string;
   role: string;
+  partnerType?: string | null;
 };
 
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const [collapsed, setCollapsed] = useState(() => {
-    if (typeof window === "undefined") return false;
+  const [collapsed, setCollapsed] = useState(false);
+  const [sessionUser, setSessionUser] = useState<SessionUser | null>(null);
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    // Read from localStorage only on the client after hydration
     const storedState = localStorage.getItem("dash_sidebar_collapsed");
-    if (storedState) return storedState === "1";
-    return window.matchMedia("(max-width: 1024px)").matches;
-  });
-  const sessionUser = useMemo(() => {
-    if (typeof window === "undefined") return null;
+    if (storedState) {
+      setCollapsed(storedState === "1");
+    } else if (window.matchMedia("(max-width: 1024px)").matches) {
+      setCollapsed(true);
+    }
 
     const raw = localStorage.getItem("admin_dash_user");
-    if (!raw) return null;
-
-    try {
-      const parsed = JSON.parse(raw) as SessionUser;
-      return parsed?.id ? parsed : null;
-    } catch {
-      return null;
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw) as SessionUser;
+        if (parsed?.id) setSessionUser(parsed);
+      } catch {}
     }
+    setHydrated(true);
   }, []);
 
   const initials = useMemo(() => {
@@ -74,35 +78,52 @@ export default function Sidebar() {
     router.replace("/login");
   }
 
-  const menuSections = [
-    {
-      title: "Core",
-      items: [
-        { name: "Dashboard", href: "/", icon: LayoutDashboard },
-        { name: "Partners", href: "/partners", icon: Users },
-        { name: "Users", href: "/users", icon: Users },
-      ],
-    },
-    {
-      title: "Web Platform",
-      items: [
-        { name: "Bookings", href: "/bookings", icon: CreditCard },
-        { name: "Events", href: "/events", icon: Ticket },
-      ],
-    },
-    {
-      title: "Mobile App",
-      items: [
-        { name: "GameHub", href: "/gamehub", icon: Gamepad2 },
-      ],
-    },
-    {
-      title: "System",
-      items: [
-        { name: "Settings", href: "/settings", icon: Settings },
-      ],
-    },
-  ];
+  const menuSections = useMemo(() => {
+    const role = String(sessionUser?.role || "ADMIN").toUpperCase();
+    const isAdmin = role === "ADMIN";
+    const partnerType = String(sessionUser?.partnerType || "").toUpperCase();
+
+    const sections = [
+      {
+        title: "Core",
+        items: [
+          { name: "Dashboard", href: "/", icon: LayoutDashboard },
+          ...(isAdmin ? [{ name: "Partners", href: "/partners", icon: Users }] : []),
+          ...(isAdmin ? [{ name: "Users", href: "/users", icon: Users }] : []),
+        ],
+      },
+      // Event Host modules
+      ...((isAdmin || partnerType === "EVENT_HOST") ? [
+        {
+          title: "Web Platform",
+          items: [
+            { name: "Bookings", href: "/bookings", icon: CreditCard },
+            { name: "Events", href: "/events", icon: Ticket },
+          ],
+        }
+      ] : []),
+      // GameHub Partner modules
+      ...((isAdmin || partnerType === "VENUE_OWNER") ? [
+        {
+          title: "Mobile App",
+          items: [
+            { name: "GameHub", href: "/gamehub", icon: Gamepad2 },
+          ],
+        }
+      ] : []),
+    ];
+
+    if (isAdmin) {
+      sections.push({
+        title: "System",
+        items: [
+          { name: "Settings", href: "/settings", icon: Settings },
+        ],
+      });
+    }
+
+    return sections;
+  }, [sessionUser]);
 
   return (
     <aside

@@ -37,7 +37,27 @@ type PartnerOption = {
   email: string;
 };
 
-const API_BASE = "http://localhost:5000/api";
+import { fetchApi } from "@/lib/api";
+
+type EventItem = {
+  id: string;
+  title: string;
+  category: string;
+  date: string;
+  time: string;
+  venue: string;
+  location: string;
+  price: number;
+  images?: string;
+  partnerId?: string | null;
+};
+
+type PartnerOption = {
+  id: string;
+  name: string;
+  email: string;
+};
+
 const ALLOWED_ROLES = new Set(["ADMIN", "PARTNER"]);
 
 function CardSkeleton() {
@@ -77,7 +97,6 @@ export default function EventsPage() {
   const [events, setEvents] = useState<EventItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [authToken, setAuthToken] = useState("");
   const [hasManagerAccess, setHasManagerAccess] = useState(false);
   const [currentRole, setCurrentRole] = useState("");
   const [partners, setPartners] = useState<PartnerOption[]>([]);
@@ -107,7 +126,7 @@ export default function EventsPage() {
       setError("");
 
       try {
-        const token = localStorage.getItem("admin_dash_token") || localStorage.getItem("token") || "";
+        const token = localStorage.getItem("admin_dash_token") || "";
         const role = String(
           localStorage.getItem("admin_dash_role") ||
             (() => {
@@ -131,46 +150,35 @@ export default function EventsPage() {
         }
 
         if (mounted) {
-          setAuthToken(token);
           setHasManagerAccess(true);
           setCurrentRole(role);
         }
 
         if (role === "ADMIN") {
-          const partnersRes = await fetch(`${API_BASE}/users/partners?status=ACTIVE&limit=200`, {
-            headers: { Authorization: `Bearer ${token}` },
-            cache: "no-store",
-          });
-          const partnersPayload = await partnersRes.json().catch(() => ({}));
-          if (partnersRes.ok && mounted) {
-            setPartners(Array.isArray(partnersPayload?.data) ? partnersPayload.data : []);
-          }
-        }
-
-        const response = await fetch(`${API_BASE}/events/manage/list`, {
-          headers: { Authorization: `Bearer ${token}` },
-          cache: "no-store",
-        });
-        const payload = await response.json();
-        if (!response.ok) {
-          if ([401, 403, 404].includes(response.status)) {
-            clearDashboardSession();
+          try {
+            const partnersPayload = await fetchApi("/users/partners?status=ACTIVE&limit=200");
             if (mounted) {
-              setError("Session expired. Please login again.");
-              setEvents([]);
+              setPartners(Array.isArray(partnersPayload?.data) ? partnersPayload.data : []);
             }
-            router.replace("/login");
-            return;
+          } catch (pErr) {
+            console.warn("Failed to fetch partners:", pErr);
           }
-          throw new Error(payload?.error || "Failed to fetch events");
         }
 
+        const payload = await fetchApi("/events/manage/list");
         if (mounted) {
           setEvents(Array.isArray(payload?.data) ? payload.data : []);
         }
       } catch (err) {
         console.error("Failed to fetch events:", err);
         if (mounted) {
+          const status = (err as any).status || 0;
+          if ([401, 403, 404].includes(status)) {
+            clearDashboardSession();
+            setError("Session expired. Please login again.");
+            router.replace("/login");
+            return;
+          }
           setError(err instanceof Error ? err.message : "Failed to load events");
           setEvents([]);
         }
@@ -189,47 +197,35 @@ export default function EventsPage() {
   }, [router]);
 
   const handleDelete = async (id: string) => {
-    if (!hasManagerAccess || !authToken) {
+    if (!hasManagerAccess) {
       setError("Log in as ADMIN or PARTNER to delete events.");
       return;
     }
 
     if (confirm("Are you sure you want to delete this event?")) {
       try {
-        const response = await fetch(`${API_BASE}/events/${id}`, {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${authToken}` },
-        });
-        const payload = await response.json().catch(() => ({}));
-        if ([401, 403, 404].includes(response.status)) {
+        await fetchApi(`/events/${id}`, { method: "DELETE" });
+        setEvents((prev) => prev.filter((event) => event.id !== id));
+      } catch (deleteError) {
+        const status = (deleteError as any).status || 0;
+        if ([401, 403, 404].includes(status)) {
           clearDashboardSession();
           setError("Session expired. Please login again.");
           router.replace("/login");
           return;
         }
-        if (!response.ok) throw new Error(payload?.error || "Failed to delete event");
-
-        setEvents((prev) => prev.filter((event) => event.id !== id));
-      } catch (deleteError) {
         setError(deleteError instanceof Error ? deleteError.message : "Failed to delete event");
       }
     }
   };
 
   const handleAssignPartner = async (eventId: string, partnerId: string) => {
-    if (!authToken || currentRole !== "ADMIN") return;
+    if (currentRole !== "ADMIN") return;
     try {
-      const response = await fetch(`${API_BASE}/events/${eventId}/assign-partner`, {
+      await fetchApi(`/events/${eventId}/assign-partner`, {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
         body: JSON.stringify({ partnerId }),
       });
-      const payload = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(payload?.error || "Failed to assign partner");
-
       setEvents((prev) => prev.map((event) => (event.id === eventId ? { ...event, partnerId } : event)));
     } catch (assignErr) {
       setError(assignErr instanceof Error ? assignErr.message : "Failed to assign partner");
@@ -309,6 +305,7 @@ export default function EventsPage() {
                         src={cover}
                         alt={event.title}
                         fill
+                        unoptimized
                         className="object-cover transition duration-300 group-hover:scale-105"
                         sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
                       />

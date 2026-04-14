@@ -1231,7 +1231,7 @@ router.post('/bookings/confirm', authenticateToken, async (req, res) => {
       payment: {
         id: `ghp-${randomUUID()}`,
         method: String(paymentMethod).toUpperCase(),
-        status: 'SUCCESS',
+        status: paymentMethod === 'RAZORPAY' ? 'PENDING' : 'SUCCESS',
         transactionId: `txn_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
       },
       createdAt: new Date().toISOString(),

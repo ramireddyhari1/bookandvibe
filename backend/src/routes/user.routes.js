@@ -89,6 +89,11 @@ router.get('/partners', authenticateToken, requireAdmin, async (req, res) => {
           phone: true,
           role: true,
           status: true,
+          partnerType: true,
+          eventHostId: true,
+          gamehubFacilities: {
+            select: { id: true, name: true }
+          },
           createdAt: true,
         },
         skip,
@@ -116,7 +121,7 @@ router.get('/partners', authenticateToken, requireAdmin, async (req, res) => {
 // POST /api/users/partners - Create partner account (admin only)
 router.post('/partners', authenticateToken, requireAdmin, async (req, res) => {
   try {
-    const { name, email, password, phone, status = 'ACTIVE' } = req.body || {};
+    const { name, email, password, phone, status = 'ACTIVE', partnerType, eventHostId, facilityId } = req.body || {};
     const normalizedEmail = String(email || '').trim().toLowerCase();
     const normalizedName = String(name || '').trim();
 
@@ -136,6 +141,13 @@ router.post('/partners', authenticateToken, requireAdmin, async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(String(password), salt);
 
+    // If no partnerType provided, derive it from assignments for backward compatibility
+    let derivedType = partnerType ? String(partnerType).toUpperCase() : null;
+    if (!derivedType) {
+      if (eventHostId) derivedType = 'EVENT_HOST';
+      else if (facilityId) derivedType = 'VENUE_OWNER';
+    }
+
     const created = await prisma.user.create({
       data: {
         name: normalizedName,
@@ -144,6 +156,8 @@ router.post('/partners', authenticateToken, requireAdmin, async (req, res) => {
         phone: phone ? String(phone) : null,
         role: 'PARTNER',
         status: String(status).toUpperCase(),
+        partnerType: derivedType,
+        eventHostId: eventHostId || null,
       },
       select: {
         id: true,
@@ -152,9 +166,18 @@ router.post('/partners', authenticateToken, requireAdmin, async (req, res) => {
         phone: true,
         role: true,
         status: true,
+        partnerType: true,
+        eventHostId: true,
         createdAt: true,
       },
     });
+
+    if (facilityId) {
+      await prisma.gamehubFacility.update({
+        where: { id: facilityId },
+        data: { partnerId: created.id }
+      });
+    }
 
     return res.status(201).json({ message: 'Partner created successfully', data: created });
   } catch (error) {

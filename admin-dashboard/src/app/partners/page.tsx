@@ -11,10 +11,13 @@ type PartnerRecord = {
   phone?: string | null;
   role: string;
   status: string;
+  partnerType?: string | null;
+  eventHostId?: string | null;
+  gamehubFacilities?: { id: string; name: string }[];
   createdAt: string;
 };
 
-const API_BASE = "http://localhost:5000/api";
+import { fetchApi } from "@/lib/api";
 
 function toTitle(value: string): string {
   const normalized = String(value || "").toLowerCase();
@@ -30,7 +33,6 @@ export default function PartnersPage() {
   const [message, setMessage] = useState("");
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
-  const [token, setToken] = useState("");
   const [userRole, setUserRole] = useState("");
   const [formState, setFormState] = useState({
     name: "",
@@ -38,7 +40,11 @@ export default function PartnersPage() {
     phone: "",
     password: "",
     status: "ACTIVE",
+    partnerType: "EVENT_HOST",
+    eventHostId: "",
+    facilityId: "",
   });
+  const [facilities, setFacilities] = useState<{ id: string; name: string }[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
   const isAdmin = userRole === "ADMIN";
@@ -51,14 +57,7 @@ export default function PartnersPage() {
     document.cookie = "admin_dash_role=; path=/; max-age=0; samesite=lax";
   }
 
-  function authHeaders(includeJson = false): Record<string, string> {
-    const headers: Record<string, string> = {};
-    if (includeJson) headers["Content-Type"] = "application/json";
-    if (token) headers.Authorization = `Bearer ${token}`;
-    return headers;
-  }
-
-  const loadPartners = useCallback(async (activeToken: string) => {
+  const loadPartners = useCallback(async () => {
     setLoading(true);
     setError("");
 
@@ -67,13 +66,7 @@ export default function PartnersPage() {
       if (search.trim()) params.set("search", search.trim());
       if (statusFilter !== "All") params.set("status", statusFilter.toUpperCase());
 
-      const response = await fetch(`${API_BASE}/users/partners?${params.toString()}`, {
-        headers: { Authorization: `Bearer ${activeToken}` },
-        cache: "no-store",
-      });
-      const payload = await response.json();
-
-      if (!response.ok) throw new Error(payload?.error || "Failed to load partners");
+      const payload: any = await fetchApi(`/users/partners?${params.toString()}`);
       setPartners(Array.isArray(payload?.data) ? payload.data : []);
     } catch (err) {
       setPartners([]);
@@ -87,7 +80,7 @@ export default function PartnersPage() {
     let mounted = true;
 
     async function init() {
-      const storedToken = localStorage.getItem("admin_dash_token") || localStorage.getItem("token") || "";
+      const storedToken = localStorage.getItem("admin_dash_token") || "";
       if (!storedToken) {
         if (mounted) {
           setError("No dashboard session found. Please login first.");
@@ -97,29 +90,10 @@ export default function PartnersPage() {
       }
 
       try {
-        const meResponse = await fetch(`${API_BASE}/auth/me`, {
-          headers: { Authorization: `Bearer ${storedToken}` },
-          cache: "no-store",
-        });
-        const mePayload = await meResponse.json().catch(() => ({}));
-
-        if (!meResponse.ok) {
-          const code = meResponse.status;
-          if (code === 401 || code === 403 || code === 404) {
-            clearDashboardSession();
-            if (mounted) {
-              setError("Session expired. Please login again as ADMIN.");
-              setLoading(false);
-            }
-            router.replace("/login");
-            return;
-          }
-          throw new Error(mePayload?.error || "Unable to verify session");
-        }
-
+        const mePayload: any = await fetchApi("/auth/me");
         const normalizedRole = String(mePayload?.user?.role || "").toUpperCase();
+        
         if (mounted) {
-          setToken(storedToken);
           setUserRole(normalizedRole);
         }
 
@@ -131,10 +105,23 @@ export default function PartnersPage() {
           return;
         }
 
-        await loadPartners(storedToken);
+        // Fetch facilities for the dropdown
+        const facPayload: any = await fetchApi("/gamehub/facilities/manage/list?limit=100");
+        if (mounted) {
+          setFacilities(Array.isArray(facPayload?.data) ? facPayload.data : []);
+        }
+
+        await loadPartners();
       } catch (err) {
         if (mounted) {
-          setError(err instanceof Error ? err.message : "Unable to initialize partners page");
+          const status = (err as any).status || 0;
+          if (status === 401 || status === 403 || status === 404) {
+            clearDashboardSession();
+            setError("Session expired. Please login again as ADMIN.");
+            router.replace("/login");
+          } else {
+            setError(err instanceof Error ? err.message : "Unable to initialize partners page");
+          }
           setLoading(false);
         }
       }
@@ -146,12 +133,6 @@ export default function PartnersPage() {
       mounted = false;
     };
   }, [loadPartners, router]);
-
-  useEffect(() => {
-    if (isAdmin && token) {
-      loadPartners(token);
-    }
-  }, [isAdmin, token, loadPartners]);
 
   const partnerStats = useMemo(() => {
     const total = partners.length;
@@ -169,24 +150,23 @@ export default function PartnersPage() {
     setMessage("");
 
     try {
-      const response = await fetch(`${API_BASE}/users/partners`, {
+      await fetchApi("/users/partners", {
         method: "POST",
-        headers: authHeaders(true),
         body: JSON.stringify({
           name: formState.name.trim(),
           email: formState.email.trim(),
           phone: formState.phone.trim(),
           password: formState.password,
           status: formState.status,
+          partnerType: formState.partnerType,
+          eventHostId: formState.partnerType === "EVENT_HOST" ? formState.eventHostId.trim() : null,
+          facilityId: formState.partnerType === "VENUE_OWNER" ? formState.facilityId : null,
         }),
       });
-      const payload = await response.json();
-
-      if (!response.ok) throw new Error(payload?.error || "Failed to create partner");
 
       setMessage("Partner created successfully.");
-      setFormState({ name: "", email: "", phone: "", password: "", status: "ACTIVE" });
-      await loadPartners(token);
+      setFormState({ name: "", email: "", phone: "", password: "", status: "ACTIVE", partnerType: "EVENT_HOST", eventHostId: "", facilityId: "" });
+      await loadPartners();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to create partner");
     } finally {
@@ -200,16 +180,13 @@ export default function PartnersPage() {
     setError("");
     setMessage("");
     try {
-      const response = await fetch(`${API_BASE}/users/${partnerId}/role`, {
+      await fetchApi(`/users/${partnerId}/role`, {
         method: "PATCH",
-        headers: authHeaders(true),
         body: JSON.stringify({ role }),
       });
-      const payload = await response.json();
-      if (!response.ok) throw new Error(payload?.error || "Failed to update role");
 
       setMessage("Partner role updated.");
-      await loadPartners(token);
+      await loadPartners();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to update role");
     }
@@ -221,16 +198,13 @@ export default function PartnersPage() {
     setError("");
     setMessage("");
     try {
-      const response = await fetch(`${API_BASE}/users/${partnerId}/status`, {
+      await fetchApi(`/users/${partnerId}/status`, {
         method: "PATCH",
-        headers: authHeaders(true),
         body: JSON.stringify({ status }),
       });
-      const payload = await response.json();
-      if (!response.ok) throw new Error(payload?.error || "Failed to update status");
 
       setMessage("Partner status updated.");
-      await loadPartners(token);
+      await loadPartners();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to update status");
     }
@@ -322,6 +296,43 @@ export default function PartnersPage() {
                 <option value="INACTIVE">INACTIVE</option>
               </select>
             </div>
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400/80 ml-1">Partner Type</label>
+              <select
+                value={formState.partnerType}
+                onChange={(e) => setFormState((prev) => ({ ...prev, partnerType: e.target.value }))}
+                className="w-full rounded-2xl border border-emerald-50 bg-emerald-50/20 px-4 py-3 text-sm font-bold text-slate-700 outline-none focus:border-emerald-200 focus:bg-white transition-all cursor-pointer"
+              >
+                <option value="EVENT_HOST">EVENT HOST</option>
+                <option value="VENUE_OWNER">GAMEHUB PARTNER (VENUE OWNER)</option>
+              </select>
+            </div>
+
+            {formState.partnerType === "EVENT_HOST" ? (
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400/80 ml-1">Event Host ID (Optional)</label>
+                <input
+                  placeholder="e.g. EH-778"
+                  value={formState.eventHostId}
+                  onChange={(e) => setFormState((prev) => ({ ...prev, eventHostId: e.target.value }))}
+                  className="w-full rounded-2xl border border-emerald-50 bg-emerald-50/20 px-4 py-3 text-sm font-bold text-slate-900 outline-none focus:border-emerald-200 focus:bg-white transition-all"
+                />
+              </div>
+            ) : (
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400/80 ml-1">Assign to GameHub Venue</label>
+                <select
+                  value={formState.facilityId}
+                  onChange={(e) => setFormState((prev) => ({ ...prev, facilityId: e.target.value }))}
+                  className="w-full rounded-2xl border border-emerald-50 bg-emerald-50/20 px-4 py-3 text-sm font-bold text-slate-700 outline-none focus:border-emerald-200 focus:bg-white transition-all cursor-pointer"
+                >
+                  <option value="">No Venue Assigned</option>
+                  {facilities.map((f) => (
+                    <option key={f.id} value={f.id}>{f.name}</option>
+                  ))}
+                </select>
+              </div>
+            )}
             <div className="flex items-end">
               <button
                 type="submit"
@@ -376,6 +387,7 @@ export default function PartnersPage() {
               <thead className="bg-slate-50 text-xs uppercase text-slate-500">
                 <tr>
                   <th className="p-3">Partner</th>
+                  <th className="p-3">Type</th>
                   <th className="p-3">Role</th>
                   <th className="p-3">Status</th>
                   <th className="p-3">Joined</th>
@@ -388,6 +400,25 @@ export default function PartnersPage() {
                       <div className="font-semibold text-slate-900">{partner.name}</div>
                       <div className="text-xs text-slate-500">{partner.email}</div>
                       {partner.phone ? <div className="text-xs text-slate-400">{partner.phone}</div> : null}
+                    </td>
+                    <td className="p-3">
+                      <div className="flex flex-wrap gap-1.5">
+                        {partner.eventHostId && (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-purple-50 text-purple-700 border border-purple-100">
+                            ID: {partner.eventHostId}
+                          </span>
+                        )}
+                        {partner.gamehubFacilities && partner.gamehubFacilities.length > 0 && (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-100">
+                            🏟️ {partner.gamehubFacilities[0].name}
+                          </span>
+                        )}
+                        {!partner.eventHostId && (!partner.gamehubFacilities || partner.gamehubFacilities.length === 0) && (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-slate-50 text-slate-500 border border-slate-100 italic">
+                            No active portal
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="p-3">
                       {isAdmin ? (

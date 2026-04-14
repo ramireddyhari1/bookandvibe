@@ -102,7 +102,14 @@ router.post('/login', validate(loginSchema), async (req, res) => {
     res.json({ 
       message: 'Login successful', 
       token, 
-      user: { id: user.id, name: user.name, email: user.email, role: user.role } 
+      user: { 
+        id: user.id, 
+        name: user.name, 
+        email: user.email, 
+        role: user.role, 
+        partnerType: user.partnerType || null,
+        eventHostId: user.eventHostId || null
+      } 
     });
   } catch (err) {
     return handleAuthRouteError(res, err, 'Login failed. Please try again later.');
@@ -117,11 +124,26 @@ router.post('/logout', (req, res) => {
 // GET /api/auth/me
 router.get('/me', authenticateToken, async (req, res) => {
   try {
-    const user = await prisma.user.findUnique({ where: { id: req.user.id } });
+    const user = await prisma.user.findUnique({ 
+      where: { id: req.user.id },
+      include: {
+        gamehubFacilities: {
+          select: { id: true, name: true }
+        }
+      }
+    });
     if (!user) return res.status(404).json({ error: 'User not found' });
     
     res.json({ 
-      user: { id: user.id, name: user.name, email: user.email, role: user.role } 
+      user: { 
+        id: user.id, 
+        name: user.name, 
+        email: user.email, 
+        role: user.role, 
+        partnerType: user.partnerType || null,
+        eventHostId: user.eventHostId || null,
+        managedFacilities: user.gamehubFacilities || []
+      } 
     });
   } catch (err) {
     return handleAuthRouteError(res, err, 'Unable to fetch user profile. Please try again later.');

@@ -46,6 +46,17 @@ const events = [
       price: 35.00,
       totalSlots: 15,
       image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=1000"
+    {
+      title: "Dil Se - DSP Special Telugu Jamming",
+      description: "A specially curated live set focusing on the vibrant sounds of Devi Sri Prasad featuring the EIRA band.",
+      category: "CONCERT",
+      location: "Hyderabad",
+      venue: "Throwback, Kavuri Hills",
+      date: "2026-04-19",
+      time: "19:00",
+      price: 349,
+      totalSlots: 150,
+      image: "https://d3pmsbscv4kwdi.cloudfront.net/events/1775570542079-384f5959f4eefd59.jpg"
     }
   ];
 

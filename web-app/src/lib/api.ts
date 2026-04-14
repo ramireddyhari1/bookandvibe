@@ -1,4 +1,11 @@
-export const API_URL = "http://localhost:5000/api";
+const getBaseUrl = () => {
+  if (typeof window !== "undefined") {
+    return `http://${window.location.hostname}:5000/api`;
+  }
+  return "http://127.0.0.1:5000/api";
+};
+
+export const API_URL = process.env.NEXT_PUBLIC_API_URL || getBaseUrl();
 
 type FetchOptions = RequestInit & { requiresAuth?: boolean };
 

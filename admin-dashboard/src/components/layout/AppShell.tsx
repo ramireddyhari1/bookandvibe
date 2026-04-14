@@ -1,6 +1,7 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import Sidebar from "@/components/layout/Sidebar";
 import { useMemo } from "react";
 import { Bell, CalendarDays, Search, User } from "lucide-react";
@@ -16,16 +17,21 @@ function titleFromPath(pathname: string): string {
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const isAuthRoute = pathname === "/login";
 
-  const sessionUser = useMemo(() => {
-    if (typeof window === "undefined") return null;
+  const [sessionUser, setSessionUser] = useState<{ id?: string; name?: string; role?: string; partnerType?: string | null } | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
     const raw = localStorage.getItem("admin_dash_user");
-    if (!raw) return null;
-    try {
-      return JSON.parse(raw) as { name?: string; role?: string };
-    } catch {
-      return null;
+    if (raw) {
+      try {
+        setSessionUser(JSON.parse(raw));
+      } catch (e) {
+        console.error("Failed to parse session user", e);
+      }
     }
   }, []);
 
@@ -38,16 +44,50 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     .map((part) => part[0]?.toUpperCase() || "")
     .join("") || "BV";
 
+  const role = String(sessionUser?.role || "ADMIN").toUpperCase();
+  const isAdmin = role === "ADMIN";
+
+  useEffect(() => {
+    if (!mounted) return;
+    const restrictedPaths = ["/partners", "/users", "/settings"];
+    const isSystemRestricted = restrictedPaths.some(p => pathname === p || pathname.startsWith(p + "/"));
+    
+    if (!isAdmin && isSystemRestricted) {
+      console.warn("Restricted system access attempt:", pathname);
+      router.replace("/");
+      return;
+    }
+
+    // Role-specific type protection
+    if (!isAdmin && role === "PARTNER") {
+      const partnerType = String(sessionUser?.partnerType || "").toUpperCase();
+      
+      const isEventRoute = pathname.startsWith("/events") || pathname.startsWith("/bookings");
+      const isGameHubRoute = pathname.startsWith("/gamehub");
+
+      if (partnerType === "EVENT_HOST" && isGameHubRoute) {
+        console.warn("Event Host attempted GameHub access:", pathname);
+        router.replace("/");
+      } else if (partnerType === "VENUE_OWNER" && isEventRoute) {
+        console.warn("Venue Owner attempted Event access:", pathname);
+        router.replace("/");
+      }
+    }
+  }, [pathname, isAdmin, role, sessionUser, mounted, router]);
+
+  const [today, setToday] = useState("");
+  useEffect(() => {
+    setToday(new Date().toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+    }));
+  }, []);
+
   if (isAuthRoute) {
     return <main className="min-h-screen">{children}</main>;
   }
-
-  const today = new Date().toLocaleDateString("en-US", {
-    weekday: "short",
-    month: "short",
-    day: "2-digit",
-    year: "numeric",
-  });
 
   return (
     <div className="dashboard-shell">

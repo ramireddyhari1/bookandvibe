@@ -15,7 +15,18 @@ type UserRecord = {
   totalSpent?: number;
 };
 
-const API_BASE = "http://localhost:5000/api";
+import { fetchApi } from "@/lib/api";
+
+type UserRecord = {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+  createdAt: string;
+  _count?: { bookings?: number };
+  totalSpent?: number;
+};
 
 function toTitle(value: string): string {
   const normalized = String(value || "").toLowerCase();
@@ -45,7 +56,7 @@ export default function UsersPage() {
       setLoading(true);
       setError("");
       try {
-        const token = localStorage.getItem("admin_dash_token") || localStorage.getItem("token") || "";
+        const token = localStorage.getItem("admin_dash_token") || "";
         if (!token) {
           setError("Session expired. Please login again.");
           setUsers([]);
@@ -54,49 +65,28 @@ export default function UsersPage() {
           return;
         }
 
-        const sessionRes = await fetch(`${API_BASE}/auth/me`, {
-          headers: { Authorization: `Bearer ${token}` },
-          cache: "no-store",
-        });
-        const sessionPayload = await sessionRes.json().catch(() => ({}));
-        if (!sessionRes.ok) {
-          if ([401, 403, 404].includes(sessionRes.status)) {
-            clearDashboardSession();
-            setError("Session expired. Please login again.");
-            setUsers([]);
-            setLoading(false);
-            router.replace("/login");
-            return;
-          }
-          throw new Error(sessionPayload?.error || "Unable to verify session");
-        }
-
+        const sessionPayload: any = await fetchApi("/auth/me");
         const role = String(sessionPayload?.user?.role || "").toUpperCase();
-        if (role !== "ADMIN" && role !== "PARTNER") {
-          setError("Only ADMIN or PARTNER can view users data.");
+        if (role !== "ADMIN") {
+          setError("Only ADMIN can view users data.");
           setUsers([]);
           setLoading(false);
+          router.replace("/");
           return;
         }
 
-        const response = await fetch(`${API_BASE}/users`, {
-          headers: { Authorization: `Bearer ${token}` },
-          cache: "no-store",
-        });
-        const payload = await response.json();
-        if (!response.ok) {
-          if ([401, 403, 404].includes(response.status)) {
-            clearDashboardSession();
-            setError("Session expired. Please login again.");
-            setUsers([]);
-            setLoading(false);
-            router.replace("/login");
-            return;
-          }
-          throw new Error(payload?.error || "Failed to fetch users");
-        }
+        const payload: any = await fetchApi("/users");
         setUsers(Array.isArray(payload?.data) ? payload.data : []);
       } catch (err) {
+        const status = (err as any).status || 0;
+        if ([401, 403, 404].includes(status)) {
+          clearDashboardSession();
+          setError("Session expired. Please login again.");
+          setUsers([]);
+          setLoading(false);
+          router.replace("/login");
+          return;
+        }
         const message = err instanceof Error ? err.message : "Failed to fetch users";
         setError(message);
       } finally {

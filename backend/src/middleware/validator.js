@@ -57,7 +57,7 @@ const bookingConfirmSchema = Joi.object({
   eventId: Joi.string().uuid().required(),
   seatNumbers: Joi.array().items(Joi.string().uppercase().pattern(/^([A-Z]+)(\d+)$/)).min(1).required(),
   totalAmount: Joi.number().min(0).optional(), // We'll recalculate this on the server anyway
-  paymentMethod: Joi.string().valid('UPI', 'CARD', 'NETBANKING', 'MOCK').default('MOCK'),
+  paymentMethod: Joi.string().valid('UPI', 'CARD', 'NETBANKING', 'RAZORPAY').default('RAZORPAY'),
   idempotencyKey: Joi.string().min(8).optional()
 });
 

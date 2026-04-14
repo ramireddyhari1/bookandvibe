@@ -18,6 +18,7 @@ import {
   Gift,
   Star,
   CheckCircle2,
+  ArrowLeft,
 } from "lucide-react";
 
 export default function RegisterPage() {
@@ -70,6 +71,16 @@ export default function RegisterPage() {
 
   return (
     <div className="fixed inset-0 z-[200] flex bg-gradient-to-br from-rose-100 via-rose-50 to-white overflow-y-auto">
+      
+      {/* Back to Home Button */}
+      <Link 
+        href="/"
+        className="absolute top-6 left-6 md:top-8 md:left-8 z-50 flex items-center gap-2 text-gray-800 lg:text-white/70 lg:hover:text-white hover:text-rose-600 transition-all bg-white/50 lg:bg-white/5 lg:hover:bg-white/10 backdrop-blur-md px-4 py-2.5 rounded-full border border-gray-200/50 lg:border-white/10 shadow-sm lg:shadow-none"
+      >
+        <ArrowLeft size={18} />
+        <span className="text-sm font-bold tracking-wide">Back to Home</span>
+      </Link>
+
       {/* ═══════════════════════════════════════════════════
           LEFT PANEL — Visual / Branding
       ═══════════════════════════════════════════════════ */}

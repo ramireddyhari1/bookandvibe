@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Gamepad2, MapPin, Search, Star, Users, Ticket, Sparkles, ArrowUpRight, RefreshCw, Plus, Pencil, Trash2, X } from "lucide-react";
+import { Gamepad2, MapPin, Search, Star, Users, Ticket, Sparkles, ArrowUpRight, RefreshCw, Plus, Pencil, Trash2, X, Clock, HelpCircle } from "lucide-react";
 
 type GameHubFacility = {
   id: string;
@@ -83,7 +83,86 @@ type FacilityFormState = {
   status: "ACTIVE" | "INACTIVE" | "MAINTENANCE";
 };
 
-const API_BASE = "http://localhost:5000/api";
+import { fetchApi } from "@/lib/api";
+
+type GameHubFacility = {
+  id: string;
+  name: string;
+  type: string;
+  location: string;
+  venue: string;
+  rating: number;
+  priceRange: string;
+  pricePerHour?: number;
+  unit?: string;
+  distance?: string;
+  description?: string;
+  phone?: string;
+  openHours?: string;
+  status?: "ACTIVE" | "INACTIVE" | "MAINTENANCE";
+  pricingRules?: Array<{ type: string; time?: string; day?: string; price: number }>;
+  features?: string[];
+  amenities?: string[];
+  image?: string;
+  tags?: string[];
+  gallery?: string[];
+  battleModes?: Array<{ name: string; players: string; duration: string }>;
+  slotTemplate?: Array<{ label: string; isBooked?: boolean }>;
+  availableSports?: string[];
+  partnerId?: string | null;
+  partner?: { id: string; name: string; email: string } | null;
+};
+
+type PartnerOption = {
+  id: string;
+  name: string;
+  email: string;
+};
+
+type CalendarDay = {
+  date: string;
+  bookingCount: number;
+  blockedCount: number;
+  bookings: Array<{ id: string; slotLabel: string; status: string }>;
+  blocks: Array<{ id: string; slotLabel: string; reason: string; createdAt: string }>;
+};
+
+type CalendarGridCell = {
+  date: string;
+  inCurrentMonth: boolean;
+};
+
+type FacilityFormState = {
+  name: string;
+  type: string;
+  location: string;
+  venue: string;
+  distance: string;
+  rating: string;
+  priceRange: string;
+  pricePerHour: string;
+  unit: string;
+  image: string;
+  description: string;
+  phone: string;
+  openHours: string;
+  amenities: string;
+  features: string;
+  tags: string;
+  gallery: string;
+  pricingRules: string;
+  slotTemplate: string;
+  availableSports: string;
+  slotStartHour: string;
+  slotEndHour: string;
+  slotInterval: string;
+  peakStartHour: string;
+  peakEndHour: string;
+  peakPrice: string;
+  weekendPrice: string;
+  status: "ACTIVE" | "INACTIVE" | "MAINTENANCE";
+};
+
 const defaultImage = "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1200";
 const WEEKDAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -182,13 +261,13 @@ export default function GameHubAdminPage() {
   const [blockDate, setBlockDate] = useState(todayDateString());
   const [blockReason, setBlockReason] = useState("Maintenance");
   const [blockSlotsInput, setBlockSlotsInput] = useState("");
-  const [authToken, setAuthToken] = useState("");
   const [adminChecked, setAdminChecked] = useState(false);
   const [hasAdminAccess, setHasAdminAccess] = useState(false);
   const [currentRole, setCurrentRole] = useState("");
   const [partners, setPartners] = useState<PartnerOption[]>([]);
   const [authError, setAuthError] = useState("");
   const [selectedDate, setSelectedDate] = useState(`${currentMonthString()}-01`);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   function clearDashboardSession() {
     localStorage.removeItem("admin_dash_token");
@@ -215,17 +294,6 @@ export default function GameHubAdminPage() {
   }, [calendarDays]);
 
   const monthGrid = useMemo(() => buildMonthGrid(calendarMonth), [calendarMonth]);
-
-  function authHeaders(includeJson = false): Record<string, string> {
-    const headers: Record<string, string> = {};
-    if (includeJson) {
-      headers["Content-Type"] = "application/json";
-    }
-    if (authToken) {
-      headers.Authorization = `Bearer ${authToken}`;
-    }
-    return headers;
-  }
 
   function openCreateEditor() {
     setEditorMode("create");
@@ -263,9 +331,8 @@ export default function GameHubAdminPage() {
 
     setActionError("");
     try {
-      const response = await fetch(`${API_BASE}/gamehub/facilities/slot-template/generate`, {
+      const payload: any = await fetchApi("/gamehub/facilities/slot-template/generate", {
         method: "POST",
-        headers: authHeaders(true),
         body: JSON.stringify({
           startHour: Number(formState.slotStartHour || 6),
           endHour: Number(formState.slotEndHour || 22),
@@ -277,8 +344,6 @@ export default function GameHubAdminPage() {
           weekendPrice: Number(formState.weekendPrice || 1000),
         }),
       });
-      const payload = await response.json();
-      if (!response.ok) throw new Error(payload?.error || "Failed to generate slots");
 
       setFormState((prev) => ({
         ...prev,
@@ -351,17 +416,13 @@ export default function GameHubAdminPage() {
 
     try {
       const isEdit = editorMode === "edit";
-      const endpoint = isEdit ? `${API_BASE}/gamehub/facilities/${editingFacilityId}` : `${API_BASE}/gamehub/facilities`;
+      const endpoint = isEdit ? `/gamehub/facilities/${editingFacilityId}` : "/gamehub/facilities";
       const method = isEdit ? "PATCH" : "POST";
 
-      const response = await fetch(endpoint, {
+      const data: any = await fetchApi(endpoint, {
         method,
-        headers: authHeaders(true),
         body: JSON.stringify(payload),
       });
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data?.error || "Failed to save facility");
 
       const facility = data?.data as GameHubFacility;
       if (isEdit && editingFacilityId) {
@@ -396,13 +457,7 @@ export default function GameHubAdminPage() {
     setActionMessage("");
 
     try {
-      const response = await fetch(`${API_BASE}/gamehub/facilities/${facility.id}`, {
-        method: "DELETE",
-        headers: authHeaders(),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data?.error || "Failed to delete facility");
-
+      await fetchApi(`/gamehub/facilities/${facility.id}`, { method: "DELETE" });
       setFacilities((prev) => prev.filter((item) => item.id !== facility.id));
       setActionMessage("Facility deleted successfully.");
     } catch (err) {
@@ -419,13 +474,10 @@ export default function GameHubAdminPage() {
     setActionMessage("");
 
     try {
-      const response = await fetch(`${API_BASE}/gamehub/facilities/${facilityId}/assign-partner`, {
+      const payload: any = await fetchApi(`/gamehub/facilities/${facilityId}/assign-partner`, {
         method: "PATCH",
-        headers: authHeaders(true),
         body: JSON.stringify({ partnerId }),
       });
-      const payload = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(payload?.error || "Failed to assign facility partner");
 
       const updated = payload?.data as GameHubFacility;
       setFacilities((prev) => prev.map((item) => (item.id === facilityId ? { ...item, ...updated } : item)));
@@ -439,10 +491,9 @@ export default function GameHubAdminPage() {
     let mounted = true;
 
     async function verifyAdminSession() {
-      const token = localStorage.getItem("admin_dash_token") || localStorage.getItem("token") || "";
+      const token = localStorage.getItem("admin_dash_token") || "";
       if (!token) {
         if (mounted) {
-          setAuthToken("");
           setHasAdminAccess(false);
           setAuthError("No dashboard session token found. Log in as ADMIN or PARTNER to manage GameHub operations.");
           setAdminChecked(true);
@@ -451,27 +502,10 @@ export default function GameHubAdminPage() {
       }
 
       try {
-        const response = await fetch(`${API_BASE}/auth/me`, {
-          headers: { Authorization: `Bearer ${token}` },
-          cache: "no-store",
-        });
-        const payload = await response.json().catch(() => ({}));
-
-        if (!response.ok && [401, 403, 404].includes(response.status)) {
-          clearDashboardSession();
-          if (mounted) {
-            setHasAdminAccess(false);
-            setAuthError("Session expired. Please login again as ADMIN or PARTNER.");
-            setAdminChecked(true);
-          }
-          router.replace("/login");
-          return;
-        }
-
+        const payload: any = await fetchApi("/auth/me");
         const normalizedRole = String(payload?.user?.role || "").toUpperCase();
-        const isAdmin = Boolean(response.ok && (normalizedRole === "ADMIN" || normalizedRole === "PARTNER"));
+        const isAdmin = Boolean(normalizedRole === "ADMIN" || normalizedRole === "PARTNER");
         if (mounted) {
-          setAuthToken(token);
           setHasAdminAccess(isAdmin);
           setCurrentRole(normalizedRole);
           setAuthError(isAdmin ? "" : "Current account is not ADMIN/PARTNER. Protected actions are disabled.");
@@ -479,19 +513,27 @@ export default function GameHubAdminPage() {
         }
 
         if (mounted && normalizedRole === "ADMIN") {
-          const partnerRes = await fetch(`${API_BASE}/users/partners?status=ACTIVE&limit=200`, {
-            headers: { Authorization: `Bearer ${token}` },
-            cache: "no-store",
-          });
-          const partnerPayload = await partnerRes.json().catch(() => ({}));
-          if (partnerRes.ok) {
-            setPartners(Array.isArray(partnerPayload?.data) ? partnerPayload.data : []);
+          try {
+            const partnerPayload: any = await fetchApi("/users/partners?status=ACTIVE&limit=200");
+            if (mounted) {
+              setPartners(Array.isArray(partnerPayload?.data) ? partnerPayload.data : []);
+            }
+          } catch (pErr) {
+            console.warn("Failed to fetch partners:", pErr);
           }
         }
-      } catch (_) {
+      } catch (err) {
         if (mounted) {
-          setHasAdminAccess(false);
-          setAuthError("Unable to verify admin session. Protected actions are disabled.");
+          const status = (err as any).status || 0;
+          if ([401, 403, 404].includes(status)) {
+            clearDashboardSession();
+            setHasAdminAccess(false);
+            setAuthError("Session expired. Please login again as ADMIN or PARTNER.");
+            router.replace("/login");
+          } else {
+            setHasAdminAccess(false);
+            setAuthError("Unable to verify admin session. Protected actions are disabled.");
+          }
           setAdminChecked(true);
         }
       }
@@ -508,7 +550,7 @@ export default function GameHubAdminPage() {
     let mounted = true;
 
     const loadFacilities = async () => {
-      if (!adminChecked || !hasAdminAccess || !authToken) {
+      if (!adminChecked || !hasAdminAccess) {
         setFacilities([]);
         setLoading(false);
         return;
@@ -521,13 +563,7 @@ export default function GameHubAdminPage() {
         const params = new URLSearchParams();
         if (search.trim()) params.set("search", search.trim());
 
-        const response = await fetch(`${API_BASE}/gamehub/facilities/manage/list?${params.toString()}`, {
-          cache: "no-store",
-          headers: authHeaders(),
-        });
-        if (!response.ok) throw new Error("Failed to load GameHub facilities");
-
-        const payload = await response.json();
+        const payload: any = await fetchApi(`/gamehub/facilities/manage/list?${params.toString()}`);
         if (mounted) setFacilities(Array.isArray(payload?.data) ? payload.data : []);
       } catch (err) {
         if (mounted) {
@@ -544,7 +580,7 @@ export default function GameHubAdminPage() {
       mounted = false;
       window.clearTimeout(timer);
     };
-  }, [search, adminChecked, hasAdminAccess, authToken]);
+  }, [search, adminChecked, hasAdminAccess]);
 
   useEffect(() => {
     if (!selectedCalendarFacilityId && facilities.length > 0) {
@@ -575,12 +611,7 @@ export default function GameHubAdminPage() {
       setCalendarLoading(true);
       setActionError("");
       try {
-        const response = await fetch(`${API_BASE}/gamehub/facilities/${selectedCalendarFacilityId}/calendar?month=${calendarMonth}`, {
-          headers: authHeaders(),
-        });
-        const payload = await response.json();
-        if (!response.ok) throw new Error(payload?.error || "Failed to load calendar");
-
+        const payload: any = await fetchApi(`/gamehub/facilities/${selectedCalendarFacilityId}/calendar?month=${calendarMonth}`);
         setCalendarDays(Array.isArray(payload?.data?.days) ? payload.data.days : []);
       } catch (err) {
         setActionError(err instanceof Error ? err.message : "Failed to load calendar");
@@ -590,7 +621,7 @@ export default function GameHubAdminPage() {
     }
 
     loadCalendar();
-  }, [selectedCalendarFacilityId, calendarMonth, adminChecked, hasAdminAccess, authToken]);
+  }, [selectedCalendarFacilityId, calendarMonth, adminChecked, hasAdminAccess]);
 
   async function handleBlockSlots(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -614,9 +645,8 @@ export default function GameHubAdminPage() {
         .map((item) => item.trim())
         .filter(Boolean);
 
-      const response = await fetch(`${API_BASE}/gamehub/facilities/${selectedCalendarFacilityId}/block-slots`, {
+      await fetchApi(`/gamehub/facilities/${selectedCalendarFacilityId}/block-slots`, {
         method: "POST",
-        headers: authHeaders(true),
         body: JSON.stringify({
           date: blockDate,
           slotLabels,
@@ -624,19 +654,11 @@ export default function GameHubAdminPage() {
         }),
       });
 
-      const payload = await response.json();
-      if (!response.ok) throw new Error(payload?.error || "Failed to block slots");
-
       setActionMessage("Slots blocked successfully.");
       setBlockSlotsInput("");
 
-      const refreshed = await fetch(`${API_BASE}/gamehub/facilities/${selectedCalendarFacilityId}/calendar?month=${calendarMonth}`, {
-        headers: authHeaders(),
-      });
-      const refreshedPayload = await refreshed.json();
-      if (refreshed.ok) {
-        setCalendarDays(Array.isArray(refreshedPayload?.data?.days) ? refreshedPayload.data.days : []);
-      }
+      const refreshedPayload: any = await fetchApi(`/gamehub/facilities/${selectedCalendarFacilityId}/calendar?month=${calendarMonth}`);
+      setCalendarDays(Array.isArray(refreshedPayload?.data?.days) ? refreshedPayload.data.days : []);
     } catch (err) {
       setActionError(err instanceof Error ? err.message : "Failed to block slots");
     } finally {
@@ -657,22 +679,14 @@ export default function GameHubAdminPage() {
     setActionMessage("");
 
     try {
-      const response = await fetch(`${API_BASE}/gamehub/facilities/${selectedCalendarFacilityId}/block-slots/${blockId}`, {
+      await fetchApi(`/gamehub/facilities/${selectedCalendarFacilityId}/block-slots/${blockId}`, {
         method: "DELETE",
-        headers: authHeaders(),
       });
-      const payload = await response.json();
-      if (!response.ok) throw new Error(payload?.error || "Failed to unblock slot");
 
       setActionMessage("Blocked slot removed.");
 
-      const refreshed = await fetch(`${API_BASE}/gamehub/facilities/${selectedCalendarFacilityId}/calendar?month=${calendarMonth}`, {
-        headers: authHeaders(),
-      });
-      const refreshedPayload = await refreshed.json();
-      if (refreshed.ok) {
-        setCalendarDays(Array.isArray(refreshedPayload?.data?.days) ? refreshedPayload.data.days : []);
-      }
+      const refreshedPayload: any = await fetchApi(`/gamehub/facilities/${selectedCalendarFacilityId}/calendar?month=${calendarMonth}`);
+      setCalendarDays(Array.isArray(refreshedPayload?.data?.days) ? refreshedPayload.data.days : []);
     } catch (err) {
       setActionError(err instanceof Error ? err.message : "Failed to unblock slot");
     } finally {
@@ -831,24 +845,117 @@ export default function GameHubAdminPage() {
               <input value={formState.features} onChange={(e) => handleFormChange("features", e.target.value)} placeholder="Features (comma separated)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" />
               <input value={formState.tags} onChange={(e) => handleFormChange("tags", e.target.value)} placeholder="Tags (comma separated)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" />
 
-              <div className="rounded-2xl border border-slate-200 bg-white p-4 md:col-span-2">
-                <p className="text-sm font-extrabold text-slate-900">Slot Generator</p>
-                <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-4">
-                  <input value={formState.slotStartHour} onChange={(e) => handleFormChange("slotStartHour", e.target.value)} type="number" min="0" max="23" placeholder="Start Hour" className="rounded-xl border border-slate-300 px-3 py-2 text-sm" />
-                  <input value={formState.slotEndHour} onChange={(e) => handleFormChange("slotEndHour", e.target.value)} type="number" min="1" max="24" placeholder="End Hour" className="rounded-xl border border-slate-300 px-3 py-2 text-sm" />
-                  <input value={formState.slotInterval} onChange={(e) => handleFormChange("slotInterval", e.target.value)} type="number" min="15" step="15" placeholder="Interval" className="rounded-xl border border-slate-300 px-3 py-2 text-sm" />
-                  <input value={formState.peakPrice} onChange={(e) => handleFormChange("peakPrice", e.target.value)} type="number" min="0" placeholder="Peak Price" className="rounded-xl border border-slate-300 px-3 py-2 text-sm" />
-                  <input value={formState.peakStartHour} onChange={(e) => handleFormChange("peakStartHour", e.target.value)} type="number" min="0" max="23" placeholder="Peak Start" className="rounded-xl border border-slate-300 px-3 py-2 text-sm" />
-                  <input value={formState.peakEndHour} onChange={(e) => handleFormChange("peakEndHour", e.target.value)} type="number" min="1" max="24" placeholder="Peak End" className="rounded-xl border border-slate-300 px-3 py-2 text-sm" />
-                  <input value={formState.weekendPrice} onChange={(e) => handleFormChange("weekendPrice", e.target.value)} type="number" min="0" placeholder="Weekend Price" className="rounded-xl border border-slate-300 px-3 py-2 text-sm" />
-                  <button type="button" onClick={generateSlotsFromPreset} className="rounded-xl bg-rose-100 px-3 py-2 text-sm font-bold text-rose-700">
-                    Generate Slots
+              <div className="rounded-3xl border border-emerald-100 bg-emerald-50/20 p-6 md:col-span-2 shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h4 className="flex items-center gap-2 text-base font-black text-slate-900 uppercase tracking-tight">
+                      <Clock size={18} className="text-emerald-500" />
+                      Slot Generator
+                    </h4>
+                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">Define bookable hours and pricing logic</p>
+                  </div>
+                  <div className="flex items-center gap-2 rounded-lg bg-emerald-50 px-2 py-1 text-[10px] font-black text-emerald-700 border border-emerald-100 uppercase tracking-wider">
+                    <HelpCircle size={12} /> 24h Format: 18 = 6 PM
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                  {/* Row 1: Operational Hours */}
+                  <div className="space-y-4 rounded-2xl bg-white p-4 border border-emerald-50 shadow-sm">
+                    <p className="text-[11px] font-black text-emerald-600 uppercase tracking-widest border-b border-emerald-50 pb-2">Operational Hours</p>
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 ml-1">Start Hour (0-23)</label>
+                        <input value={formState.slotStartHour} onChange={(e) => handleFormChange("slotStartHour", e.target.value)} type="number" min="0" max="23" className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-bold text-slate-900 focus:bg-white focus:border-emerald-300 transition-all outline-none" />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 ml-1">End Hour (1-24)</label>
+                        <input value={formState.slotEndHour} onChange={(e) => handleFormChange("slotEndHour", e.target.value)} type="number" min="1" max="24" className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-bold text-slate-900 focus:bg-white focus:border-emerald-300 transition-all outline-none" />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 ml-1">Slot Duration (Min)</label>
+                        <select value={formState.slotInterval} onChange={(e) => handleFormChange("slotInterval", e.target.value)} className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm font-bold text-slate-900 focus:bg-white focus:border-emerald-300 transition-all outline-none">
+                          <option value="30">30 Minutes</option>
+                          <option value="45">45 Minutes</option>
+                          <option value="60">60 Minutes</option>
+                          <option value="90">90 Minutes</option>
+                          <option value="120">120 Minutes</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Row 2: Peak Hours */}
+                  <div className="space-y-4 rounded-2xl bg-white p-4 border border-emerald-50 shadow-sm">
+                    <p className="text-[11px] font-black text-rose-500 uppercase tracking-widest border-b border-rose-50 pb-2">Peak Pricing</p>
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 ml-1">Peak Start (e.g. 18)</label>
+                        <input value={formState.peakStartHour} onChange={(e) => handleFormChange("peakStartHour", e.target.value)} type="number" min="0" max="23" className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-bold text-slate-900 focus:bg-white focus:border-rose-300 transition-all outline-none" />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 ml-1">Peak End (e.g. 22)</label>
+                        <input value={formState.peakEndHour} onChange={(e) => handleFormChange("peakEndHour", e.target.value)} type="number" min="1" max="24" className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-bold text-slate-900 focus:bg-white focus:border-rose-300 transition-all outline-none" />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 ml-1">Peak Hourly Rate</label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-black text-slate-400">₹</span>
+                          <input value={formState.peakPrice} onChange={(e) => handleFormChange("peakPrice", e.target.value)} type="number" min="0" className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-7 pr-3 py-2 text-sm font-black text-slate-900 focus:bg-white focus:border-rose-300 transition-all outline-none" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Row 3: Special Pricing */}
+                  <div className="space-y-4 rounded-2xl bg-white p-4 border border-emerald-50 shadow-sm">
+                    <p className="text-[11px] font-black text-indigo-500 uppercase tracking-widest border-b border-indigo-50 pb-2">Weekend Pricing</p>
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 ml-1">Weekend (Sat/Sun) Rate</label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-black text-slate-400">₹</span>
+                          <input value={formState.weekendPrice} onChange={(e) => handleFormChange("weekendPrice", e.target.value)} type="number" min="0" className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-7 pr-3 py-2 text-sm font-black text-slate-900 focus:bg-white focus:border-indigo-300 transition-all outline-none" />
+                        </div>
+                      </div>
+                      <div className="pt-2">
+                        <button
+                          type="button"
+                          onClick={generateSlotsFromPreset}
+                          className="w-full flex items-center justify-center gap-2 rounded-xl bg-emerald-500 py-3 text-xs font-black text-white uppercase tracking-widest shadow-lg shadow-emerald-200 hover:bg-emerald-600 active:scale-95 transition-all"
+                        >
+                          <Sparkles size={14} /> Generate Slots
+                        </button>
+                      </div>
+                      <p className="text-[9px] text-slate-400 font-bold text-center italic">Must generate after changing times</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex flex-col gap-4 border-t border-emerald-100/50 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => setShowAdvanced(!showAdvanced)}
+                    className="flex items-center gap-2 self-start text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-emerald-600 transition-all"
+                  >
+                    {showAdvanced ? "Hide Advanced Configuration" : "View Advanced JSON Configuration"}
+                    <ArrowUpRight size={12} className={showAdvanced ? "rotate-180" : ""} />
                   </button>
+
+                  {showAdvanced && (
+                    <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                      <div className="space-y-2">
+                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Pricing Rules Logic (JSON)</label>
+                        <textarea value={formState.pricingRules} onChange={(e) => handleFormChange("pricingRules", e.target.value)} placeholder="Pricing Rules JSON" className="w-full rounded-2xl border border-slate-200 bg-slate-900 p-4 font-mono text-xs text-emerald-400 outline-none h-40" />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Slot Template Data (JSON)</label>
+                        <textarea value={formState.slotTemplate} onChange={(e) => handleFormChange("slotTemplate", e.target.value)} placeholder="Slot Template JSON" className="w-full rounded-2xl border border-slate-200 bg-slate-900 p-4 font-mono text-xs text-emerald-400 outline-none h-60" />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
-
-              <textarea value={formState.pricingRules} onChange={(e) => handleFormChange("pricingRules", e.target.value)} placeholder="Pricing Rules JSON" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" rows={5} />
-              <textarea value={formState.slotTemplate} onChange={(e) => handleFormChange("slotTemplate", e.target.value)} placeholder="Slot Template JSON" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" rows={6} />
 
               <div className="md:col-span-2 mt-2 flex items-center gap-3">
                 <button

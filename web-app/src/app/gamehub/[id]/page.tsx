@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import Link from "next/link";
+import Script from "next/script";
 import { useParams, useRouter } from "next/navigation";
 import {
   Activity,
@@ -21,10 +22,27 @@ import {
   Target,
   Trophy,
   Users,
+  X,
   Zap
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
-import { API_URL } from "@/lib/api";
+import { fetchApi } from "@/lib/api";
+import PremiumSelect from "@/components/ui/PremiumSelect";
+import PriceChartModal from "@/components/ui/PriceChartModal";
+import PremiumDatePicker from "@/components/ui/PremiumDatePicker";
+
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
+
+type PricingRule = {
+  type: string;
+  time?: string;
+  day?: string;
+  price: number;
+};
 
 type Review = {
   id: number;
@@ -54,6 +72,8 @@ type Facility = {
   amenities: string[];
   gallery: string[];
   slotTemplate: Array<{ label: string; isBooked: boolean }>;
+  pricingRules?: PricingRule[];
+  availableSports?: string[];
   reviews?: Review[];
 };
 
@@ -65,62 +85,122 @@ type AvailabilitySlot = {
 
 const MOCK_FACILITIES: Facility[] = [
   {
-    type: "Multiple Sports",
-    location: "Mumbai",
-    venue: "D.No: 12-468/E/4, Near Highway",
-    distance: "0.16 Kms",
-    rating: 4.20,
-    reviewsCount: 99,
-    pricePerHour: 1200,
+    id: "f-1",
+    name: "Neon Turf Arena",
+    type: "Football",
+    location: "Gachibowli, Hyd",
+    venue: "Gachibowli Stadium Road",
+    distance: "2.1 Kms",
+    rating: 4.80,
+    reviewsCount: 156,
+    pricePerHour: 1400,
     unit: "hr",
-    image: "https://images.unsplash.com/photo-1544919982-b61976f0ba43?auto=format&fit=crop&q=80&w=800",
-    description: "Experience world-class sports at Our Zone Sports Arena. We offer top-tier facilities for Cricket, Football, Badminton, and Table Tennis, with professional coaching available.",
-    phone: "+91 98765 43210",
-    openHours: "6:00 AM - 11:00 PM",
-    amenities: ["Parking", "Water", "Washrooms", "Changing Room", "Floodlights"],
-    gallery: [
-      "https://images.unsplash.com/photo-1544919982-b61976f0ba43?auto=format&fit=crop&q=80&w=800",
-      "https://images.unsplash.com/photo-1529900748604-07564a03e7a6?auto=format&fit=crop&q=80&w=800",
-      "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80&w=800"
-    ],
+    image: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=1200",
+    description: "Premium FIFA-certified astroturf for 5v5 and 7v7 football matches with floodlights.",
+    phone: "+91 90000 11111",
+    openHours: "5:00 AM - 1:00 AM",
+    amenities: ["Parking", "Changing Room", "Floodlights", "Water", "Washrooms"],
+    gallery: ["https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=1200"],
     slotTemplate: [
-      { label: "06:00 AM", isBooked: false },
-      { label: "07:00 AM", isBooked: true },
-      { label: "08:00 AM", isBooked: false },
-      { label: "09:00 AM", isBooked: false },
-      { label: "05:00 PM", isBooked: false },
       { label: "06:00 PM", isBooked: false },
       { label: "07:00 PM", isBooked: true },
       { label: "08:00 PM", isBooked: false }
     ]
   },
   {
-    id: "mock-2",
-    name: "Sai Sandeep Badminton Club",
-    type: "Badminton",
-    location: "Mumbai",
-    venue: "Pappula Mill Rd, Yanam",
-    distance: "6.62 Kms",
-    rating: 4.44,
-    reviewsCount: 16,
-    pricePerHour: 350,
+    id: "f-2",
+    name: "Cricket Royale Nets",
+    type: "Cricket",
+    location: "Benz Circle, VJA",
+    venue: "Behind PVP Mall",
+    distance: "1.5 Kms",
+    rating: 4.70,
+    reviewsCount: 89,
+    pricePerHour: 600,
     unit: "hr",
-    image: "https://images.unsplash.com/photo-1626225967045-944080928956?auto=format&fit=crop&q=80&w=800",
-    description: "Premium badminton courts with professional flooring and lighting. Perfect for players of all levels.",
-    phone: "+91 88776 65544",
-    openHours: "5:00 AM - 10:00 PM",
-    amenities: ["Water", "Washrooms", "Shuttles Available"],
-    gallery: [
-      "https://images.unsplash.com/photo-1626225967045-944080928956?auto=format&fit=crop&q=80&w=800"
-    ],
+    image: "https://images.unsplash.com/photo-1540324155970-14e422f01f2f?q=80&w=1200",
+    description: "High quality indoor/outdoor practice nets with bowling machines available.",
+    phone: "+91 98888 22222",
+    openHours: "6:00 AM - 10:00 PM",
+    amenities: ["Bowling Machine", "Parking", "Water"],
+    gallery: ["https://images.unsplash.com/photo-1540324155970-14e422f01f2f?q=80&w=1200"],
     slotTemplate: [
       { label: "06:00 AM", isBooked: false },
       { label: "07:00 AM", isBooked: false }
     ]
+  },
+  {
+    id: "f-3",
+    name: "Sky Smash Badminton",
+    type: "Badminton",
+    location: "Indiranagar, BLR",
+    venue: "12th Main Road",
+    distance: "3.2 Kms",
+    rating: 4.90,
+    reviewsCount: 304,
+    pricePerHour: 450,
+    unit: "hr",
+    image: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?q=80&w=1200",
+    description: "3 BWF certified wooden courts with anti-skid mats and tournament grade lighting.",
+    phone: "+91 88888 33333",
+    openHours: "5:00 AM - 11:00 PM",
+    amenities: ["AC", "Wooden Court", "Showers", "Parking", "Cafe"],
+    gallery: [
+      "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?q=80&w=1200",
+      "https://images.unsplash.com/photo-1626225967045-944080928956?q=80&w=1200"
+    ],
+    slotTemplate: [
+      { label: "05:00 PM", isBooked: false },
+      { label: "06:00 PM", isBooked: true },
+      { label: "07:00 PM", isBooked: false },
+      { label: "08:00 PM", isBooked: false }
+    ]
+  },
+  {
+    id: "f-4",
+    name: "Grand Slam Cricket Nets",
+    type: "Cricket",
+    location: "Ameerpet, Hyderabad",
+    venue: "Near SR Nagar",
+    distance: "4.1 Kms",
+    rating: 4.60,
+    reviewsCount: 112,
+    pricePerHour: 450,
+    unit: "hr",
+    image: "https://images.unsplash.com/photo-1531415074968-036ba1b575da?q=80&w=1200",
+    description: "Professional cricket practice facilities to hone your batting and bowling skills.",
+    phone: "+91 77777 44444",
+    openHours: "6:00 AM - 9:00 PM",
+    amenities: ["Parking", "Water"],
+    gallery: ["https://images.unsplash.com/photo-1531415074968-036ba1b575da?q=80&w=1200"],
+    slotTemplate: [
+      { label: "04:00 PM", isBooked: false },
+      { label: "05:00 PM", isBooked: true }
+    ]
+  },
+  {
+    id: "f-5",
+    name: "Power Play Turf",
+    type: "Football",
+    location: "Madhapur, Hyderabad",
+    venue: "Ayyappa Society",
+    distance: "0.8 Kms",
+    rating: 4.80,
+    reviewsCount: 220,
+    pricePerHour: 1500,
+    unit: "hr",
+    image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=1200",
+    description: "The best 6v6 football turf in the area with high shock absorption.",
+    phone: "+91 99999 55555",
+    openHours: "24 Hours",
+    amenities: ["Parking", "Floodlights", "Washrooms", "Energy Drinks"],
+    gallery: ["https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=1200"],
+    slotTemplate: [
+      { label: "09:00 PM", isBooked: false },
+      { label: "10:00 PM", isBooked: false }
+    ]
   }
 ];
-
-const API_BASE = API_URL;
 
 function todayDateString() {
   return new Date().toISOString().slice(0, 10);
@@ -147,14 +227,15 @@ export default function FacilityDetailPage() {
   const [bookingLoading, setBookingLoading] = useState(false);
   const [bookingError, setBookingError] = useState("");
   const [bookingSuccess, setBookingSuccess] = useState("");
+  const [showPriceChart, setShowPriceChart] = useState(false);
+  const [showBookingSheet, setShowBookingSheet] = useState(false);
+  const [activeChartSport, setActiveChartSport] = useState("");
 
   const sportsList = useMemo(() => {
     if (!facility) return [];
-    // Prioritize dynamic availableSports from Admin
     if (Array.isArray(facility.availableSports) && facility.availableSports.length > 0) {
       return facility.availableSports;
     }
-    // Fallback to legacy type-based parsing
     if (facility.type === "Multiple Sports" || facility.type.includes("&")) {
       return ["Badminton", "Football", "Table Tennis", "Box Cricket"];
     }
@@ -167,11 +248,26 @@ export default function FacilityDetailPage() {
      }
   }, [sportsList, selectedSport]);
 
-  const courtsList = useMemo(() => ["Wooden Court 1", "Synthetic Court 2", "Premium Court 3"], []);
+  const courtsList = useMemo(() => {
+    if (!facility) return [];
+    const base = facility.pricePerHour || 500;
+    return [
+      { name: "Wooden Court 1", price: base },
+      { name: "Synthetic Court 2", price: base + 100 },
+      { name: "Premium Court 3", price: base + 250 }
+    ];
+  }, [facility]);
+
+  const currentCourt = useMemo(() => 
+    courtsList.find(c => c.name === selectedCourt) || (courtsList.length > 0 ? courtsList[0] : null)
+  , [selectedCourt, courtsList]);
+
+  const currentPrice = currentCourt?.price ?? (facility?.pricePerHour ?? 0);
+  const totalAmount = currentPrice * duration;
 
   useEffect(() => {
      if (!selectedCourt && courtsList.length > 0) {
-        setSelectedCourt(courtsList[0]);
+        setSelectedCourt(courtsList[0].name);
      }
   }, [selectedCourt, courtsList]);
 
@@ -180,26 +276,20 @@ export default function FacilityDetailPage() {
       setLoading(true);
       setError("");
       try {
-        const [facilityRes, listRes, availabilityRes] = await Promise.all([
-          fetch(`${API_BASE}/gamehub/facilities/${facilityId}`),
-          fetch(`${API_BASE}/gamehub/facilities`),
-          fetch(`${API_BASE}/gamehub/facilities/${facilityId}/availability?date=${bookingDate}${user?.id ? `&userId=${user.id}` : ""}`),
+        const [facilityPayload, listPayload, availabilityPayload]: any[] = await Promise.all([
+          fetchApi(`/gamehub/facilities/${facilityId}`, { requiresAuth: false }),
+          fetchApi("/gamehub/facilities", { requiresAuth: false }),
+          fetchApi(`/gamehub/facilities/${facilityId}/availability?date=${bookingDate}${user?.id ? `&userId=${user.id}` : ""}`, { requiresAuth: false }),
         ]);
 
-        const facilityPayload = await facilityRes.json();
-        const listPayload = await listRes.json();
-        const availabilityPayload = await availabilityRes.json();
-
-        if (facilityRes.ok) {
+        if (facilityPayload?.data) {
           setFacility(facilityPayload.data);
           setReviews(Array.isArray(facilityPayload?.data?.reviews) ? facilityPayload.data.reviews : []);
         } else {
-          // Fallback to finding in MOCK data
           const found = MOCK_FACILITIES.find((f: any) => f.id === facilityId);
           if (found) {
             setFacility(found);
             setReviews([]);
-            // Mock slots if API fails
             setAvailabilitySlots(found.slotTemplate.map(s => ({label: s.label, status: s.isBooked ? "BOOKED" : "AVAILABLE", lockedByCurrentUser: false})));
           } else {
             throw new Error("Facility not found");
@@ -207,8 +297,8 @@ export default function FacilityDetailPage() {
         }
 
         setAllFacilities(Array.isArray(listPayload?.data) ? listPayload.data : MOCK_FACILITIES);
+        setAvailabilitySlots(Array.isArray(availabilityPayload?.data?.slots) ? availabilityPayload.data.slots : []);
       } catch (err) {
-        // Final fallback if everything fails
         const found = MOCK_FACILITIES.find((f: any) => f.id === facilityId);
         if (found) {
           setFacility(found);
@@ -230,9 +320,9 @@ export default function FacilityDetailPage() {
     return allFacilities.filter((f) => f.id !== facilityId).slice(0, 3);
   }, [allFacilities, facilityId]);
 
-  async function handleConfirmBooking() {
+  const handleConfirmBooking = useCallback(async () => {
     if (!selectedSlot) return;
-    if (!isAuthenticated || !token) {
+    if (!isAuthenticated) {
       setBookingError("Please login first to book this slot.");
       return;
     }
@@ -242,32 +332,88 @@ export default function FacilityDetailPage() {
     setBookingSuccess("");
 
     try {
-      const lockRes = await fetch(`${API_BASE}/gamehub/bookings/lock`, {
+      // 1. Lock the slot first
+      await fetchApi("/gamehub/bookings/lock", {
         method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        requiresAuth: true,
         body: JSON.stringify({ facilityId, slotLabel: selectedSlot, date: bookingDate }),
       });
-      if (!lockRes.ok) throw new Error("Unable to lock slot");
 
-      const confirmRes = await fetch(`${API_BASE}/gamehub/bookings/confirm`, {
+      // 2. Create Razorpay order
+      const orderRes: any = await fetchApi("/payments/initiate", {
         method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}`, "idempotency-key": Date.now().toString() },
-        body: JSON.stringify({ facilityId, slotLabel: selectedSlot, date: bookingDate, paymentMethod: "MOCK" }),
+        requiresAuth: true,
+        body: JSON.stringify({
+          amount: totalAmount,
+          facilityId,
+          currency: "INR",
+        }),
       });
-      if (!confirmRes.ok) throw new Error("Unable to confirm booking");
 
-      setBookingSuccess(`Booking confirmed for ${selectedSlot}!`);
-      setSelectedSlot(null);
-      // Refresh slots
-      const refreshRes = await fetch(`${API_BASE}/gamehub/facilities/${facilityId}/availability?date=${bookingDate}`);
-      const refreshPayload = await refreshRes.json();
-      setAvailabilitySlots(refreshPayload.data?.slots || []);
+      const { orderId, keyId, amount: orderAmount, currency } = orderRes.data;
+
+      // 3. Open Razorpay checkout popup
+      const options = {
+        key: keyId,
+        amount: orderAmount,
+        currency: currency,
+        name: "Book & Vibe",
+        description: `${facility?.name || "GameHub"} — ${selectedSlot}`,
+        order_id: orderId,
+        prefill: {
+          name: user?.name || "",
+          email: user?.email || "",
+        },
+        theme: { color: "#42B460" },
+        handler: async (response: any) => {
+          try {
+            // 4. Verify payment & create gamehub booking on backend
+            await fetchApi("/payments/confirm-gamehub", {
+              method: "POST",
+              requiresAuth: true,
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                facilityId,
+                slotLabel: selectedSlot,
+                date: bookingDate,
+                totalAmount,
+                meta: { court: selectedCourt, pricePerHour: currentPrice },
+              }),
+            });
+
+            setBookingSuccess(`Booking confirmed for ${selectedSlot}!`);
+            setSelectedSlot(null);
+
+            // Refresh availability
+            const refreshPayload: any = await fetchApi(`/gamehub/facilities/${facilityId}/availability?date=${bookingDate}`, { requiresAuth: false });
+            setAvailabilitySlots(refreshPayload.data?.slots || []);
+          } catch (err) {
+            setBookingError(err instanceof Error ? err.message : "Booking failed after payment");
+          } finally {
+            setBookingLoading(false);
+          }
+        },
+        modal: {
+          ondismiss: () => {
+            setBookingLoading(false);
+            setBookingError("Payment was cancelled.");
+          },
+        },
+      };
+
+      const razorpayInstance = new window.Razorpay(options);
+      razorpayInstance.on("payment.failed", () => {
+        setBookingLoading(false);
+        setBookingError("Payment failed. Please try again.");
+      });
+      razorpayInstance.open();
     } catch (err) {
       setBookingError(err instanceof Error ? err.message : "Booking failed");
-    } finally {
       setBookingLoading(false);
     }
-  }
+  }, [selectedSlot, isAuthenticated, facilityId, bookingDate, totalAmount, facility, user, selectedCourt, currentPrice]);
 
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-gray-50"><div className="w-12 h-12 border-4 border-[#42B460] border-t-transparent rounded-full animate-spin"></div></div>;
   if (error || !facility) return (
@@ -279,6 +425,7 @@ export default function FacilityDetailPage() {
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] pb-20 pt-20">
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
       {/* Sticky Top Navigation */}
       <div className="fixed top-0 left-0 right-0 z-[100] bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between md:hidden">
         <button onClick={() => router.back()} className="text-gray-900"><ArrowLeft size={24} /></button>
@@ -358,7 +505,8 @@ export default function FacilityDetailPage() {
                            key={sport} 
                            onClick={() => {
                              setSelectedSport(sport);
-                             document.getElementById('booking-card')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                             setActiveChartSport(sport);
+                             setShowPriceChart(true);
                            }}
                            className={`flex flex-col items-center justify-center p-4 rounded-xl border transition-all cursor-pointer min-w-[100px] group ${
                              selectedSport === sport 
@@ -452,18 +600,18 @@ export default function FacilityDetailPage() {
             </div>
           </div>
 
-          {/* Right Column: Sticky Booking Card */}
-          <div className="lg:col-span-4" id="booking-card">
-             <div className="sticky top-28 space-y-6">
-                 <div className="bg-[#1c222b] text-white p-8 rounded-[32px] shadow-2xl relative overflow-hidden border border-white/5">
-                    <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#42B460]/20 rounded-full blur-3xl" />
+          {/* Right Column: Sticky Booking Card — Desktop only */}
+          <div className="hidden lg:block lg:col-span-4" id="booking-card">
+             <div className="sticky top-24 space-y-6">
+                 <div className="bg-[#1c222b] text-white p-6 sm:px-8 sm:pt-8 sm:pb-12 rounded-[32px] shadow-2xl relative border border-white/5">
+                    <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#42B460]/20 rounded-full blur-3xl pointer-events-none" />
                     
                     <div className="flex items-center justify-between mb-8">
                        <div>
                           <p className="text-[10px] font-black text-[#42B460] uppercase tracking-widest mb-1">Total Amount</p>
-                          <div className="flex items-baseline gap-1.5">
-                             <span className="text-3xl font-black">₹{facility.pricePerHour * duration}</span>
-                             <span className="text-gray-400 font-bold text-xs">/ {duration} {duration === 1 ? 'Hr' : 'Hrs'}</span>
+                          <div className="flex items-baseline gap-1">
+                             <span className="text-3xl font-black text-white">₹{totalAmount}</span>
+                             <span className="text-xs font-bold text-gray-500 uppercase tracking-tighter">all inclusive</span>
                           </div>
                        </div>
                        <div className="bg-white/5 p-2 rounded-xl border border-white/10">
@@ -473,110 +621,57 @@ export default function FacilityDetailPage() {
 
                     <div className="space-y-5">
                        {/* Sport Selection */}
-                       <div>
-                          <label className="text-[10px] font-black uppercase text-gray-500 tracking-widest block mb-2">Sport</label>
-                          <div className="relative group">
-                             <select 
-                               value={selectedSport} 
-                               onChange={(e) => setSelectedSport(e.target.value)}
-                               className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 font-bold text-sm appearance-none outline-none focus:border-[#42B460] transition-all cursor-pointer z-10 relative sport-select"
-                             >
-                               {sportsList.map(sport => (
-                                 <option key={sport} value={sport} className="bg-[#1c222b]">{sport}</option>
-                               ))}
-                             </select>
-                             <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500 z-20">
-                                <ChevronRight size={16} className="rotate-90" />
-                             </div>
-                             <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none text-[#42B460] z-20">
-                                {selectedSport.includes("Badminton") && <Activity size={18} />}
-                                {selectedSport.includes("Football") && <Target size={18} />}
-                                {selectedSport.includes("Table Tennis") && <Trophy size={18} />}
-                                {(selectedSport.includes("Box") || selectedSport.includes("Cricket")) && <Award size={18} />}
-                                {!["Badminton", "Football", "Table Tennis", "Box", "Cricket"].some(s => selectedSport.includes(s)) && <Zap size={18} />}
-                             </div>
-                             <style jsx>{`
-                               .sport-select { padding-left: 2.75rem; }
-                             `}</style>
-                          </div>
-                       </div>
+                        <PremiumSelect 
+                          label="Sport"
+                          value={selectedSport}
+                          onChange={setSelectedSport}
+                          options={sportsList.map(sport => ({
+                            value: sport,
+                            label: sport,
+                            icon: sport.includes("Badminton") ? <Activity size={18} /> :
+                                  sport.includes("Football") ? <Target size={18} /> :
+                                  sport.includes("Table Tennis") ? <Trophy size={18} /> :
+                                  (sport.includes("Box") || sport.includes("Cricket")) ? <Award size={18} /> :
+                                  <Zap size={18} />
+                          }))}
+                        />
 
-                       {/* Date Picker */}
-                       <div>
-                          <label className="text-[10px] font-black uppercase text-gray-500 tracking-widest block mb-2">Date</label>
-                          <div className="relative">
-                             <input 
-                               type="date"
-                               value={bookingDate}
-                               onChange={(e) => setBookingDate(e.target.value)}
-                               className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 font-bold text-sm appearance-none outline-none focus:border-[#42B460] transition-all cursor-pointer color-scheme-dark z-10 relative"
-                             />
-                             <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[#42B460] z-20">
-                                <Calendar size={18} />
-                             </div>
-                             <style jsx>{`
-                               input[type="date"]::-webkit-calendar-picker-indicator {
-                                 position: absolute;
-                                 top: 0;
-                                 left: 0;
-                                 right: 0;
-                                 bottom: 0;
-                                 width: auto;
-                                 height: auto;
-                                 color: transparent;
-                                 background: transparent;
-                               }
-                               .color-scheme-dark { color-scheme: dark; }
-                             `}</style>
-                          </div>
-                       </div>
+                         {/* Date Picker */}
+                         <PremiumDatePicker 
+                           label="Date"
+                           value={bookingDate}
+                           onChange={setBookingDate}
+                         />
 
-                       {/* Court Selection */}
-                       <div>
-                          <label className="text-[10px] font-black uppercase text-gray-500 tracking-widest block mb-2">Select Court</label>
-                          <div className="relative">
-                            <select 
-                              value={selectedCourt} 
-                              onChange={(e) => setSelectedCourt(e.target.value)}
-                              className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 font-bold text-sm appearance-none outline-none focus:border-[#42B460] transition-colors cursor-pointer"
-                            >
-                              {courtsList.map(court => (
-                                <option key={court} value={court} className="bg-[#1c222b]">{court}</option>
-                              ))}
-                            </select>
-                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
-                               <ChevronRight size={16} className="rotate-90" />
-                            </div>
-                          </div>
-                       </div>
+                        {/* Court Selection */}
+                        <PremiumSelect 
+                          label="Select Court"
+                          value={selectedCourt}
+                          onChange={setSelectedCourt}
+                          options={courtsList.map(court => ({
+                             value: court.name,
+                             label: court.name,
+                             price: court.price,
+                             unit: facility?.unit || 'hr',
+                             icon: <Zap size={18} />
+                          }))}
+                        />
 
                        <div className="grid grid-cols-2 gap-4">
-                          {/* Start Time Dropdown */}
-                          <div>
-                             <label className="text-[10px] font-black uppercase text-gray-500 tracking-widest block mb-2">Start Time</label>
-                             <div className="relative">
-                               <select 
-                                 value={selectedSlot || ""} 
-                                 onChange={(e) => setSelectedSlot(e.target.value)}
-                                 className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 font-bold text-sm appearance-none outline-none focus:border-[#42B460] transition-colors cursor-pointer"
-                               >
-                                 <option value="" className="bg-[#1c222b]">Select</option>
-                                 {(availabilitySlots.length ? availabilitySlots : facility.slotTemplate.map(s => ({label: s.label, status: s.isBooked ? "BOOKED" : "AVAILABLE", lockedByCurrentUser: false}))).map((slot) => (
-                                   <option 
-                                     key={slot.label} 
-                                     value={slot.label} 
-                                     disabled={slot.status !== "AVAILABLE"}
-                                     className={`${slot.status === "AVAILABLE" ? 'bg-[#1c222b]' : 'bg-[#1c222b] text-gray-600'}`}
-                                   >
-                                     {slot.label} {slot.status !== "AVAILABLE" ? ' (Full)' : ''}
-                                   </option>
-                                 ))}
-                               </select>
-                               <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
-                                 <ChevronRight size={14} className="rotate-90" />
-                               </div>
-                             </div>
-                          </div>
+                          {/* Start Time Selection */}
+                          <PremiumSelect 
+                            label="Start Time"
+                            value={selectedSlot || ""}
+                            placeholder="Select"
+                            onChange={setSelectedSlot}
+                            icon={<Clock size={16} />}
+                            options={(availabilitySlots.length ? availabilitySlots : facility.slotTemplate.map(s => ({label: s.label, status: s.isBooked ? "BOOKED" : "AVAILABLE", lockedByCurrentUser: false}))).map((slot) => ({
+                              value: slot.label,
+                              label: slot.label,
+                              disabled: slot.status !== "AVAILABLE",
+                              icon: <Clock size={16} />
+                            }))}
+                          />
 
                           {/* Duration Stepper */}
                           <div>
@@ -647,6 +742,164 @@ export default function FacilityDetailPage() {
                 </div>
              </div>
           </div>
+
+          {/* ═══ MOBILE: Sticky Book Now Button ═══ */}
+          <div className="fixed bottom-0 left-0 right-0 z-[200] lg:hidden">
+            <div className="bg-white/95 backdrop-blur-lg border-t border-gray-200 px-5 py-3 flex items-center justify-between gap-4">
+              <div>
+                <p className="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Starting from</p>
+                <p className="text-[22px] font-black text-gray-900 leading-tight">₹{facility.pricePerHour}<span className="text-[12px] text-gray-400 font-bold">/{facility.unit}</span></p>
+              </div>
+              <button
+                onClick={() => setShowBookingSheet(true)}
+                className="bg-[#42B460] text-white px-8 py-3.5 rounded-2xl font-black text-[15px] shadow-xl shadow-[#42B460]/30 active:scale-95 transition-transform uppercase tracking-wider flex items-center gap-2"
+              >
+                Book Now <ChevronRight size={18} />
+              </button>
+            </div>
+          </div>
+
+          {/* ═══ MOBILE: Booking Bottom Sheet ═══ */}
+          {showBookingSheet && (
+            <div className="fixed inset-0 z-[300] lg:hidden">
+              {/* Backdrop */}
+              <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowBookingSheet(false)} />
+              {/* Sheet */}
+              <div className="absolute bottom-0 left-0 right-0 bg-[#1c222b] rounded-t-[32px] max-h-[90vh] overflow-y-auto animate-[slideUp_0.3s_ease-out]">
+                {/* Handle */}
+                <div className="sticky top-0 bg-[#1c222b] rounded-t-[32px] pt-3 pb-2 px-6 flex items-center justify-between z-10">
+                  <div className="w-10 h-1 bg-white/20 rounded-full mx-auto" />
+                  <button onClick={() => setShowBookingSheet(false)} className="absolute right-5 top-4 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                    <X size={16} className="text-white" />
+                  </button>
+                </div>
+                <div className="px-6 pb-8 text-white">
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <p className="text-[10px] font-black text-[#42B460] uppercase tracking-widest mb-1">Total Amount</p>
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-3xl font-black text-white">₹{totalAmount}</span>
+                        <span className="text-xs font-bold text-gray-500 uppercase tracking-tighter">all inclusive</span>
+                      </div>
+                    </div>
+                    <div className="bg-white/5 p-2 rounded-xl border border-white/10">
+                      <Activity size={20} className="text-[#42B460]" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-5">
+                    <PremiumSelect 
+                      label="Sport"
+                      value={selectedSport}
+                      onChange={setSelectedSport}
+                      options={sportsList.map(sport => ({
+                        value: sport,
+                        label: sport,
+                        icon: sport.includes("Badminton") ? <Activity size={18} /> :
+                              sport.includes("Football") ? <Target size={18} /> :
+                              sport.includes("Table Tennis") ? <Trophy size={18} /> :
+                              (sport.includes("Box") || sport.includes("Cricket")) ? <Award size={18} /> :
+                              <Zap size={18} />
+                      }))}
+                    />
+
+                    <PremiumDatePicker 
+                      label="Date"
+                      value={bookingDate}
+                      onChange={setBookingDate}
+                    />
+
+                    <PremiumSelect 
+                      label="Select Court"
+                      value={selectedCourt}
+                      onChange={setSelectedCourt}
+                      options={courtsList.map(court => ({
+                        value: court.name,
+                        label: court.name,
+                        price: court.price,
+                        unit: facility?.unit || 'hr',
+                        icon: <Zap size={18} />
+                      }))}
+                    />
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <PremiumSelect 
+                        label="Start Time"
+                        value={selectedSlot || ""}
+                        placeholder="Select"
+                        onChange={setSelectedSlot}
+                        icon={<Clock size={16} />}
+                        options={(availabilitySlots.length ? availabilitySlots : facility.slotTemplate.map(s => ({label: s.label, status: s.isBooked ? "BOOKED" : "AVAILABLE", lockedByCurrentUser: false}))).map((slot) => ({
+                          value: slot.label,
+                          label: slot.label,
+                          disabled: slot.status !== "AVAILABLE",
+                          icon: <Clock size={16} />
+                        }))}
+                      />
+                      <div>
+                        <label className="text-[10px] font-black uppercase text-gray-500 tracking-widest block mb-2">Duration</label>
+                        <div className="flex items-center bg-white/5 border border-white/10 rounded-2xl overflow-hidden h-full">
+                          <button 
+                            onClick={() => setDuration(Math.max(1, duration - 1))}
+                            className="w-10 h-full hover:bg-white/10 transition-colors flex items-center justify-center border-r border-white/5 text-xl font-light"
+                          >-</button>
+                          <span className="flex-1 text-center font-black text-sm">{duration} Hr</span>
+                          <button 
+                            onClick={() => setDuration(Math.min(4, duration + 1))}
+                            className="w-10 h-full hover:bg-white/10 transition-colors flex items-center justify-center border-l border-white/5 text-xl font-light"
+                          >+</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="pt-4">
+                      <button
+                        disabled={!selectedSlot || bookingLoading}
+                        onClick={handleConfirmBooking}
+                        className="w-full bg-[#42B460] hover:bg-[#38A354] disabled:bg-gray-800 disabled:text-gray-600 text-white py-4 rounded-2xl font-black text-[15px] transition-all shadow-xl shadow-[#42B460]/30 flex items-center justify-center gap-3 uppercase tracking-wider"
+                      >
+                        {bookingLoading ? (
+                          <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        ) : (
+                          <>Confirm & Add <ChevronRight size={20} /></>
+                        )}
+                      </button>
+                    </div>
+
+                    {bookingError && (
+                      <div className="bg-red-500/10 border border-red-500/20 text-red-100 p-4 rounded-2xl text-[12px] font-bold flex items-center gap-3">
+                        <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                        {bookingError}
+                      </div>
+                    )}
+                    {bookingSuccess && (
+                      <motion.div 
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="bg-gradient-to-br from-emerald-50 to-green-50 border border-green-100 p-6 rounded-[24px] text-center space-y-4 shadow-xl shadow-green-900/5"
+                      >
+                         <div className="w-16 h-16 rounded-full bg-green-500 flex items-center justify-center text-white mx-auto shadow-lg shadow-green-500/20">
+                            <CheckCircle size={32} strokeWidth={3} />
+                         </div>
+                         <div className="space-y-1">
+                            <h4 className="text-[18px] font-black text-gray-900 leading-none">Booking Vibe Confirmed!</h4>
+                            <p className="text-[13px] text-green-700 font-bold">{bookingSuccess}</p>
+                         </div>
+                         <div className="pt-2">
+                            <button 
+                              onClick={() => router.push("/profile/bookings")}
+                              className="text-[11px] font-black uppercase tracking-widest text-green-700 hover:text-green-800 underline transition-colors"
+                            >
+                              View My Bookings
+                            </button>
+                         </div>
+                      </motion.div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Similar Venues Section */}
@@ -685,6 +938,15 @@ export default function FacilityDetailPage() {
           </div>
         )}
       </div>
+
+      <PriceChartModal 
+        isOpen={showPriceChart}
+        onClose={() => setShowPriceChart(false)}
+        sport={activeChartSport}
+        basePrice={facility.pricePerHour}
+        unit={facility.unit}
+        pricingRules={facility.pricingRules || []}
+      />
     </div>
   );
 }

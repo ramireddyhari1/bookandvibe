@@ -16,13 +16,17 @@ import {
   LayoutGrid,
   Lock,
   MapPin,
+  Navigation,
   Plus,
   Shield,
+  Tag,
   Ticket,
   Trash2,
   Type,
   Users,
 } from "lucide-react";
+
+import { fetchApi } from "@/lib/api";
 
 type BookingFormat = "SEAT" | "TIER" | "HYBRID";
 type VisibilityType = "PUBLIC" | "PRIVATE" | "INVITE_ONLY";
@@ -36,8 +40,6 @@ interface Tier {
   description: string;
   color: string;
 }
-
-const API_BASE = "http://localhost:5000/api";
 
 const TIER_COLORS = [
   { value: "rose", label: "Rose", className: "bg-rose-500" },
@@ -62,7 +64,6 @@ export default function CreateEventPage() {
   const [draftId, setDraftId] = useState("");
   const [globalError, setGlobalError] = useState("");
   const [reviewIssues, setReviewIssues] = useState<string[]>([]);
-  const [authToken, setAuthToken] = useState("");
   const [hasManagerAccess, setHasManagerAccess] = useState(false);
   const [accessChecked, setAccessChecked] = useState(false);
 
@@ -82,8 +83,11 @@ export default function CreateEventPage() {
     category: "MUSIC",
     location: "",
     venue: "",
-    image: "",
+    mapLink: "",
+    cardImage: "",
+    bannerImage: "",
   });
+  const [cardInputMode, setCardInputMode] = useState<"url" | "upload">("url");
   const [bannerInputMode, setBannerInputMode] = useState<"url" | "upload">("url");
 
   const [schedule, setSchedule] = useState({
@@ -105,6 +109,7 @@ export default function CreateEventPage() {
   const [tiers, setTiers] = useState<Tier[]>(DEFAULT_TIERS);
 
   const [pricing, setPricing] = useState({
+    basePrice: "",
     currency: "INR",
     taxPercent: "0",
     platformFeeType: "PERCENT" as PlatformFeeType,
@@ -113,6 +118,8 @@ export default function CreateEventPage() {
     accessCode: "",
     featured: false,
   });
+
+  const [tags, setTags] = useState<string[]>([]);
 
   const requiresSeat = bookingFormat === "SEAT" || bookingFormat === "HYBRID";
   const requiresTier = bookingFormat === "TIER" || bookingFormat === "HYBRID";
@@ -152,24 +159,24 @@ export default function CreateEventPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleBannerUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, field: "cardImage" | "bannerImage") => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      setError("Please upload a valid image file for the banner.");
+      setError(`Please upload a valid image file for the ${field === "cardImage" ? "card" : "banner"}.`);
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      setError("Banner image must be under 5MB.");
+      setError("Image must be under 5MB.");
       return;
     }
 
     const reader = new FileReader();
     reader.onload = () => {
       const result = String(reader.result || "");
-      setEventDetails((v) => ({ ...v, image: result }));
+      setEventDetails((v) => ({ ...v, [field]: result }));
     };
     reader.readAsDataURL(file);
   };
@@ -188,7 +195,8 @@ export default function CreateEventPage() {
       if (!eventDetails.location.trim() || !eventDetails.venue.trim()) {
         return "City and venue are required.";
       }
-      if (!eventDetails.image.trim()) return "Please provide a banner using URL or direct upload.";
+      if (!eventDetails.cardImage.trim()) return "Please provide a card image using URL or direct upload.";
+      if (!eventDetails.bannerImage.trim()) return "Please provide a banner image using URL or direct upload.";
       return null;
     }
 
@@ -225,6 +233,10 @@ export default function CreateEventPage() {
           return !tier.name.trim() || (parseFloat(tier.price) || 0) <= 0 || (parseInt(tier.quantity, 10) || 0) <= 0;
         });
         if (invalidTier) return "Each tier needs valid name, price, and quantity.";
+      } else {
+        if (!pricing.basePrice || parseFloat(pricing.basePrice) < 0) {
+          return "Base price is required and cannot be negative.";
+        }
       }
 
       const tax = parseFloat(pricing.taxPercent) || 0;
@@ -267,14 +279,15 @@ export default function CreateEventPage() {
       bookingFormat,
       location: eventDetails.location,
       venue: eventDetails.venue,
+      mapLink: eventDetails.mapLink || null,
       date: schedule.date,
       time: schedule.time,
       bookingStartAt,
       bookingEndAt,
-      image: eventDetails.image,
-      images: [eventDetails.image],
+      image: eventDetails.cardImage,
+      images: [eventDetails.cardImage, eventDetails.bannerImage],
       totalSlots,
-      price: requiresTier ? minTierPrice : 0,
+      price: requiresTier ? minTierPrice : (parseFloat(pricing.basePrice) || 0),
       currency: pricing.currency,
       taxPercent: parseFloat(pricing.taxPercent) || 0,
       platformFeeType: pricing.platformFeeType,
@@ -299,38 +312,30 @@ export default function CreateEventPage() {
             color: tier.color,
           }))
         : [],
+      tags: tags,
     };
   };
 
   const persistDraft = async () => {
-    if (!hasManagerAccess || !authToken) {
+    if (!hasManagerAccess) {
       throw new Error("Log in as ADMIN or PARTNER to manage events.");
     }
 
     const payload = buildPayload();
     if (draftId) {
-      const res = await fetch(`${API_BASE}/events/${draftId}`, {
+      await fetchApi(`/events/${draftId}`, {
         method: "PUT",
-        headers: authHeaders(),
         body: JSON.stringify(payload),
       });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || "Failed to update draft");
-      }
       return draftId;
     }
 
-    const res = await fetch(`${API_BASE}/events`, {
+    const data = await fetchApi("/events", {
       method: "POST",
-      headers: authHeaders(),
       body: JSON.stringify(payload),
     });
-
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.error || "Failed to create draft");
-    setDraftId(data?.data?.id || "");
-    return data?.data?.id || "";
+    setDraftId((data as any)?.data?.id || "");
+    return (data as any)?.data?.id || "";
   };
 
   const handleSaveDraft = async () => {
@@ -371,30 +376,20 @@ export default function CreateEventPage() {
       const eventId = await persistDraft();
       if (!eventId) throw new Error("Unable to resolve draft id for publishing.");
 
-      const validateRes = await fetch(`${API_BASE}/events/${eventId}/validate-publish`, {
+      const validateData = await fetchApi(`/events/${eventId}/validate-publish`, {
         method: "POST",
-        headers: authHeaders(),
       });
-      const validateData = await validateRes.json().catch(() => ({}));
-      if (!validateRes.ok) {
-        throw new Error(validateData.error || "Publish validation failed.");
-      }
 
-      if (!validateData?.data?.canPublish) {
-        const failures = validateData?.data?.failures || ["Event is incomplete."];
+      if (!(validateData as any)?.data?.canPublish) {
+        const failures = (validateData as any)?.data?.failures || ["Event is incomplete."];
         setReviewIssues(failures);
         setError(failures[0] || "Publish blocked by backend validation.");
         return;
       }
 
-      const publishRes = await fetch(`${API_BASE}/events/${eventId}/publish`, {
+      await fetchApi(`/events/${eventId}/publish`, {
         method: "POST",
-        headers: authHeaders(),
       });
-      const publishData = await publishRes.json().catch(() => ({}));
-      if (!publishRes.ok) {
-        throw new Error(publishData.error || "Failed to publish event.");
-      }
 
       router.push("/events");
     } catch (error) {
@@ -458,17 +453,11 @@ export default function CreateEventPage() {
     ],
   ];
 
-  function authHeaders(): Record<string, string> {
-    const headers: Record<string, string> = { "Content-Type": "application/json" };
-    if (authToken) headers.Authorization = `Bearer ${authToken}`;
-    return headers;
-  }
-
   useEffect(() => {
     let mounted = true;
 
     async function verifyAccessAndMaybeLoad() {
-      const token = localStorage.getItem("admin_dash_token") || localStorage.getItem("token") || "";
+      const token = localStorage.getItem("admin_dash_token") || "";
       if (!token) {
         if (mounted) {
           setHasManagerAccess(false);
@@ -479,23 +468,9 @@ export default function CreateEventPage() {
       }
 
       try {
-        const sessionRes = await fetch(`${API_BASE}/auth/me`, {
-          headers: { Authorization: `Bearer ${token}` },
-          cache: "no-store",
-        });
-        const sessionPayload = await sessionRes.json().catch(() => ({}));
-        if (!sessionRes.ok && [401, 403, 404].includes(sessionRes.status)) {
-          clearDashboardSession();
-          if (mounted) {
-            setHasManagerAccess(false);
-            setGlobalError("Session expired. Please login again as ADMIN or PARTNER.");
-            setAccessChecked(true);
-          }
-          router.replace("/login");
-          return;
-        }
+        const sessionPayload: any = await fetchApi("/auth/me");
         const role = String(sessionPayload?.user?.role || "").toUpperCase();
-        const isManager = sessionRes.ok && (role === "ADMIN" || role === "PARTNER");
+        const isManager = (role === "ADMIN" || role === "PARTNER");
 
         if (!isManager) {
           if (mounted) {
@@ -507,31 +482,13 @@ export default function CreateEventPage() {
         }
 
         if (mounted) {
-          setAuthToken(token);
           setHasManagerAccess(true);
           setAccessChecked(true);
         }
 
         if (!eventIdFromQuery) return;
 
-        const eventRes = await fetch(`${API_BASE}/events/manage/${eventIdFromQuery}`, {
-          headers: { Authorization: `Bearer ${token}` },
-          cache: "no-store",
-        });
-        const eventPayload = await eventRes.json().catch(() => ({}));
-        if (!eventRes.ok) {
-          if ([401, 403, 404].includes(eventRes.status)) {
-            clearDashboardSession();
-            if (mounted) {
-              setGlobalError("Session expired. Please login again as ADMIN or PARTNER.");
-              setAccessChecked(true);
-            }
-            router.replace("/login");
-            return;
-          }
-          throw new Error(eventPayload?.error || "Failed to load event for editing");
-        }
-
+        const eventPayload: any = await fetchApi(`/events/manage/${eventIdFromQuery}`);
         const event = eventPayload?.data;
         if (!event || !mounted) return;
 
@@ -552,7 +509,8 @@ export default function CreateEventPage() {
           category: event.category || "MUSIC",
           location: event.location || "",
           venue: event.venue || "",
-          image: parsedImages[0] || "",
+          cardImage: parsedImages[0] || "",
+          bannerImage: parsedImages[1] || parsedImages[0] || "",
         });
         setSchedule({
           date: event.date ? String(event.date).slice(0, 10) : "",
@@ -569,6 +527,7 @@ export default function CreateEventPage() {
           allowSeatSelection: event.seatSelection !== false,
         });
         setPricing({
+          basePrice: String(event.price ?? "0"),
           currency: event.currency || "INR",
           taxPercent: String(event.taxPercent ?? "0"),
           platformFeeType: (event.platformFeeType || "PERCENT") as PlatformFeeType,
@@ -589,9 +548,17 @@ export default function CreateEventPage() {
               }))
             : DEFAULT_TIERS
         );
+        setTags(event.tags ? JSON.parse(event.tags) : []);
       } catch (loadErr) {
         if (mounted) {
-          setGlobalError(loadErr instanceof Error ? loadErr.message : "Failed to load event editor");
+          const status = (loadErr as any).status || 0;
+          if ([401, 403, 404].includes(status)) {
+            clearDashboardSession();
+            setGlobalError("Session expired. Please login again as ADMIN or PARTNER.");
+            router.replace("/login");
+          } else {
+            setGlobalError(loadErr instanceof Error ? loadErr.message : "Failed to load event editor");
+          }
           setAccessChecked(true);
         }
       }
@@ -762,7 +729,58 @@ export default function CreateEventPage() {
                 />
               </label>
               <label className="space-y-2 md:col-span-2">
-                <span className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500"><ImageIcon size={13} /> Banner</span>
+                <span className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500"><Navigation size={13} /> Google Maps Link <span className="text-slate-400 normal-case font-medium">(optional)</span></span>
+                <input
+                  value={eventDetails.mapLink}
+                  onChange={(e) => setEventDetails((v) => ({ ...v, mapLink: e.target.value }))}
+                  className={inputClass}
+                  placeholder="https://maps.google.com/..."
+                />
+              </label>
+              <label className="space-y-2 md:col-span-2">
+                <span className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500"><ImageIcon size={13} /> Card Image</span>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setCardInputMode("url")}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold border ${cardInputMode === "url" ? "bg-teal-50 text-teal-700 border-teal-300" : "bg-white text-slate-500 border-slate-300"}`}
+                  >
+                    Image URL
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setCardInputMode("upload")}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold border ${cardInputMode === "upload" ? "bg-teal-50 text-teal-700 border-teal-300" : "bg-white text-slate-500 border-slate-300"}`}
+                  >
+                    Upload Image
+                  </button>
+                </div>
+
+                {cardInputMode === "url" ? (
+                  <input
+                    value={eventDetails.cardImage}
+                    onChange={(e) => setEventDetails((v) => ({ ...v, cardImage: e.target.value }))}
+                    className={inputClass}
+                    placeholder="https://..."
+                  />
+                ) : (
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleImageUpload(e, "cardImage")}
+                    className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700"
+                  />
+                )}
+
+                {eventDetails.cardImage && (
+                  <div className="mt-2 rounded-xl border border-slate-200 overflow-hidden bg-slate-50">
+                    <img src={eventDetails.cardImage} alt="Card preview" className="w-full h-44 object-cover" />
+                  </div>
+                )}
+              </label>
+
+              <label className="space-y-2 md:col-span-2">
+                <span className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500"><ImageIcon size={13} /> Banner Image</span>
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
@@ -782,8 +800,8 @@ export default function CreateEventPage() {
 
                 {bannerInputMode === "url" ? (
                   <input
-                    value={eventDetails.image}
-                    onChange={(e) => setEventDetails((v) => ({ ...v, image: e.target.value }))}
+                    value={eventDetails.bannerImage}
+                    onChange={(e) => setEventDetails((v) => ({ ...v, bannerImage: e.target.value }))}
                     className={inputClass}
                     placeholder="https://..."
                   />
@@ -791,14 +809,14 @@ export default function CreateEventPage() {
                   <input
                     type="file"
                     accept="image/*"
-                    onChange={handleBannerUpload}
+                    onChange={(e) => handleImageUpload(e, "bannerImage")}
                     className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700"
                   />
                 )}
 
-                {eventDetails.image && (
+                {eventDetails.bannerImage && (
                   <div className="mt-2 rounded-xl border border-slate-200 overflow-hidden bg-slate-50">
-                    <img src={eventDetails.image} alt="Banner preview" className="w-full h-44 object-cover" />
+                    <img src={eventDetails.bannerImage} alt="Banner preview" className="w-full h-44 object-cover" />
                   </div>
                 )}
               </label>
@@ -936,8 +954,21 @@ export default function CreateEventPage() {
             <h2 className="text-lg font-extrabold text-slate-900">5. Tiers, Fees and Visibility</h2>
 
             {!requiresTier && (
-              <div className="rounded-xl border border-blue-200 bg-blue-50 p-3 text-sm font-semibold text-blue-700">
-                Not required for seat-only events. You can still add tiers later if needed.
+              <div className="space-y-4">
+                <div className="rounded-xl border border-blue-200 bg-blue-50 p-3 text-sm font-semibold text-blue-700">
+                  Not required for seat-only events. You can keep defaults.
+                </div>
+                <label className="space-y-2 block">
+                  <span className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500"><DollarSign size={13} /> Base Ticket Price</span>
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={pricing.basePrice}
+                    onChange={(e) => setPricing((v) => ({ ...v, basePrice: e.target.value }))}
+                    className={inputClass}
+                  />
+                </label>
               </div>
             )}
 
@@ -1086,6 +1117,39 @@ export default function CreateEventPage() {
                   />
                 </label>
               )}
+
+              <div className="md:col-span-2 space-y-3">
+                <span className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500"><Tag size={13} /> Event Tags (e.g. Buy 2 Get 1 Free)</span>
+                <div className="flex flex-wrap gap-2">
+                  {tags.map((tag, idx) => (
+                    <div key={idx} className="flex items-center gap-2 rounded-lg bg-teal-50 border border-teal-200 px-3 py-1.5 text-sm font-bold text-teal-700">
+                      {tag}
+                      <button type="button" onClick={() => setTags(tags.filter((_, i) => i !== idx))}><Trash2 size={12} /></button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const t = prompt("Enter tag (e.g. Buy 2, Get 1 Free)");
+                      if (t) setTags([...tags, t]);
+                    }}
+                    className="rounded-lg border border-dashed border-slate-300 px-3 py-1.5 text-xs font-bold text-slate-500 hover:border-teal-500 hover:text-teal-600 transition-colors"
+                  >
+                    + Add Custom Tag
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!tags.includes("Buy 2, Get 1 Free on select tickets")) {
+                        setTags([...tags, "Buy 2, Get 1 Free on select tickets"]);
+                      }
+                    }}
+                    className="rounded-lg border border-slate-300 bg-rose-50 px-3 py-1.5 text-xs font-bold text-rose-700 hover:bg-rose-100 transition-colors"
+                  >
+                    + Buy 2 Get 1
+                  </button>
+                </div>
+              </div>
 
               <label className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 md:col-span-2">
                 <input

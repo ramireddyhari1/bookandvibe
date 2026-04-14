@@ -127,6 +127,56 @@ router.get('/', authenticateToken, async (req, res) => {
   }
 });
 
+// GET /api/bookings/manage/list - Admin/Partner scoped bookings for dashboard
+router.get('/manage/list', authenticateToken, async (req, res) => {
+  try {
+    const { status, search, page = 1, limit = 20 } = req.query;
+    const isAdmin = req.user.role === 'ADMIN';
+    const userId = req.user.id;
+
+    const where = isAdmin ? {} : { event: { partnerId: userId } };
+    
+    if (status && status !== 'All') where.status = status;
+    if (search) {
+      where.OR = [
+        { user: { name: { contains: search, mode: 'insensitive' } } },
+        { event: { title: { contains: search, mode: 'insensitive' } } },
+        { id: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    const [bookings, total] = await Promise.all([
+      prisma.booking.findMany({
+        where,
+        include: {
+          event: { select: { id: true, title: true, date: true, venue: true, images: true } },
+          show: { select: { id: true, showDate: true, startTime: true, endTime: true } },
+          user: { select: { id: true, name: true, email: true } },
+          payment: true,
+          items: { include: { tier: true } },
+          bookingSeats: {
+            include: { showSeat: { select: { id: true, seatCode: true, section: true, price: true } } },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: parseInt(limit),
+      }),
+      prisma.booking.count({ where })
+    ]);
+
+    res.json({
+      message: 'Success',
+      data: bookings,
+      pagination: { total, page: parseInt(page), limit: parseInt(limit), totalPages: Math.ceil(total / parseInt(limit)) }
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // GET /api/bookings/all - Admin: list ALL bookings (SECURED)
 router.get('/all', authenticateToken, requireAdmin, async (req, res) => {
   try {
@@ -557,7 +607,7 @@ router.post('/shows/:showId/seat-locks/release', authenticateToken, async (req, 
 // POST /api/bookings/shows/:showId/seat-bookings/confirm - confirm show seats after payment
 router.post('/shows/:showId/seat-bookings/confirm', authenticateToken, validate(bookingConfirmSchema), async (req, res) => {
   const { showId } = req.params;
-  const { seatNumbers = [], totalAmount, paymentMethod = 'MOCK' } = req.body;
+  const { seatNumbers = [], totalAmount, paymentMethod = 'RAZORPAY' } = req.body;
   const userId = req.user.id;
   const idempotencyKey = idempotencyKeyFromRequest(req);
 
@@ -743,7 +793,7 @@ router.get('/:id', async (req, res) => {
 // POST /api/bookings - Create booking with tier support
 router.post('/', authenticateToken, async (req, res) => {
   try {
-    const { eventId, items = [], totalAmount, paymentMethod = 'MOCK' } = req.body;
+    const { eventId, items = [], totalAmount, paymentMethod = 'RAZORPAY' } = req.body;
     // items: [{ tierId, quantity }]
     const userId = req.user.id;
     const totalQty = items.reduce((sum, i) => sum + parseInt(i.quantity), 0);
@@ -803,7 +853,7 @@ router.post('/', authenticateToken, async (req, res) => {
           amount: parseFloat(totalAmount),
           method: paymentMethod,
           transactionId: `TXN-${Date.now()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
-          status: 'SUCCESS',
+          status: paymentMethod === 'RAZORPAY' ? 'PENDING' : 'SUCCESS',
           bookingId: booking.id
         }
       });

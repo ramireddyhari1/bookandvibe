@@ -1,11 +1,19 @@
 import axios from 'axios';
-import * as SecureStore from 'expo-secure-store';
 import Constants from 'expo-constants';
-
 import { Platform } from 'react-native';
+import { storage } from '../utils/storage';
 
 // Android emulator must use 10.0.2.2 to reach host machine's localhost
-const DEFAULT_API_URL = Platform.OS === 'android' ? 'http://10.0.2.2:5000/api' : 'http://localhost:5000/api';
+// Use 127.0.0.1 instead of localhost for more reliable resolution on Windows
+const getBaseUrl = () => {
+  if (Platform.OS === 'web' && typeof window !== 'undefined') {
+    return `http://${window.location.hostname}:5000/api`;
+  }
+  if (Platform.OS === 'android') return 'http://10.0.2.2:5000/api';
+  return 'http://127.0.0.1:5000/api';
+};
+
+const DEFAULT_API_URL = getBaseUrl();
 
 const API_URL =
   process.env.EXPO_PUBLIC_API_URL ??
@@ -14,7 +22,7 @@ const API_URL =
 
 const apiClient = axios.create({
   baseURL: API_URL,
-  timeout: 15000,
+  timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -22,12 +30,12 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use(async (config) => {
   try {
-    const token = await SecureStore.getItemAsync('partner_token');
+    const token = await storage.getItem('partner_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
   } catch (error) {
-    console.warn('SecureStore Error:', error);
+    console.warn('Storage Error:', error);
   }
   return config;
 });

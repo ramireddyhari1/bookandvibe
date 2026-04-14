@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${interTight.variable} dashboard-body antialiased`}>
         <AppShell>{children}</AppShell>
       </body>

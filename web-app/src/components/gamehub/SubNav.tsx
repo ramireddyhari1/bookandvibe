@@ -10,29 +10,34 @@ interface SubNavProps {
 
 const SubNav: React.FC<SubNavProps> = ({ activeTab, setActiveTab }) => {
   const menuItems = [
-    { id: "play", label: "Play Now", icon: Users },
-    { id: "reserve", label: "Reserve Slot", icon: Calendar },
-    { id: "find", label: "Find Grounds", icon: MapPin },
+    { 
+      id: "play", 
+      label: "PLAY NOW", 
+      subLabel: "Join matches instantly",
+      badge: "LIVE",
+      icon: Users 
+    },
+    { 
+      id: "reserve", 
+      label: "RESERVE SLOT", 
+      subLabel: "Book your slot in seconds",
+      badge: "POPULAR",
+      icon: Calendar 
+    },
+    { 
+      id: "find", 
+      label: "FIND GROUNDS", 
+      subLabel: "Find grounds near you",
+      badge: "NEARBY",
+      icon: MapPin 
+    },
   ];
 
-  const activeIndex = menuItems.findIndex((item) => item.id === activeTab);
-
   return (
-    <div className="sticky top-[80px] z-[90] w-full bg-white/60 backdrop-blur-xl border-b border-gray-100">
-      <div className="max-w-[1200px] mx-auto px-4 py-6 md:py-8 flex justify-center">
-        {/* Premium Segmented Control Container */}
-        <div className="relative flex w-full max-w-[600px] bg-[#F5F5F5] p-1.5 rounded-full shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)] border border-gray-100/50">
-
-          {/* Animated Slider Pill */}
-          <div
-            className="absolute top-1.5 bottom-1.5 rounded-full bg-gradient-to-r from-[#42B460] to-[#38A354] shadow-[0_2px_8px_rgba(66,180,96,0.25)] transition-all duration-300 ease-in-out z-0"
-            style={{
-              width: `calc(33.33% - 8px)`,
-              left: `calc(${(activeIndex * 33.33)}% + 4px)`
-            }}
-          />
-
-          {/* Navigation Buttons */}
+    <div className="sticky top-[80px] z-[90] w-full bg-white/60 backdrop-blur-xl border-b border-gray-100 flex justify-center">
+      <div className="max-w-[1200px] w-full px-4 py-6 md:py-10 flex justify-center">
+        {/* Premium Pill Container */}
+        <div className="inline-flex bg-white rounded-[40px] shadow-2xl border border-gray-100 p-1.5 md:p-2">
           {menuItems.map((item) => {
             const isActive = activeTab === item.id;
             const Icon = item.icon;
@@ -42,17 +47,40 @@ const SubNav: React.FC<SubNavProps> = ({ activeTab, setActiveTab }) => {
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
                 className={`
-                  relative z-10 flex-1 flex items-center justify-center gap-2.5 py-3 md:py-3.5 px-2 rounded-full transition-all duration-300
-                  ${isActive ? "text-white" : "text-gray-500 hover:text-gray-900"}
-                  group
+                  relative flex items-center gap-3.5 px-6 md:px-8 py-4 rounded-[32px] transition-all duration-300 group
+                  ${isActive 
+                    ? "bg-[#42B460] text-white shadow-lg shadow-[#42B460]/20 scale-[1.02] z-10" 
+                    : "text-[#64748B] hover:text-[#1c222b] hover:bg-gray-50"}
                 `}
               >
-                <div className={`transition-transform duration-300 ${isActive ? "" : "group-hover:scale-110"}`}>
-                  <Icon size={19} strokeWidth={isActive ? 2.5 : 2} />
+                 {/* Micro Badge */}
+                 <div className={`
+                   absolute top-1 right-3 px-1.5 py-0.5 rounded-md text-[7px] font-black tracking-widest uppercase
+                   ${isActive 
+                     ? "bg-white/90 text-[#42B460] shadow-sm" 
+                     : "bg-gray-100 text-gray-500 group-hover:bg-[#42B460] group-hover:text-white transition-colors"}
+                 `}>
+                   {item.badge}
+                 </div>
+
+                <div className={`
+                  p-2 rounded-xl transition-colors
+                  ${isActive ? "bg-white/20" : "bg-gray-100 group-hover:bg-[#42B460]/10"}
+                `}>
+                  <Icon size={20} strokeWidth={isActive ? 2.5 : 2} />
                 </div>
-                <span className={`text-[13px] md:text-[14px] font-bold tracking-widest transition-all uppercase`}>
-                  {item.label}
-                </span>
+
+                <div className="flex flex-col items-start gap-0.5">
+                  <span className="text-[14px] font-black tracking-tight leading-none">
+                    {item.label}
+                  </span>
+                  <span className={`
+                    text-[10px] font-bold whitespace-nowrap leading-none transition-colors
+                    ${isActive ? "text-white/80" : "text-gray-400 group-hover:text-gray-500"}
+                  `}>
+                    {item.subLabel}
+                  </span>
+                </div>
               </button>
             );
           })}

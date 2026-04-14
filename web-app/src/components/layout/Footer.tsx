@@ -19,7 +19,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className={`${theme.bg} border-t ${theme.textMain} transition-colors duration-500`}>
+    <footer className={`${theme.bg} border-t ${theme.textMain} transition-colors duration-500 hidden md:block`}>
       <div className="max-w-[1600px] mx-auto px-4 lg:px-6 pt-16 pb-8">
         
         {/* Top Section */}

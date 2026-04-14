@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   Users,
@@ -23,7 +23,7 @@ import {
   RefreshCw,
 } from "lucide-react";
 
-const API_BASE = "http://localhost:5000/api";
+import { fetchApi } from "@/lib/api";
 
 type DashboardData = {
   totalUsers: number;
@@ -40,10 +40,6 @@ type DashboardData = {
     time: string;
   }>;
 };
-
-function getAuthToken(): string {
-  return localStorage.getItem("admin_dash_token") || "";
-}
 
 function formatCurrency(value: number): string {
   return `INR ${value.toLocaleString("en-IN")}`;
@@ -70,53 +66,33 @@ export default function AdminDashboard() {
   async function fetchDashboardData() {
     setLoading(true);
     setError("");
-    const token = getAuthToken();
-    const headers: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {};
 
     try {
-      const [usersRes, eventsRes, bookingsRes] = await Promise.allSettled([
-        fetch(`${API_BASE}/users?limit=1`, { headers, cache: "no-store" }),
-        fetch(`${API_BASE}/events`, { headers, cache: "no-store" }),
-        fetch(`${API_BASE}/bookings`, { headers, cache: "no-store" }),
+      const [statsPayload, bookingsPayload] = await Promise.all([
+        fetchApi("/events/stats"),
+        fetchApi("/bookings/manage/list?limit=5"),
       ]);
 
-      let totalUsers = 0;
-      let activeEvents = 0;
-      let totalBookings = 0;
-      let totalRevenue = 0;
-      const recentBookings: DashboardData["recentBookings"] = [];
+      const stats = statsPayload?.data || {};
+      const totalUsers = stats.totalUsers || 0;
+      const activeEvents = stats.totalEvents || 0;
+      const totalBookings = stats.totalBookings || 0;
+      const totalRevenue = stats.totalRevenue || 0;
 
-      if (usersRes.status === "fulfilled" && usersRes.value.ok) {
-        const payload = await usersRes.value.json();
-        totalUsers = payload?.pagination?.total || payload?.data?.length || 0;
-      }
-
-      if (eventsRes.status === "fulfilled" && eventsRes.value.ok) {
-        const payload = await eventsRes.value.json();
-        const events = Array.isArray(payload?.data) ? payload.data : Array.isArray(payload) ? payload : [];
-        activeEvents = events.length;
-      }
-
-      if (bookingsRes.status === "fulfilled" && bookingsRes.value.ok) {
-        const payload = await bookingsRes.value.json();
-        const bookings = Array.isArray(payload?.data) ? payload.data : Array.isArray(payload) ? payload : [];
-        totalBookings = bookings.length;
-        totalRevenue = bookings.reduce((sum: number, b: any) => sum + (Number(b.totalAmount || b.amount) || 0), 0);
-
-        bookings.slice(0, 5).forEach((b: any) => {
-          const name = b.user?.name || b.userName || "User";
-          const initials = name.split(" ").map((w: string) => w[0]).join("").slice(0, 2).toUpperCase();
-          recentBookings.push({
-            id: b.id,
-            user: name,
-            avatar: initials,
-            event: b.event?.title || b.eventTitle || b.slotLabel || "Booking",
-            amount: formatCurrency(Number(b.totalAmount || b.amount) || 0),
-            status: b.status || "Confirmed",
-            time: b.createdAt ? timeAgo(b.createdAt) : "recently",
-          });
-        });
-      }
+      const bookings = Array.isArray(bookingsPayload?.data) ? bookingsPayload.data : [];
+      const recentBookings: DashboardData["recentBookings"] = bookings.map((b: any) => {
+        const name = b.user?.name || b.userName || "User";
+        const initials = name.split(" ").map((w: string) => w[0]).join("").slice(0, 2).toUpperCase();
+        return {
+          id: b.id,
+          user: name,
+          avatar: initials,
+          event: b.event?.title || b.eventTitle || b.slotLabel || "Booking",
+          amount: formatCurrency(Number(b.totalAmount || b.amount) || 0),
+          status: b.status || "Confirmed",
+          time: b.createdAt ? timeAgo(b.createdAt) : "recently",
+        };
+      });
 
       setData({ totalUsers, activeEvents, totalRevenue, totalBookings, recentBookings });
     } catch (err) {
@@ -144,9 +120,17 @@ export default function AdminDashboard() {
     fetchDashboardData();
   }, []);
 
+  const sessionUser = useMemo(() => {
+    if (typeof window === "undefined") return null;
+    const raw = localStorage.getItem("admin_dash_user");
+    if (!raw) return null;
+    try { return JSON.parse(raw); } catch { return null; }
+  }, []);
+  const isAdmin = String(sessionUser?.role || "ADMIN").toUpperCase() === "ADMIN";
+
   const stats = [
     {
-      name: "Total Accounts",
+      name: isAdmin ? "Total Accounts" : "Event Attendees",
       value: data ? data.totalUsers.toLocaleString() : "—",
       change: "+12.5%",
       trend: "up",
@@ -155,7 +139,7 @@ export default function AdminDashboard() {
       textColor: "text-emerald-600",
     },
     {
-      name: "Active Events",
+      name: isAdmin ? "Active Events" : "My Events",
       value: data ? String(data.activeEvents) : "—",
       change: "+8.2%",
       trend: "up",
@@ -164,7 +148,7 @@ export default function AdminDashboard() {
       textColor: "text-emerald-600",
     },
     {
-      name: "Revenue",
+      name: isAdmin ? "Total Revenue" : "My Earnings",
       value: data ? formatCurrency(data.totalRevenue) : "—",
       change: "+24.3%",
       trend: "up",
@@ -173,7 +157,7 @@ export default function AdminDashboard() {
       textColor: "text-emerald-700",
     },
     {
-      name: "Bookings",
+      name: "Total Bookings",
       value: data ? data.totalBookings.toLocaleString() : "—",
       change: "-3.1%",
       trend: "down",

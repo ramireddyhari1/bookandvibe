@@ -42,3 +42,47 @@ body {
   scrollbar-width: none;
   scroll-behavior: smooth;
 }
+
+/* Mobile-specific overrides */
+@media (max-width: 767px) {
+  body {
+    background: #FFFFFF !important;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Snap scrolling for mobile carousels */
+@utility snap-x {
+  scroll-snap-type: x mandatory;
+}
+
+@utility snap-start {
+  scroll-snap-align: start;
+}
+
+@utility snap-center {
+  scroll-snap-align: center;
+}
+
+@utility snap-mandatory {
+  scroll-snap-type: x mandatory;
+}
+
+/* Line clamp utility */
+@utility line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Bottom sheet slide-up animation */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}

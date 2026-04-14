@@ -130,7 +130,9 @@ exports.Prisma.UserScalarFieldEnum = {
   role: 'role',
   status: 'status',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  partnerType: 'partnerType',
+  eventHostId: 'eventHostId'
 };
 
 exports.Prisma.EventScalarFieldEnum = {
@@ -159,6 +161,7 @@ exports.Prisma.EventScalarFieldEnum = {
   isPublished: 'isPublished',
   publishedAt: 'publishedAt',
   featured: 'featured',
+  mapLink: 'mapLink',
   seatLayout: 'seatLayout',
   seatRows: 'seatRows',
   seatsPerRow: 'seatsPerRow',
@@ -287,6 +290,7 @@ exports.Prisma.GamehubFacilityScalarFieldEnum = {
   gallery: 'gallery',
   battleModes: 'battleModes',
   slotTemplate: 'slotTemplate',
+  availableSports: 'availableSports',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   partnerId: 'partnerId'

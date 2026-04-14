@@ -285,14 +285,27 @@ router.get('/categories', async (req, res) => {
   }
 });
 
-// GET /api/events/stats - Admin stats aggregation
-router.get('/stats', async (req, res) => {
+// GET /api/events/stats - Admin/Partner stats aggregation
+router.get('/stats', authenticateToken, requireAdminOrPartner, async (req, res) => {
   try {
+    const isAdmin = isAdminUser(req.user);
+    const userId = req.user.id;
+
+    const whereEvent = isAdmin ? {} : { partnerId: userId };
+    const whereBooking = isAdmin ? {} : { event: { partnerId: userId } };
+    const wherePayment = isAdmin ? {} : { booking: { event: { partnerId: userId } } };
+
     const [totalEvents, totalBookings, revenue, totalUsers] = await Promise.all([
-      prisma.event.count(),
-      prisma.booking.count(),
-      prisma.payment.aggregate({ _sum: { amount: true }, where: { status: 'SUCCESS' } }),
-      prisma.user.count()
+      prisma.event.count({ where: whereEvent }),
+      prisma.booking.count({ where: whereBooking }),
+      prisma.payment.aggregate({
+        _sum: { amount: true },
+        where: { ...wherePayment, status: 'SUCCESS' }
+      }),
+      isAdmin ? prisma.user.count() : prisma.booking.groupBy({
+        by: ['userId'],
+        where: whereBooking,
+      }).then(res => res.length)
     ]);
 
     res.json({
@@ -300,7 +313,7 @@ router.get('/stats', async (req, res) => {
         totalEvents,
         totalBookings,
         totalRevenue: revenue._sum.amount || 0,
-        totalUsers
+        totalUsers: isAdmin ? totalUsers : totalUsers
       }
     });
   } catch (error) {
@@ -599,6 +612,8 @@ router.post('/', authenticateToken, requireAdminOrPartner, async (req, res) => {
         numberedSeats: req.body.seating?.hasNumberedSeats ?? true,
         seatSelection: req.body.seating?.allowSeatSelection ?? true,
         featured: req.body.featured || false,
+        tags: JSON.stringify(req.body.tags || []),
+        mapLink: req.body.mapLink || null,
         status: 'DRAFT',
         isPublished: false,
         partnerId: partnerId,
@@ -667,6 +682,7 @@ router.put('/:id', authenticateToken, requireAdminOrPartner, async (req, res) =>
       'featured',
       'accessCode',
       'currency',
+      'mapLink',
     ];
     fields.forEach(f => { if (req.body[f] !== undefined) updateData[f] = req.body[f]; });
 
@@ -682,6 +698,9 @@ router.put('/:id', authenticateToken, requireAdminOrPartner, async (req, res) =>
     if (req.body.platformFeeValue !== undefined) updateData.platformFeeValue = parseFloat(req.body.platformFeeValue) || 0;
     if (req.body.images !== undefined || req.body.image !== undefined) {
       updateData.images = JSON.stringify(parseImages(req.body.images || req.body.image || ''));
+    }
+    if (req.body.tags !== undefined) {
+      updateData.tags = JSON.stringify(req.body.tags || []);
     }
 
     if (req.body.seating) {

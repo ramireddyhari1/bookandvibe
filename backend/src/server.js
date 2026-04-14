@@ -68,7 +68,7 @@ morgan.token('auth-status', (req, res) => {
 app.use(helmet());
 app.use(limiter);
 app.use(cors({
-  origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : '*',
+  origin: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   credentials: true
 }));

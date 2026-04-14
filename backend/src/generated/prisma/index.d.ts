@@ -2767,6 +2767,8 @@ export namespace Prisma {
     status: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    partnerType: string | null
+    eventHostId: string | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -2780,6 +2782,8 @@ export namespace Prisma {
     status: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    partnerType: string | null
+    eventHostId: string | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -2793,6 +2797,8 @@ export namespace Prisma {
     status: number
     createdAt: number
     updatedAt: number
+    partnerType: number
+    eventHostId: number
     _all: number
   }
 
@@ -2808,6 +2814,8 @@ export namespace Prisma {
     status?: true
     createdAt?: true
     updatedAt?: true
+    partnerType?: true
+    eventHostId?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -2821,6 +2829,8 @@ export namespace Prisma {
     status?: true
     createdAt?: true
     updatedAt?: true
+    partnerType?: true
+    eventHostId?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -2834,6 +2844,8 @@ export namespace Prisma {
     status?: true
     createdAt?: true
     updatedAt?: true
+    partnerType?: true
+    eventHostId?: true
     _all?: true
   }
 
@@ -2920,6 +2932,8 @@ export namespace Prisma {
     status: string
     createdAt: Date
     updatedAt: Date
+    partnerType: string | null
+    eventHostId: string | null
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -2950,6 +2964,8 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    partnerType?: boolean
+    eventHostId?: boolean
     events?: boolean | User$eventsArgs<ExtArgs>
     bookings?: boolean | User$bookingsArgs<ExtArgs>
     gamehubBookings?: boolean | User$gamehubBookingsArgs<ExtArgs>
@@ -2972,6 +2988,8 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    partnerType?: boolean
+    eventHostId?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -2985,6 +3003,8 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    partnerType?: boolean
+    eventHostId?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -2998,9 +3018,11 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    partnerType?: boolean
+    eventHostId?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "phone" | "avatar" | "role" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "phone" | "avatar" | "role" | "status" | "createdAt" | "updatedAt" | "partnerType" | "eventHostId", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     events?: boolean | User$eventsArgs<ExtArgs>
     bookings?: boolean | User$bookingsArgs<ExtArgs>
@@ -3038,6 +3060,8 @@ export namespace Prisma {
       status: string
       createdAt: Date
       updatedAt: Date
+      partnerType: string | null
+      eventHostId: string | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -3479,6 +3503,8 @@ export namespace Prisma {
     readonly status: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
+    readonly partnerType: FieldRef<"User", 'String'>
+    readonly eventHostId: FieldRef<"User", 'String'>
   }
     
 
@@ -4135,6 +4161,7 @@ export namespace Prisma {
     isPublished: boolean | null
     publishedAt: Date | null
     featured: boolean | null
+    mapLink: string | null
     seatLayout: string | null
     seatRows: number | null
     seatsPerRow: number | null
@@ -4171,6 +4198,7 @@ export namespace Prisma {
     isPublished: boolean | null
     publishedAt: Date | null
     featured: boolean | null
+    mapLink: string | null
     seatLayout: string | null
     seatRows: number | null
     seatsPerRow: number | null
@@ -4207,6 +4235,7 @@ export namespace Prisma {
     isPublished: number
     publishedAt: number
     featured: number
+    mapLink: number
     seatLayout: number
     seatRows: number
     seatsPerRow: number
@@ -4265,6 +4294,7 @@ export namespace Prisma {
     isPublished?: true
     publishedAt?: true
     featured?: true
+    mapLink?: true
     seatLayout?: true
     seatRows?: true
     seatsPerRow?: true
@@ -4301,6 +4331,7 @@ export namespace Prisma {
     isPublished?: true
     publishedAt?: true
     featured?: true
+    mapLink?: true
     seatLayout?: true
     seatRows?: true
     seatsPerRow?: true
@@ -4337,6 +4368,7 @@ export namespace Prisma {
     isPublished?: true
     publishedAt?: true
     featured?: true
+    mapLink?: true
     seatLayout?: true
     seatRows?: true
     seatsPerRow?: true
@@ -4460,6 +4492,7 @@ export namespace Prisma {
     isPublished: boolean
     publishedAt: Date | null
     featured: boolean
+    mapLink: string | null
     seatLayout: string
     seatRows: number | null
     seatsPerRow: number | null
@@ -4515,6 +4548,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: boolean
     featured?: boolean
+    mapLink?: boolean
     seatLayout?: boolean
     seatRows?: boolean
     seatsPerRow?: boolean
@@ -4557,6 +4591,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: boolean
     featured?: boolean
+    mapLink?: boolean
     seatLayout?: boolean
     seatRows?: boolean
     seatsPerRow?: boolean
@@ -4594,6 +4629,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: boolean
     featured?: boolean
+    mapLink?: boolean
     seatLayout?: boolean
     seatRows?: boolean
     seatsPerRow?: boolean
@@ -4631,6 +4667,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: boolean
     featured?: boolean
+    mapLink?: boolean
     seatLayout?: boolean
     seatRows?: boolean
     seatsPerRow?: boolean
@@ -4641,7 +4678,7 @@ export namespace Prisma {
     partnerId?: boolean
   }
 
-  export type EventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "category" | "bookingFormat" | "visibility" | "accessCode" | "location" | "venue" | "date" | "time" | "bookingStartAt" | "bookingEndAt" | "price" | "currency" | "taxPercent" | "platformFeeType" | "platformFeeValue" | "totalSlots" | "availableSlots" | "images" | "status" | "isPublished" | "publishedAt" | "featured" | "seatLayout" | "seatRows" | "seatsPerRow" | "numberedSeats" | "seatSelection" | "createdAt" | "updatedAt" | "partnerId", ExtArgs["result"]["event"]>
+  export type EventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "category" | "bookingFormat" | "visibility" | "accessCode" | "location" | "venue" | "date" | "time" | "bookingStartAt" | "bookingEndAt" | "price" | "currency" | "taxPercent" | "platformFeeType" | "platformFeeValue" | "totalSlots" | "availableSlots" | "images" | "status" | "isPublished" | "publishedAt" | "featured" | "mapLink" | "seatLayout" | "seatRows" | "seatsPerRow" | "numberedSeats" | "seatSelection" | "createdAt" | "updatedAt" | "partnerId", ExtArgs["result"]["event"]>
   export type EventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     partner?: boolean | UserDefaultArgs<ExtArgs>
     bookings?: boolean | Event$bookingsArgs<ExtArgs>
@@ -4692,6 +4729,7 @@ export namespace Prisma {
       isPublished: boolean
       publishedAt: Date | null
       featured: boolean
+      mapLink: string | null
       seatLayout: string
       seatRows: number | null
       seatsPerRow: number | null
@@ -5153,6 +5191,7 @@ export namespace Prisma {
     readonly isPublished: FieldRef<"Event", 'Boolean'>
     readonly publishedAt: FieldRef<"Event", 'DateTime'>
     readonly featured: FieldRef<"Event", 'Boolean'>
+    readonly mapLink: FieldRef<"Event", 'String'>
     readonly seatLayout: FieldRef<"Event", 'String'>
     readonly seatRows: FieldRef<"Event", 'Int'>
     readonly seatsPerRow: FieldRef<"Event", 'Int'>
@@ -16048,6 +16087,7 @@ export namespace Prisma {
     gallery: string | null
     battleModes: string | null
     slotTemplate: string | null
+    availableSports: string | null
     createdAt: Date | null
     updatedAt: Date | null
     partnerId: string | null
@@ -16077,6 +16117,7 @@ export namespace Prisma {
     gallery: string | null
     battleModes: string | null
     slotTemplate: string | null
+    availableSports: string | null
     createdAt: Date | null
     updatedAt: Date | null
     partnerId: string | null
@@ -16106,6 +16147,7 @@ export namespace Prisma {
     gallery: number
     battleModes: number
     slotTemplate: number
+    availableSports: number
     createdAt: number
     updatedAt: number
     partnerId: number
@@ -16149,6 +16191,7 @@ export namespace Prisma {
     gallery?: true
     battleModes?: true
     slotTemplate?: true
+    availableSports?: true
     createdAt?: true
     updatedAt?: true
     partnerId?: true
@@ -16178,6 +16221,7 @@ export namespace Prisma {
     gallery?: true
     battleModes?: true
     slotTemplate?: true
+    availableSports?: true
     createdAt?: true
     updatedAt?: true
     partnerId?: true
@@ -16207,6 +16251,7 @@ export namespace Prisma {
     gallery?: true
     battleModes?: true
     slotTemplate?: true
+    availableSports?: true
     createdAt?: true
     updatedAt?: true
     partnerId?: true
@@ -16323,6 +16368,7 @@ export namespace Prisma {
     gallery: string
     battleModes: string
     slotTemplate: string
+    availableSports: string
     createdAt: Date
     updatedAt: Date
     partnerId: string | null
@@ -16371,6 +16417,7 @@ export namespace Prisma {
     gallery?: boolean
     battleModes?: boolean
     slotTemplate?: boolean
+    availableSports?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     partnerId?: boolean
@@ -16405,6 +16452,7 @@ export namespace Prisma {
     gallery?: boolean
     battleModes?: boolean
     slotTemplate?: boolean
+    availableSports?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     partnerId?: boolean
@@ -16435,6 +16483,7 @@ export namespace Prisma {
     gallery?: boolean
     battleModes?: boolean
     slotTemplate?: boolean
+    availableSports?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     partnerId?: boolean
@@ -16465,12 +16514,13 @@ export namespace Prisma {
     gallery?: boolean
     battleModes?: boolean
     slotTemplate?: boolean
+    availableSports?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     partnerId?: boolean
   }
 
-  export type GamehubFacilityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "type" | "location" | "venue" | "distance" | "rating" | "reviewsCount" | "pricePerHour" | "unit" | "priceRange" | "image" | "description" | "phone" | "openHours" | "status" | "pricingRules" | "amenities" | "features" | "tags" | "gallery" | "battleModes" | "slotTemplate" | "createdAt" | "updatedAt" | "partnerId", ExtArgs["result"]["gamehubFacility"]>
+  export type GamehubFacilityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "type" | "location" | "venue" | "distance" | "rating" | "reviewsCount" | "pricePerHour" | "unit" | "priceRange" | "image" | "description" | "phone" | "openHours" | "status" | "pricingRules" | "amenities" | "features" | "tags" | "gallery" | "battleModes" | "slotTemplate" | "availableSports" | "createdAt" | "updatedAt" | "partnerId", ExtArgs["result"]["gamehubFacility"]>
   export type GamehubFacilityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     partner?: boolean | GamehubFacility$partnerArgs<ExtArgs>
     reviews?: boolean | GamehubFacility$reviewsArgs<ExtArgs>
@@ -16517,6 +16567,7 @@ export namespace Prisma {
       gallery: string
       battleModes: string
       slotTemplate: string
+      availableSports: string
       createdAt: Date
       updatedAt: Date
       partnerId: string | null
@@ -16970,6 +17021,7 @@ export namespace Prisma {
     readonly gallery: FieldRef<"GamehubFacility", 'String'>
     readonly battleModes: FieldRef<"GamehubFacility", 'String'>
     readonly slotTemplate: FieldRef<"GamehubFacility", 'String'>
+    readonly availableSports: FieldRef<"GamehubFacility", 'String'>
     readonly createdAt: FieldRef<"GamehubFacility", 'DateTime'>
     readonly updatedAt: FieldRef<"GamehubFacility", 'DateTime'>
     readonly partnerId: FieldRef<"GamehubFacility", 'String'>
@@ -24348,7 +24400,9 @@ export namespace Prisma {
     role: 'role',
     status: 'status',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    partnerType: 'partnerType',
+    eventHostId: 'eventHostId'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -24380,6 +24434,7 @@ export namespace Prisma {
     isPublished: 'isPublished',
     publishedAt: 'publishedAt',
     featured: 'featured',
+    mapLink: 'mapLink',
     seatLayout: 'seatLayout',
     seatRows: 'seatRows',
     seatsPerRow: 'seatsPerRow',
@@ -24538,6 +24593,7 @@ export namespace Prisma {
     gallery: 'gallery',
     battleModes: 'battleModes',
     slotTemplate: 'slotTemplate',
+    availableSports: 'availableSports',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     partnerId: 'partnerId'
@@ -24740,6 +24796,8 @@ export namespace Prisma {
     status?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    partnerType?: StringNullableFilter<"User"> | string | null
+    eventHostId?: StringNullableFilter<"User"> | string | null
     events?: EventListRelationFilter
     bookings?: BookingListRelationFilter
     gamehubBookings?: GamehubBookingListRelationFilter
@@ -24761,6 +24819,8 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    partnerType?: SortOrderInput | SortOrder
+    eventHostId?: SortOrderInput | SortOrder
     events?: EventOrderByRelationAggregateInput
     bookings?: BookingOrderByRelationAggregateInput
     gamehubBookings?: GamehubBookingOrderByRelationAggregateInput
@@ -24774,6 +24834,7 @@ export namespace Prisma {
   export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     email?: string
+    eventHostId?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
@@ -24785,6 +24846,7 @@ export namespace Prisma {
     status?: StringFilter<"User"> | string
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    partnerType?: StringNullableFilter<"User"> | string | null
     events?: EventListRelationFilter
     bookings?: BookingListRelationFilter
     gamehubBookings?: GamehubBookingListRelationFilter
@@ -24793,7 +24855,7 @@ export namespace Prisma {
     gamehubFacilities?: GamehubFacilityListRelationFilter
     wallet?: XOR<WalletNullableScalarRelationFilter, WalletWhereInput> | null
     payouts?: PayoutListRelationFilter
-  }, "id" | "email">
+  }, "id" | "email" | "eventHostId">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
@@ -24806,6 +24868,8 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    partnerType?: SortOrderInput | SortOrder
+    eventHostId?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -24825,6 +24889,8 @@ export namespace Prisma {
     status?: StringWithAggregatesFilter<"User"> | string
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    partnerType?: StringNullableWithAggregatesFilter<"User"> | string | null
+    eventHostId?: StringNullableWithAggregatesFilter<"User"> | string | null
   }
 
   export type EventWhereInput = {
@@ -24856,6 +24922,7 @@ export namespace Prisma {
     isPublished?: BoolFilter<"Event"> | boolean
     publishedAt?: DateTimeNullableFilter<"Event"> | Date | string | null
     featured?: BoolFilter<"Event"> | boolean
+    mapLink?: StringNullableFilter<"Event"> | string | null
     seatLayout?: StringFilter<"Event"> | string
     seatRows?: IntNullableFilter<"Event"> | number | null
     seatsPerRow?: IntNullableFilter<"Event"> | number | null
@@ -24897,6 +24964,7 @@ export namespace Prisma {
     isPublished?: SortOrder
     publishedAt?: SortOrderInput | SortOrder
     featured?: SortOrder
+    mapLink?: SortOrderInput | SortOrder
     seatLayout?: SortOrder
     seatRows?: SortOrderInput | SortOrder
     seatsPerRow?: SortOrderInput | SortOrder
@@ -24941,6 +25009,7 @@ export namespace Prisma {
     isPublished?: BoolFilter<"Event"> | boolean
     publishedAt?: DateTimeNullableFilter<"Event"> | Date | string | null
     featured?: BoolFilter<"Event"> | boolean
+    mapLink?: StringNullableFilter<"Event"> | string | null
     seatLayout?: StringFilter<"Event"> | string
     seatRows?: IntNullableFilter<"Event"> | number | null
     seatsPerRow?: IntNullableFilter<"Event"> | number | null
@@ -24982,6 +25051,7 @@ export namespace Prisma {
     isPublished?: SortOrder
     publishedAt?: SortOrderInput | SortOrder
     featured?: SortOrder
+    mapLink?: SortOrderInput | SortOrder
     seatLayout?: SortOrder
     seatRows?: SortOrderInput | SortOrder
     seatsPerRow?: SortOrderInput | SortOrder
@@ -25026,6 +25096,7 @@ export namespace Prisma {
     isPublished?: BoolWithAggregatesFilter<"Event"> | boolean
     publishedAt?: DateTimeNullableWithAggregatesFilter<"Event"> | Date | string | null
     featured?: BoolWithAggregatesFilter<"Event"> | boolean
+    mapLink?: StringNullableWithAggregatesFilter<"Event"> | string | null
     seatLayout?: StringWithAggregatesFilter<"Event"> | string
     seatRows?: IntNullableWithAggregatesFilter<"Event"> | number | null
     seatsPerRow?: IntNullableWithAggregatesFilter<"Event"> | number | null
@@ -25718,6 +25789,7 @@ export namespace Prisma {
     gallery?: StringFilter<"GamehubFacility"> | string
     battleModes?: StringFilter<"GamehubFacility"> | string
     slotTemplate?: StringFilter<"GamehubFacility"> | string
+    availableSports?: StringFilter<"GamehubFacility"> | string
     createdAt?: DateTimeFilter<"GamehubFacility"> | Date | string
     updatedAt?: DateTimeFilter<"GamehubFacility"> | Date | string
     partnerId?: StringNullableFilter<"GamehubFacility"> | string | null
@@ -25751,6 +25823,7 @@ export namespace Prisma {
     gallery?: SortOrder
     battleModes?: SortOrder
     slotTemplate?: SortOrder
+    availableSports?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     partnerId?: SortOrderInput | SortOrder
@@ -25787,6 +25860,7 @@ export namespace Prisma {
     gallery?: StringFilter<"GamehubFacility"> | string
     battleModes?: StringFilter<"GamehubFacility"> | string
     slotTemplate?: StringFilter<"GamehubFacility"> | string
+    availableSports?: StringFilter<"GamehubFacility"> | string
     createdAt?: DateTimeFilter<"GamehubFacility"> | Date | string
     updatedAt?: DateTimeFilter<"GamehubFacility"> | Date | string
     partnerId?: StringNullableFilter<"GamehubFacility"> | string | null
@@ -25820,6 +25894,7 @@ export namespace Prisma {
     gallery?: SortOrder
     battleModes?: SortOrder
     slotTemplate?: SortOrder
+    availableSports?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     partnerId?: SortOrderInput | SortOrder
@@ -25857,6 +25932,7 @@ export namespace Prisma {
     gallery?: StringWithAggregatesFilter<"GamehubFacility"> | string
     battleModes?: StringWithAggregatesFilter<"GamehubFacility"> | string
     slotTemplate?: StringWithAggregatesFilter<"GamehubFacility"> | string
+    availableSports?: StringWithAggregatesFilter<"GamehubFacility"> | string
     createdAt?: DateTimeWithAggregatesFilter<"GamehubFacility"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"GamehubFacility"> | Date | string
     partnerId?: StringNullableWithAggregatesFilter<"GamehubFacility"> | string | null
@@ -26314,6 +26390,8 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    partnerType?: string | null
+    eventHostId?: string | null
     events?: EventCreateNestedManyWithoutPartnerInput
     bookings?: BookingCreateNestedManyWithoutUserInput
     gamehubBookings?: GamehubBookingCreateNestedManyWithoutUserInput
@@ -26335,6 +26413,8 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    partnerType?: string | null
+    eventHostId?: string | null
     events?: EventUncheckedCreateNestedManyWithoutPartnerInput
     bookings?: BookingUncheckedCreateNestedManyWithoutUserInput
     gamehubBookings?: GamehubBookingUncheckedCreateNestedManyWithoutUserInput
@@ -26356,6 +26436,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partnerType?: NullableStringFieldUpdateOperationsInput | string | null
+    eventHostId?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUpdateManyWithoutPartnerNestedInput
     bookings?: BookingUpdateManyWithoutUserNestedInput
     gamehubBookings?: GamehubBookingUpdateManyWithoutUserNestedInput
@@ -26377,6 +26459,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partnerType?: NullableStringFieldUpdateOperationsInput | string | null
+    eventHostId?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutPartnerNestedInput
     bookings?: BookingUncheckedUpdateManyWithoutUserNestedInput
     gamehubBookings?: GamehubBookingUncheckedUpdateManyWithoutUserNestedInput
@@ -26398,6 +26482,8 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    partnerType?: string | null
+    eventHostId?: string | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -26411,6 +26497,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partnerType?: NullableStringFieldUpdateOperationsInput | string | null
+    eventHostId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -26424,6 +26512,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partnerType?: NullableStringFieldUpdateOperationsInput | string | null
+    eventHostId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type EventCreateInput = {
@@ -26452,6 +26542,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -26492,6 +26583,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -26532,6 +26624,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -26572,6 +26665,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -26612,6 +26706,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -26648,6 +26743,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -26683,6 +26779,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -27389,6 +27486,7 @@ export namespace Prisma {
     gallery?: string
     battleModes?: string
     slotTemplate?: string
+    availableSports?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     partner?: UserCreateNestedOneWithoutGamehubFacilitiesInput
@@ -27421,6 +27519,7 @@ export namespace Prisma {
     gallery?: string
     battleModes?: string
     slotTemplate?: string
+    availableSports?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     partnerId?: string | null
@@ -27453,6 +27552,7 @@ export namespace Prisma {
     gallery?: StringFieldUpdateOperationsInput | string
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
+    availableSports?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partner?: UserUpdateOneWithoutGamehubFacilitiesNestedInput
@@ -27485,6 +27585,7 @@ export namespace Prisma {
     gallery?: StringFieldUpdateOperationsInput | string
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
+    availableSports?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27517,6 +27618,7 @@ export namespace Prisma {
     gallery?: string
     battleModes?: string
     slotTemplate?: string
+    availableSports?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     partnerId?: string | null
@@ -27546,6 +27648,7 @@ export namespace Prisma {
     gallery?: StringFieldUpdateOperationsInput | string
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
+    availableSports?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -27574,6 +27677,7 @@ export namespace Prisma {
     gallery?: StringFieldUpdateOperationsInput | string
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
+    availableSports?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28177,6 +28281,8 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    partnerType?: SortOrder
+    eventHostId?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -28190,6 +28296,8 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    partnerType?: SortOrder
+    eventHostId?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -28203,6 +28311,8 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    partnerType?: SortOrder
+    eventHostId?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -28355,6 +28465,7 @@ export namespace Prisma {
     isPublished?: SortOrder
     publishedAt?: SortOrder
     featured?: SortOrder
+    mapLink?: SortOrder
     seatLayout?: SortOrder
     seatRows?: SortOrder
     seatsPerRow?: SortOrder
@@ -28401,6 +28512,7 @@ export namespace Prisma {
     isPublished?: SortOrder
     publishedAt?: SortOrder
     featured?: SortOrder
+    mapLink?: SortOrder
     seatLayout?: SortOrder
     seatRows?: SortOrder
     seatsPerRow?: SortOrder
@@ -28437,6 +28549,7 @@ export namespace Prisma {
     isPublished?: SortOrder
     publishedAt?: SortOrder
     featured?: SortOrder
+    mapLink?: SortOrder
     seatLayout?: SortOrder
     seatRows?: SortOrder
     seatsPerRow?: SortOrder
@@ -29021,6 +29134,7 @@ export namespace Prisma {
     gallery?: SortOrder
     battleModes?: SortOrder
     slotTemplate?: SortOrder
+    availableSports?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     partnerId?: SortOrder
@@ -29056,6 +29170,7 @@ export namespace Prisma {
     gallery?: SortOrder
     battleModes?: SortOrder
     slotTemplate?: SortOrder
+    availableSports?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     partnerId?: SortOrder
@@ -29085,6 +29200,7 @@ export namespace Prisma {
     gallery?: SortOrder
     battleModes?: SortOrder
     slotTemplate?: SortOrder
+    availableSports?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     partnerId?: SortOrder
@@ -30934,6 +31050,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -30973,6 +31090,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -31156,6 +31274,7 @@ export namespace Prisma {
     gallery?: string
     battleModes?: string
     slotTemplate?: string
+    availableSports?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     reviews?: GamehubReviewCreateNestedManyWithoutFacilityInput
@@ -31187,6 +31306,7 @@ export namespace Prisma {
     gallery?: string
     battleModes?: string
     slotTemplate?: string
+    availableSports?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     reviews?: GamehubReviewUncheckedCreateNestedManyWithoutFacilityInput
@@ -31302,6 +31422,7 @@ export namespace Prisma {
     isPublished?: BoolFilter<"Event"> | boolean
     publishedAt?: DateTimeNullableFilter<"Event"> | Date | string | null
     featured?: BoolFilter<"Event"> | boolean
+    mapLink?: StringNullableFilter<"Event"> | string | null
     seatLayout?: StringFilter<"Event"> | string
     seatRows?: IntNullableFilter<"Event"> | number | null
     seatsPerRow?: IntNullableFilter<"Event"> | number | null
@@ -31480,6 +31601,7 @@ export namespace Prisma {
     gallery?: StringFilter<"GamehubFacility"> | string
     battleModes?: StringFilter<"GamehubFacility"> | string
     slotTemplate?: StringFilter<"GamehubFacility"> | string
+    availableSports?: StringFilter<"GamehubFacility"> | string
     createdAt?: DateTimeFilter<"GamehubFacility"> | Date | string
     updatedAt?: DateTimeFilter<"GamehubFacility"> | Date | string
     partnerId?: StringNullableFilter<"GamehubFacility"> | string | null
@@ -31555,6 +31677,8 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    partnerType?: string | null
+    eventHostId?: string | null
     bookings?: BookingCreateNestedManyWithoutUserInput
     gamehubBookings?: GamehubBookingCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
@@ -31575,6 +31699,8 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    partnerType?: string | null
+    eventHostId?: string | null
     bookings?: BookingUncheckedCreateNestedManyWithoutUserInput
     gamehubBookings?: GamehubBookingUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -31751,6 +31877,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partnerType?: NullableStringFieldUpdateOperationsInput | string | null
+    eventHostId?: NullableStringFieldUpdateOperationsInput | string | null
     bookings?: BookingUpdateManyWithoutUserNestedInput
     gamehubBookings?: GamehubBookingUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
@@ -31771,6 +31899,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partnerType?: NullableStringFieldUpdateOperationsInput | string | null
+    eventHostId?: NullableStringFieldUpdateOperationsInput | string | null
     bookings?: BookingUncheckedUpdateManyWithoutUserNestedInput
     gamehubBookings?: GamehubBookingUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -31901,6 +32031,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -31940,6 +32071,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -32019,6 +32151,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -32058,6 +32191,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -32109,6 +32243,8 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    partnerType?: string | null
+    eventHostId?: string | null
     events?: EventCreateNestedManyWithoutPartnerInput
     gamehubBookings?: GamehubBookingCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
@@ -32129,6 +32265,8 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    partnerType?: string | null
+    eventHostId?: string | null
     events?: EventUncheckedCreateNestedManyWithoutPartnerInput
     gamehubBookings?: GamehubBookingUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -32169,6 +32307,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -32208,6 +32347,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -32352,6 +32492,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partnerType?: NullableStringFieldUpdateOperationsInput | string | null
+    eventHostId?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUpdateManyWithoutPartnerNestedInput
     gamehubBookings?: GamehubBookingUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
@@ -32372,6 +32514,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partnerType?: NullableStringFieldUpdateOperationsInput | string | null
+    eventHostId?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutPartnerNestedInput
     gamehubBookings?: GamehubBookingUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -32418,6 +32562,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -32457,6 +32602,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -32608,6 +32754,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -32647,6 +32794,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -32776,6 +32924,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -32815,6 +32964,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -33361,6 +33511,8 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    partnerType?: string | null
+    eventHostId?: string | null
     events?: EventCreateNestedManyWithoutPartnerInput
     bookings?: BookingCreateNestedManyWithoutUserInput
     gamehubBookings?: GamehubBookingCreateNestedManyWithoutUserInput
@@ -33381,6 +33533,8 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    partnerType?: string | null
+    eventHostId?: string | null
     events?: EventUncheckedCreateNestedManyWithoutPartnerInput
     bookings?: BookingUncheckedCreateNestedManyWithoutUserInput
     gamehubBookings?: GamehubBookingUncheckedCreateNestedManyWithoutUserInput
@@ -33417,6 +33571,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partnerType?: NullableStringFieldUpdateOperationsInput | string | null
+    eventHostId?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUpdateManyWithoutPartnerNestedInput
     bookings?: BookingUpdateManyWithoutUserNestedInput
     gamehubBookings?: GamehubBookingUpdateManyWithoutUserNestedInput
@@ -33437,6 +33593,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partnerType?: NullableStringFieldUpdateOperationsInput | string | null
+    eventHostId?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutPartnerNestedInput
     bookings?: BookingUncheckedUpdateManyWithoutUserNestedInput
     gamehubBookings?: GamehubBookingUncheckedUpdateManyWithoutUserNestedInput
@@ -33457,6 +33615,8 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    partnerType?: string | null
+    eventHostId?: string | null
     events?: EventCreateNestedManyWithoutPartnerInput
     bookings?: BookingCreateNestedManyWithoutUserInput
     gamehubBookings?: GamehubBookingCreateNestedManyWithoutUserInput
@@ -33477,6 +33637,8 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    partnerType?: string | null
+    eventHostId?: string | null
     events?: EventUncheckedCreateNestedManyWithoutPartnerInput
     bookings?: BookingUncheckedCreateNestedManyWithoutUserInput
     gamehubBookings?: GamehubBookingUncheckedCreateNestedManyWithoutUserInput
@@ -33517,6 +33679,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -33556,6 +33719,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -33596,6 +33760,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partnerType?: NullableStringFieldUpdateOperationsInput | string | null
+    eventHostId?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUpdateManyWithoutPartnerNestedInput
     bookings?: BookingUpdateManyWithoutUserNestedInput
     gamehubBookings?: GamehubBookingUpdateManyWithoutUserNestedInput
@@ -33616,6 +33782,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partnerType?: NullableStringFieldUpdateOperationsInput | string | null
+    eventHostId?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutPartnerNestedInput
     bookings?: BookingUncheckedUpdateManyWithoutUserNestedInput
     gamehubBookings?: GamehubBookingUncheckedUpdateManyWithoutUserNestedInput
@@ -33662,6 +33830,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -33701,6 +33870,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -33725,6 +33895,8 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    partnerType?: string | null
+    eventHostId?: string | null
     events?: EventCreateNestedManyWithoutPartnerInput
     bookings?: BookingCreateNestedManyWithoutUserInput
     gamehubBookings?: GamehubBookingCreateNestedManyWithoutUserInput
@@ -33745,6 +33917,8 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    partnerType?: string | null
+    eventHostId?: string | null
     events?: EventUncheckedCreateNestedManyWithoutPartnerInput
     bookings?: BookingUncheckedCreateNestedManyWithoutUserInput
     gamehubBookings?: GamehubBookingUncheckedCreateNestedManyWithoutUserInput
@@ -33879,6 +34053,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partnerType?: NullableStringFieldUpdateOperationsInput | string | null
+    eventHostId?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUpdateManyWithoutPartnerNestedInput
     bookings?: BookingUpdateManyWithoutUserNestedInput
     gamehubBookings?: GamehubBookingUpdateManyWithoutUserNestedInput
@@ -33899,6 +34075,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partnerType?: NullableStringFieldUpdateOperationsInput | string | null
+    eventHostId?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutPartnerNestedInput
     bookings?: BookingUncheckedUpdateManyWithoutUserNestedInput
     gamehubBookings?: GamehubBookingUncheckedUpdateManyWithoutUserNestedInput
@@ -34007,6 +34185,7 @@ export namespace Prisma {
     gallery?: string
     battleModes?: string
     slotTemplate?: string
+    availableSports?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     partner?: UserCreateNestedOneWithoutGamehubFacilitiesInput
@@ -34038,6 +34217,7 @@ export namespace Prisma {
     gallery?: string
     battleModes?: string
     slotTemplate?: string
+    availableSports?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     partnerId?: string | null
@@ -34085,6 +34265,7 @@ export namespace Prisma {
     gallery?: StringFieldUpdateOperationsInput | string
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
+    availableSports?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partner?: UserUpdateOneWithoutGamehubFacilitiesNestedInput
@@ -34116,6 +34297,7 @@ export namespace Prisma {
     gallery?: StringFieldUpdateOperationsInput | string
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
+    availableSports?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34134,6 +34316,8 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    partnerType?: string | null
+    eventHostId?: string | null
     events?: EventCreateNestedManyWithoutPartnerInput
     bookings?: BookingCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
@@ -34154,6 +34338,8 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    partnerType?: string | null
+    eventHostId?: string | null
     events?: EventUncheckedCreateNestedManyWithoutPartnerInput
     bookings?: BookingUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -34192,6 +34378,7 @@ export namespace Prisma {
     gallery?: string
     battleModes?: string
     slotTemplate?: string
+    availableSports?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     partner?: UserCreateNestedOneWithoutGamehubFacilitiesInput
@@ -34223,6 +34410,7 @@ export namespace Prisma {
     gallery?: string
     battleModes?: string
     slotTemplate?: string
+    availableSports?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     partnerId?: string | null
@@ -34257,6 +34445,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partnerType?: NullableStringFieldUpdateOperationsInput | string | null
+    eventHostId?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUpdateManyWithoutPartnerNestedInput
     bookings?: BookingUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
@@ -34277,6 +34467,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partnerType?: NullableStringFieldUpdateOperationsInput | string | null
+    eventHostId?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutPartnerNestedInput
     bookings?: BookingUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -34321,6 +34513,7 @@ export namespace Prisma {
     gallery?: StringFieldUpdateOperationsInput | string
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
+    availableSports?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partner?: UserUpdateOneWithoutGamehubFacilitiesNestedInput
@@ -34352,6 +34545,7 @@ export namespace Prisma {
     gallery?: StringFieldUpdateOperationsInput | string
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
+    availableSports?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34383,6 +34577,7 @@ export namespace Prisma {
     gallery?: string
     battleModes?: string
     slotTemplate?: string
+    availableSports?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     partner?: UserCreateNestedOneWithoutGamehubFacilitiesInput
@@ -34414,6 +34609,7 @@ export namespace Prisma {
     gallery?: string
     battleModes?: string
     slotTemplate?: string
+    availableSports?: string
     createdAt?: Date | string
     updatedAt?: Date | string
     partnerId?: string | null
@@ -34461,6 +34657,7 @@ export namespace Prisma {
     gallery?: StringFieldUpdateOperationsInput | string
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
+    availableSports?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partner?: UserUpdateOneWithoutGamehubFacilitiesNestedInput
@@ -34492,6 +34689,7 @@ export namespace Prisma {
     gallery?: StringFieldUpdateOperationsInput | string
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
+    availableSports?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34510,6 +34708,8 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    partnerType?: string | null
+    eventHostId?: string | null
     events?: EventCreateNestedManyWithoutPartnerInput
     bookings?: BookingCreateNestedManyWithoutUserInput
     gamehubBookings?: GamehubBookingCreateNestedManyWithoutUserInput
@@ -34530,6 +34730,8 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    partnerType?: string | null
+    eventHostId?: string | null
     events?: EventUncheckedCreateNestedManyWithoutPartnerInput
     bookings?: BookingUncheckedCreateNestedManyWithoutUserInput
     gamehubBookings?: GamehubBookingUncheckedCreateNestedManyWithoutUserInput
@@ -34594,6 +34796,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partnerType?: NullableStringFieldUpdateOperationsInput | string | null
+    eventHostId?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUpdateManyWithoutPartnerNestedInput
     bookings?: BookingUpdateManyWithoutUserNestedInput
     gamehubBookings?: GamehubBookingUpdateManyWithoutUserNestedInput
@@ -34614,6 +34818,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partnerType?: NullableStringFieldUpdateOperationsInput | string | null
+    eventHostId?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutPartnerNestedInput
     bookings?: BookingUncheckedUpdateManyWithoutUserNestedInput
     gamehubBookings?: GamehubBookingUncheckedUpdateManyWithoutUserNestedInput
@@ -34715,6 +34921,8 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    partnerType?: string | null
+    eventHostId?: string | null
     events?: EventCreateNestedManyWithoutPartnerInput
     bookings?: BookingCreateNestedManyWithoutUserInput
     gamehubBookings?: GamehubBookingCreateNestedManyWithoutUserInput
@@ -34735,6 +34943,8 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    partnerType?: string | null
+    eventHostId?: string | null
     events?: EventUncheckedCreateNestedManyWithoutPartnerInput
     bookings?: BookingUncheckedCreateNestedManyWithoutUserInput
     gamehubBookings?: GamehubBookingUncheckedCreateNestedManyWithoutUserInput
@@ -34771,6 +34981,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partnerType?: NullableStringFieldUpdateOperationsInput | string | null
+    eventHostId?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUpdateManyWithoutPartnerNestedInput
     bookings?: BookingUpdateManyWithoutUserNestedInput
     gamehubBookings?: GamehubBookingUpdateManyWithoutUserNestedInput
@@ -34791,6 +35003,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partnerType?: NullableStringFieldUpdateOperationsInput | string | null
+    eventHostId?: NullableStringFieldUpdateOperationsInput | string | null
     events?: EventUncheckedUpdateManyWithoutPartnerNestedInput
     bookings?: BookingUncheckedUpdateManyWithoutUserNestedInput
     gamehubBookings?: GamehubBookingUncheckedUpdateManyWithoutUserNestedInput
@@ -34826,6 +35040,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -34904,6 +35119,7 @@ export namespace Prisma {
     gallery?: string
     battleModes?: string
     slotTemplate?: string
+    availableSports?: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -34944,6 +35160,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -34983,6 +35200,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -35022,6 +35240,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -35196,6 +35415,7 @@ export namespace Prisma {
     gallery?: StringFieldUpdateOperationsInput | string
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
+    availableSports?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviews?: GamehubReviewUpdateManyWithoutFacilityNestedInput
@@ -35227,6 +35447,7 @@ export namespace Prisma {
     gallery?: StringFieldUpdateOperationsInput | string
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
+    availableSports?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviews?: GamehubReviewUncheckedUpdateManyWithoutFacilityNestedInput
@@ -35258,6 +35479,7 @@ export namespace Prisma {
     gallery?: StringFieldUpdateOperationsInput | string
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
+    availableSports?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

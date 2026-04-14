@@ -1,7 +1,7 @@
 "use client";
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { API_URL } from "@/lib/api";
+import { fetchApi } from "@/lib/api";
 
 type User = { id: string; name: string; email: string; role: string } | null;
 
@@ -26,19 +26,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const storedToken = localStorage.getItem("token");
       if (storedToken) {
         try {
-          const res = await fetch(`${API_URL}/auth/me`, {
-            headers: { Authorization: `Bearer ${storedToken}` }
-          });
-          if (res.ok) {
-            const data = await res.json();
-            setToken(storedToken);
-            setUser(data.user);
-          } else {
-            // Invalid token
-            localStorage.removeItem("token");
-          }
+          const data = await fetchApi("/auth/me", { requiresAuth: true });
+          setToken(storedToken);
+          setUser(data.user);
         } catch (err) {
           console.error("Failed to verify session", err);
+          localStorage.removeItem("token");
         }
       }
       setLoading(false);
