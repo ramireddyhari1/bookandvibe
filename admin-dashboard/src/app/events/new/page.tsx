@@ -65,7 +65,9 @@ export default function CreateEventPage() {
   const [globalError, setGlobalError] = useState("");
   const [reviewIssues, setReviewIssues] = useState<string[]>([]);
   const [hasManagerAccess, setHasManagerAccess] = useState(false);
+  const [userRole, setUserRole] = useState("");
   const [accessChecked, setAccessChecked] = useState(false);
+  const isAdmin = userRole === "ADMIN";
 
   function clearDashboardSession() {
     localStorage.removeItem("admin_dash_token");
@@ -239,12 +241,14 @@ export default function CreateEventPage() {
         }
       }
 
-      const tax = parseFloat(pricing.taxPercent) || 0;
-      if (tax < 0 || tax > 100) return "Tax percent must be between 0 and 100.";
+      if (isAdmin) {
+        const tax = parseFloat(pricing.taxPercent) || 0;
+        if (tax < 0 || tax > 100) return "Tax percent must be between 0 and 100.";
 
-      const fee = parseFloat(pricing.platformFeeValue) || 0;
-      if (fee < 0) return "Platform fee cannot be negative.";
-      if (pricing.platformFeeType === "PERCENT" && fee > 100) return "Platform fee percent must be between 0 and 100.";
+        const fee = parseFloat(pricing.platformFeeValue) || 0;
+        if (fee < 0) return "Platform fee cannot be negative.";
+        if (pricing.platformFeeType === "PERCENT" && fee > 100) return "Platform fee percent must be between 0 and 100.";
+      }
 
       if (pricing.visibility !== "PUBLIC" && pricing.accessCode.trim().length < 4) {
         return "Private/Invite-only events require an access code of at least 4 characters.";
@@ -289,9 +293,6 @@ export default function CreateEventPage() {
       totalSlots,
       price: requiresTier ? minTierPrice : (parseFloat(pricing.basePrice) || 0),
       currency: pricing.currency,
-      taxPercent: parseFloat(pricing.taxPercent) || 0,
-      platformFeeType: pricing.platformFeeType,
-      platformFeeValue: parseFloat(pricing.platformFeeValue) || 0,
       visibility: pricing.visibility,
       accessCode: pricing.visibility === "PUBLIC" ? null : pricing.accessCode.trim(),
       featured: pricing.featured,
@@ -313,6 +314,13 @@ export default function CreateEventPage() {
           }))
         : [],
       tags: tags,
+      ...(isAdmin
+        ? {
+            taxPercent: parseFloat(pricing.taxPercent) || 0,
+            platformFeeType: pricing.platformFeeType,
+            platformFeeValue: parseFloat(pricing.platformFeeValue) || 0,
+          }
+        : {}),
     };
   };
 
@@ -444,13 +452,17 @@ export default function CreateEventPage() {
     ["Capacity", totalSlots ? `${totalSlots} slots` : "Missing capacity"],
     ["Pricing", requiresTier ? `${tiers.length} tiers` : "No tiers required"],
     ["Visibility", pricing.visibility],
-    ["Tax", `${pricing.taxPercent || "0"}%`],
-    [
-      "Platform Fee",
-      pricing.platformFeeType === "PERCENT"
-        ? `${pricing.platformFeeValue || "0"}%`
-        : `${pricing.currency} ${pricing.platformFeeValue || "0"}`,
-    ],
+    ...(isAdmin
+      ? [
+          ["Tax", `${pricing.taxPercent || "0"}%`],
+          [
+            "Platform Fee",
+            pricing.platformFeeType === "PERCENT"
+              ? `${pricing.platformFeeValue || "0"}%`
+              : `${pricing.currency} ${pricing.platformFeeValue || "0"}`,
+          ],
+        ]
+      : []),
   ];
 
   useEffect(() => {
@@ -483,6 +495,7 @@ export default function CreateEventPage() {
 
         if (mounted) {
           setHasManagerAccess(true);
+          setUserRole(role);
           setAccessChecked(true);
         }
 
@@ -1048,75 +1061,80 @@ export default function CreateEventPage() {
               </div>
             )}
 
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <label className="space-y-2">
-                <span className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500"><Globe size={13} /> Currency</span>
-                <input
-                  value={pricing.currency}
-                  onChange={(e) => setPricing((v) => ({ ...v, currency: e.target.value.toUpperCase() }))}
-                  className={inputClass}
-                  maxLength={6}
-                />
-              </label>
-              <label className="space-y-2">
-                <span className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500"><DollarSign size={13} /> Tax %</span>
-                <input
-                  type="number"
-                  min="0"
-                  max="100"
-                  step="0.01"
-                  value={pricing.taxPercent}
-                  onChange={(e) => setPricing((v) => ({ ...v, taxPercent: e.target.value }))}
-                  className={inputClass}
-                />
-              </label>
-              <label className="space-y-2">
-                <span className="text-xs font-bold uppercase text-slate-500">Platform Fee Type</span>
-                <select
-                  value={pricing.platformFeeType}
-                  onChange={(e) => setPricing((v) => ({ ...v, platformFeeType: e.target.value as PlatformFeeType }))}
-                  className={inputClass}
-                >
-                  <option value="PERCENT">Percent</option>
-                  <option value="FIXED">Fixed</option>
-                </select>
-              </label>
-              <label className="space-y-2">
-                <span className="text-xs font-bold uppercase text-slate-500">Platform Fee Value</span>
-                <input
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value={pricing.platformFeeValue}
-                  onChange={(e) => setPricing((v) => ({ ...v, platformFeeValue: e.target.value }))}
-                  className={inputClass}
-                />
-              </label>
-
-              <label className="space-y-2">
-                <span className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500"><Eye size={13} /> Visibility</span>
-                <select
-                  value={pricing.visibility}
-                  onChange={(e) => setPricing((v) => ({ ...v, visibility: e.target.value as VisibilityType }))}
-                  className={inputClass}
-                >
-                  <option value="PUBLIC">Public</option>
-                  <option value="PRIVATE">Private</option>
-                  <option value="INVITE_ONLY">Invite-only</option>
-                </select>
-              </label>
-
-              {pricing.visibility !== "PUBLIC" && (
+            {isAdmin && (
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <label className="space-y-2">
-                  <span className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500"><Lock size={13} /> Access Code</span>
+                  <span className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500"><Globe size={13} /> Currency</span>
                   <input
-                    value={pricing.accessCode}
-                    onChange={(e) => setPricing((v) => ({ ...v, accessCode: e.target.value }))}
+                    value={pricing.currency}
+                    onChange={(e) => setPricing((v) => ({ ...v, currency: e.target.value.toUpperCase() }))}
                     className={inputClass}
-                    placeholder="Minimum 4 characters"
+                    maxLength={6}
                   />
                 </label>
-              )}
+                <label className="space-y-2">
+                  <span className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500"><DollarSign size={13} /> Tax %</span>
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    step="0.01"
+                    value={pricing.taxPercent}
+                    onChange={(e) => setPricing((v) => ({ ...v, taxPercent: e.target.value }))}
+                    className={inputClass}
+                  />
+                </label>
+                <label className="space-y-2">
+                  <span className="text-xs font-bold uppercase text-slate-500">Platform Fee Type</span>
+                  <select
+                    value={pricing.platformFeeType}
+                    onChange={(e) => setPricing((v) => ({ ...v, platformFeeType: e.target.value as PlatformFeeType }))}
+                    className={inputClass}
+                  >
+                    <option value="PERCENT">Percent</option>
+                    <option value="FIXED">Fixed</option>
+                  </select>
+                </label>
+                <label className="space-y-2">
+                  <span className="text-xs font-bold uppercase text-slate-500">Platform Fee Value</span>
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={pricing.platformFeeValue}
+                    onChange={(e) => setPricing((v) => ({ ...v, platformFeeValue: e.target.value }))}
+                    className={inputClass}
+                  />
+                </label>
+
+                <label className="space-y-2">
+                  <span className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500"><Eye size={13} /> Visibility</span>
+                  <select
+                    value={pricing.visibility}
+                    onChange={(e) => setPricing((v) => ({ ...v, visibility: e.target.value as VisibilityType }))}
+                    className={inputClass}
+                  >
+                    <option value="PUBLIC">Public</option>
+                    <option value="PRIVATE">Private</option>
+                    <option value="INVITE_ONLY">Invite-only</option>
+                  </select>
+                </label>
+
+                {pricing.visibility !== "PUBLIC" && (
+                  <label className="space-y-2">
+                    <span className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500"><Lock size={13} /> Access Code</span>
+                    <input
+                      value={pricing.accessCode}
+                      onChange={(e) => setPricing((v) => ({ ...v, accessCode: e.target.value }))}
+                      className={inputClass}
+                      placeholder="Minimum 4 characters"
+                    />
+                  </label>
+                )}
+              </div>
+            )}
+
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 
               <div className="md:col-span-2 space-y-3">
                 <span className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500"><Tag size={13} /> Event Tags (e.g. Buy 2 Get 1 Free)</span>
@@ -1151,14 +1169,16 @@ export default function CreateEventPage() {
                 </div>
               </div>
 
-              <label className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 md:col-span-2">
-                <input
-                  type="checkbox"
-                  checked={pricing.featured}
-                  onChange={(e) => setPricing((v) => ({ ...v, featured: e.target.checked }))}
-                />
-                Mark this event as featured
-              </label>
+              {isAdmin && (
+                <label className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 md:col-span-2">
+                  <input
+                    type="checkbox"
+                    checked={pricing.featured}
+                    onChange={(e) => setPricing((v) => ({ ...v, featured: e.target.checked }))}
+                  />
+                  Mark this event as featured
+                </label>
+              )}
             </div>
           </section>
         )}
@@ -1222,9 +1242,11 @@ export default function CreateEventPage() {
                 type="button"
                 onClick={handlePublish}
                 disabled={loading || !hasManagerAccess || !accessChecked}
-                className="rounded-xl bg-emerald-600 px-5 py-2 text-sm font-bold text-white transition hover:bg-emerald-700 disabled:opacity-60"
+                className={`rounded-xl px-5 py-2 text-sm font-bold text-white transition disabled:opacity-60 ${
+                  userRole === "ADMIN" ? "bg-emerald-600 hover:bg-emerald-700" : "bg-teal-600 hover:bg-teal-700"
+                }`}
               >
-                {loading ? "Publishing..." : "Publish Event"}
+                {loading ? "Processing..." : userRole === "ADMIN" ? "Publish Event" : "Request Approval"}
               </button>
             )}
           </div>

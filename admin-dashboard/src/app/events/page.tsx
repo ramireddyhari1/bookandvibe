@@ -27,6 +27,7 @@ type EventItem = {
   venue: string;
   location: string;
   price: number;
+  status: string;
   images?: string;
   partnerId?: string | null;
 };
@@ -39,18 +40,7 @@ type PartnerOption = {
 
 import { fetchApi } from "@/lib/api";
 
-type EventItem = {
-  id: string;
-  title: string;
-  category: string;
-  date: string;
-  time: string;
-  venue: string;
-  location: string;
-  price: number;
-  images?: string;
-  partnerId?: string | null;
-};
+// Removed redundant type declaration
 
 type PartnerOption = {
   id: string;
@@ -232,6 +222,20 @@ export default function EventsPage() {
     }
   };
 
+  const handleApprovalAction = async (eventId: string, action: "approve" | "reject") => {
+    if (currentRole !== "ADMIN") return;
+    try {
+      await fetchApi(`/events/${eventId}/${action}`, { method: "POST" });
+      setEvents((prev) =>
+        prev.map((event) =>
+          event.id === eventId ? { ...event, status: action === "approve" ? "ACTIVE" : "REJECTED" } : event
+        )
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : `Failed to ${action} event`);
+    }
+  };
+
   const stats = useMemo(() => {
     const total = events.length;
     const now = Date.now();
@@ -357,40 +361,75 @@ export default function EventsPage() {
                       </div>
                     ) : null}
 
-                    <div className="flex items-center justify-between border-t border-slate-700/70 pt-3">
-                      <div className="rounded-full border border-emerald-400/25 bg-emerald-500/10 px-2.5 py-1 text-xs font-bold text-emerald-300">
-                        <Radio size={12} className="mr-1 inline-block" /> Live
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="group/tooltip relative">
-                          <Link
-                            href={`/events/${event.id}`}
-                            title="View"
-                            className="btn-glass focus-premium rounded-lg p-2.5 hover:shadow-[0_0_20px_rgba(125,211,252,0.25)]"
-                          >
-                            <Eye size={15} />
-                          </Link>
-                          <span className="pointer-events-none absolute -top-7 left-1/2 -translate-x-1/2 rounded-md border border-white/10 bg-slate-900/90 px-2 py-0.5 text-[10px] font-bold text-slate-200 opacity-0 transition group-hover/tooltip:opacity-100">View</span>
-                        </div>
-                        <div className="group/tooltip relative">
-                          <Link
-                            href={`/events/new?eventId=${event.id}`}
-                            title="Edit"
-                            className="btn-glass focus-premium rounded-lg p-2.5 hover:shadow-[0_0_20px_rgba(167,139,250,0.25)]"
-                          >
-                            <Pencil size={15} />
-                          </Link>
-                          <span className="pointer-events-none absolute -top-7 left-1/2 -translate-x-1/2 rounded-md border border-white/10 bg-slate-900/90 px-2 py-0.5 text-[10px] font-bold text-slate-200 opacity-0 transition group-hover/tooltip:opacity-100">Edit</span>
-                        </div>
-                        <div className="group/tooltip relative">
+                    <div className={currentRole === "ADMIN" && event.status === "PENDING" ? "space-y-3" : ""}>
+                      {currentRole === "ADMIN" && event.status === "PENDING" && (
+                        <div className="flex items-center gap-2 border-t border-slate-100 pt-3">
                           <button
-                            onClick={() => handleDelete(event.id)}
-                            title="Delete"
-                            className="btn-danger-soft focus-premium rounded-lg p-2.5"
+                            onClick={() => handleApprovalAction(event.id, "approve")}
+                            className="flex-1 rounded-xl bg-emerald-600 py-2 text-[11px] font-black uppercase tracking-wider text-white transition hover:bg-emerald-700"
                           >
-                            <Trash2 size={15} />
+                            Approve
                           </button>
-                          <span className="pointer-events-none absolute -top-7 left-1/2 -translate-x-1/2 rounded-md border border-rose-300/25 bg-rose-950/85 px-2 py-0.5 text-[10px] font-bold text-rose-200 opacity-0 transition group-hover/tooltip:opacity-100">Delete</span>
+                          <button
+                            onClick={() => handleApprovalAction(event.id, "reject")}
+                            className="flex-1 rounded-xl bg-rose-50 py-2 text-[11px] font-black uppercase tracking-wider text-rose-600 transition hover:bg-rose-100 border border-rose-100"
+                          >
+                            Reject
+                          </button>
+                        </div>
+                      )}
+
+                      <div className="flex items-center justify-between border-t border-slate-100 pt-3">
+                        <div className="flex items-center gap-2">
+                          {event.status === "ACTIVE" ? (
+                            <div className="rounded-full border border-emerald-400/25 bg-emerald-50 text-[10px] font-black uppercase tracking-wider text-emerald-600 px-2 py-0.5">
+                              Active
+                            </div>
+                          ) : event.status === "PENDING" ? (
+                            <div className="rounded-full border border-amber-400/25 bg-amber-50 text-[10px] font-black uppercase tracking-wider text-amber-600 px-2 py-0.5 animate-pulse">
+                              Pending
+                            </div>
+                          ) : event.status === "REJECTED" ? (
+                            <div className="rounded-full border border-rose-400/25 bg-rose-50 text-[10px] font-black uppercase tracking-wider text-rose-600 px-2 py-0.5">
+                              Rejected
+                            </div>
+                          ) : (
+                            <div className="rounded-full border border-slate-400/25 bg-slate-50 text-[10px] font-black uppercase tracking-wider text-slate-500 px-2 py-0.5">
+                              Draft
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="group/tooltip relative">
+                            <Link
+                              href={`/events/${event.id}`}
+                              title="View"
+                              className="btn-glass focus-premium rounded-lg p-2.5 hover:shadow-[0_0_20px_rgba(125,211,252,0.25)]"
+                            >
+                              <Eye size={15} />
+                            </Link>
+                            <span className="pointer-events-none absolute -top-7 left-1/2 -translate-x-1/2 rounded-md border border-white/10 bg-slate-900/90 px-2 py-0.5 text-[10px] font-bold text-slate-200 opacity-0 transition group-hover/tooltip:opacity-100">View</span>
+                          </div>
+                          <div className="group/tooltip relative">
+                            <Link
+                              href={`/events/new?eventId=${event.id}`}
+                              title="Edit"
+                              className="btn-glass focus-premium rounded-lg p-2.5 hover:shadow-[0_0_20px_rgba(167,139,250,0.25)]"
+                            >
+                              <Pencil size={15} />
+                            </Link>
+                            <span className="pointer-events-none absolute -top-7 left-1/2 -translate-x-1/2 rounded-md border border-white/10 bg-slate-900/90 px-2 py-0.5 text-[10px] font-bold text-slate-200 opacity-0 transition group-hover/tooltip:opacity-100">Edit</span>
+                          </div>
+                          <div className="group/tooltip relative">
+                            <button
+                              onClick={() => handleDelete(event.id)}
+                              title="Delete"
+                              className="btn-danger-soft focus-premium rounded-lg p-2.5"
+                            >
+                              <Trash2 size={15} />
+                            </button>
+                            <span className="pointer-events-none absolute -top-7 left-1/2 -translate-x-1/2 rounded-md border border-rose-300/25 bg-rose-950/85 px-2 py-0.5 text-[10px] font-bold text-rose-200 opacity-0 transition group-hover/tooltip:opacity-100">Delete</span>
+                          </div>
                         </div>
                       </div>
                     </div>

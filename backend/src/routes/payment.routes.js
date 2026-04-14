@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const Razorpay = require('razorpay');
 const prisma = require('../lib/prisma');
 const { authenticateToken } = require('../middleware/auth');
+const { creditPartnerWallet } = require('../services/wallet.service');
 
 // ─── Initialize Razorpay Instance ────────────────────────────────────────────
 const razorpay = new Razorpay({
@@ -178,8 +179,8 @@ router.post('/confirm-booking', authenticateToken, async (req, res) => {
         include: { items: { include: { tier: true } } },
       });
 
-      // Create payment record with Razorpay details
-      await tx.payment.create({
+      // 3. Create payment record with Razorpay details
+      const payment = await tx.payment.create({
         data: {
           amount: parseFloat(totalAmount),
           method: 'RAZORPAY',
@@ -188,6 +189,16 @@ router.post('/confirm-booking', authenticateToken, async (req, res) => {
           bookingId: booking.id,
         },
       });
+
+      // 4. Credit Partner Wallet
+      const eventTitle = event.title || 'Event Entrance';
+      await creditPartnerWallet(
+        tx,
+        event.partnerId,
+        parseFloat(totalAmount),
+        `Earning from: ${eventTitle} (Booking #${booking.id.slice(0, 8)})`,
+        booking.id
+      );
 
       return booking;
     });
@@ -228,19 +239,41 @@ router.post('/confirm-gamehub', authenticateToken, async (req, res) => {
     }
 
     // 2. Create gamehub booking
-    const booking = await prisma.gamehubBooking.create({
-      data: {
-        bookingDate: new Date(date),
-        slotLabel,
-        totalAmount: parseFloat(totalAmount),
-        currency: 'INR',
-        status: 'CONFIRMED',
-        paymentMethod: 'RAZORPAY',
-        paymentStatus: 'SUCCESS',
-        transactionId: razorpay_payment_id,
-        userId,
-        facilityId,
-      },
+    const booking = await prisma.$transaction(async (tx) => {
+      const facility = await tx.gamehubFacility.findUnique({
+        where: { id: facilityId },
+        select: { id: true, name: true, partnerId: true }
+      });
+
+      if (!facility) throw new Error('Facility not found');
+
+      const createdBooking = await tx.gamehubBooking.create({
+        data: {
+          bookingDate: new Date(date),
+          slotLabel,
+          totalAmount: parseFloat(totalAmount),
+          currency: 'INR',
+          status: 'CONFIRMED',
+          paymentMethod: 'RAZORPAY',
+          paymentStatus: 'SUCCESS',
+          transactionId: razorpay_payment_id,
+          userId,
+          facilityId,
+        },
+      });
+
+      // Credit Partner Wallet
+      if (facility.partnerId) {
+        await creditPartnerWallet(
+          tx,
+          facility.partnerId,
+          parseFloat(totalAmount),
+          `Venue Earning: ${facility.name} (Slot: ${slotLabel})`,
+          createdBooking.id
+        );
+      }
+
+      return createdBooking;
     });
 
     res.status(201).json({ message: 'GameHub booking confirmed! 🎉', data: booking });

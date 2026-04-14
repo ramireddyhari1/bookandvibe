@@ -89,7 +89,7 @@ export default function BookingsPage() {
         <p className="text-emerald-600/70 mt-1 font-bold uppercase text-[10px] tracking-wider">Live tracking & operations</p>
       </header>
 
-      <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-white p-5 rounded-2xl border border-emerald-50 shadow-sm transition-all hover:bg-emerald-50/30">
           <p className="text-[10px] font-black uppercase tracking-widest text-slate-400/80">Total Bookings</p>
           <p className="text-3xl font-black mt-1 text-slate-900 tracking-tight">{stats.totalBookings}</p>

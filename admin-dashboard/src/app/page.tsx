@@ -217,10 +217,10 @@ export default function AdminDashboard() {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.6fr_1fr] lg:items-end">
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600/50">Executive Overview</p>
-            <h2 className="dash-title mt-2 bg-gradient-to-r from-emerald-900 via-teal-900 to-emerald-800 bg-clip-text text-3xl font-black leading-tight text-transparent md:text-4xl">
+            <h2 className="dash-title mt-2 bg-gradient-to-r from-emerald-900 via-teal-900 to-emerald-800 bg-clip-text text-xl sm:text-3xl font-black leading-tight text-transparent md:text-4xl">
               Professional command center for events, partners, and live operations
             </h2>
-            <p className="mt-4 max-w-3xl text-sm font-bold text-slate-500/80">
+            <p className="hidden sm:block mt-4 max-w-3xl text-sm font-bold text-slate-500/80">
               Track key growth metrics, monitor operational health, and execute high-priority actions from one focused dashboard.
               {error && <span className="ml-2 text-amber-600">(⚠ {error})</span>}
             </p>
@@ -247,22 +247,22 @@ export default function AdminDashboard() {
         </div>
       </section>
 
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-2 lg:grid-cols-4 md:gap-5">
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (
-            <div key={stat.name} className="dash-card surface-elevate group border-emerald-50/50 bg-white p-5 shadow-sm transition-all hover:bg-emerald-50/30">
-              <div className="mb-4 flex items-start justify-between">
-                <div className={`rounded-xl p-3 ${stat.bgColor} transition-transform group-hover:scale-110`}>
-                  <Icon size={20} className={stat.textColor} />
+            <div key={stat.name} className="dash-card surface-elevate group border-emerald-50/50 bg-white p-3.5 md:p-5 shadow-sm transition-all hover:bg-emerald-50/30">
+              <div className="mb-3 md:mb-4 flex items-start justify-between">
+                <div className={`rounded-xl p-2 md:p-3 ${stat.bgColor} transition-transform group-hover:scale-110`}>
+                  <Icon size={16} className={`${stat.textColor} md:w-5 md:h-5`} />
                 </div>
-                <div className={`flex items-center gap-1 rounded-lg px-2.5 py-1 text-[12px] font-black ${stat.trend === "up" ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-600"}`}>
-                  {stat.trend === "up" ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
-                  {stat.change}
+                <div className={`flex items-center gap-1 rounded-lg px-1.5 py-0.5 md:px-2.5 md:py-1 text-[10px] md:text-[12px] font-black ${stat.trend === "up" ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-600"}`}>
+                  {stat.trend === "up" ? <ArrowUpRight size={12} className="md:size-3.5" /> : <ArrowDownRight size={12} className="md:size-3.5" />}
+                  <span className="hidden xs:inline">{stat.change}</span>
                 </div>
               </div>
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400/80">{stat.name}</p>
-              <p className="dash-title mt-1 text-[30px] font-black leading-none text-slate-900">{loading ? "..." : stat.value}</p>
+              <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.15em] md:tracking-[0.2em] text-slate-400/80 truncate">{stat.name}</p>
+              <p className="dash-title mt-1 text-[20px] md:text-[30px] font-black leading-none text-slate-900">{loading ? "..." : stat.value}</p>
             </div>
           );
         })}
@@ -304,9 +304,11 @@ export default function AdminDashboard() {
                   </g>
                 ))}
               </svg>
-              <div className="absolute inset-x-2 bottom-0 grid grid-cols-12">
-                {chartLabels.map((label) => (
-                  <span key={label} className="text-center text-[10px] font-black uppercase text-slate-400/60">{label}</span>
+              <div className="absolute inset-x-2 bottom-0 flex justify-between">
+                {chartLabels.map((label, idx) => (
+                  <span key={label} className={`text-center text-[10px] font-black uppercase text-slate-400/60 ${(idx % 2 !== 0 && chartLabels.length > 6) ? 'hidden sm:block' : ''}`}>
+                    {label}
+                  </span>
                 ))}
               </div>
             </div>

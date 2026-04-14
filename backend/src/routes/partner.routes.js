@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const prisma = require('../lib/prisma');
-const { authenticateToken, requireAdminOrPartner } = require('../middleware/auth');
+const { authenticateToken, requireAdmin, requireAdminOrPartner } = require('../middleware/auth');
 
 // ─── Partner Stats (Dashboard) ───────────────────────────────────────────────
 router.get('/dashboard-stats', authenticateToken, requireAdminOrPartner, async (req, res) => {
@@ -444,6 +444,65 @@ router.post('/verify-ticket', authenticateToken, requireAdminOrPartner, async (r
     return res.status(404).json({ error: 'Invalid or unrecognized ticket code' });
   } catch (error) {
     console.error('Verify Ticket Error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// ─── ADMIN: List All Payout Requests ──────────────────────────────────────────
+router.get('/all-payouts', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const payouts = await prisma.payout.findMany({
+      include: {
+        user: { select: { name: true, email: true } }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+    res.json({ success: true, data: payouts });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// ─── ADMIN: Update Payout Status ──────────────────────────────────────────────
+router.patch('/payouts/:id/status', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status, transactionId } = req.body;
+
+    if (!['PROCESSING', 'COMPLETED', 'FAILED'].includes(status)) {
+      return res.status(400).json({ error: 'Invalid payout status' });
+    }
+
+    const payout = await prisma.payout.update({
+      where: { id },
+      data: { 
+        status, 
+        transactionId: transactionId || undefined 
+      },
+      include: { user: true }
+    });
+
+    // If failed, refund the wallet
+    if (status === 'FAILED') {
+      const wallet = await prisma.wallet.findUnique({ where: { userId: payout.userId } });
+      if (wallet) {
+        await prisma.wallet.update({
+          where: { id: wallet.id },
+          data: { balance: { increment: payout.amount } }
+        });
+        await prisma.walletTransaction.create({
+          data: {
+            walletId: wallet.id,
+            amount: payout.amount,
+            type: 'REFUND',
+            description: `Refund for failed payout #${id.slice(0, 8)}`
+          }
+        });
+      }
+    }
+
+    res.json({ success: true, data: payout });
+  } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });

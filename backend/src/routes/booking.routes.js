@@ -16,6 +16,7 @@ const {
 } = require('../services/idempotency.service');
 const { validate, seatLockSchema, bookingConfirmSchema } = require('../middleware/validator');
 const { emitSeatStateUpdate } = require('../lib/realtime');
+const { creditPartnerWallet } = require('../services/wallet.service');
 
 function rowLabelToIndex(rowLabel) {
   let index = 0;
@@ -389,7 +390,7 @@ router.post('/seat-bookings/confirm', authenticateToken, validate(bookingConfirm
 
       const event = await tx.event.findUnique({
         where: { id: eventId },
-        select: { id: true, price: true, availableSlots: true, seatRows: true, seatsPerRow: true, seatSelection: true },
+        select: { id: true, title: true, partnerId: true, price: true, availableSlots: true, seatRows: true, seatsPerRow: true, seatSelection: true },
       });
 
       if (!event) {
@@ -460,6 +461,15 @@ router.post('/seat-bookings/confirm', authenticateToken, validate(bookingConfirm
           bookingId: createdBooking.id,
         },
       });
+
+      // Credit Partner Wallet
+      await creditPartnerWallet(
+        tx,
+        event.partnerId,
+        finalAmount,
+        `Seat Earning: ${event.title || 'Event'} (Booking #${createdBooking.id.slice(0, 8)})`,
+        createdBooking.id
+      );
 
       return createdBooking;
     });
@@ -651,7 +661,7 @@ router.post('/shows/:showId/seat-bookings/confirm', authenticateToken, validate(
       const show = await tx.show.findUnique({
         where: { id: showId },
         include: {
-          event: { select: { id: true, price: true } },
+          event: { select: { id: true, title: true, partnerId: true, price: true } },
           seats: {
             where: { seatCode: { in: normalizedSeats } },
             select: { id: true, seatCode: true, status: true, price: true },
@@ -726,6 +736,15 @@ router.post('/shows/:showId/seat-bookings/confirm', authenticateToken, validate(
           bookingId: createdBooking.id,
         },
       });
+
+      // Credit Partner Wallet
+      await creditPartnerWallet(
+        tx,
+        show.event.partnerId,
+        finalAmount,
+        `Show Seat Earning: ${show.event.title || 'Event'} (Booking #${createdBooking.id.slice(0, 8)})`,
+        createdBooking.id
+      );
 
       return createdBooking;
     });
@@ -848,7 +867,7 @@ router.post('/', authenticateToken, async (req, res) => {
       });
 
       // 5. Create payment
-      await tx.payment.create({
+      const payment = await tx.payment.create({
         data: {
           amount: parseFloat(totalAmount),
           method: paymentMethod,
@@ -857,6 +876,18 @@ router.post('/', authenticateToken, async (req, res) => {
           bookingId: booking.id
         }
       });
+
+      // Credit Partner Wallet (Only if success, which is true for MOCK)
+      if (payment.status === 'SUCCESS') {
+        const eventTitle = event.title || 'Event';
+        await creditPartnerWallet(
+          tx,
+          event.partnerId,
+          parseFloat(totalAmount),
+          `Tier Earning: ${eventTitle} (Booking #${booking.id.slice(0, 8)})`,
+          booking.id
+        );
+      }
 
       return booking;
     });

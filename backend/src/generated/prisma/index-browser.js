@@ -161,6 +161,7 @@ exports.Prisma.EventScalarFieldEnum = {
   isPublished: 'isPublished',
   publishedAt: 'publishedAt',
   featured: 'featured',
+  tags: 'tags',
   mapLink: 'mapLink',
   seatLayout: 'seatLayout',
   seatRows: 'seatRows',

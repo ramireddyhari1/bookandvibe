@@ -560,14 +560,28 @@ router.get('/:id', async (req, res) => {
 // POST /api/events - Create event with tiers
 router.post('/', authenticateToken, requireAdminOrPartner, async (req, res) => {
   try {
+    const isAdmin = isAdminUser(req.user);
+    const partnerAttemptedFeeEdit = !isAdmin && (
+      req.body.taxPercent !== undefined ||
+      req.body.platformFeeType !== undefined ||
+      req.body.platformFeeValue !== undefined
+    );
+    if (partnerAttemptedFeeEdit) {
+      return res.status(403).json({ error: 'Only admins can set tax and platform fee.' });
+    }
+
     const requestedPartnerId = req.body.partnerId;
-    const partnerId = isAdminUser(req.user)
+    const partnerId = isAdmin
       ? (requestedPartnerId ? await resolvePartnerIdOrThrow(requestedPartnerId) : req.user.id)
       : req.user.id;
 
     const bookingFormat = normalizeEnum(req.body.bookingFormat, BOOKING_FORMATS, 'HYBRID');
     const visibility = normalizeEnum(req.body.visibility, VISIBILITY_TYPES, 'PUBLIC');
-    const platformFeeType = normalizeEnum(req.body.platformFeeType, PLATFORM_FEE_TYPES, 'PERCENT');
+    const platformFeeType = isAdmin
+      ? normalizeEnum(req.body.platformFeeType, PLATFORM_FEE_TYPES, 'PERCENT')
+      : 'PERCENT';
+    const taxPercent = isAdmin ? (parseFloat(req.body.taxPercent) || 0) : 0;
+    const platformFeeValue = isAdmin ? (parseFloat(req.body.platformFeeValue) || 0) : 0;
     const tiers = (req.body.tiers || []).map((tier) => ({
       name: String(tier.name || '').trim(),
       price: parseFloat(tier.price) || 0,
@@ -600,9 +614,9 @@ router.post('/', authenticateToken, requireAdminOrPartner, async (req, res) => {
         bookingEndAt,
         price: minPrice,
         currency: String(req.body.currency || 'INR').toUpperCase(),
-        taxPercent: parseFloat(req.body.taxPercent) || 0,
+        taxPercent,
         platformFeeType,
-        platformFeeValue: parseFloat(req.body.platformFeeValue) || 0,
+        platformFeeValue,
         totalSlots: totalSlots,
         availableSlots: totalSlots,
         images: JSON.stringify(images),
@@ -664,6 +678,16 @@ router.post('/', authenticateToken, requireAdminOrPartner, async (req, res) => {
 // PUT /api/events/:id - Update event
 router.put('/:id', authenticateToken, requireAdminOrPartner, async (req, res) => {
   try {
+    const isAdmin = isAdminUser(req.user);
+    const partnerAttemptedFeeEdit = !isAdmin && (
+      req.body.taxPercent !== undefined ||
+      req.body.platformFeeType !== undefined ||
+      req.body.platformFeeValue !== undefined
+    );
+    if (partnerAttemptedFeeEdit) {
+      return res.status(403).json({ error: 'Only admins can edit tax and platform fee.' });
+    }
+
     const managedEvent = await loadEventForManagement(req.params.id);
     if (!managedEvent) return res.status(404).json({ error: 'Event not found' });
     if (!hasEventManagementAccess(req.user, managedEvent)) {
@@ -693,9 +717,9 @@ router.put('/:id', authenticateToken, requireAdminOrPartner, async (req, res) =>
     if (req.body.bookingEndAt !== undefined) updateData.bookingEndAt = parseDateOrNull(req.body.bookingEndAt);
     if (req.body.bookingFormat) updateData.bookingFormat = normalizeEnum(req.body.bookingFormat, BOOKING_FORMATS, 'HYBRID');
     if (req.body.visibility) updateData.visibility = normalizeEnum(req.body.visibility, VISIBILITY_TYPES, 'PUBLIC');
-    if (req.body.taxPercent !== undefined) updateData.taxPercent = parseFloat(req.body.taxPercent) || 0;
-    if (req.body.platformFeeType) updateData.platformFeeType = normalizeEnum(req.body.platformFeeType, PLATFORM_FEE_TYPES, 'PERCENT');
-    if (req.body.platformFeeValue !== undefined) updateData.platformFeeValue = parseFloat(req.body.platformFeeValue) || 0;
+    if (isAdmin && req.body.taxPercent !== undefined) updateData.taxPercent = parseFloat(req.body.taxPercent) || 0;
+    if (isAdmin && req.body.platformFeeType) updateData.platformFeeType = normalizeEnum(req.body.platformFeeType, PLATFORM_FEE_TYPES, 'PERCENT');
+    if (isAdmin && req.body.platformFeeValue !== undefined) updateData.platformFeeValue = parseFloat(req.body.platformFeeValue) || 0;
     if (req.body.images !== undefined || req.body.image !== undefined) {
       updateData.images = JSON.stringify(parseImages(req.body.images || req.body.image || ''));
     }
@@ -817,9 +841,10 @@ router.post('/:id/validate-publish', authenticateToken, requireAdminOrPartner, a
   }
 });
 
-// POST /api/events/:id/publish - Publish only if fully valid
+// POST /api/events/:id/publish - Admin publishes, Partner requests approval
 router.post('/:id/publish', authenticateToken, requireAdminOrPartner, async (req, res) => {
   try {
+    const isAdmin = isAdminUser(req.user);
     const managedEvent = await loadEventForManagement(req.params.id);
     if (!managedEvent) return res.status(404).json({ error: 'Event not found' });
     if (!hasEventManagementAccess(req.user, managedEvent)) {
@@ -837,14 +862,66 @@ router.post('/:id/publish', authenticateToken, requireAdminOrPartner, async (req
     const updated = await prisma.event.update({
       where: { id: req.params.id },
       data: {
-        status: 'ACTIVE',
-        isPublished: true,
-        publishedAt: new Date(),
+        status: isAdmin ? 'ACTIVE' : 'PENDING',
+        isPublished: isAdmin, // Only true if Admin publishes
+        publishedAt: isAdmin ? new Date() : null,
       },
       include: { tiers: true },
     });
 
-    return res.json({ message: 'Event published successfully', data: updated });
+    return res.json({ 
+      message: isAdmin ? 'Event published successfully' : 'Event submitted for approval', 
+      data: updated 
+    });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+// POST /api/events/:id/approve - Admin only approval
+router.post('/:id/approve', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const event = await prisma.event.findUnique({ where: { id: req.params.id } });
+    if (!event) return res.status(404).json({ error: 'Event not found' });
+    
+    if (event.status !== 'PENDING') {
+      return res.status(400).json({ error: 'Only pending events can be approved' });
+    }
+
+    const updated = await prisma.event.update({
+      where: { id: req.params.id },
+      data: {
+        status: 'ACTIVE',
+        isPublished: true,
+        publishedAt: new Date(),
+      },
+    });
+
+    return res.json({ message: 'Event approved and published', data: updated });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+// POST /api/events/:id/reject - Admin only rejection
+router.post('/:id/reject', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const event = await prisma.event.findUnique({ where: { id: req.params.id } });
+    if (!event) return res.status(404).json({ error: 'Event not found' });
+    
+    if (event.status !== 'PENDING') {
+      return res.status(400).json({ error: 'Only pending events can be rejected' });
+    }
+
+    const updated = await prisma.event.update({
+      where: { id: req.params.id },
+      data: {
+        status: 'REJECTED',
+        isPublished: false,
+      },
+    });
+
+    return res.json({ message: 'Event rejected', data: updated });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

@@ -58,10 +58,11 @@ model Event {
   totalSlots       Int
   availableSlots   Int
   images           String    @default("[]") // JSON array of image URLs
-  status           String    @default("DRAFT") // ACTIVE, DRAFT, COMPLETED, CANCELLED
+  status           String    @default("DRAFT") // ACTIVE, DRAFT, PENDING, REJECTED, COMPLETED, CANCELLED
   isPublished      Boolean   @default(false)
   publishedAt      DateTime?
   featured         Boolean   @default(false)
+  tags             String    @default("[]") // JSON array of tags
   mapLink          String? // Google Maps URL for venue directions
 
   // Seating configuration (stored as JSON)

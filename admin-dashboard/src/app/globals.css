@@ -13,6 +13,12 @@
   --accent-soft: rgba(16, 185, 129, 0.08);
 }
 
+@media (max-width: 1024px) {
+  :root {
+    --sidebar-w: 0px !important;
+  }
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -189,8 +195,4 @@ body {
   }
 }
 
-@media (max-width: 1024px) {
-  :root {
-    --sidebar-w: 80px;
-  }
-}
+/* Removed mobile sidebar var override to handle via !important in root above */

@@ -74,8 +74,12 @@ export default function AdminLoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-rose-950 px-4 py-10">
       <div className="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl">
         <div className="mb-7 text-center">
-          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-rose-500/20 text-rose-300">
-            <ShieldCheck size={28} />
+          <div className="mx-auto mb-3 flex h-48 w-48 items-center justify-center overflow-hidden rounded-[2.5rem] bg-white p-3 shadow-2xl shadow-rose-500/20 ring-1 ring-white/10 transition-transform hover:scale-105">
+            <img 
+              src="/logo.png" 
+              alt="Book & Vibe" 
+              className="h-full w-full scale-[2.2] object-contain transition-transform duration-500 hover:scale-[2.4]"
+            />
           </div>
           <h1 className="text-2xl font-extrabold text-white">Admin Dashboard Login</h1>
           <p className="mt-2 text-sm font-medium text-slate-300">Sign in using an ADMIN or PARTNER account</p>

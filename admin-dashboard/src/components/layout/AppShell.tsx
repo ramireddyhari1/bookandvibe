@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Sidebar from "@/components/layout/Sidebar";
 import { useMemo } from "react";
-import { Bell, CalendarDays, Search, User } from "lucide-react";
+import { Bell, CalendarDays, Menu, Search, User } from "lucide-react";
 
 function titleFromPath(pathname: string): string {
   if (pathname === "/") return "Operations Overview";
@@ -21,6 +21,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const isAuthRoute = pathname === "/login";
 
   const [sessionUser, setSessionUser] = useState<{ id?: string; name?: string; role?: string; partnerType?: string | null } | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -34,6 +35,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       }
     }
   }, []);
+
+  // Close mobile menu on path changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
 
   const userName = sessionUser?.name || "Dashboard User";
   const roleLabel = String(sessionUser?.role || "ADMIN").toUpperCase();
@@ -91,12 +97,25 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="dashboard-shell">
-      <Sidebar />
-      <main className="app-main relative z-10 min-h-screen px-4 pb-10 pt-5 md:px-8">
-        <header className="dash-card sticky top-4 z-30 mb-6 flex items-center justify-between gap-3 border-emerald-100/50 bg-white/80 px-3 py-3 md:px-5">
-          <div className="min-w-0">
-            <p className="text-[10px] font-black uppercase tracking-[0.25em] text-emerald-600/60">Control Suite</p>
-            <h1 className="dash-title truncate text-xl font-extrabold text-slate-900">{titleFromPath(pathname)}</h1>
+      <Sidebar 
+        mobileOpen={isMobileMenuOpen} 
+        onMobileClose={() => setIsMobileMenuOpen(false)} 
+      />
+      <main className="app-main relative z-10 min-h-screen px-4 pb-10 pt-4 md:px-8 md:pt-6">
+        <header className="dash-card sticky top-2 lg:top-4 z-30 mb-6 flex items-center justify-between gap-3 border-emerald-100/50 bg-white/80 px-3 py-2.5 transition-all md:px-5 md:py-3 lg:top-4">
+          <div className="flex items-center gap-3 min-w-0">
+            {/* Hamburger Button */}
+            <button 
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="flex lg:hidden btn-glass focus-premium rounded-xl p-2 text-slate-600 hover:text-emerald-600"
+            >
+              <Menu size={20} />
+            </button>
+
+            <div className="min-w-0">
+              <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.25em] text-emerald-600/60">Control Suite</p>
+              <h1 className="dash-title truncate text-lg md:text-xl font-extrabold text-slate-900">{titleFromPath(pathname)}</h1>
+            </div>
           </div>
 
           <div className="hidden flex-1 items-center justify-center lg:flex">

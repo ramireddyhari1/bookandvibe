@@ -4161,6 +4161,7 @@ export namespace Prisma {
     isPublished: boolean | null
     publishedAt: Date | null
     featured: boolean | null
+    tags: string | null
     mapLink: string | null
     seatLayout: string | null
     seatRows: number | null
@@ -4198,6 +4199,7 @@ export namespace Prisma {
     isPublished: boolean | null
     publishedAt: Date | null
     featured: boolean | null
+    tags: string | null
     mapLink: string | null
     seatLayout: string | null
     seatRows: number | null
@@ -4235,6 +4237,7 @@ export namespace Prisma {
     isPublished: number
     publishedAt: number
     featured: number
+    tags: number
     mapLink: number
     seatLayout: number
     seatRows: number
@@ -4294,6 +4297,7 @@ export namespace Prisma {
     isPublished?: true
     publishedAt?: true
     featured?: true
+    tags?: true
     mapLink?: true
     seatLayout?: true
     seatRows?: true
@@ -4331,6 +4335,7 @@ export namespace Prisma {
     isPublished?: true
     publishedAt?: true
     featured?: true
+    tags?: true
     mapLink?: true
     seatLayout?: true
     seatRows?: true
@@ -4368,6 +4373,7 @@ export namespace Prisma {
     isPublished?: true
     publishedAt?: true
     featured?: true
+    tags?: true
     mapLink?: true
     seatLayout?: true
     seatRows?: true
@@ -4492,6 +4498,7 @@ export namespace Prisma {
     isPublished: boolean
     publishedAt: Date | null
     featured: boolean
+    tags: string
     mapLink: string | null
     seatLayout: string
     seatRows: number | null
@@ -4548,6 +4555,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: boolean
     featured?: boolean
+    tags?: boolean
     mapLink?: boolean
     seatLayout?: boolean
     seatRows?: boolean
@@ -4591,6 +4599,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: boolean
     featured?: boolean
+    tags?: boolean
     mapLink?: boolean
     seatLayout?: boolean
     seatRows?: boolean
@@ -4629,6 +4638,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: boolean
     featured?: boolean
+    tags?: boolean
     mapLink?: boolean
     seatLayout?: boolean
     seatRows?: boolean
@@ -4667,6 +4677,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: boolean
     featured?: boolean
+    tags?: boolean
     mapLink?: boolean
     seatLayout?: boolean
     seatRows?: boolean
@@ -4678,7 +4689,7 @@ export namespace Prisma {
     partnerId?: boolean
   }
 
-  export type EventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "category" | "bookingFormat" | "visibility" | "accessCode" | "location" | "venue" | "date" | "time" | "bookingStartAt" | "bookingEndAt" | "price" | "currency" | "taxPercent" | "platformFeeType" | "platformFeeValue" | "totalSlots" | "availableSlots" | "images" | "status" | "isPublished" | "publishedAt" | "featured" | "mapLink" | "seatLayout" | "seatRows" | "seatsPerRow" | "numberedSeats" | "seatSelection" | "createdAt" | "updatedAt" | "partnerId", ExtArgs["result"]["event"]>
+  export type EventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "category" | "bookingFormat" | "visibility" | "accessCode" | "location" | "venue" | "date" | "time" | "bookingStartAt" | "bookingEndAt" | "price" | "currency" | "taxPercent" | "platformFeeType" | "platformFeeValue" | "totalSlots" | "availableSlots" | "images" | "status" | "isPublished" | "publishedAt" | "featured" | "tags" | "mapLink" | "seatLayout" | "seatRows" | "seatsPerRow" | "numberedSeats" | "seatSelection" | "createdAt" | "updatedAt" | "partnerId", ExtArgs["result"]["event"]>
   export type EventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     partner?: boolean | UserDefaultArgs<ExtArgs>
     bookings?: boolean | Event$bookingsArgs<ExtArgs>
@@ -4729,6 +4740,7 @@ export namespace Prisma {
       isPublished: boolean
       publishedAt: Date | null
       featured: boolean
+      tags: string
       mapLink: string | null
       seatLayout: string
       seatRows: number | null
@@ -5191,6 +5203,7 @@ export namespace Prisma {
     readonly isPublished: FieldRef<"Event", 'Boolean'>
     readonly publishedAt: FieldRef<"Event", 'DateTime'>
     readonly featured: FieldRef<"Event", 'Boolean'>
+    readonly tags: FieldRef<"Event", 'String'>
     readonly mapLink: FieldRef<"Event", 'String'>
     readonly seatLayout: FieldRef<"Event", 'String'>
     readonly seatRows: FieldRef<"Event", 'Int'>
@@ -24434,6 +24447,7 @@ export namespace Prisma {
     isPublished: 'isPublished',
     publishedAt: 'publishedAt',
     featured: 'featured',
+    tags: 'tags',
     mapLink: 'mapLink',
     seatLayout: 'seatLayout',
     seatRows: 'seatRows',
@@ -24922,6 +24936,7 @@ export namespace Prisma {
     isPublished?: BoolFilter<"Event"> | boolean
     publishedAt?: DateTimeNullableFilter<"Event"> | Date | string | null
     featured?: BoolFilter<"Event"> | boolean
+    tags?: StringFilter<"Event"> | string
     mapLink?: StringNullableFilter<"Event"> | string | null
     seatLayout?: StringFilter<"Event"> | string
     seatRows?: IntNullableFilter<"Event"> | number | null
@@ -24964,6 +24979,7 @@ export namespace Prisma {
     isPublished?: SortOrder
     publishedAt?: SortOrderInput | SortOrder
     featured?: SortOrder
+    tags?: SortOrder
     mapLink?: SortOrderInput | SortOrder
     seatLayout?: SortOrder
     seatRows?: SortOrderInput | SortOrder
@@ -25009,6 +25025,7 @@ export namespace Prisma {
     isPublished?: BoolFilter<"Event"> | boolean
     publishedAt?: DateTimeNullableFilter<"Event"> | Date | string | null
     featured?: BoolFilter<"Event"> | boolean
+    tags?: StringFilter<"Event"> | string
     mapLink?: StringNullableFilter<"Event"> | string | null
     seatLayout?: StringFilter<"Event"> | string
     seatRows?: IntNullableFilter<"Event"> | number | null
@@ -25051,6 +25068,7 @@ export namespace Prisma {
     isPublished?: SortOrder
     publishedAt?: SortOrderInput | SortOrder
     featured?: SortOrder
+    tags?: SortOrder
     mapLink?: SortOrderInput | SortOrder
     seatLayout?: SortOrder
     seatRows?: SortOrderInput | SortOrder
@@ -25096,6 +25114,7 @@ export namespace Prisma {
     isPublished?: BoolWithAggregatesFilter<"Event"> | boolean
     publishedAt?: DateTimeNullableWithAggregatesFilter<"Event"> | Date | string | null
     featured?: BoolWithAggregatesFilter<"Event"> | boolean
+    tags?: StringWithAggregatesFilter<"Event"> | string
     mapLink?: StringNullableWithAggregatesFilter<"Event"> | string | null
     seatLayout?: StringWithAggregatesFilter<"Event"> | string
     seatRows?: IntNullableWithAggregatesFilter<"Event"> | number | null
@@ -26542,6 +26561,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    tags?: string
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -26583,6 +26603,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    tags?: string
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -26624,6 +26645,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    tags?: StringFieldUpdateOperationsInput | string
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -26665,6 +26687,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    tags?: StringFieldUpdateOperationsInput | string
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -26706,6 +26729,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    tags?: string
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -26743,6 +26767,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    tags?: StringFieldUpdateOperationsInput | string
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -26779,6 +26804,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    tags?: StringFieldUpdateOperationsInput | string
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -28465,6 +28491,7 @@ export namespace Prisma {
     isPublished?: SortOrder
     publishedAt?: SortOrder
     featured?: SortOrder
+    tags?: SortOrder
     mapLink?: SortOrder
     seatLayout?: SortOrder
     seatRows?: SortOrder
@@ -28512,6 +28539,7 @@ export namespace Prisma {
     isPublished?: SortOrder
     publishedAt?: SortOrder
     featured?: SortOrder
+    tags?: SortOrder
     mapLink?: SortOrder
     seatLayout?: SortOrder
     seatRows?: SortOrder
@@ -28549,6 +28577,7 @@ export namespace Prisma {
     isPublished?: SortOrder
     publishedAt?: SortOrder
     featured?: SortOrder
+    tags?: SortOrder
     mapLink?: SortOrder
     seatLayout?: SortOrder
     seatRows?: SortOrder
@@ -31050,6 +31079,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    tags?: string
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -31090,6 +31120,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    tags?: string
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -31422,6 +31453,7 @@ export namespace Prisma {
     isPublished?: BoolFilter<"Event"> | boolean
     publishedAt?: DateTimeNullableFilter<"Event"> | Date | string | null
     featured?: BoolFilter<"Event"> | boolean
+    tags?: StringFilter<"Event"> | string
     mapLink?: StringNullableFilter<"Event"> | string | null
     seatLayout?: StringFilter<"Event"> | string
     seatRows?: IntNullableFilter<"Event"> | number | null
@@ -32031,6 +32063,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    tags?: string
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -32071,6 +32104,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    tags?: string
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -32151,6 +32185,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    tags?: StringFieldUpdateOperationsInput | string
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -32191,6 +32226,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    tags?: StringFieldUpdateOperationsInput | string
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -32307,6 +32343,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    tags?: string
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -32347,6 +32384,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    tags?: string
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -32562,6 +32600,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    tags?: StringFieldUpdateOperationsInput | string
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -32602,6 +32641,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    tags?: StringFieldUpdateOperationsInput | string
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -32754,6 +32794,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    tags?: string
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -32794,6 +32835,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    tags?: string
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -32924,6 +32966,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    tags?: StringFieldUpdateOperationsInput | string
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -32964,6 +33007,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    tags?: StringFieldUpdateOperationsInput | string
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -33679,6 +33723,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    tags?: string
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -33719,6 +33764,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    tags?: string
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -33830,6 +33876,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    tags?: StringFieldUpdateOperationsInput | string
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -33870,6 +33917,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    tags?: StringFieldUpdateOperationsInput | string
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -35040,6 +35088,7 @@ export namespace Prisma {
     isPublished?: boolean
     publishedAt?: Date | string | null
     featured?: boolean
+    tags?: string
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -35160,6 +35209,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    tags?: StringFieldUpdateOperationsInput | string
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -35200,6 +35250,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    tags?: StringFieldUpdateOperationsInput | string
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -35240,6 +35291,7 @@ export namespace Prisma {
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
+    tags?: StringFieldUpdateOperationsInput | string
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
