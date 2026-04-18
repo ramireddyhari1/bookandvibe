@@ -11,7 +11,8 @@ export function middleware(request: NextRequest) {
 
   const token = request.cookies.get("admin_dash_token")?.value;
   const role = String(request.cookies.get("admin_dash_role")?.value || "").toUpperCase();
-  const isAuthenticated = Boolean(token && ALLOWED_ROLES.has(role));
+  const isSession = request.cookies.get("admin_dash_session")?.value === "1";
+  const isAuthenticated = Boolean(token && ALLOWED_ROLES.has(role) && isSession);
   const isLoginPage = pathname === "/login";
 
   if (!isAuthenticated && !isLoginPage) {

@@ -5,6 +5,17 @@ import { usePathname, useRouter } from "next/navigation";
 import Sidebar from "@/components/layout/Sidebar";
 import { useMemo } from "react";
 import { Bell, CalendarDays, Menu, Search, User } from "lucide-react";
+import NotificationDropdown from "@/components/layout/NotificationDropdown";
+
+function readCookie(name: string): string {
+  if (typeof document === "undefined") return "";
+  const match = document.cookie
+    .split(";")
+    .map((item) => item.trim())
+    .find((item) => item.startsWith(`${name}=`));
+  if (!match) return "";
+  return decodeURIComponent(match.slice(name.length + 1));
+}
 
 function titleFromPath(pathname: string): string {
   if (pathname === "/") return "Operations Overview";
@@ -21,18 +32,35 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const isAuthRoute = pathname === "/login";
 
   const [sessionUser, setSessionUser] = useState<{ id?: string; name?: string; role?: string; partnerType?: string | null } | null>(null);
+  const [resolvedRole, setResolvedRole] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    const raw = localStorage.getItem("admin_dash_user");
+    const raw = sessionStorage.getItem("admin_dash_user") || localStorage.getItem("admin_dash_user");
+    const cookieRole = String(readCookie("admin_dash_role") || "").toUpperCase();
+
     if (raw) {
       try {
-        setSessionUser(JSON.parse(raw));
+        const parsedUser = JSON.parse(raw);
+        const storageRole = String(parsedUser?.role || "").toUpperCase();
+        const normalizedRole = cookieRole || storageRole;
+        const normalizedUser = normalizedRole ? { ...parsedUser, role: normalizedRole } : parsedUser;
+
+        setSessionUser(normalizedUser);
+        setResolvedRole(normalizedRole);
+
+        if (normalizedRole && normalizedRole !== storageRole) {
+          sessionStorage.setItem("admin_dash_user", JSON.stringify(normalizedUser));
+          localStorage.setItem("admin_dash_user", JSON.stringify(normalizedUser));
+        }
       } catch (e) {
         console.error("Failed to parse session user", e);
+        setResolvedRole(cookieRole);
       }
+    } else {
+      setResolvedRole(cookieRole);
     }
   }, []);
 
@@ -42,7 +70,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   }, [pathname]);
 
   const userName = sessionUser?.name || "Dashboard User";
-  const roleLabel = String(sessionUser?.role || "ADMIN").toUpperCase();
+  const roleLabel = resolvedRole || String(sessionUser?.role || "ADMIN").toUpperCase();
   const initials = userName
     .split(" ")
     .filter(Boolean)
@@ -50,11 +78,13 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     .map((part) => part[0]?.toUpperCase() || "")
     .join("") || "BV";
 
-  const role = String(sessionUser?.role || "ADMIN").toUpperCase();
+  const role = resolvedRole || String(sessionUser?.role || "").toUpperCase();
   const isAdmin = role === "ADMIN";
 
   useEffect(() => {
     if (!mounted) return;
+    if (!role) return;
+
     const restrictedPaths = ["/partners", "/users", "/settings"];
     const isSystemRestricted = restrictedPaths.some(p => pathname === p || pathname.startsWith(p + "/"));
     
@@ -136,11 +166,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               <span className="hidden sm:inline">{today}</span>
             </button>
 
-            <button className="btn-glass focus-premium relative rounded-xl p-2.5 text-slate-600">
-              <Bell size={16} className="text-emerald-600" />
-              <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-white shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-              <span className="absolute right-2 top-2 h-2 w-2 animate-ping rounded-full bg-emerald-400" />
-            </button>
+            <NotificationDropdown />
 
             <details className="group relative">
               <summary className="focus-premium flex cursor-pointer list-none items-center gap-2 rounded-xl border border-emerald-50 bg-emerald-50/20 px-2 py-1.5 transition-all hover:bg-emerald-50/50">

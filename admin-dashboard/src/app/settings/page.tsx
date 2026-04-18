@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { fetchApi } from "@/lib/api";
 import {
   Settings as SettingsIcon,
   Globe,
@@ -17,12 +18,47 @@ import {
   Check,
   Camera,
   Ticket,
+  LayoutTemplate,
 } from "lucide-react";
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("general");
   const [saved, setSaved] = useState(false);
   const [showApiKey, setShowApiKey] = useState(false);
+
+  // Website Content State
+  const [websiteConfig, setWebsiteConfig] = useState<any>({
+    banners: [],
+    footerText: "",
+    socialLinks: []
+  });
+  const [configLoading, setConfigLoading] = useState(false);
+
+  useEffect(() => {
+    if (activeTab === "website" && !websiteConfig.footerText) {
+      setConfigLoading(true);
+      fetchApi('/config/website')
+        .then(res => {
+          if (res.data) setWebsiteConfig(res.data);
+        })
+        .catch(console.error)
+        .finally(() => setConfigLoading(false));
+    }
+  }, [activeTab]);
+
+  const handleSaveWebsiteConfig = async () => {
+    try {
+      setSaved(true);
+      await fetchApi('/config/website', {
+        method: 'PUT',
+        body: JSON.stringify(websiteConfig)
+      });
+      setTimeout(() => setSaved(false), 2000);
+    } catch (err) {
+      console.error(err);
+      setSaved(false);
+    }
+  };
 
   const handleSave = () => {
     setSaved(true);
@@ -35,6 +71,7 @@ export default function SettingsPage() {
     { id: "security", label: "Security", icon: Shield },
     { id: "api", label: "API Keys", icon: Key },
     { id: "appearance", label: "Appearance", icon: Palette },
+    { id: "website", label: "Website Content", icon: LayoutTemplate },
   ];
 
   return (
@@ -455,6 +492,122 @@ export default function SettingsPage() {
                 <button
                   onClick={handleSave}
                   className="btn-primary-glow flex items-center gap-2 rounded-2xl px-8 py-4 font-black text-sm uppercase tracking-widest shadow-lg shadow-emerald-100/50 hover:scale-[1.02] transition-all"
+                >
+                  {saved ? <Check size={18} strokeWidth={3} /> : <Save size={18} strokeWidth={3} />}
+                  {saved ? "Synchronized" : "Apply Changes"}
+                </button>
+              </div>
+            </div>
+          )}
+          {/* ── Website Content ────────────── */}
+          {activeTab === "website" && (
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+              <div className="p-6 border-b border-slate-100">
+                <h2 className="text-lg font-extrabold text-slate-900">Website Content</h2>
+                <p className="text-sm text-slate-500 font-medium mt-1">Manage public landing page banners and footer</p>
+              </div>
+
+              {configLoading ? (
+                <div className="p-8 text-center text-sm font-bold text-slate-400">Loading Configuration...</div>
+              ) : (
+                <div className="p-6 space-y-8">
+                  {/* Banners */}
+                  <div>
+                    <h3 className="font-black text-slate-800 uppercase text-sm tracking-tight mb-4">Hero Banners</h3>
+                    <div className="space-y-6">
+                      {websiteConfig.banners?.map((banner: any, index: number) => (
+                        <div key={banner.id} className="p-5 border border-emerald-50 rounded-xl bg-emerald-50/10">
+                          <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600 mb-4">{banner.id}</p>
+                          <div className="space-y-4">
+                            <div>
+                              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Title</label>
+                              <input
+                                type="text"
+                                value={banner.title || ""}
+                                onChange={(e) => {
+                                  const newBanners = [...websiteConfig.banners];
+                                  newBanners[index].title = e.target.value;
+                                  setWebsiteConfig({ ...websiteConfig, banners: newBanners });
+                                }}
+                                className="w-full bg-white border border-slate-200 focus:border-emerald-400 rounded-xl px-4 py-3 text-slate-900 text-sm font-bold outline-none transition-all"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Subtitle</label>
+                              <input
+                                type="text"
+                                value={banner.subtitle || ""}
+                                onChange={(e) => {
+                                  const newBanners = [...websiteConfig.banners];
+                                  newBanners[index].subtitle = e.target.value;
+                                  setWebsiteConfig({ ...websiteConfig, banners: newBanners });
+                                }}
+                                className="w-full bg-white border border-slate-200 focus:border-emerald-400 rounded-xl px-4 py-3 text-slate-900 text-sm font-bold outline-none transition-all"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Background Image URL</label>
+                              <input
+                                type="text"
+                                value={banner.image || ""}
+                                onChange={(e) => {
+                                  const newBanners = [...websiteConfig.banners];
+                                  newBanners[index].image = e.target.value;
+                                  setWebsiteConfig({ ...websiteConfig, banners: newBanners });
+                                }}
+                                className="w-full bg-white border border-slate-200 focus:border-emerald-400 rounded-xl px-4 py-3 text-slate-900 text-sm font-bold outline-none transition-all"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Footer Setup */}
+                  <div className="pt-6 border-t border-emerald-50">
+                    <h3 className="font-black text-slate-800 uppercase text-sm tracking-tight mb-4">Footer Section</h3>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Bio Text</label>
+                        <textarea
+                          rows={3}
+                          value={websiteConfig.footerText || ""}
+                          onChange={(e) => setWebsiteConfig({ ...websiteConfig, footerText: e.target.value })}
+                          className="w-full bg-white border border-slate-200 focus:border-emerald-400 rounded-xl px-4 py-3 text-slate-900 text-sm font-bold outline-none transition-all resize-none"
+                        />
+                      </div>
+
+                      <div className="pt-2">
+                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-1">Social Media Links</label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {websiteConfig.socialLinks?.map((link: any, index: number) => (
+                            <div key={index} className="flex flex-col gap-1">
+                              <span className="text-[11px] font-bold text-slate-600">{link.platform}</span>
+                              <input
+                                type="url"
+                                value={link.url || ""}
+                                onChange={(e) => {
+                                  const newLinks = [...websiteConfig.socialLinks];
+                                  newLinks[index].url = e.target.value;
+                                  setWebsiteConfig({ ...websiteConfig, socialLinks: newLinks });
+                                }}
+                                className="w-full bg-white border border-slate-200 focus:border-emerald-400 rounded-lg px-3 py-2.5 text-slate-900 text-sm font-medium outline-none transition-all"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="p-6 border-t border-emerald-50 bg-emerald-50/10 flex justify-end">
+                <button
+                  onClick={handleSaveWebsiteConfig}
+                  disabled={configLoading}
+                  className="btn-primary-glow flex items-center gap-2 rounded-2xl px-8 py-4 font-black text-sm uppercase tracking-widest shadow-lg shadow-emerald-100/50 hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {saved ? <Check size={18} strokeWidth={3} /> : <Save size={18} strokeWidth={3} />}
                   {saved ? "Synchronized" : "Apply Changes"}

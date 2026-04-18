@@ -610,6 +610,7 @@ router.post('/', authenticateToken, requireAdminOrPartner, async (req, res) => {
         venue: req.body.venue,
         date: new Date(req.body.date),
         time: req.body.time,
+        duration: req.body.duration || null,
         bookingStartAt,
         bookingEndAt,
         price: minPrice,
@@ -707,6 +708,7 @@ router.put('/:id', authenticateToken, requireAdminOrPartner, async (req, res) =>
       'accessCode',
       'currency',
       'mapLink',
+      'duration',
     ];
     fields.forEach(f => { if (req.body[f] !== undefined) updateData[f] = req.body[f]; });
 

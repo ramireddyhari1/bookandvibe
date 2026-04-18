@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Calendar, Search, Shield, Users as UsersIcon } from "lucide-react";
+import { Calendar, Edit2, Search, Shield, Users as UsersIcon } from "lucide-react";
+import EditUserModal from "@/components/users/EditUserModal";
 
 type UserRecord = {
   id: string;
@@ -42,13 +43,18 @@ export default function UsersPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState("All");
   const [statusFilter, setStatusFilter] = useState("All");
+  const [editingUser, setEditingUser] = useState<UserRecord | null>(null);
 
   function clearDashboardSession() {
+    sessionStorage.removeItem("admin_dash_token");
+    sessionStorage.removeItem("admin_dash_role");
+    sessionStorage.removeItem("admin_dash_user");
     localStorage.removeItem("admin_dash_token");
     localStorage.removeItem("admin_dash_role");
     localStorage.removeItem("admin_dash_user");
     document.cookie = "admin_dash_token=; path=/; max-age=0; samesite=lax";
     document.cookie = "admin_dash_role=; path=/; max-age=0; samesite=lax";
+    document.cookie = "admin_dash_session=; path=/; max-age=0; samesite=lax";
   }
 
   useEffect(() => {
@@ -56,7 +62,7 @@ export default function UsersPage() {
       setLoading(true);
       setError("");
       try {
-        const token = localStorage.getItem("admin_dash_token") || "";
+        const token = sessionStorage.getItem("admin_dash_token") || localStorage.getItem("admin_dash_token") || "";
         if (!token) {
           setError("Session expired. Please login again.");
           setUsers([]);
@@ -199,6 +205,7 @@ export default function UsersPage() {
                   <th className="p-3">Bookings</th>
                   <th className="p-3">Spent</th>
                   <th className="p-3">Joined</th>
+                  <th className="p-3 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -221,11 +228,20 @@ export default function UsersPage() {
                     </td>
                     <td className="p-4 font-black text-slate-900">{user._count?.bookings || 0}</td>
                     <td className="p-4 font-black text-emerald-600">₹{Math.round(user.totalSpent || 0).toLocaleString()}</td>
-                    <td className="p-4 text-slate-400 font-bold">
+                     <td className="p-4 text-slate-400 font-bold">
                       <span className="inline-flex items-center gap-1.5">
                         <Calendar size={13} className="text-emerald-400/60" />
                         {new Date(user.createdAt).toLocaleDateString("en-IN")}
                       </span>
+                    </td>
+                    <td className="p-4 text-right">
+                      <button 
+                        onClick={() => setEditingUser(user)}
+                        className="p-2 rounded-xl bg-slate-50 text-slate-400 hover:bg-emerald-50 hover:text-emerald-600 transition-all active:scale-95"
+                        title="Edit Profile"
+                      >
+                        <Edit2 size={16} />
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -234,6 +250,14 @@ export default function UsersPage() {
           </div>
         )}
       </section>
+
+      <EditUserModal 
+        user={editingUser} 
+        onClose={() => setEditingUser(null)}
+        onUpdate={(updated) => {
+          setUsers(prev => prev.map(u => u.id === updated.id ? { ...u, ...updated } : u));
+        }}
+      />
     </div>
   );
 }

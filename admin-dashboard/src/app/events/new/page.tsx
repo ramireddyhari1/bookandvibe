@@ -70,11 +70,15 @@ export default function CreateEventPage() {
   const isAdmin = userRole === "ADMIN";
 
   function clearDashboardSession() {
+    sessionStorage.removeItem("admin_dash_token");
+    sessionStorage.removeItem("admin_dash_role");
+    sessionStorage.removeItem("admin_dash_user");
     localStorage.removeItem("admin_dash_token");
     localStorage.removeItem("admin_dash_role");
     localStorage.removeItem("admin_dash_user");
     document.cookie = "admin_dash_token=; path=/; max-age=0; samesite=lax";
     document.cookie = "admin_dash_role=; path=/; max-age=0; samesite=lax";
+    document.cookie = "admin_dash_session=; path=/; max-age=0; samesite=lax";
   }
 
   const [bookingFormat, setBookingFormat] = useState<BookingFormat>("HYBRID");
@@ -95,6 +99,7 @@ export default function CreateEventPage() {
   const [schedule, setSchedule] = useState({
     date: "",
     time: "",
+    duration: "",
     bookingStartAt: "",
     bookingEndAt: "",
   });
@@ -286,6 +291,7 @@ export default function CreateEventPage() {
       mapLink: eventDetails.mapLink || null,
       date: schedule.date,
       time: schedule.time,
+      duration: schedule.duration || null,
       bookingStartAt,
       bookingEndAt,
       image: eventDetails.cardImage,
@@ -469,7 +475,7 @@ export default function CreateEventPage() {
     let mounted = true;
 
     async function verifyAccessAndMaybeLoad() {
-      const token = localStorage.getItem("admin_dash_token") || "";
+      const token = sessionStorage.getItem("admin_dash_token") || localStorage.getItem("admin_dash_token") || "";
       if (!token) {
         if (mounted) {
           setHasManagerAccess(false);
@@ -528,6 +534,7 @@ export default function CreateEventPage() {
         setSchedule({
           date: event.date ? String(event.date).slice(0, 10) : "",
           time: event.time || "",
+          duration: event.duration || "",
           bookingStartAt: event.bookingStartAt ? new Date(event.bookingStartAt).toISOString().slice(0, 16) : "",
           bookingEndAt: event.bookingEndAt ? new Date(event.bookingEndAt).toISOString().slice(0, 16) : "",
         });
@@ -811,12 +818,16 @@ export default function CreateEventPage() {
                   </button>
                 </div>
 
+                <p className="text-[11px] font-semibold text-slate-500">
+                  Use 21:9 banner images. Recommended: 2100x900 px (or 2520x1080 px for sharper quality). Minimum safe: 1600x686 px.
+                </p>
+
                 {bannerInputMode === "url" ? (
                   <input
                     value={eventDetails.bannerImage}
                     onChange={(e) => setEventDetails((v) => ({ ...v, bannerImage: e.target.value }))}
                     className={inputClass}
-                    placeholder="https://..."
+                    placeholder="https://... (21:9 banner)"
                   />
                 ) : (
                   <input
@@ -874,6 +885,15 @@ export default function CreateEventPage() {
                   type="datetime-local"
                   value={schedule.bookingEndAt}
                   onChange={(e) => setSchedule((v) => ({ ...v, bookingEndAt: e.target.value }))}
+                  className={inputClass}
+                />
+              </label>
+              <label className="space-y-2 md:col-span-2">
+                <span className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500"><Clock size={13} /> Event Duration</span>
+                <input
+                  value={schedule.duration}
+                  onChange={(e) => setSchedule((v) => ({ ...v, duration: e.target.value }))}
+                  placeholder="e.g. 3 Hours, 90 Mins, Full Day"
                   className={inputClass}
                 />
               </label>

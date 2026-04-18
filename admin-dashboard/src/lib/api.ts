@@ -18,7 +18,9 @@ export async function fetchApi(endpoint: string, options: FetchOptions = {}) {
   };
 
   if (requiresAuth) {
-    const token = typeof window !== "undefined" ? localStorage.getItem("admin_dash_token") : null;
+    const token = typeof window !== "undefined"
+      ? sessionStorage.getItem("admin_dash_token") || localStorage.getItem("admin_dash_token")
+      : null;
     if (token) {
       (headers as Record<string, string>)["Authorization"] = `Bearer ${token}`;
     }

@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { Ticket, MapPin, Search, ChevronDown, Check, User as UserIcon, LogOut, CalendarCheck, Navigation } from "lucide-react";
+import { MapPin, Search, ChevronDown, Check, User as UserIcon, LogOut, CalendarCheck, Navigation } from "lucide-react";
 import { useLocation, LOCATIONS } from "@/context/LocationContext";
 import { useAuth } from "@/context/AuthContext";
 
@@ -17,24 +17,85 @@ export default function Navbar() {
   // Theme Logic
   const isHome = pathname === "/";
   const isGamehub = pathname?.includes("/gamehub");
+  const isEvents = pathname?.includes("/events");
+  const logoSrc = isGamehub ? "/bv-green.png" : isEvents ? "/bv-orange.png" : "/bv-white.png";
   // Pages that should use the immersive dark navbar (like Homepage)
   const isDarkPage = isHome || pathname === "/profile/bookings";
 
-  const theme = {
-    primary: isGamehub ? "text-[#42B460]" : "text-rose-600",
-    primaryFill: isGamehub ? "fill-[#42B460]" : "fill-rose-500",
-    primaryIcon: isGamehub ? "text-[#42B460]" : "text-rose-500",
-    primaryBg: isGamehub ? "bg-[#42B460]" : "bg-rose-500",
-    primaryBgHover: isGamehub ? "hover:bg-[#369650]" : "hover:bg-rose-600",
-    primaryLightBg: isGamehub ? "bg-[#42B460]/10" : "bg-rose-50",
-    primaryLightBgHover: isGamehub ? "hover:bg-[#42B460]/20" : "hover:bg-rose-100",
-    primaryHover: isGamehub ? "hover:text-[#42B460]" : "hover:text-rose-600",
-    borderFocus: isGamehub ? "focus:border-[#42B460]" : "focus:border-rose-300",
-    ringFocus: isGamehub ? "focus:ring-[#42B460]/20" : "focus:ring-rose-50",
-    activeBg: isGamehub ? "bg-[#42B460]/10" : "bg-rose-50",
-    activeText: isGamehub ? "text-[#42B460]" : "text-rose-700",
-    borderHover: isGamehub ? "hover:border-[#42B460]/50" : "hover:border-rose-300",
+  const getTheme = () => {
+    if (isGamehub) {
+      return {
+        primary: "text-[#42B460]",
+        primaryFill: "fill-[#42B460]",
+        primaryIcon: "text-[#42B460]",
+        primaryBg: "bg-[#42B460]",
+        primaryBgHover: "hover:bg-[#369650]",
+        primaryLightBg: "bg-[#42B460]/10",
+        primaryLightBgHover: "hover:bg-[#42B460]/20",
+        primaryHover: "hover:text-[#42B460]",
+        borderFocus: "focus:border-[#42B460]",
+        ringFocus: "focus:ring-[#42B460]/20",
+        activeBg: "bg-[#42B460]/10",
+        activeText: "text-[#42B460]",
+        borderHover: "hover:border-[#42B460]/50",
+        buttonText: "text-white"
+      };
+    }
+    if (isEvents) {
+      return {
+        primary: "text-orange-600",
+        primaryFill: "fill-orange-500",
+        primaryIcon: "text-orange-500",
+        primaryBg: "bg-orange-500",
+        primaryBgHover: "hover:bg-orange-600",
+        primaryLightBg: "bg-orange-50",
+        primaryLightBgHover: "hover:bg-orange-100",
+        primaryHover: "hover:text-orange-600",
+        borderFocus: "focus:border-orange-300",
+        ringFocus: "focus:ring-orange-50",
+        activeBg: "bg-orange-50",
+        activeText: "text-orange-700",
+        borderHover: "hover:border-orange-300",
+        buttonText: "text-white"
+      };
+    }
+    if (isHome) {
+      return {
+        primary: "text-white",
+        primaryFill: "fill-white",
+        primaryIcon: "text-white",
+        primaryBg: "bg-white",
+        primaryBgHover: "hover:bg-gray-200",
+        primaryLightBg: "bg-white/10",
+        primaryLightBgHover: "hover:bg-white/20",
+        primaryHover: "hover:text-gray-300",
+        borderFocus: "focus:border-white/50",
+        ringFocus: "focus:ring-white/20",
+        activeBg: "bg-white/10",
+        activeText: "text-white",
+        borderHover: "hover:border-white/50",
+        buttonText: "text-[#0a0a0a]"
+      };
+    }
+    return {
+      primary: "text-rose-600",
+      primaryFill: "fill-rose-500",
+      primaryIcon: "text-rose-500",
+      primaryBg: "bg-rose-500",
+      primaryBgHover: "hover:bg-rose-600",
+      primaryLightBg: "bg-rose-50",
+      primaryLightBgHover: "hover:bg-rose-100",
+      primaryHover: "hover:text-rose-600",
+      borderFocus: "focus:border-rose-300",
+      ringFocus: "focus:ring-rose-50",
+      activeBg: "bg-rose-50",
+      activeText: "text-rose-700",
+      borderHover: "hover:border-rose-300",
+      buttonText: "text-white"
+    };
   };
+
+  const theme = getTheme();
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -48,17 +109,18 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className={`fixed w-full z-[100] pt-4 pb-4 backdrop-blur-md transition-all duration-300 hidden md:block ${isDarkPage ? 'bg-[#0f1115]/70 border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)]' : 'bg-white/60 border-b border-white/50 shadow-[0_4px_30px_rgba(0,0,0,0.05)]'}`}>
+    <nav className={`fixed w-full z-[100] pt-4 pb-4 backdrop-blur-md transition-all duration-300 hidden md:block ${isDarkPage ? `bg-[#0f1115]/70 border-b-[3px] ${isGamehub ? 'border-[#42B460]' : isEvents ? 'border-orange-500' : 'border-white'} shadow-[0_4px_30px_rgba(0,0,0,0.3)]` : `bg-white/90 border-b-[3px] ${isGamehub ? 'border-[#42B460]' : isEvents ? 'border-orange-500' : 'border-rose-500'} shadow-lg`}`}>
       <div className="max-w-[1600px] mx-auto px-4 lg:px-6">
         <div className="flex items-center justify-between h-20 gap-4">
 
           {/* Logo & Search (Left Side) */}
           <div className="flex items-center justify-start gap-6 flex-1 min-w-0">
-            <Link href="/" className="flex items-center gap-2 shrink-0 group">
-              <Ticket className={`${theme.primaryIcon} ${theme.primaryFill} -rotate-45 group-hover:scale-110 transition-transform`} size={32} />
-              <span className={`text-[32px] font-mexicana ${isDarkPage ? 'text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-[#42B460]' : theme.primary} tracking-wide py-1 pr-2 whitespace-nowrap leading-none`}>
-                BOOK & VIBE
-              </span>
+            <Link href="/" className="flex items-center shrink-0 group">
+              <img
+                src={logoSrc}
+                alt="Book & Vibe"
+                className="h-28 lg:h-32 w-auto rounded-md transition-transform group-hover:scale-[1.03]"
+              />
             </Link>
 
             {/* Search Bar */}
@@ -94,7 +156,7 @@ export default function Navbar() {
                 <div className="flex flex-col leading-tight">
                   <div className="flex items-center gap-1">
                     <span className={`text-[15px] font-bold ${isDarkPage ? 'text-white' : 'text-[#1c222b]'} ${theme.primaryHover} transition truncate max-w-[130px]`}>{selectedLocation.city}</span>
-                    <ChevronDown size={14} className={`${isDarkPage ? 'text-white/50' : 'text-gray-400'} ${isGamehub ? 'group-hover:text-[#42B460]' : 'group-hover:text-rose-500'} transition-transform duration-300 ${isLocationOpen ? 'rotate-180' : ''}`} />
+                    <ChevronDown size={14} className={`${isDarkPage ? 'text-white/50' : 'text-gray-400'} ${theme.primaryHover} transition-transform duration-300 ${isLocationOpen ? 'rotate-180' : ''}`} />
                   </div>
                   <span className={`text-[12px] ${isDarkPage ? 'text-white/50' : 'text-gray-500'} font-medium mt-0.5 truncate max-w-[140px]`}>{selectedLocation.detail}</span>
                 </div>
@@ -117,7 +179,7 @@ export default function Navbar() {
                     </div>
                   </div>
                   <div className="max-h-64 overflow-y-auto p-2 space-y-1 scrollbar-thin scrollbar-thumb-gray-200">
-                    
+
                     {/* GPS Location Option */}
                     <button
                       onClick={() => {
@@ -126,11 +188,11 @@ export default function Navbar() {
                       }}
                       className="w-full text-left flex items-start px-3 py-2.5 rounded-xl transition-all hover:bg-gray-50 group"
                     >
-                      <div className="mt-0.5 mr-3 shrink-0 text-rose-500 group-hover:bg-rose-100 p-1 -m-1 rounded-full group-hover:scale-110 transition-all">
-                        <Navigation size={16} className="fill-rose-500" />
+                      <div className={`mt-0.5 mr-3 shrink-0 ${theme.primaryIcon} ${theme.primaryLightBgHover} p-1 -m-1 rounded-full group-hover:scale-110 transition-all`}>
+                        <Navigation size={16} className={theme.primaryFill} />
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-[14px] font-bold text-rose-600">
+                        <span className={`text-[14px] font-bold ${theme.primary}`}>
                           Detect my location
                         </span>
                         <span className="text-[12px] text-gray-500 font-medium truncate max-w-[160px]">
@@ -226,7 +288,7 @@ export default function Navbar() {
                   <Link href="/login" className={`text-[14px] font-[600] ${isDarkPage ? 'text-white hover:bg-white/10' : 'text-[#1c222b] hover:bg-black/5'} px-4 py-2 rounded-full transition whitespace-nowrap`}>
                     Log in
                   </Link>
-                  <Link href="/register" className={`text-[14px] font-[600] ${theme.primaryBg} ${theme.primaryBgHover} text-white px-6 py-2.5 rounded-full transition shadow-sm whitespace-nowrap`}>
+                  <Link href="/register" className={`text-[14px] font-[600] ${theme.primaryBg} ${theme.primaryBgHover} ${theme.buttonText} px-6 py-2.5 rounded-full transition shadow-sm whitespace-nowrap`}>
                     Sign up
                   </Link>
                 </>

@@ -21,6 +21,7 @@ import {
   ArrowUpToLine,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
+import { fetchApi } from "@/lib/api";
 
 type SessionUser = {
   id: string;
@@ -41,6 +42,20 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [sessionUser, setSessionUser] = useState<SessionUser | null>(null);
   const [hydrated, setHydrated] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  async function loadUnreadCount() {
+    try {
+      const data = await fetchApi("/notifications/unread-count");
+      setUnreadCount(data?.data?.count || 0);
+    } catch {}
+  }
+
+  useEffect(() => {
+    loadUnreadCount();
+    const interval = setInterval(loadUnreadCount, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     // Read from localStorage only on the client after hydration
@@ -51,7 +66,7 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
       setCollapsed(true);
     }
 
-    const raw = localStorage.getItem("admin_dash_user");
+    const raw = sessionStorage.getItem("admin_dash_user") || localStorage.getItem("admin_dash_user");
     if (raw) {
       try {
         const parsed = JSON.parse(raw) as SessionUser;
@@ -79,11 +94,15 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   }, [collapsed]);
 
   function handleLogout() {
+    sessionStorage.removeItem("admin_dash_token");
+    sessionStorage.removeItem("admin_dash_role");
+    sessionStorage.removeItem("admin_dash_user");
     localStorage.removeItem("admin_dash_token");
     localStorage.removeItem("admin_dash_role");
     localStorage.removeItem("admin_dash_user");
     document.cookie = "admin_dash_token=; path=/; max-age=0; samesite=lax";
     document.cookie = "admin_dash_role=; path=/; max-age=0; samesite=lax";
+    document.cookie = "admin_dash_session=; path=/; max-age=0; samesite=lax";
     router.replace("/login");
   }
 
@@ -269,12 +288,16 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
           <button className="group flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-left text-slate-500 transition-all hover:bg-emerald-50/50 hover:text-emerald-700">
             <div className="relative">
               <Bell size={18} className="text-slate-400 transition group-hover:text-emerald-600" />
-              <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-white" />
+              {unreadCount > 0 && (
+                <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-white" />
+              )}
             </div>
             {!collapsed ? (
               <>
                 <span className="text-[14px] font-bold">Notifications</span>
-                <span className="ml-auto rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-bold text-emerald-700">3</span>
+                {unreadCount > 0 && (
+                  <span className="ml-auto rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-bold text-emerald-700">{unreadCount}</span>
+                )}
               </>
             ) : null}
           </button>

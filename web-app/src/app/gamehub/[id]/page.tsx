@@ -83,125 +83,6 @@ type AvailabilitySlot = {
   lockedByCurrentUser: boolean;
 };
 
-const MOCK_FACILITIES: Facility[] = [
-  {
-    id: "f-1",
-    name: "Neon Turf Arena",
-    type: "Football",
-    location: "Gachibowli, Hyd",
-    venue: "Gachibowli Stadium Road",
-    distance: "2.1 Kms",
-    rating: 4.80,
-    reviewsCount: 156,
-    pricePerHour: 1400,
-    unit: "hr",
-    image: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=1200",
-    description: "Premium FIFA-certified astroturf for 5v5 and 7v7 football matches with floodlights.",
-    phone: "+91 90000 11111",
-    openHours: "5:00 AM - 1:00 AM",
-    amenities: ["Parking", "Changing Room", "Floodlights", "Water", "Washrooms"],
-    gallery: ["https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=1200"],
-    slotTemplate: [
-      { label: "06:00 PM", isBooked: false },
-      { label: "07:00 PM", isBooked: true },
-      { label: "08:00 PM", isBooked: false }
-    ]
-  },
-  {
-    id: "f-2",
-    name: "Cricket Royale Nets",
-    type: "Cricket",
-    location: "Benz Circle, VJA",
-    venue: "Behind PVP Mall",
-    distance: "1.5 Kms",
-    rating: 4.70,
-    reviewsCount: 89,
-    pricePerHour: 600,
-    unit: "hr",
-    image: "https://images.unsplash.com/photo-1540324155970-14e422f01f2f?q=80&w=1200",
-    description: "High quality indoor/outdoor practice nets with bowling machines available.",
-    phone: "+91 98888 22222",
-    openHours: "6:00 AM - 10:00 PM",
-    amenities: ["Bowling Machine", "Parking", "Water"],
-    gallery: ["https://images.unsplash.com/photo-1540324155970-14e422f01f2f?q=80&w=1200"],
-    slotTemplate: [
-      { label: "06:00 AM", isBooked: false },
-      { label: "07:00 AM", isBooked: false }
-    ]
-  },
-  {
-    id: "f-3",
-    name: "Sky Smash Badminton",
-    type: "Badminton",
-    location: "Indiranagar, BLR",
-    venue: "12th Main Road",
-    distance: "3.2 Kms",
-    rating: 4.90,
-    reviewsCount: 304,
-    pricePerHour: 450,
-    unit: "hr",
-    image: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?q=80&w=1200",
-    description: "3 BWF certified wooden courts with anti-skid mats and tournament grade lighting.",
-    phone: "+91 88888 33333",
-    openHours: "5:00 AM - 11:00 PM",
-    amenities: ["AC", "Wooden Court", "Showers", "Parking", "Cafe"],
-    gallery: [
-      "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?q=80&w=1200",
-      "https://images.unsplash.com/photo-1626225967045-944080928956?q=80&w=1200"
-    ],
-    slotTemplate: [
-      { label: "05:00 PM", isBooked: false },
-      { label: "06:00 PM", isBooked: true },
-      { label: "07:00 PM", isBooked: false },
-      { label: "08:00 PM", isBooked: false }
-    ]
-  },
-  {
-    id: "f-4",
-    name: "Grand Slam Cricket Nets",
-    type: "Cricket",
-    location: "Ameerpet, Hyderabad",
-    venue: "Near SR Nagar",
-    distance: "4.1 Kms",
-    rating: 4.60,
-    reviewsCount: 112,
-    pricePerHour: 450,
-    unit: "hr",
-    image: "https://images.unsplash.com/photo-1531415074968-036ba1b575da?q=80&w=1200",
-    description: "Professional cricket practice facilities to hone your batting and bowling skills.",
-    phone: "+91 77777 44444",
-    openHours: "6:00 AM - 9:00 PM",
-    amenities: ["Parking", "Water"],
-    gallery: ["https://images.unsplash.com/photo-1531415074968-036ba1b575da?q=80&w=1200"],
-    slotTemplate: [
-      { label: "04:00 PM", isBooked: false },
-      { label: "05:00 PM", isBooked: true }
-    ]
-  },
-  {
-    id: "f-5",
-    name: "Power Play Turf",
-    type: "Football",
-    location: "Madhapur, Hyderabad",
-    venue: "Ayyappa Society",
-    distance: "0.8 Kms",
-    rating: 4.80,
-    reviewsCount: 220,
-    pricePerHour: 1500,
-    unit: "hr",
-    image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=1200",
-    description: "The best 6v6 football turf in the area with high shock absorption.",
-    phone: "+91 99999 55555",
-    openHours: "24 Hours",
-    amenities: ["Parking", "Floodlights", "Washrooms", "Energy Drinks"],
-    gallery: ["https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=1200"],
-    slotTemplate: [
-      { label: "09:00 PM", isBooked: false },
-      { label: "10:00 PM", isBooked: false }
-    ]
-  }
-];
-
 function todayDateString() {
   return new Date().toISOString().slice(0, 10);
 }
@@ -286,28 +167,13 @@ export default function FacilityDetailPage() {
           setFacility(facilityPayload.data);
           setReviews(Array.isArray(facilityPayload?.data?.reviews) ? facilityPayload.data.reviews : []);
         } else {
-          const found = MOCK_FACILITIES.find((f: any) => f.id === facilityId);
-          if (found) {
-            setFacility(found);
-            setReviews([]);
-            setAvailabilitySlots(found.slotTemplate.map(s => ({label: s.label, status: s.isBooked ? "BOOKED" : "AVAILABLE", lockedByCurrentUser: false})));
-          } else {
-            throw new Error("Facility not found");
-          }
+          throw new Error("Facility not found");
         }
 
-        setAllFacilities(Array.isArray(listPayload?.data) ? listPayload.data : MOCK_FACILITIES);
+        setAllFacilities(Array.isArray(listPayload?.data) ? listPayload.data : []);
         setAvailabilitySlots(Array.isArray(availabilityPayload?.data?.slots) ? availabilityPayload.data.slots : []);
       } catch (err) {
-        const found = MOCK_FACILITIES.find((f: any) => f.id === facilityId);
-        if (found) {
-          setFacility(found);
-          setReviews([]);
-          setAvailabilitySlots(found.slotTemplate.map(s => ({label: s.label, status: s.isBooked ? "BOOKED" : "AVAILABLE", lockedByCurrentUser: false})));
-          setAllFacilities(MOCK_FACILITIES);
-        } else {
-          setError(err instanceof Error ? err.message : "Failed to load facility");
-        }
+        setError(err instanceof Error ? err.message : "Failed to load facility");
       } finally {
         setLoading(false);
       }
@@ -344,7 +210,6 @@ export default function FacilityDetailPage() {
         method: "POST",
         requiresAuth: true,
         body: JSON.stringify({
-          amount: totalAmount,
           facilityId,
           currency: "INR",
         }),

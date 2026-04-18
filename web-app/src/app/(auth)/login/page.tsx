@@ -65,7 +65,7 @@ export default function LoginPage() {
       ═══════════════════════════════════════════════════ */}
       <div className="absolute inset-y-0 left-0 w-1/2 overflow-hidden hidden md:block border-r border-white/5">
         <img
-          src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=2074"
+          src="/events.png"
           alt="Concert atmosphere"
           className="absolute inset-0 w-full h-full object-cover opacity-60"
         />
@@ -91,7 +91,7 @@ export default function LoginPage() {
       ═══════════════════════════════════════════════════ */}
       <div className="absolute inset-y-0 right-0 w-1/2 overflow-hidden hidden md:block border-l border-white/5">
         <img
-          src="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=2000"
+          src="/gamehub.png"
           alt="Sports stadium"
           className="absolute inset-0 w-full h-full object-cover opacity-60"
         />
@@ -115,19 +115,14 @@ export default function LoginPage() {
       {/* ═══════════════════════════════════════════════════
           CENTER FLOATING CARD — Login Form
       ═══════════════════════════════════════════════════ */}
-      <div className="relative z-10 w-full max-w-[380px] px-4 py-8 my-auto">
+      <div className="relative z-10 w-full max-w-[420px] px-4 py-8 my-auto">
         
         {/* White Container */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-[0_0_60px_rgba(0,0,0,0.3)]">
+        <div className="bg-white rounded-[24px] p-8 shadow-[0_0_60px_rgba(0,0,0,0.3)]">
           
           {/* Fusion Logo Header */}
-          <div className="flex flex-col items-center justify-center mb-6">
-            <div className="flex items-center justify-center gap-2 mb-1">
-              <Ticket className="text-transparent fill-rose-500 -rotate-45" size={24} />
-              <span className="text-[22px] font-mexicana text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-[#42B460] tracking-wide text-center">
-                BOOK & VIBE
-              </span>
-            </div>
+          <div className="flex flex-col items-center justify-center mb-6 mt-2">
+            <img src="/bv-orange.png" alt="Book & Vibe" className="h-32 w-auto mb-2 scale-[1.25]" />
             <p className="text-gray-500 font-medium text-xs text-center mt-1">
               Premium courts & live events.
             </p>
@@ -248,7 +243,7 @@ export default function LoginPage() {
               className="w-full flex items-center justify-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-bold text-[12px] uppercase tracking-wider py-3 rounded-xl transition-all hover:-translate-y-0.5 hover:shadow-lg"
             >
               <Briefcase size={15} />
-              Partner / Admin Login
+              Partner Login
             </a>
             <p className="text-center text-[10px] text-gray-400 mt-2 font-medium">
               Manage your events & venues

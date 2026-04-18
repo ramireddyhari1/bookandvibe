@@ -112,7 +112,7 @@ function HeroPosterCard({ event }: { event: any }) {
   const statusLine = "Tickets selling fast!";
   return (
     <Link href={`/events/${event.id}`} className="block shrink-0 w-[85vw] sm:w-[320px] snap-center">
-      <div className="relative w-full aspect-[3.5/4.5] rounded-[36px] overflow-hidden group shadow-2xl shadow-rose-900/20">
+      <div className="relative w-full aspect-[3.5/4.5] rounded-[36px] overflow-hidden group shadow-2xl shadow-orange-900/20">
         <motion.img 
           src={getEventImage(event.images)} 
           alt={event.title} 
@@ -149,12 +149,12 @@ function HeroPosterCard({ event }: { event: any }) {
             
             <div className="flex items-center gap-3 text-white/70 text-[13px] font-medium">
               <div className="flex items-center gap-1">
-                <CalendarDays size={14} className="text-rose-400" />
+                <CalendarDays size={14} className="text-orange-400" />
                 <span>{new Date(event.date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</span>
               </div>
               <span className="w-1 h-1 rounded-full bg-white/30" />
               <div className="flex items-center gap-1">
-                <MapPin size={14} className="text-rose-400" />
+                <MapPin size={14} className="text-orange-400" />
                 <span className="max-w-[120px] truncate">{event.venue}</span>
               </div>
             </div>
@@ -223,7 +223,7 @@ function PosterBannerCarousel({ events }: { events: any[] }) {
             animate={{
               width: i === activeIndex ? 24 : 6,
               opacity: i === activeIndex ? 1 : 0.3,
-              backgroundColor: i === activeIndex ? "#E11D48" : "#D1D5DB"
+              backgroundColor: i === activeIndex ? "#F97316" : "#D1D5DB"
             }}
             className="h-1.5 rounded-full"
           />
@@ -240,7 +240,7 @@ function SectionEventCard({ event }: { event: any }) {
       <div className="relative w-full aspect-[3/4] rounded-[28px] overflow-hidden bg-white shadow-md border border-gray-100">
         <img src={getEventImage(event.images)} alt={event.title} className="absolute inset-0 w-full h-[60%] object-cover" />
         <div className="absolute top-[60%] bottom-0 left-0 right-0 p-4 bg-white flex flex-col justify-end">
-          <p className="text-rose-500 text-[12px] font-bold tracking-wider mb-1.5">
+          <p className="text-orange-500 text-[12px] font-bold tracking-wider mb-1.5">
             {new Date(event.date).toLocaleDateString("en-IN", { day: "2-digit", month: "short" }).toUpperCase()}
           </p>
           <h4 className="text-gray-900 text-[16px] font-bold line-clamp-2 mb-1.5 leading-snug">{event.title}</h4>
@@ -286,8 +286,8 @@ function GridEventCard({ event }: { event: any }) {
             <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
               {tags.map((tag: string, idx: number) => (
                 <div key={idx} className="flex items-center gap-1">
-                  <Tag size={12} className="text-rose-500" />
-                  <span className="text-rose-500 text-[12px] font-bold">{tag.length > 25 ? tag.substring(0, 22) + "..." : tag}</span>
+                  <Tag size={12} className="text-orange-500" />
+                  <span className="text-orange-500 text-[12px] font-bold">{tag.length > 25 ? tag.substring(0, 22) + "..." : tag}</span>
                 </div>
               ))}
             </div>
@@ -384,14 +384,14 @@ export default function MobileHome() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: isGameHub ? "#F0FDF4" : "#fff1f2" }}>
-        <div className="w-10 h-10 border-4 border-rose-500 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen flex items-center justify-center" style={{ background: isGameHub ? "#F0FDF4" : "#fff7ed" }}>
+        <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen pb-6 overflow-x-hidden" style={{ background: isGameHub ? "linear-gradient(180deg, #F0FDF4, #FFFFFF, #F8FAFC)" : "linear-gradient(180deg, #fff1f2, #ffffff, #fafafa)" }}>
+    <div className="min-h-screen pb-6 overflow-x-hidden" style={{ background: isGameHub ? "linear-gradient(180deg, #F0FDF4, #FFFFFF, #F8FAFC)" : "linear-gradient(180deg, #fff7ed, #ffffff, #fafafa)" }}>
 
       {/* ═══ HEADER ═══ */}
       <div className="px-5 pt-[max(env(safe-area-inset-top),12px)] pb-5">
@@ -422,17 +422,17 @@ export default function MobileHome() {
             <div className="space-y-1">
               <p className="text-gray-500 text-[10px] font-bold tracking-widest uppercase">CURRENT LOCATION</p>
               <div className="flex items-center gap-1.5">
-                <MapPin size={16} className="text-rose-500" />
+                <MapPin size={16} className="text-orange-500" />
                 <span className="text-gray-900 text-[18px] font-bold">{selectedLocation.city}</span>
                 <ChevronDown size={14} className="text-gray-500 -ml-0.5" />
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="relative w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center border border-rose-100">
-                <Bell size={20} className="text-rose-600" />
-                <div className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-rose-500 border-[1.5px] border-white" />
+              <div className="relative w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center border border-orange-100">
+                <Bell size={20} className="text-orange-600" />
+                <div className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-orange-500 border-[1.5px] border-white" />
               </div>
-              <Link href="/profile" className="w-10 h-10 rounded-full bg-rose-600 flex items-center justify-center border-2 border-rose-200">
+              <Link href="/profile" className="w-10 h-10 rounded-full bg-orange-600 flex items-center justify-center border-2 border-orange-200">
                 <span className="text-white text-[18px] font-bold">{user?.name?.charAt(0).toUpperCase() || "U"}</span>
               </Link>
             </div>
@@ -443,12 +443,12 @@ export default function MobileHome() {
       {/* ═══ SEARCH BAR ═══ */}
       <div className="px-5 mb-6">
         <div className="rounded-[16px] p-[1px] shadow-sm border border-gray-100" style={{
-          background: isGameHub ? "rgba(16,185,129,0.12)" : "rgba(225, 29, 72, 0.12)"
+          background: isGameHub ? "rgba(16,185,129,0.12)" : "rgba(249, 115, 22, 0.12)"
         }}>
           <div className="flex items-center gap-3 rounded-[15px] px-4 h-12" style={{
-            background: isGameHub ? "linear-gradient(90deg, #FFFFFF, #F0FDF4)" : "linear-gradient(90deg, #FFFFFF, #fff1f2)"
+            background: isGameHub ? "linear-gradient(90deg, #FFFFFF, #F0FDF4)" : "linear-gradient(90deg, #FFFFFF, #fff7ed)"
           }}>
-            <Search size={20} className={isGameHub ? "text-gray-400" : "text-rose-300"} />
+            <Search size={20} className={isGameHub ? "text-gray-400" : "text-orange-300"} />
             <input
               type="text"
               placeholder="Search events, artists, venues..."
@@ -473,7 +473,7 @@ export default function MobileHome() {
               width: "calc(50% - 2px)",
               left: activeTab === "events" ? "2px" : "calc(50%)",
               background: activeTab === "events"
-                ? "linear-gradient(90deg, #fb7185, #e11d48)"
+                ? "linear-gradient(90deg, #fb923c, #f97316)"
                 : "linear-gradient(90deg, #34D399, #10B981)",
             }}
           />
@@ -505,13 +505,13 @@ export default function MobileHome() {
           <div className="mb-10">
             <div className="flex items-center justify-between px-5 mb-5 mt-2">
               <div className="flex flex-col">
-                <span className="text-rose-500 text-[11px] font-black tracking-[0.2em] uppercase mb-1">CURATED FOR YOU</span>
+                <span className="text-orange-500 text-[11px] font-black tracking-[0.2em] uppercase mb-1">CURATED FOR YOU</span>
                 <h2 className="text-gray-900 text-[26px] font-black tracking-tight leading-none">Top Picks</h2>
               </div>
               <div className="flex items-center gap-3">
-                <div className="bg-rose-50 px-3 py-1.5 rounded-2xl border border-rose-100 flex items-center gap-2 group active:scale-95 transition-transform shadow-sm">
-                  <span className="text-rose-600 text-[12px] font-bold">Top</span>
-                  <Zap size={14} className="text-rose-500 fill-rose-500" />
+                <div className="bg-orange-50 px-3 py-1.5 rounded-2xl border border-orange-100 flex items-center gap-2 group active:scale-95 transition-transform shadow-sm">
+                  <span className="text-orange-600 text-[12px] font-bold">Top</span>
+                  <Zap size={14} className="text-orange-500 fill-orange-500" />
                 </div>
               </div>
             </div>
@@ -535,11 +535,11 @@ export default function MobileHome() {
               {/* Spotlight Banner */}
               {posterEvent && (
                 <Link href={`/events/${posterEvent.id}`} className="block mx-5 mt-5">
-                  <div className="relative h-[160px] rounded-[18px] overflow-hidden border border-rose-500/20">
+                  <div className="relative h-[160px] rounded-[18px] overflow-hidden border border-orange-500/20">
                     <img src={getEventImage(posterEvent.images)} alt={posterEvent.title} className="absolute inset-0 w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-gradient-to-t from-gray-900/72 to-transparent" />
                     <div className="absolute left-4 right-4 bottom-3.5">
-                      <span className="inline-block px-2 py-1 rounded-full bg-rose-600/95 text-white text-[10px] font-bold tracking-wide mb-1.5">SPOTLIGHT</span>
+                      <span className="inline-block px-2 py-1 rounded-full bg-orange-600/95 text-white text-[10px] font-bold tracking-wide mb-1.5">SPOTLIGHT</span>
                       <h3 className="text-white text-[19px] font-bold truncate">{posterEvent.title}</h3>
                       <p className="text-white/80 text-[13px] mt-1 truncate">{posterEvent.venue}</p>
                     </div>

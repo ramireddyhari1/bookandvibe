@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Users,
   Ticket,
@@ -59,9 +60,31 @@ function timeAgo(dateStr: string): string {
 }
 
 export default function AdminDashboard() {
+  const router = useRouter();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [activityFeed, setActivityFeed] = useState<Array<{ type: string; text: string; createdAt: string }>>([]);
+  const [authChecked, setAuthChecked] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  function hasAuthState() {
+    if (typeof window === "undefined") return false;
+    const token = sessionStorage.getItem("admin_dash_token") || localStorage.getItem("admin_dash_token");
+    const role = String(sessionStorage.getItem("admin_dash_role") || localStorage.getItem("admin_dash_role") || "").toUpperCase();
+    const cookieToken = document.cookie.includes("admin_dash_token=");
+    return Boolean(token && role && cookieToken);
+  }
+
+  useEffect(() => {
+    const authenticated = hasAuthState();
+    setIsAuthenticated(authenticated);
+    setAuthChecked(true);
+
+    if (!authenticated) {
+      router.replace("/login?next=/");
+    }
+  }, [router]);
 
   async function fetchDashboardData() {
     setLoading(true);
@@ -114,11 +137,22 @@ export default function AdminDashboard() {
     } finally {
       setLoading(false);
     }
+
+    // Fetch live activity feed
+    try {
+      const activityPayload = await fetchApi("/config/activity?limit=8");
+      if (Array.isArray(activityPayload?.data)) {
+        setActivityFeed(activityPayload.data);
+      }
+    } catch (err) {
+      console.warn("Activity feed fetch error:", err);
+    }
   }
 
   useEffect(() => {
+    if (!isAuthenticated) return;
     fetchDashboardData();
-  }, []);
+  }, [isAuthenticated]);
 
   const sessionUser = useMemo(() => {
     if (typeof window === "undefined") return null;
@@ -173,13 +207,25 @@ export default function AdminDashboard() {
     { label: "Seat Locks", state: "Healthy", icon: CircleCheck, tone: "text-emerald-700 bg-emerald-50 border-emerald-100/50 shadow-[0_8px_20px_rgba(16,185,129,0.08)]" },
   ];
 
-  const activityFeed = [
-    { icon: UserPlus, text: "New user Vikram Singh registered", time: "5 min ago", iconBg: "bg-emerald-50", iconColor: "text-emerald-600" },
-    { icon: Ticket, text: "Event 'Delhi Food Fest' published", time: "18 min ago", iconBg: "bg-emerald-50", iconColor: "text-emerald-600" },
-    { icon: CreditCard, text: "Payment INR 4,999 received", time: "45 min ago", iconBg: "bg-emerald-100", iconColor: "text-emerald-700" },
-    { icon: Users, text: "Partner 'Arena Events' onboarded", time: "2 hr ago", iconBg: "bg-emerald-50", iconColor: "text-emerald-600" },
-    { icon: Zap, text: "System update deployed v2.4.1", time: "4 hr ago", iconBg: "bg-slate-100", iconColor: "text-slate-600" },
-  ];
+  const activityIconMap: Record<string, { icon: any; iconBg: string; iconColor: string }> = {
+    user_registered: { icon: UserPlus, iconBg: "bg-emerald-50", iconColor: "text-emerald-600" },
+    partner_joined: { icon: Users, iconBg: "bg-emerald-100", iconColor: "text-emerald-700" },
+    event_published: { icon: Ticket, iconBg: "bg-emerald-50", iconColor: "text-emerald-600" },
+    event_created: { icon: Ticket, iconBg: "bg-slate-100", iconColor: "text-slate-600" },
+    booking: { icon: ShoppingBag, iconBg: "bg-emerald-50", iconColor: "text-emerald-600" },
+    payment: { icon: CreditCard, iconBg: "bg-emerald-100", iconColor: "text-emerald-700" },
+  };
+
+  const renderedActivity = activityFeed.map((item) => {
+    const style = activityIconMap[item.type] || { icon: Zap, iconBg: "bg-slate-100", iconColor: "text-slate-600" };
+    return {
+      icon: style.icon,
+      text: item.text,
+      time: timeAgo(item.createdAt),
+      iconBg: style.iconBg,
+      iconColor: style.iconColor,
+    };
+  });
 
   const statusColor: Record<string, string> = {
     Confirmed: "bg-emerald-50 text-emerald-700 border-emerald-100/50",
@@ -210,24 +256,32 @@ export default function AdminDashboard() {
 
   const recentBookings = data?.recentBookings || [];
 
+  if (!authChecked) {
+    return <div className="min-h-screen" />;
+  }
+
+  if (!isAuthenticated) {
+    return <div className="min-h-screen" />;
+  }
+
   return (
-    <div className="mx-auto max-w-7xl space-y-7">
-      <section className="dash-card overflow-hidden border-emerald-100/50 bg-white p-6 md:p-7">
+    <div className="mx-auto max-w-7xl flex flex-col gap-7">
+      <section className="dash-card order-last md:order-none overflow-hidden border-emerald-100/50 p-6 md:p-7">
         <div className="pointer-events-none absolute -right-10 -top-12 h-64 w-64 rounded-full bg-gradient-to-br from-emerald-400/20 via-teal-300/15 to-emerald-200/10 blur-3xl" />
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.6fr_1fr] lg:items-end">
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600/50">Executive Overview</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-700/80">Executive Overview</p>
             <h2 className="dash-title mt-2 bg-gradient-to-r from-emerald-900 via-teal-900 to-emerald-800 bg-clip-text text-xl sm:text-3xl font-black leading-tight text-transparent md:text-4xl">
               Professional command center for events, partners, and live operations
             </h2>
-            <p className="hidden sm:block mt-4 max-w-3xl text-sm font-bold text-slate-500/80">
+            <p className="hidden sm:block mt-4 max-w-3xl text-sm font-bold text-slate-600">
               Track key growth metrics, monitor operational health, and execute high-priority actions from one focused dashboard.
               {error && <span className="ml-2 text-amber-600">(⚠ {error})</span>}
             </p>
           </div>
           <div className="rounded-2xl border border-emerald-50 bg-emerald-50/20 p-4 backdrop-blur-xl shadow-sm">
             <div className="flex items-center justify-between">
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-900/40">System Integrity</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-900/60">System Integrity</p>
               <button onClick={fetchDashboardData} className="rounded-lg p-1.5 text-emerald-500 hover:bg-emerald-50 transition" title="Refresh">
                 <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
               </button>
@@ -251,7 +305,7 @@ export default function AdminDashboard() {
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (
-            <div key={stat.name} className="dash-card surface-elevate group border-emerald-50/50 bg-white p-3.5 md:p-5 shadow-sm transition-all hover:bg-emerald-50/30">
+            <div key={stat.name} className="dash-card surface-elevate group border-emerald-50/50 p-3.5 md:p-5 shadow-sm transition-all hover:bg-emerald-50/30">
               <div className="mb-3 md:mb-4 flex items-start justify-between">
                 <div className={`rounded-xl p-2 md:p-3 ${stat.bgColor} transition-transform group-hover:scale-110`}>
                   <Icon size={16} className={`${stat.textColor} md:w-5 md:h-5`} />
@@ -261,7 +315,7 @@ export default function AdminDashboard() {
                   <span className="hidden xs:inline">{stat.change}</span>
                 </div>
               </div>
-              <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.15em] md:tracking-[0.2em] text-slate-400/80 truncate">{stat.name}</p>
+              <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.15em] md:tracking-[0.2em] text-slate-500 truncate">{stat.name}</p>
               <p className="dash-title mt-1 text-[20px] md:text-[30px] font-black leading-none text-slate-900">{loading ? "..." : stat.value}</p>
             </div>
           );
@@ -269,18 +323,18 @@ export default function AdminDashboard() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
-        <div className="dash-card xl:col-span-2 border-emerald-50/50 bg-white p-6 shadow-sm">
+        <div className="dash-card xl:col-span-2 border-emerald-50/50 p-6 shadow-sm flex flex-col">
           <div className="mb-6 flex items-center justify-between">
             <div>
               <h3 className="dash-title text-lg font-black text-slate-900">Revenue Performance</h3>
-              <p className="text-sm font-bold text-slate-400/80">Monthly trend and momentum for FY 2026</p>
+              <p className="text-sm font-bold text-slate-500">Monthly trend and momentum for FY 2026</p>
             </div>
             <span className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-100 px-4 py-2 text-xs font-black uppercase tracking-wider text-emerald-700 shadow-sm">
               <TrendingUp size={14} /> +24.3%
             </span>
           </div>
 
-          <div className="chart-grid rounded-2xl border border-emerald-50 bg-emerald-50/20 p-3">
+          <div className="chart-grid rounded-2xl border border-emerald-50 bg-emerald-50/20 p-3 flex-1 flex flex-col justify-between">
             <div className="relative h-[200px]">
               <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="h-full w-full" preserveAspectRatio="none" aria-label="Revenue trend chart">
                 <defs>
@@ -320,7 +374,7 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        <div className="dash-card border-emerald-50/50 bg-white p-6 shadow-sm">
+        <div className="dash-card border-emerald-50/50 p-6 shadow-sm">
           <div className="mb-5 flex items-center justify-between">
             <h3 className="dash-title inline-flex items-center gap-2 text-lg font-black text-slate-900">
               <Activity size={17} className="text-emerald-500" />
@@ -329,8 +383,8 @@ export default function AdminDashboard() {
             <span className="rounded-lg bg-emerald-50 px-2 py-1 text-[10px] font-black uppercase tracking-wider text-emerald-600">Realtime</span>
           </div>
 
-          <div className="space-y-3">
-            {activityFeed.map((item, i) => {
+          <div className="space-y-3 max-h-[380px] overflow-y-auto pr-2 custom-scrollbar">
+            {renderedActivity.length > 0 ? renderedActivity.map((item, i) => {
               const Icon = item.icon;
               return (
                 <div key={i} className="group flex cursor-pointer items-start gap-4 rounded-xl border border-transparent p-3 transition-all hover:bg-emerald-50/50 hover:border-emerald-50">
@@ -339,19 +393,21 @@ export default function AdminDashboard() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="text-[13px] font-black leading-snug text-slate-800">{item.text}</p>
-                    <p className="mt-1 flex items-center gap-1 text-[11px] font-bold text-slate-400">
+                    <p className="mt-1 flex items-center gap-1 text-[11px] font-bold text-slate-500">
                       <Clock size={10} /> {item.time}
                     </p>
                   </div>
                 </div>
               );
-            })}
+            }) : (
+              <p className="text-center text-sm font-bold text-slate-400 py-6">{loading ? "Loading..." : "No recent activity"}</p>
+            )}
           </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
-        <div className="dash-card overflow-hidden xl:col-span-2 border-emerald-50/50 bg-white shadow-sm">
+        <div className="dash-card overflow-hidden xl:col-span-2 border-emerald-50/50 shadow-sm">
           <div className="flex items-center justify-between border-b border-emerald-50 p-6">
             <h3 className="dash-title text-lg font-black text-slate-900">Recent Bookings</h3>
             <Link href="/bookings" className="inline-flex items-center gap-1 text-sm font-black uppercase tracking-wider text-emerald-600 transition hover:text-emerald-500">
@@ -401,7 +457,7 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        <div className="dash-card border-emerald-50/50 bg-white p-6 shadow-sm">
+        <div className="dash-card border-emerald-50/50 p-6 shadow-sm">
           <h3 className="dash-title mb-6 text-lg font-black text-slate-900">Quick Actions</h3>
           <div className="space-y-3">
             <Link href="/events/new" className="group flex w-full items-center gap-4 rounded-2xl border border-emerald-50 bg-white p-4 transition-all hover:bg-emerald-50 hover:border-emerald-100 hover:shadow-lg hover:shadow-emerald-100/50 hover:scale-[1.02]">
@@ -410,7 +466,7 @@ export default function AdminDashboard() {
               </div>
               <div>
                 <span className="text-[14px] font-black text-slate-900">Create Event</span>
-                <p className="mt-0.5 text-[11px] font-bold text-slate-400">Launch a new experience</p>
+                <p className="mt-0.5 text-[11px] font-bold text-slate-500">Launch a new experience</p>
               </div>
               <ArrowRight size={14} className="ml-auto text-emerald-300 transition group-hover:text-emerald-600" />
             </Link>
@@ -421,7 +477,7 @@ export default function AdminDashboard() {
               </div>
               <div>
                 <span className="text-[14px] font-black text-slate-900">Manage GameHub</span>
-                <p className="mt-0.5 text-[11px] font-bold text-slate-400">Operations & Scheduling</p>
+                <p className="mt-0.5 text-[11px] font-bold text-slate-500">Operations & Scheduling</p>
               </div>
               <ArrowRight size={14} className="ml-auto text-emerald-300 transition group-hover:text-emerald-600" />
             </Link>
@@ -432,7 +488,7 @@ export default function AdminDashboard() {
               </div>
               <div>
                 <span className="text-[14px] font-black text-slate-900">Partner Hub</span>
-                <p className="mt-0.5 text-[11px] font-bold text-slate-400">Collaborations & Access</p>
+                <p className="mt-0.5 text-[11px] font-bold text-slate-500">Collaborations & Access</p>
               </div>
               <ArrowRight size={14} className="ml-auto text-emerald-300 transition group-hover:text-emerald-600" />
             </Link>

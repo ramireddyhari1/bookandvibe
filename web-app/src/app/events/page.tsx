@@ -98,7 +98,6 @@ export default function EventsPage() {
       setError("");
       try {
         const params = new URLSearchParams();
-        if (selectedLocation.city) params.append("city", selectedLocation.city);
         if (activeCategory !== "All") params.append("category", activeCategory);
         if (searchQuery) params.append("search", searchQuery);
         
@@ -210,8 +209,28 @@ export default function EventsPage() {
     return () => clearTimeout(timer);
   }, [selectedLocation, activeCategory, searchQuery, selectedPriceRange, selectedDateFilter]);
 
-  const featuredEvent = useMemo(() => events.find((e) => e.featured), [events]);
-  const trendingEvents = useMemo(() => events.filter((e) => e.featured || e.price > 1000), [events]);
+  const matchesLocation = useCallback(
+    (event: any) => {
+      const city = String(selectedLocation.city || "").trim().toLowerCase();
+      if (!city) return true;
+      const location = `${event.location || ""} ${event.venue || ""}`.toLowerCase();
+      return location.includes(city);
+    },
+    [selectedLocation.city]
+  );
+
+  const locationRelatedEvents = useMemo(
+    () => events.filter((event) => matchesLocation(event)),
+    [events, matchesLocation]
+  );
+
+  const featuredEvent = useMemo(() => locationRelatedEvents.find((e) => e.featured) || events.find((e) => e.featured), [locationRelatedEvents, events]);
+  const trendingEvents = useMemo(() => {
+    const pool = locationRelatedEvents.length > 0 ? locationRelatedEvents : events;
+    return [...pool]
+      .sort((a, b) => Number(b.featured) - Number(a.featured) || Number(b.price || 0) - Number(a.price || 0))
+      .slice(0, 3);
+  }, [locationRelatedEvents, events]);
 
   const formatEventDate = (dateStr: string) => {
     const d = new Date(dateStr);
@@ -233,10 +252,15 @@ export default function EventsPage() {
     (selectedPriceRange !== 0 ? 1 : 0) +
     (selectedDateFilter !== "all" ? 1 : 0);
 
-  const getEventImage = (imagesStr: string) => {
+  const getEventImage = (imagesStr: string, preferBanner = false) => {
     try {
       const images = JSON.parse(imagesStr);
-      return Array.isArray(images) ? images[0] : images;
+      if (Array.isArray(images)) {
+        if (!images.length) return "";
+        if (preferBanner) return images[1] || images[0];
+        return images[0] || images[1] || "";
+      }
+      return images;
     } catch {
       return imagesStr;
     }
@@ -247,9 +271,9 @@ export default function EventsPage() {
   const bannerTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const bannerEvents = useMemo(() => {
-    const withImages = events.filter((e) => e.images);
+    const withImages = (locationRelatedEvents.length > 0 ? locationRelatedEvents : events).filter((e) => e.images);
     return withImages.slice(0, 5);
-  }, [events]);
+  }, [events, locationRelatedEvents]);
 
   const startAutoPlay = useCallback(() => {
     if (bannerTimerRef.current) clearInterval(bannerTimerRef.current);
@@ -271,13 +295,13 @@ export default function EventsPage() {
   const prevSlide = () => goToSlide((currentSlide - 1 + (bannerEvents.length || 1)) % (bannerEvents.length || 1));
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-100 via-rose-50 to-white text-[#1c222b] pb-24 font-sans leading-normal">
+    <div className="min-h-screen bg-gradient-to-br from-orange-100 via-orange-50 to-white text-[#1c222b] pb-24 font-sans leading-normal">
 
       {/* ═══════════════════════════════════════════════════════
           MASSIVE 16:9 POSTER BANNER CAROUSEL (Desktop)
       ═══════════════════════════════════════════════════════ */}
-      {bannerEvents.length > 0 && (
-        <div className="hidden md:block relative w-full pt-[112px] max-w-[1600px] mx-auto px-4 lg:px-6">
+      {bannerEvents.length > 0 ? (
+        <div className="hidden md:block relative w-full pt-[124px] max-w-[1600px] mx-auto px-4 lg:px-6">
           <div className="relative w-full overflow-hidden rounded-3xl shadow-2xl" style={{ aspectRatio: '21/9', maxHeight: '75vh' }}>
             {bannerEvents.map((event, idx) => (
               <Link
@@ -290,7 +314,7 @@ export default function EventsPage() {
                 }`}
               >
                 <img
-                  src={getEventImage(event.images)}
+                  src={getEventImage(event.images, true)}
                   alt={event.title}
                   className="w-full h-full object-cover"
                 />
@@ -302,7 +326,7 @@ export default function EventsPage() {
                 <div className="absolute bottom-0 left-0 right-0 p-8 lg:p-14 z-20">
                   <div className="max-w-[1400px] mx-auto">
                     <div className="flex items-center gap-3 mb-4">
-                      <span className="bg-rose-500 text-white text-[11px] tracking-wider uppercase px-3 py-1.5 rounded-full font-extrabold shadow-lg">
+                      <span className="bg-orange-500 text-white text-[11px] tracking-wider uppercase px-3 py-1.5 rounded-full font-extrabold shadow-lg">
                         {event.featured ? "⭐ Featured" : event.category}
                       </span>
                       <span className="bg-white/15 backdrop-blur-md text-white text-[11px] tracking-wider uppercase px-3 py-1.5 rounded-full font-extrabold border border-white/20">
@@ -314,16 +338,16 @@ export default function EventsPage() {
                     </h2>
                     <div className="flex flex-wrap items-center gap-5 text-white/80 text-sm font-semibold mb-6">
                       <span className="flex items-center gap-2">
-                        <Calendar size={16} className="text-rose-400" />
+                        <Calendar size={16} className="text-orange-400" />
                         {formatEventDate(event.date)}, {event.time}
                       </span>
                       <span className="flex items-center gap-2">
-                        <MapPin size={16} className="text-rose-400" />
+                        <MapPin size={16} className="text-orange-400" />
                         {event.venue}
                       </span>
                     </div>
                     <div className="flex items-center gap-4">
-                      <span className="bg-white text-[#1c222b] px-8 py-3.5 rounded-2xl font-extrabold text-[15px] hover:bg-rose-500 hover:text-white transition-colors shadow-xl">
+                      <span className="bg-white text-[#1c222b] px-8 py-3.5 rounded-2xl font-extrabold text-[15px] hover:bg-orange-500 hover:text-white transition-colors shadow-xl">
                         ₹{event.price} · Get Tickets
                       </span>
                     </div>
@@ -359,7 +383,7 @@ export default function EventsPage() {
                     onClick={(e) => { e.preventDefault(); goToSlide(idx); }}
                     className={`rounded-full transition-all duration-300 ${
                       idx === currentSlide
-                        ? "w-8 h-2.5 bg-rose-500"
+                        ? "w-8 h-2.5 bg-orange-500"
                         : "w-2.5 h-2.5 bg-white/40 hover:bg-white/60"
                     }`}
                   />
@@ -368,14 +392,16 @@ export default function EventsPage() {
             )}
           </div>
         </div>
+      ) : (
+        <div className="hidden md:block pt-[124px]"></div>
       )}
 
 
 
       {/* ── Search + Filters Bar ─────────────────────────────── */}
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 mt-6 md:mt-8">
-        <div className="flex items-center bg-white rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl transition-shadow px-5 py-3.5 gap-3">
-          <Search size={22} className="text-rose-400 shrink-0" strokeWidth={2.5} />
+        <div className="flex items-center bg-white rounded-full border-2 border-orange-500 shadow-lg hover:shadow-xl transition-shadow px-6 py-3 gap-3">
+          <Search size={22} className="text-orange-400 shrink-0" strokeWidth={2.5} />
           <input
             type="text"
             placeholder="Search events, artists, venues..."
@@ -392,14 +418,14 @@ export default function EventsPage() {
             onClick={() => setShowFilters(!showFilters)}
             className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold transition-all font-sans ${
               showFilters || activeFilterCount > 0
-                ? "bg-rose-500 text-white"
+                ? "bg-orange-500 text-white"
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
             <SlidersHorizontal size={16} />
             Filters
             {activeFilterCount > 0 && (
-              <span className="bg-white text-rose-600 text-[11px] font-black w-5 h-5 rounded-full flex items-center justify-center">
+              <span className="bg-white text-orange-600 text-[11px] font-black w-5 h-5 rounded-full flex items-center justify-center">
                 {activeFilterCount}
               </span>
             )}
@@ -422,8 +448,8 @@ export default function EventsPage() {
                       onClick={() => setSelectedPriceRange(idx)}
                       className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
                         selectedPriceRange === idx
-                          ? "bg-rose-500 text-white shadow-md"
-                          : "bg-gray-50 text-gray-600 hover:bg-rose-50 hover:text-rose-600 border border-gray-100"
+                          ? "bg-orange-500 text-white shadow-md"
+                          : "bg-gray-50 text-gray-600 hover:bg-orange-50 hover:text-orange-600 border border-gray-100"
                       }`}
                     >
                       {range.label}
@@ -444,8 +470,8 @@ export default function EventsPage() {
                       onClick={() => setSelectedDateFilter(df.value)}
                       className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
                         selectedDateFilter === df.value
-                          ? "bg-rose-500 text-white shadow-md"
-                          : "bg-gray-50 text-gray-600 hover:bg-rose-50 hover:text-rose-600 border border-gray-100"
+                          ? "bg-orange-500 text-white shadow-md"
+                          : "bg-gray-50 text-gray-600 hover:bg-orange-50 hover:text-orange-600 border border-gray-100"
                       }`}
                     >
                       {df.label}
@@ -463,7 +489,7 @@ export default function EventsPage() {
                   setSelectedDateFilter("all");
                   setActiveCategory("All");
                 }}
-                className="mt-4 text-sm text-rose-500 font-bold hover:text-rose-600 transition flex items-center gap-1"
+                className="mt-4 text-sm text-orange-500 font-bold hover:text-orange-600 transition flex items-center gap-1"
               >
                 <X size={14} /> Clear all filters
               </button>
@@ -480,31 +506,43 @@ export default function EventsPage() {
             <button
               key={cat.label}
               onClick={() => setActiveCategory(cat.label)}
-              className={`flex items-center gap-2 px-6 py-3 rounded-2xl text-[15px] font-bold whitespace-nowrap transition-all shadow-sm font-sans ${
+              className={`group relative flex items-center gap-2.5 px-5 py-2.5 min-h-[48px] rounded-2xl text-[15px] font-bold whitespace-nowrap transition-all duration-300 border font-sans focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#fff7ed] ${
                 activeCategory === cat.label
-                  ? "bg-rose-600 text-white shadow-md transform -translate-y-0.5"
-                  : "bg-white text-[#1c222b]/70 hover:bg-rose-50 hover:text-rose-600 border border-gray-200"
+                  ? "bg-gradient-to-b from-orange-500 to-orange-600 text-white border-orange-500 shadow-[0_8px_20px_rgba(249,115,22,0.30)]"
+                  : "bg-white text-[#334155] border-gray-200 hover:border-orange-300 hover:text-orange-700 hover:bg-gradient-to-b hover:from-white hover:to-orange-50/60 shadow-[0_1px_2px_rgba(15,23,42,0.06)] hover:shadow-[0_8px_18px_rgba(15,23,42,0.08)]"
               }`}
+              aria-pressed={activeCategory === cat.label}
             >
-              {cat.icon}
-              {cat.display || cat.label}
+              <span
+                className={`inline-flex items-center justify-center w-5 h-5 ${
+                  activeCategory === cat.label
+                    ? "text-white"
+                    : "text-slate-500 group-hover:text-orange-600"
+                } transition-colors`}
+              >
+                {cat.icon}
+              </span>
+              <span className="tracking-[0.01em]">{cat.display || cat.label}</span>
+              {activeCategory === cat.label && (
+                <span className="absolute inset-x-4 -bottom-px h-[2px] rounded-full bg-white/85" />
+              )}
             </button>
           ))}
         </div>
 
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20 animate-pulse">
-            <div className="w-12 h-12 border-4 border-rose-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p className="text-rose-500 font-bold font-sans">Discovering experiences...</p>
+            <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p className="text-orange-500 font-bold font-sans">Discovering experiences...</p>
           </div>
         ) : error ? (
-          <div className="bg-white border border-rose-100 rounded-3xl p-12 text-center shadow-sm mb-12">
-            <Frown className="w-16 h-16 text-rose-300 mx-auto mb-4" />
+          <div className="bg-white border border-orange-100 rounded-3xl p-12 text-center shadow-sm mb-12">
+            <Frown className="w-16 h-16 text-orange-300 mx-auto mb-4" />
             <h3 className="text-xl font-bold text-gray-900 mb-2 font-sans">Oops! Something went wrong</h3>
             <p className="text-gray-500 mb-6 max-w-md mx-auto font-medium font-sans">{error}</p>
             <button 
               onClick={() => window.location.reload()}
-              className="mt-6 bg-rose-500 text-white px-8 py-3 rounded-2xl font-bold shadow-lg hover:bg-rose-600 transition font-sans"
+              className="mt-6 bg-orange-500 text-white px-8 py-3 rounded-2xl font-bold shadow-lg hover:bg-orange-600 transition font-sans"
             >
               Try Again
             </button>
@@ -517,7 +555,7 @@ export default function EventsPage() {
                 <Link href={`/events/${featuredEvent.id}`} className="block group">
                   <div className="relative w-full h-[280px] md:h-[380px] rounded-3xl overflow-hidden shadow-lg border border-gray-100">
                     <img
-                      src={getEventImage(featuredEvent.images)}
+                      src={getEventImage(featuredEvent.images, true)}
                       alt={featuredEvent.title}
                       className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out font-sans"
                     />
@@ -525,7 +563,7 @@ export default function EventsPage() {
                     
                     <div className="absolute inset-y-0 left-0 p-8 md:p-12 flex flex-col justify-center max-w-xl">
                       <div className="flex items-center gap-3 mb-4">
-                        <span className="bg-rose-500 text-white text-[11px] tracking-wider uppercase px-3 py-1.5 rounded-full font-extrabold shadow-lg font-sans">
+                        <span className="bg-orange-500 text-white text-[11px] tracking-wider uppercase px-3 py-1.5 rounded-full font-extrabold shadow-lg font-sans">
                           ⭐ Featured
                         </span>
                         <span className="bg-white/15 backdrop-blur-md text-white text-[11px] tracking-wider uppercase px-3 py-1.5 rounded-full font-extrabold border border-white/20 font-sans">
@@ -540,16 +578,16 @@ export default function EventsPage() {
                       </p>
                       <div className="flex flex-wrap items-center gap-4 text-white/70 text-sm font-medium mb-6 font-sans">
                         <span className="flex items-center gap-1.5 font-sans">
-                          <Calendar size={15} className="text-rose-400" />
+                          <Calendar size={15} className="text-orange-400" />
                           {formatEventDate(featuredEvent.date)}, {featuredEvent.time}
                         </span>
                         <span className="flex items-center gap-1.5 font-sans">
-                          <MapPin size={15} className="text-rose-400" />
+                          <MapPin size={15} className="text-orange-400" />
                           {featuredEvent.venue}
                         </span>
                       </div>
                       <div className="flex items-center gap-4 font-sans">
-                        <span className="bg-white text-[#1c222b] px-6 py-3 rounded-2xl font-extrabold text-[15px] group-hover:bg-rose-500 group-hover:text-white transition-colors shadow-lg font-sans">
+                        <span className="bg-white text-[#1c222b] px-6 py-3 rounded-2xl font-extrabold text-[15px] group-hover:bg-orange-500 group-hover:text-white transition-colors shadow-lg font-sans">
                           ₹{featuredEvent.price} · Get Tickets
                         </span>
                       </div>
@@ -564,15 +602,15 @@ export default function EventsPage() {
               <div className="mb-12">
                 <div className="flex justify-between items-end border-b border-gray-200 pb-4 mb-8">
                   <div className="flex items-center gap-3">
-                    <div className="bg-gradient-to-br from-rose-500 to-rose-600 text-white p-2.5 rounded-xl shadow-md font-sans">
+                    <div className="bg-gradient-to-br from-orange-500 to-orange-600 text-white p-2.5 rounded-xl shadow-md font-sans">
                       <Flame size={20} />
                     </div>
                     <div>
                       <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight font-sans">
-                        Trending Now
+                        Trending in {selectedLocation.city || "Your Area"}
                       </h2>
                       <p className="text-sm text-gray-500 font-medium font-sans">
-                        Most popular events people are booking
+                        Location-based events near you
                       </p>
                     </div>
                   </div>
@@ -593,19 +631,19 @@ export default function EventsPage() {
                           />
                         </div>
                         <div className="flex-1 p-5 flex flex-col">
-                          <span className="text-[11px] font-extrabold text-rose-500 uppercase tracking-wider mb-1.5 font-sans">
+                          <span className="text-[11px] font-extrabold text-orange-500 uppercase tracking-wider mb-1.5 font-sans">
                             {event.category}
                           </span>
-                          <h3 className="text-[16px] font-extrabold text-[#1c222b] leading-snug mb-2 line-clamp-2 group-hover:text-rose-600 transition-colors font-sans">
+                          <h3 className="text-[16px] font-extrabold text-[#1c222b] leading-snug mb-2 line-clamp-2 group-hover:text-orange-600 transition-colors font-sans">
                             {event.title}
                           </h3>
                           <div className="space-y-1 text-xs text-gray-500 font-semibold mb-3 flex-1 font-sans">
                             <p className="flex items-center gap-1.5 font-sans">
-                              <Calendar size={13} className="text-rose-400 font-sans" />
+                              <Calendar size={13} className="text-orange-400 font-sans" />
                               {formatEventDate(event.date)}, {event.time}
                             </p>
                             <p className="flex items-center gap-1.5 font-sans">
-                              <MapPin size={13} className="text-rose-400 font-sans" />
+                              <MapPin size={13} className="text-orange-400 font-sans" />
                               {event.venue}
                             </p>
                           </div>
@@ -625,7 +663,7 @@ export default function EventsPage() {
             {/* All Events */}
             <div className="flex justify-between items-end border-b border-gray-200 pb-4 mb-8 font-sans">
               <div className="flex items-center gap-3 font-sans">
-                <div className="bg-gradient-to-br from-rose-500 to-rose-600 text-white p-2.5 rounded-xl shadow-md font-sans">
+                <div className="bg-gradient-to-br from-orange-500 to-orange-600 text-white p-2.5 rounded-xl shadow-md font-sans">
                   <Ticket size={20} />
                 </div>
                 <div className="font-sans">
@@ -634,9 +672,6 @@ export default function EventsPage() {
                       ? "All Events"
                       : CATEGORIES.find((c) => c.label === activeCategory)?.display || activeCategory}
                   </h2>
-                  <p className="text-sm text-gray-500 font-medium font-sans">
-                    {events.length} event{events.length !== 1 ? "s" : ""} in {selectedLocation.city}
-                  </p>
                 </div>
               </div>
             </div>
@@ -663,7 +698,7 @@ export default function EventsPage() {
                               toggleFavorite(event.id);
                             }}
                             className={`p-2 rounded-xl backdrop-blur-md border border-white/30 transition-all font-sans ${
-                              favorites.has(event.id) ? "bg-rose-500 text-white" : "bg-white/20 text-white hover:bg-white/40 font-sans"
+                              favorites.has(event.id) ? "bg-orange-500 text-white" : "bg-white/20 text-white hover:bg-white/40 font-sans"
                             }`}
                           >
                             <Heart size={16} className={favorites.has(event.id) ? "fill-white" : ""} />
@@ -671,7 +706,7 @@ export default function EventsPage() {
                         </div>
                         <div className="absolute bottom-3 left-3 z-10 font-sans">
                           <div className="bg-white rounded-xl px-3 py-2 text-center shadow-lg min-w-[52px] font-sans">
-                            <p className="text-[10px] text-rose-500 font-extrabold uppercase tracking-wider leading-none font-sans">
+                            <p className="text-[10px] text-orange-500 font-extrabold uppercase tracking-wider leading-none font-sans">
                               {new Date(event.date).toLocaleDateString("en-US", { month: "short" })}
                             </p>
                             <p className="text-xl font-black text-[#1c222b] leading-none mt-0.5 font-sans">
@@ -681,15 +716,15 @@ export default function EventsPage() {
                         </div>
                       </div>
                       <div className="p-5 flex-1 flex flex-col bg-white font-sans">
-                        <p className="text-rose-500 text-[13px] font-bold mb-1.5 flex items-center gap-1.5 font-sans">
+                        <p className="text-orange-500 text-[13px] font-bold mb-1.5 flex items-center gap-1.5 font-sans">
                           <Clock size={13} />
                           {formatEventDate(event.date)}, {event.time}
                         </p>
-                        <h3 className="text-[17px] font-extrabold text-[#1c222b] leading-snug line-clamp-2 mb-2 group-hover:text-rose-600 transition-colors font-sans">
+                        <h3 className="text-[17px] font-extrabold text-[#1c222b] leading-snug line-clamp-2 mb-2 group-hover:text-orange-600 transition-colors font-sans">
                           {event.title}
                         </h3>
                         <p className="text-gray-500 text-[13px] font-semibold flex items-center gap-1.5 mb-4 mt-auto font-sans">
-                          <MapPin size={13} className="text-rose-400 shrink-0 font-sans" />
+                          <MapPin size={13} className="text-orange-400 shrink-0 font-sans" />
                           {event.venue}
                         </p>
                         <div className="flex justify-between items-center pt-4 border-t border-gray-100 font-sans">
@@ -703,10 +738,10 @@ export default function EventsPage() {
               </div>
             ) : (
               <div className="text-center py-24 bg-white/50 border border-dashed border-gray-200 rounded-3xl font-sans">
-                <Frown className="text-rose-300 mx-auto mb-4 font-sans" size={64} strokeWidth={1} />
+                <Frown className="text-orange-300 mx-auto mb-4 font-sans" size={64} strokeWidth={1} />
                 <h3 className="text-2xl font-black text-[#1c222b] mb-2 font-sans">No events found</h3>
                 <p className="text-gray-500 max-w-md mx-auto font-medium mb-6 font-sans">
-                  There are currently no events matching your criteria in <strong className="text-rose-500 font-sans">{selectedLocation.city}</strong>.
+                  There are currently no events matching your criteria in <strong className="text-orange-500 font-sans">{selectedLocation.city}</strong>.
                 </p>
                 <button
                   onClick={() => {
@@ -715,7 +750,7 @@ export default function EventsPage() {
                     setSelectedPriceRange(0);
                     setSelectedDateFilter("all");
                   }}
-                  className="bg-rose-500 hover:bg-rose-600 text-white px-6 py-3 rounded-full font-bold transition shadow-md font-sans"
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-full font-bold transition shadow-md font-sans"
                 >
                   Clear All Filters
                 </button>
@@ -724,28 +759,6 @@ export default function EventsPage() {
           </>
         )}
 
-        {/* Newsletter Section */}
-        <div className="mt-20 bg-gradient-to-r from-rose-600 to-rose-500 rounded-3xl p-10 md:p-14 text-white relative overflow-hidden shadow-xl font-sans">
-          <div className="absolute -top-12 -right-12 w-48 h-48 bg-white/10 rounded-full font-sans" />
-          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8 font-sans">
-            <div className="text-center md:text-left font-sans">
-              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-3 font-sans">Never Miss a Beat 🎶</h2>
-              <p className="text-white/80 text-lg font-medium max-w-lg font-sans">
-                Get early access to event drops, exclusive presale codes, and curated recommendations straight to your inbox.
-              </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto shrink-0 font-sans">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="bg-white/15 backdrop-blur-sm border border-white/30 rounded-xl px-5 py-3.5 text-white placeholder-white/60 font-medium text-sm outline-none w-full sm:w-[260px] font-sans"
-              />
-              <button className="bg-white text-rose-600 px-8 py-3.5 rounded-xl font-extrabold text-sm hover:bg-white/90 transition shadow-lg whitespace-nowrap font-sans">
-                Subscribe
-              </button>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );

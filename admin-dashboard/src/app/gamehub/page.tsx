@@ -208,6 +208,15 @@ function csvToList(input: string) {
     .filter(Boolean);
 }
 
+function readCookie(name: string): string {
+  if (typeof document === "undefined") return "";
+  const entry = document.cookie
+    .split("; ")
+    .find((item) => item.startsWith(`${name}=`));
+  if (!entry) return "";
+  return decodeURIComponent(entry.split("=").slice(1).join("="));
+}
+
 function mapFacilityToForm(facility: GameHubFacility): FacilityFormState {
   return {
     name: facility.name || "",
@@ -268,13 +277,18 @@ export default function GameHubAdminPage() {
   const [authError, setAuthError] = useState("");
   const [selectedDate, setSelectedDate] = useState(`${currentMonthString()}-01`);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [editorExperience, setEditorExperience] = useState<"easy" | "advanced">("easy");
 
   function clearDashboardSession() {
+    sessionStorage.removeItem("admin_dash_token");
+    sessionStorage.removeItem("admin_dash_role");
+    sessionStorage.removeItem("admin_dash_user");
     localStorage.removeItem("admin_dash_token");
     localStorage.removeItem("admin_dash_role");
     localStorage.removeItem("admin_dash_user");
     document.cookie = "admin_dash_token=; path=/; max-age=0; samesite=lax";
     document.cookie = "admin_dash_role=; path=/; max-age=0; samesite=lax";
+    document.cookie = "admin_dash_session=; path=/; max-age=0; samesite=lax";
   }
 
   const selectedDay = useMemo(() => {
@@ -299,6 +313,8 @@ export default function GameHubAdminPage() {
     setEditorMode("create");
     setEditingFacilityId(null);
     setFormState(emptyFormState);
+    setEditorExperience("easy");
+    setShowAdvanced(false);
     setActionError("");
     setActionMessage("");
     setIsEditorOpen(true);
@@ -308,6 +324,8 @@ export default function GameHubAdminPage() {
     setEditorMode("edit");
     setEditingFacilityId(facility.id);
     setFormState(mapFacilityToForm(facility));
+    setEditorExperience("advanced");
+    setShowAdvanced(true);
     setActionError("");
     setActionMessage("");
     setIsEditorOpen(true);
@@ -396,7 +414,7 @@ export default function GameHubAdminPage() {
       venue: formState.venue.trim(),
       distance: formState.distance.trim(),
       rating: Number(formState.rating || 0),
-      priceRange: formState.priceRange.trim(),
+      priceRange: formState.priceRange.trim() || `INR ${Number(formState.pricePerHour || 0)} / ${formState.unit.trim() || "hr"}`,
       pricePerHour: Number(formState.pricePerHour || 0),
       unit: formState.unit.trim() || "hr",
       image: formState.image.trim() || defaultImage,
@@ -491,7 +509,16 @@ export default function GameHubAdminPage() {
     let mounted = true;
 
     async function verifyAdminSession() {
-      const token = localStorage.getItem("admin_dash_token") || "";
+      const token =
+        sessionStorage.getItem("admin_dash_token") ||
+        localStorage.getItem("admin_dash_token") ||
+        readCookie("admin_dash_token") ||
+        "";
+
+      if (token && !sessionStorage.getItem("admin_dash_token")) {
+        sessionStorage.setItem("admin_dash_token", token);
+      }
+
       if (!token) {
         if (mounted) {
           setHasAdminAccess(false);
@@ -810,6 +837,32 @@ export default function GameHubAdminPage() {
               </button>
             </div>
 
+            <div className="mb-4 flex flex-wrap items-center gap-2 rounded-2xl border border-slate-200 bg-white p-2">
+              <button
+                type="button"
+                onClick={() => setEditorExperience("easy")}
+                className={`rounded-xl px-3 py-2 text-xs font-black uppercase tracking-wide transition ${
+                  editorExperience === "easy" ? "bg-emerald-500 text-white shadow-sm" : "bg-slate-100 text-slate-600"
+                }`}
+              >
+                Easy Form
+              </button>
+              <button
+                type="button"
+                onClick={() => setEditorExperience("advanced")}
+                className={`rounded-xl px-3 py-2 text-xs font-black uppercase tracking-wide transition ${
+                  editorExperience === "advanced" ? "bg-slate-900 text-white shadow-sm" : "bg-slate-100 text-slate-600"
+                }`}
+              >
+                Advanced Form
+              </button>
+              <p className="ml-1 text-[11px] font-semibold text-slate-500">
+                {editorExperience === "easy"
+                  ? "Fill only essentials. Advanced fields are hidden."
+                  : "Full control with metadata, slot presets, and JSON configuration."}
+              </p>
+            </div>
+
                 disabled={!hasAdminAccess}
             <form onSubmit={handleSubmitFacility} className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <select value={formState.status} onChange={(e) => handleFormChange("status", e.target.value)} className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm">
@@ -822,29 +875,35 @@ export default function GameHubAdminPage() {
               <input value={formState.availableSports} onChange={(e) => handleFormChange("availableSports", e.target.value)} placeholder="Sports Available (e.g. Badminton, Football)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
               <input value={formState.location} onChange={(e) => handleFormChange("location", e.target.value)} required placeholder="Location" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
               <input value={formState.venue} onChange={(e) => handleFormChange("venue", e.target.value)} required placeholder="Venue" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
-              <input value={formState.distance} onChange={(e) => handleFormChange("distance", e.target.value)} placeholder="Distance" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
               <input value={formState.rating} onChange={(e) => handleFormChange("rating", e.target.value)} type="number" min="0" max="5" step="0.1" placeholder="Rating" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
-              <input value={formState.priceRange} onChange={(e) => handleFormChange("priceRange", e.target.value)} placeholder="Price Range" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
               <div className="grid grid-cols-2 gap-3">
                 <input value={formState.pricePerHour} onChange={(e) => handleFormChange("pricePerHour", e.target.value)} type="number" min="0" step="1" placeholder="Price" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
                 <input value={formState.unit} onChange={(e) => handleFormChange("unit", e.target.value)} placeholder="Unit" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
               </div>
               <input value={formState.image} onChange={(e) => handleFormChange("image", e.target.value)} placeholder="Cover Image URL" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" />
-              <input value={formState.gallery} onChange={(e) => handleFormChange("gallery", e.target.value)} placeholder="Gallery URLs (comma separated)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" />
-              {csvToList(formState.gallery).length > 0 ? (
-                <div className="grid grid-cols-3 gap-2 md:col-span-2">
-                  {csvToList(formState.gallery).slice(0, 6).map((url) => (
-                    <img key={url} src={url} alt="gallery preview" className="h-20 w-full rounded-lg border border-slate-200 object-cover" />
-                  ))}
-                </div>
-              ) : null}
               <textarea value={formState.description} onChange={(e) => handleFormChange("description", e.target.value)} placeholder="Description" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" rows={3} />
-              <input value={formState.phone} onChange={(e) => handleFormChange("phone", e.target.value)} placeholder="Phone" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
               <input value={formState.openHours} onChange={(e) => handleFormChange("openHours", e.target.value)} placeholder="Open Hours" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
-              <input value={formState.amenities} onChange={(e) => handleFormChange("amenities", e.target.value)} placeholder="Amenities (comma separated)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" />
-              <input value={formState.features} onChange={(e) => handleFormChange("features", e.target.value)} placeholder="Features (comma separated)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" />
-              <input value={formState.tags} onChange={(e) => handleFormChange("tags", e.target.value)} placeholder="Tags (comma separated)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" />
+              {editorExperience === "advanced" ? (
+                <>
+                  <input value={formState.distance} onChange={(e) => handleFormChange("distance", e.target.value)} placeholder="Distance" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
+                  <input value={formState.priceRange} onChange={(e) => handleFormChange("priceRange", e.target.value)} placeholder="Price Range" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
+                  <input value={formState.phone} onChange={(e) => handleFormChange("phone", e.target.value)} placeholder="Phone" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
+                  <div className="hidden md:block" />
+                  <input value={formState.gallery} onChange={(e) => handleFormChange("gallery", e.target.value)} placeholder="Gallery URLs (comma separated)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" />
+                  {csvToList(formState.gallery).length > 0 ? (
+                    <div className="grid grid-cols-3 gap-2 md:col-span-2">
+                      {csvToList(formState.gallery).slice(0, 6).map((url) => (
+                        <img key={url} src={url} alt="gallery preview" className="h-20 w-full rounded-lg border border-slate-200 object-cover" />
+                      ))}
+                    </div>
+                  ) : null}
+                  <input value={formState.amenities} onChange={(e) => handleFormChange("amenities", e.target.value)} placeholder="Amenities (comma separated)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" />
+                  <input value={formState.features} onChange={(e) => handleFormChange("features", e.target.value)} placeholder="Features (comma separated)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" />
+                  <input value={formState.tags} onChange={(e) => handleFormChange("tags", e.target.value)} placeholder="Tags (comma separated)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" />
+                </>
+              ) : null}
 
+              {editorExperience === "advanced" ? (
               <div className="rounded-3xl border border-emerald-100 bg-emerald-50/20 p-6 md:col-span-2 shadow-sm">
                 <div className="flex items-center justify-between mb-4">
                   <div>
@@ -956,6 +1015,7 @@ export default function GameHubAdminPage() {
                   )}
                 </div>
               </div>
+              ) : null}
 
               <div className="md:col-span-2 mt-2 flex items-center gap-3">
                 <button

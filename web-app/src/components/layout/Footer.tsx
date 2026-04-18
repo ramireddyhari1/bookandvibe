@@ -1,93 +1,98 @@
 "use client";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Ticket } from "lucide-react";
+import { fetchApi } from "@/lib/api";
+import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube, FaPinterestP } from "react-icons/fa";
 
 export default function Footer() {
+  const [websiteConfig, setWebsiteConfig] = useState<any>(null);
+
+  useEffect(() => {
+    fetchApi('/config/website')
+      .then(res => {
+        if (res.data) setWebsiteConfig(res.data);
+      })
+      .catch(console.error);
+  }, []);
   const pathname = usePathname();
+  const isHome = pathname === "/";
   const isGamehub = pathname?.includes("/gamehub");
+  const isEvents = pathname?.includes("/events");
+
+  if (isHome) return null;
 
   const theme = {
-    bg: isGamehub ? "bg-[#111827] border-gray-800" : "bg-rose-950 border-rose-900/30",
-    textMain: isGamehub ? "text-gray-300" : "text-rose-200",
-    textMuted: isGamehub ? "text-gray-400/80" : "text-rose-300/80",
-    logoIcon: isGamehub ? "text-[#42B460] fill-[#42B460]" : "text-rose-500 fill-rose-500",
-    socialBg: isGamehub ? "bg-gray-800 hover:bg-[#42B460]" : "bg-rose-900/50 hover:bg-rose-500",
-    linkHover: isGamehub ? "hover:text-[#42B460]" : "hover:text-rose-400",
-    bottomBorder: isGamehub ? "border-gray-800" : "border-rose-900/40",
-    bottomText: isGamehub ? "text-gray-500" : "text-rose-400/60"
+    bg: "bg-[#171819]",
+    textMain: "text-white",
+    textMuted: "text-white/85",
+    iconHover: isGamehub ? "hover:text-[#42B460]" : isEvents ? "hover:text-orange-400" : "hover:text-rose-400",
+    accentText: isGamehub ? "text-[#42B460]" : isEvents ? "text-orange-400" : "text-rose-400",
+    accentRule: isGamehub ? "bg-[#42B460]" : isEvents ? "bg-orange-400" : "bg-rose-400",
+    logoSrc: isGamehub ? "/bv-green.png" : isEvents ? "/bv-orange.png" : "/bv-white.png",
   };
 
+  const iconMap: Record<string, any> = {
+    Facebook: FaFacebookF,
+    Twitter: FaTwitter,
+    Instagram: FaInstagram,
+    YouTube: FaYoutube,
+    Pinterest: FaPinterestP,
+  };
+
+  const socialLinks = websiteConfig?.socialLinks?.length > 0 ? websiteConfig.socialLinks : [
+    { platform: "Facebook", url: "#" },
+    { platform: "Twitter", url: "#" },
+    { platform: "Instagram", url: "#" },
+    { platform: "YouTube", url: "#" },
+    { platform: "Pinterest", url: "#" },
+  ];
+
+  const footerText = websiteConfig?.footerText || "Book & Vibe helps you discover experiences at the best value in your city. From headline events to game nights, every booking is designed to feel seamless, reliable and worth sharing.";
+
   return (
-    <footer className={`${theme.bg} border-t ${theme.textMain} transition-colors duration-500 hidden md:block`}>
-      <div className="max-w-[1600px] mx-auto px-4 lg:px-6 pt-16 pb-8">
-        
-        {/* Top Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8 mb-16">
-          
-          {/* Brand & description */}
-          <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-2 mb-6 group inline-flex">
-              <Ticket className={`${theme.logoIcon} -rotate-45 group-hover:scale-110 transition-transform`} size={36} />
-              <span className="text-[36px] font-mexicana text-white tracking-widest pt-1 leading-none">
-                BOOK & VIBE
-              </span>
-            </Link>
-            <p className={`${theme.textMuted} leading-relaxed max-w-sm mb-6 text-sm font-medium`}>
-              Your ultimate destination for discovering premium events, nightlife, and workshops. Elevate your weekend with experiences that match your vibe.
-            </p>
-            <div className="flex gap-4">
-              {['FB', 'X', 'IG', 'YT'].map((social) => (
-                <a key={social} href="#" className={`${theme.socialBg} w-10 h-10 flex items-center justify-center rounded-full transition-colors text-white font-bold text-xs mt-1`}>
-                  {social}
+    <footer className={`${theme.bg} ${theme.textMain} hidden md:block`}>
+      <div className="max-w-[1600px] mx-auto px-4 lg:px-6 py-5">
+        <div className={`h-px w-full mb-5 ${theme.accentRule} opacity-55`} />
+        <div className="max-w-5xl mx-auto text-center">
+          <div className="flex items-center justify-center gap-6 mb-3 text-[24px]">
+            {socialLinks.map(({ platform, url }: any) => {
+              const Icon = iconMap[platform] || FaFacebookF;
+              return (
+                <a
+                  key={platform}
+                  href={url}
+                  aria-label={platform}
+                  className={`${theme.iconHover} inline-flex items-center justify-center text-white transition-transform duration-300 hover:-translate-y-0.5`}
+                >
+                  <Icon size={22} />
                 </a>
-              ))}
-            </div>
+              );
+            })}
           </div>
 
-          {/* Links Column 1 */}
-          <div>
-            <h4 className="text-white font-bold mb-6 text-[15px] uppercase tracking-wider">Explore</h4>
-            <ul className="space-y-4 text-[14px]">
-              <li><Link href="/" className={`${theme.linkHover} transition-colors`}>Home</Link></li>
-              <li><Link href="/events" className={`${theme.linkHover} transition-colors`}>Concerts & Shows</Link></li>
-              <li><Link href="/nearby-top" className={`${theme.linkHover} transition-colors`}>Nearby Events</Link></li>
-              <li><Link href="/gamehub" className={`${theme.linkHover} transition-colors`}>Gamehub</Link></li>
-            </ul>
+          <p className={`${theme.textMuted} text-[15px] leading-6 max-w-4xl mx-auto mb-2`}>
+            {footerText}
+          </p>
+
+          <Link href="/" className="inline-flex justify-center -mt-2 mb-1">
+            <img
+              src={theme.logoSrc}
+              alt="Book & Vibe"
+              className="h-28 w-auto"
+            />
+          </Link>
+
+          <div className="text-[14px] font-normal mb-2">
+            <span className="text-white">India</span>
+            <span className={`mx-2 ${theme.accentText}`}>|</span>
+            <span className={theme.accentText}>INR</span>
           </div>
 
-          {/* Links Column 2 */}
-          <div>
-            <h4 className="text-white font-bold mb-6 text-[15px] uppercase tracking-wider">Company</h4>
-            <ul className="space-y-4 text-[14px]">
-              <li><Link href="#" className={`${theme.linkHover} transition-colors`}>About Us</Link></li>
-              <li><Link href="#" className={`${theme.linkHover} transition-colors`}>Careers</Link></li>
-              <li><Link href="#" className={`${theme.linkHover} transition-colors`}>Partner with Us</Link></li>
-              <li><Link href="#" className={`${theme.linkHover} transition-colors`}>Press & Media</Link></li>
-            </ul>
-          </div>
-
-          {/* Links Column 3 */}
-          <div>
-            <h4 className="text-white font-bold mb-6 text-[15px] uppercase tracking-wider">Support</h4>
-            <ul className="space-y-4 text-[14px]">
-              <li><Link href="#" className={`${theme.linkHover} transition-colors`}>Help Center</Link></li>
-              <li><Link href="#" className={`${theme.linkHover} transition-colors`}>Terms of Service</Link></li>
-              <li><Link href="#" className={`${theme.linkHover} transition-colors`}>Privacy Policy</Link></li>
-              <li><Link href="#" className={`${theme.linkHover} transition-colors`}>Contact Us</Link></li>
-            </ul>
-          </div>
-
-        </div>
-
-        {/* Bottom Section */}
-        <div className={`pt-8 border-t ${theme.bottomBorder} flex flex-col md:flex-row items-center justify-between gap-4 text-sm ${theme.bottomText} font-medium`}>
-          <p>&copy; {new Date().getFullYear()} Book & Vibe Technologies. All rights reserved.</p>
-          <div className="flex gap-6">
-             <span>Made with ❤️ for live events</span>
+          <div className="text-[12px] text-white/55">
+            &copy; {new Date().getFullYear()} Book & Vibe Technologies. All rights reserved.
           </div>
         </div>
-
       </div>
     </footer>
   );

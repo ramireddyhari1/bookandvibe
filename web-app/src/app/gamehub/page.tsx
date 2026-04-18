@@ -37,113 +37,6 @@ type Facility = {
   image: string;
 };
 
-const MOCK_FACILITIES: Facility[] = [
-  {
-    id: "mock-1",
-    name: "Our Zone Sports Arena",
-    type: "Cricket & Football",
-    location: "Mumbai",
-    venue: "D.No: 12-468/E/4, Near Highway",
-    distance: "0.16 Kms",
-    rating: 4.20,
-    reviewsCount: 99,
-    pricePerHour: 1200,
-    unit: "hr",
-    image: "https://images.unsplash.com/photo-1544919982-b61976f0ba43?auto=format&fit=crop&q=80&w=800"
-  },
-  {
-    id: "mock-2",
-    name: "Sai Sandeep Badminton Club",
-    type: "Badminton",
-    location: "Mumbai",
-    venue: "Pappula Mill Rd, Yanam",
-    distance: "6.62 Kms",
-    rating: 4.44,
-    reviewsCount: 16,
-    pricePerHour: 350,
-    unit: "hr",
-    image: "https://images.unsplash.com/photo-1626225967045-944080928956?auto=format&fit=crop&q=80&w=800"
-  },
-  {
-    id: "mock-3",
-    name: "Decathlon Sports Hub",
-    type: "Multi-sport",
-    location: "Mumbai",
-    venue: "No. 11-85 & 183/1, Eluru Rd",
-    distance: "9.72 Kms",
-    rating: 5.00,
-    reviewsCount: 2,
-    pricePerHour: 800,
-    unit: "hr",
-    image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&q=80&w=800"
-  },
-  {
-    id: "mock-4",
-    name: "The Turf Mumbai",
-    type: "Football",
-    location: "Mumbai",
-    venue: "Western Express Highway, Goregaon",
-    distance: "2.40 Kms",
-    rating: 4.8,
-    reviewsCount: 156,
-    pricePerHour: 1500,
-    unit: "hr",
-    image: "https://images.unsplash.com/photo-1551958219-acbc608c6377?auto=format&fit=crop&q=80&w=800"
-  },
-  {
-    id: "mock-5",
-    name: "Royal Cricket Grounds",
-    type: "Cricket",
-    location: "Mumbai",
-    venue: "Marine Drive, Churchgate",
-    distance: "12.1 Kms",
-    rating: 4.6,
-    reviewsCount: 230,
-    pricePerHour: 2500,
-    unit: "hr",
-    image: "https://images.unsplash.com/photo-1531415074941-03f6ad88949d?auto=format&fit=crop&q=80&w=800"
-  },
-  {
-    id: "mock-6",
-    name: "Smashers Shuttle Court",
-    type: "Badminton",
-    location: "Mumbai",
-    venue: "Versova Link Road, Andheri",
-    distance: "4.5 Kms",
-    rating: 4.3,
-    reviewsCount: 45,
-    pricePerHour: 400,
-    unit: "hr",
-    image: "https://images.unsplash.com/photo-1626225967045-944080928956?auto=format&fit=crop&q=80&w=800"
-  },
-  {
-    id: "mock-7",
-    name: "Infinity Swimming Club",
-    type: "Swimming",
-    location: "Mumbai",
-    venue: "Carter Road, Bandra West",
-    distance: "3.2 Kms",
-    rating: 4.9,
-    reviewsCount: 88,
-    pricePerHour: 600,
-    unit: "sess",
-    image: "https://images.unsplash.com/photo-1519733473412-409951117be8?auto=format&fit=crop&q=80&w=800"
-  },
-  {
-    id: "mock-8",
-    name: "Elite Football Arena",
-    type: "Football",
-    location: "Mumbai",
-    venue: "Link Road, Malad West",
-    distance: "0.8 Kms",
-    rating: 4.1,
-    reviewsCount: 12,
-    pricePerHour: 1100,
-    unit: "hr",
-    image: "https://images.unsplash.com/photo-1529900748604-07564a03e7a6?auto=format&fit=crop&q=80&w=800"
-  }
-];
-
 export default function GamezonePage() {
   const { selectedLocation } = useLocation();
   const [facilities, setFacilities] = useState<Facility[]>([]);
@@ -180,9 +73,22 @@ export default function GamezonePage() {
 
         const payload: any = await fetchApi(`/gamehub/facilities?${params.toString()}`, { requiresAuth: false });
 
-        // Merge API data with Mock data for a better UX during development
-        const apiData = Array.isArray(payload?.data) ? payload.data : [];
-        const mergedData = [...apiData, ...MOCK_FACILITIES];
+        let apiData = Array.isArray(payload?.data) ? payload.data : [];
+
+        if (selectedLocation.city && apiData.length === 0) {
+          const fallbackParams = new URLSearchParams(params);
+          fallbackParams.delete("city");
+          const fallbackPayload: any = await fetchApi(`/gamehub/facilities?${fallbackParams.toString()}`, { requiresAuth: false });
+          apiData = Array.isArray(fallbackPayload?.data) ? fallbackPayload.data : [];
+
+          if (apiData.length > 0) {
+            setError(`No venues found in ${selectedLocation.city}. Showing available venues from other cities.`);
+          }
+        } else {
+          setError("");
+        }
+
+        const mergedData = apiData;
 
         // Remove duplicates if any (based on name)
         const uniqueData = mergedData.filter((item, index, self) =>
@@ -192,10 +98,9 @@ export default function GamezonePage() {
         setFacilities(uniqueData);
         setTotal(uniqueData.length);
       } catch (err) {
-        // Fallback to purely mock data on error/empty API
-        setFacilities(MOCK_FACILITIES);
-        setTotal(MOCK_FACILITIES.length);
-        console.error("API error, falling back to mock data:", err);
+        setFacilities([]);
+        setTotal(0);
+        setError(err instanceof Error ? err.message : "Failed to load facilities");
       } finally {
         // Add a slight delay to show off the cool skeletons
         setTimeout(() => setLoading(false), 800);

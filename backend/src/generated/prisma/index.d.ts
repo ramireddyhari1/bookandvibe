@@ -103,6 +103,11 @@ export type WalletTransaction = $Result.DefaultSelection<Prisma.$WalletTransacti
  * 
  */
 export type Payout = $Result.DefaultSelection<Prisma.$PayoutPayload>
+/**
+ * Model WebsiteConfig
+ * 
+ */
+export type WebsiteConfig = $Result.DefaultSelection<Prisma.$WebsiteConfigPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -404,6 +409,16 @@ export class PrismaClient<
     * ```
     */
   get payout(): Prisma.PayoutDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.websiteConfig`: Exposes CRUD operations for the **WebsiteConfig** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more WebsiteConfigs
+    * const websiteConfigs = await prisma.websiteConfig.findMany()
+    * ```
+    */
+  get websiteConfig(): Prisma.WebsiteConfigDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -855,7 +870,8 @@ export namespace Prisma {
     GamehubBlockedSlot: 'GamehubBlockedSlot',
     Wallet: 'Wallet',
     WalletTransaction: 'WalletTransaction',
-    Payout: 'Payout'
+    Payout: 'Payout',
+    WebsiteConfig: 'WebsiteConfig'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -871,7 +887,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "event" | "tier" | "booking" | "show" | "showSeat" | "bookingSeat" | "bookingItem" | "payment" | "notification" | "review" | "gamehubFacility" | "gamehubReview" | "gamehubBooking" | "gamehubBlockedSlot" | "wallet" | "walletTransaction" | "payout"
+      modelProps: "user" | "event" | "tier" | "booking" | "show" | "showSeat" | "bookingSeat" | "bookingItem" | "payment" | "notification" | "review" | "gamehubFacility" | "gamehubReview" | "gamehubBooking" | "gamehubBlockedSlot" | "wallet" | "walletTransaction" | "payout" | "websiteConfig"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2207,6 +2223,80 @@ export namespace Prisma {
           }
         }
       }
+      WebsiteConfig: {
+        payload: Prisma.$WebsiteConfigPayload<ExtArgs>
+        fields: Prisma.WebsiteConfigFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.WebsiteConfigFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebsiteConfigPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.WebsiteConfigFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebsiteConfigPayload>
+          }
+          findFirst: {
+            args: Prisma.WebsiteConfigFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebsiteConfigPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.WebsiteConfigFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebsiteConfigPayload>
+          }
+          findMany: {
+            args: Prisma.WebsiteConfigFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebsiteConfigPayload>[]
+          }
+          create: {
+            args: Prisma.WebsiteConfigCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebsiteConfigPayload>
+          }
+          createMany: {
+            args: Prisma.WebsiteConfigCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.WebsiteConfigCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebsiteConfigPayload>[]
+          }
+          delete: {
+            args: Prisma.WebsiteConfigDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebsiteConfigPayload>
+          }
+          update: {
+            args: Prisma.WebsiteConfigUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebsiteConfigPayload>
+          }
+          deleteMany: {
+            args: Prisma.WebsiteConfigDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.WebsiteConfigUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.WebsiteConfigUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebsiteConfigPayload>[]
+          }
+          upsert: {
+            args: Prisma.WebsiteConfigUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WebsiteConfigPayload>
+          }
+          aggregate: {
+            args: Prisma.WebsiteConfigAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateWebsiteConfig>
+          }
+          groupBy: {
+            args: Prisma.WebsiteConfigGroupByArgs<ExtArgs>
+            result: $Utils.Optional<WebsiteConfigGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.WebsiteConfigCountArgs<ExtArgs>
+            result: $Utils.Optional<WebsiteConfigCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2333,6 +2423,7 @@ export namespace Prisma {
     wallet?: WalletOmit
     walletTransaction?: WalletTransactionOmit
     payout?: PayoutOmit
+    websiteConfig?: WebsiteConfigOmit
   }
 
   /* Types for Logging */
@@ -4162,6 +4253,7 @@ export namespace Prisma {
     publishedAt: Date | null
     featured: boolean | null
     tags: string | null
+    duration: string | null
     mapLink: string | null
     seatLayout: string | null
     seatRows: number | null
@@ -4200,6 +4292,7 @@ export namespace Prisma {
     publishedAt: Date | null
     featured: boolean | null
     tags: string | null
+    duration: string | null
     mapLink: string | null
     seatLayout: string | null
     seatRows: number | null
@@ -4238,6 +4331,7 @@ export namespace Prisma {
     publishedAt: number
     featured: number
     tags: number
+    duration: number
     mapLink: number
     seatLayout: number
     seatRows: number
@@ -4298,6 +4392,7 @@ export namespace Prisma {
     publishedAt?: true
     featured?: true
     tags?: true
+    duration?: true
     mapLink?: true
     seatLayout?: true
     seatRows?: true
@@ -4336,6 +4431,7 @@ export namespace Prisma {
     publishedAt?: true
     featured?: true
     tags?: true
+    duration?: true
     mapLink?: true
     seatLayout?: true
     seatRows?: true
@@ -4374,6 +4470,7 @@ export namespace Prisma {
     publishedAt?: true
     featured?: true
     tags?: true
+    duration?: true
     mapLink?: true
     seatLayout?: true
     seatRows?: true
@@ -4499,6 +4596,7 @@ export namespace Prisma {
     publishedAt: Date | null
     featured: boolean
     tags: string
+    duration: string | null
     mapLink: string | null
     seatLayout: string
     seatRows: number | null
@@ -4556,6 +4654,7 @@ export namespace Prisma {
     publishedAt?: boolean
     featured?: boolean
     tags?: boolean
+    duration?: boolean
     mapLink?: boolean
     seatLayout?: boolean
     seatRows?: boolean
@@ -4600,6 +4699,7 @@ export namespace Prisma {
     publishedAt?: boolean
     featured?: boolean
     tags?: boolean
+    duration?: boolean
     mapLink?: boolean
     seatLayout?: boolean
     seatRows?: boolean
@@ -4639,6 +4739,7 @@ export namespace Prisma {
     publishedAt?: boolean
     featured?: boolean
     tags?: boolean
+    duration?: boolean
     mapLink?: boolean
     seatLayout?: boolean
     seatRows?: boolean
@@ -4678,6 +4779,7 @@ export namespace Prisma {
     publishedAt?: boolean
     featured?: boolean
     tags?: boolean
+    duration?: boolean
     mapLink?: boolean
     seatLayout?: boolean
     seatRows?: boolean
@@ -4689,7 +4791,7 @@ export namespace Prisma {
     partnerId?: boolean
   }
 
-  export type EventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "category" | "bookingFormat" | "visibility" | "accessCode" | "location" | "venue" | "date" | "time" | "bookingStartAt" | "bookingEndAt" | "price" | "currency" | "taxPercent" | "platformFeeType" | "platformFeeValue" | "totalSlots" | "availableSlots" | "images" | "status" | "isPublished" | "publishedAt" | "featured" | "tags" | "mapLink" | "seatLayout" | "seatRows" | "seatsPerRow" | "numberedSeats" | "seatSelection" | "createdAt" | "updatedAt" | "partnerId", ExtArgs["result"]["event"]>
+  export type EventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "category" | "bookingFormat" | "visibility" | "accessCode" | "location" | "venue" | "date" | "time" | "bookingStartAt" | "bookingEndAt" | "price" | "currency" | "taxPercent" | "platformFeeType" | "platformFeeValue" | "totalSlots" | "availableSlots" | "images" | "status" | "isPublished" | "publishedAt" | "featured" | "tags" | "duration" | "mapLink" | "seatLayout" | "seatRows" | "seatsPerRow" | "numberedSeats" | "seatSelection" | "createdAt" | "updatedAt" | "partnerId", ExtArgs["result"]["event"]>
   export type EventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     partner?: boolean | UserDefaultArgs<ExtArgs>
     bookings?: boolean | Event$bookingsArgs<ExtArgs>
@@ -4741,6 +4843,7 @@ export namespace Prisma {
       publishedAt: Date | null
       featured: boolean
       tags: string
+      duration: string | null
       mapLink: string | null
       seatLayout: string
       seatRows: number | null
@@ -5204,6 +5307,7 @@ export namespace Prisma {
     readonly publishedAt: FieldRef<"Event", 'DateTime'>
     readonly featured: FieldRef<"Event", 'Boolean'>
     readonly tags: FieldRef<"Event", 'String'>
+    readonly duration: FieldRef<"Event", 'String'>
     readonly mapLink: FieldRef<"Event", 'String'>
     readonly seatLayout: FieldRef<"Event", 'String'>
     readonly seatRows: FieldRef<"Event", 'Int'>
@@ -24390,6 +24494,1006 @@ export namespace Prisma {
 
 
   /**
+   * Model WebsiteConfig
+   */
+
+  export type AggregateWebsiteConfig = {
+    _count: WebsiteConfigCountAggregateOutputType | null
+    _min: WebsiteConfigMinAggregateOutputType | null
+    _max: WebsiteConfigMaxAggregateOutputType | null
+  }
+
+  export type WebsiteConfigMinAggregateOutputType = {
+    id: string | null
+    banners: string | null
+    footerText: string | null
+    socialLinks: string | null
+    updatedAt: Date | null
+  }
+
+  export type WebsiteConfigMaxAggregateOutputType = {
+    id: string | null
+    banners: string | null
+    footerText: string | null
+    socialLinks: string | null
+    updatedAt: Date | null
+  }
+
+  export type WebsiteConfigCountAggregateOutputType = {
+    id: number
+    banners: number
+    footerText: number
+    socialLinks: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type WebsiteConfigMinAggregateInputType = {
+    id?: true
+    banners?: true
+    footerText?: true
+    socialLinks?: true
+    updatedAt?: true
+  }
+
+  export type WebsiteConfigMaxAggregateInputType = {
+    id?: true
+    banners?: true
+    footerText?: true
+    socialLinks?: true
+    updatedAt?: true
+  }
+
+  export type WebsiteConfigCountAggregateInputType = {
+    id?: true
+    banners?: true
+    footerText?: true
+    socialLinks?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type WebsiteConfigAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WebsiteConfig to aggregate.
+     */
+    where?: WebsiteConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WebsiteConfigs to fetch.
+     */
+    orderBy?: WebsiteConfigOrderByWithRelationInput | WebsiteConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: WebsiteConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WebsiteConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WebsiteConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned WebsiteConfigs
+    **/
+    _count?: true | WebsiteConfigCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: WebsiteConfigMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: WebsiteConfigMaxAggregateInputType
+  }
+
+  export type GetWebsiteConfigAggregateType<T extends WebsiteConfigAggregateArgs> = {
+        [P in keyof T & keyof AggregateWebsiteConfig]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateWebsiteConfig[P]>
+      : GetScalarType<T[P], AggregateWebsiteConfig[P]>
+  }
+
+
+
+
+  export type WebsiteConfigGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WebsiteConfigWhereInput
+    orderBy?: WebsiteConfigOrderByWithAggregationInput | WebsiteConfigOrderByWithAggregationInput[]
+    by: WebsiteConfigScalarFieldEnum[] | WebsiteConfigScalarFieldEnum
+    having?: WebsiteConfigScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: WebsiteConfigCountAggregateInputType | true
+    _min?: WebsiteConfigMinAggregateInputType
+    _max?: WebsiteConfigMaxAggregateInputType
+  }
+
+  export type WebsiteConfigGroupByOutputType = {
+    id: string
+    banners: string
+    footerText: string
+    socialLinks: string
+    updatedAt: Date
+    _count: WebsiteConfigCountAggregateOutputType | null
+    _min: WebsiteConfigMinAggregateOutputType | null
+    _max: WebsiteConfigMaxAggregateOutputType | null
+  }
+
+  type GetWebsiteConfigGroupByPayload<T extends WebsiteConfigGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<WebsiteConfigGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof WebsiteConfigGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], WebsiteConfigGroupByOutputType[P]>
+            : GetScalarType<T[P], WebsiteConfigGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type WebsiteConfigSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    banners?: boolean
+    footerText?: boolean
+    socialLinks?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["websiteConfig"]>
+
+  export type WebsiteConfigSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    banners?: boolean
+    footerText?: boolean
+    socialLinks?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["websiteConfig"]>
+
+  export type WebsiteConfigSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    banners?: boolean
+    footerText?: boolean
+    socialLinks?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["websiteConfig"]>
+
+  export type WebsiteConfigSelectScalar = {
+    id?: boolean
+    banners?: boolean
+    footerText?: boolean
+    socialLinks?: boolean
+    updatedAt?: boolean
+  }
+
+  export type WebsiteConfigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "banners" | "footerText" | "socialLinks" | "updatedAt", ExtArgs["result"]["websiteConfig"]>
+
+  export type $WebsiteConfigPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "WebsiteConfig"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      banners: string
+      footerText: string
+      socialLinks: string
+      updatedAt: Date
+    }, ExtArgs["result"]["websiteConfig"]>
+    composites: {}
+  }
+
+  type WebsiteConfigGetPayload<S extends boolean | null | undefined | WebsiteConfigDefaultArgs> = $Result.GetResult<Prisma.$WebsiteConfigPayload, S>
+
+  type WebsiteConfigCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<WebsiteConfigFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: WebsiteConfigCountAggregateInputType | true
+    }
+
+  export interface WebsiteConfigDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['WebsiteConfig'], meta: { name: 'WebsiteConfig' } }
+    /**
+     * Find zero or one WebsiteConfig that matches the filter.
+     * @param {WebsiteConfigFindUniqueArgs} args - Arguments to find a WebsiteConfig
+     * @example
+     * // Get one WebsiteConfig
+     * const websiteConfig = await prisma.websiteConfig.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends WebsiteConfigFindUniqueArgs>(args: SelectSubset<T, WebsiteConfigFindUniqueArgs<ExtArgs>>): Prisma__WebsiteConfigClient<$Result.GetResult<Prisma.$WebsiteConfigPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one WebsiteConfig that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {WebsiteConfigFindUniqueOrThrowArgs} args - Arguments to find a WebsiteConfig
+     * @example
+     * // Get one WebsiteConfig
+     * const websiteConfig = await prisma.websiteConfig.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends WebsiteConfigFindUniqueOrThrowArgs>(args: SelectSubset<T, WebsiteConfigFindUniqueOrThrowArgs<ExtArgs>>): Prisma__WebsiteConfigClient<$Result.GetResult<Prisma.$WebsiteConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WebsiteConfig that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebsiteConfigFindFirstArgs} args - Arguments to find a WebsiteConfig
+     * @example
+     * // Get one WebsiteConfig
+     * const websiteConfig = await prisma.websiteConfig.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends WebsiteConfigFindFirstArgs>(args?: SelectSubset<T, WebsiteConfigFindFirstArgs<ExtArgs>>): Prisma__WebsiteConfigClient<$Result.GetResult<Prisma.$WebsiteConfigPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first WebsiteConfig that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebsiteConfigFindFirstOrThrowArgs} args - Arguments to find a WebsiteConfig
+     * @example
+     * // Get one WebsiteConfig
+     * const websiteConfig = await prisma.websiteConfig.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends WebsiteConfigFindFirstOrThrowArgs>(args?: SelectSubset<T, WebsiteConfigFindFirstOrThrowArgs<ExtArgs>>): Prisma__WebsiteConfigClient<$Result.GetResult<Prisma.$WebsiteConfigPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more WebsiteConfigs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebsiteConfigFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all WebsiteConfigs
+     * const websiteConfigs = await prisma.websiteConfig.findMany()
+     * 
+     * // Get first 10 WebsiteConfigs
+     * const websiteConfigs = await prisma.websiteConfig.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const websiteConfigWithIdOnly = await prisma.websiteConfig.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends WebsiteConfigFindManyArgs>(args?: SelectSubset<T, WebsiteConfigFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WebsiteConfigPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a WebsiteConfig.
+     * @param {WebsiteConfigCreateArgs} args - Arguments to create a WebsiteConfig.
+     * @example
+     * // Create one WebsiteConfig
+     * const WebsiteConfig = await prisma.websiteConfig.create({
+     *   data: {
+     *     // ... data to create a WebsiteConfig
+     *   }
+     * })
+     * 
+     */
+    create<T extends WebsiteConfigCreateArgs>(args: SelectSubset<T, WebsiteConfigCreateArgs<ExtArgs>>): Prisma__WebsiteConfigClient<$Result.GetResult<Prisma.$WebsiteConfigPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many WebsiteConfigs.
+     * @param {WebsiteConfigCreateManyArgs} args - Arguments to create many WebsiteConfigs.
+     * @example
+     * // Create many WebsiteConfigs
+     * const websiteConfig = await prisma.websiteConfig.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends WebsiteConfigCreateManyArgs>(args?: SelectSubset<T, WebsiteConfigCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many WebsiteConfigs and returns the data saved in the database.
+     * @param {WebsiteConfigCreateManyAndReturnArgs} args - Arguments to create many WebsiteConfigs.
+     * @example
+     * // Create many WebsiteConfigs
+     * const websiteConfig = await prisma.websiteConfig.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many WebsiteConfigs and only return the `id`
+     * const websiteConfigWithIdOnly = await prisma.websiteConfig.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends WebsiteConfigCreateManyAndReturnArgs>(args?: SelectSubset<T, WebsiteConfigCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WebsiteConfigPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a WebsiteConfig.
+     * @param {WebsiteConfigDeleteArgs} args - Arguments to delete one WebsiteConfig.
+     * @example
+     * // Delete one WebsiteConfig
+     * const WebsiteConfig = await prisma.websiteConfig.delete({
+     *   where: {
+     *     // ... filter to delete one WebsiteConfig
+     *   }
+     * })
+     * 
+     */
+    delete<T extends WebsiteConfigDeleteArgs>(args: SelectSubset<T, WebsiteConfigDeleteArgs<ExtArgs>>): Prisma__WebsiteConfigClient<$Result.GetResult<Prisma.$WebsiteConfigPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one WebsiteConfig.
+     * @param {WebsiteConfigUpdateArgs} args - Arguments to update one WebsiteConfig.
+     * @example
+     * // Update one WebsiteConfig
+     * const websiteConfig = await prisma.websiteConfig.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends WebsiteConfigUpdateArgs>(args: SelectSubset<T, WebsiteConfigUpdateArgs<ExtArgs>>): Prisma__WebsiteConfigClient<$Result.GetResult<Prisma.$WebsiteConfigPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more WebsiteConfigs.
+     * @param {WebsiteConfigDeleteManyArgs} args - Arguments to filter WebsiteConfigs to delete.
+     * @example
+     * // Delete a few WebsiteConfigs
+     * const { count } = await prisma.websiteConfig.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends WebsiteConfigDeleteManyArgs>(args?: SelectSubset<T, WebsiteConfigDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WebsiteConfigs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebsiteConfigUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many WebsiteConfigs
+     * const websiteConfig = await prisma.websiteConfig.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends WebsiteConfigUpdateManyArgs>(args: SelectSubset<T, WebsiteConfigUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WebsiteConfigs and returns the data updated in the database.
+     * @param {WebsiteConfigUpdateManyAndReturnArgs} args - Arguments to update many WebsiteConfigs.
+     * @example
+     * // Update many WebsiteConfigs
+     * const websiteConfig = await prisma.websiteConfig.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more WebsiteConfigs and only return the `id`
+     * const websiteConfigWithIdOnly = await prisma.websiteConfig.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends WebsiteConfigUpdateManyAndReturnArgs>(args: SelectSubset<T, WebsiteConfigUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WebsiteConfigPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one WebsiteConfig.
+     * @param {WebsiteConfigUpsertArgs} args - Arguments to update or create a WebsiteConfig.
+     * @example
+     * // Update or create a WebsiteConfig
+     * const websiteConfig = await prisma.websiteConfig.upsert({
+     *   create: {
+     *     // ... data to create a WebsiteConfig
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the WebsiteConfig we want to update
+     *   }
+     * })
+     */
+    upsert<T extends WebsiteConfigUpsertArgs>(args: SelectSubset<T, WebsiteConfigUpsertArgs<ExtArgs>>): Prisma__WebsiteConfigClient<$Result.GetResult<Prisma.$WebsiteConfigPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of WebsiteConfigs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebsiteConfigCountArgs} args - Arguments to filter WebsiteConfigs to count.
+     * @example
+     * // Count the number of WebsiteConfigs
+     * const count = await prisma.websiteConfig.count({
+     *   where: {
+     *     // ... the filter for the WebsiteConfigs we want to count
+     *   }
+     * })
+    **/
+    count<T extends WebsiteConfigCountArgs>(
+      args?: Subset<T, WebsiteConfigCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], WebsiteConfigCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a WebsiteConfig.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebsiteConfigAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends WebsiteConfigAggregateArgs>(args: Subset<T, WebsiteConfigAggregateArgs>): Prisma.PrismaPromise<GetWebsiteConfigAggregateType<T>>
+
+    /**
+     * Group by WebsiteConfig.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WebsiteConfigGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends WebsiteConfigGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: WebsiteConfigGroupByArgs['orderBy'] }
+        : { orderBy?: WebsiteConfigGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, WebsiteConfigGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetWebsiteConfigGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the WebsiteConfig model
+   */
+  readonly fields: WebsiteConfigFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for WebsiteConfig.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__WebsiteConfigClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the WebsiteConfig model
+   */
+  interface WebsiteConfigFieldRefs {
+    readonly id: FieldRef<"WebsiteConfig", 'String'>
+    readonly banners: FieldRef<"WebsiteConfig", 'String'>
+    readonly footerText: FieldRef<"WebsiteConfig", 'String'>
+    readonly socialLinks: FieldRef<"WebsiteConfig", 'String'>
+    readonly updatedAt: FieldRef<"WebsiteConfig", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * WebsiteConfig findUnique
+   */
+  export type WebsiteConfigFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebsiteConfig
+     */
+    select?: WebsiteConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebsiteConfig
+     */
+    omit?: WebsiteConfigOmit<ExtArgs> | null
+    /**
+     * Filter, which WebsiteConfig to fetch.
+     */
+    where: WebsiteConfigWhereUniqueInput
+  }
+
+  /**
+   * WebsiteConfig findUniqueOrThrow
+   */
+  export type WebsiteConfigFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebsiteConfig
+     */
+    select?: WebsiteConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebsiteConfig
+     */
+    omit?: WebsiteConfigOmit<ExtArgs> | null
+    /**
+     * Filter, which WebsiteConfig to fetch.
+     */
+    where: WebsiteConfigWhereUniqueInput
+  }
+
+  /**
+   * WebsiteConfig findFirst
+   */
+  export type WebsiteConfigFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebsiteConfig
+     */
+    select?: WebsiteConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebsiteConfig
+     */
+    omit?: WebsiteConfigOmit<ExtArgs> | null
+    /**
+     * Filter, which WebsiteConfig to fetch.
+     */
+    where?: WebsiteConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WebsiteConfigs to fetch.
+     */
+    orderBy?: WebsiteConfigOrderByWithRelationInput | WebsiteConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WebsiteConfigs.
+     */
+    cursor?: WebsiteConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WebsiteConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WebsiteConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WebsiteConfigs.
+     */
+    distinct?: WebsiteConfigScalarFieldEnum | WebsiteConfigScalarFieldEnum[]
+  }
+
+  /**
+   * WebsiteConfig findFirstOrThrow
+   */
+  export type WebsiteConfigFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebsiteConfig
+     */
+    select?: WebsiteConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebsiteConfig
+     */
+    omit?: WebsiteConfigOmit<ExtArgs> | null
+    /**
+     * Filter, which WebsiteConfig to fetch.
+     */
+    where?: WebsiteConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WebsiteConfigs to fetch.
+     */
+    orderBy?: WebsiteConfigOrderByWithRelationInput | WebsiteConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WebsiteConfigs.
+     */
+    cursor?: WebsiteConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WebsiteConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WebsiteConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WebsiteConfigs.
+     */
+    distinct?: WebsiteConfigScalarFieldEnum | WebsiteConfigScalarFieldEnum[]
+  }
+
+  /**
+   * WebsiteConfig findMany
+   */
+  export type WebsiteConfigFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebsiteConfig
+     */
+    select?: WebsiteConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebsiteConfig
+     */
+    omit?: WebsiteConfigOmit<ExtArgs> | null
+    /**
+     * Filter, which WebsiteConfigs to fetch.
+     */
+    where?: WebsiteConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WebsiteConfigs to fetch.
+     */
+    orderBy?: WebsiteConfigOrderByWithRelationInput | WebsiteConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing WebsiteConfigs.
+     */
+    cursor?: WebsiteConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WebsiteConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WebsiteConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WebsiteConfigs.
+     */
+    distinct?: WebsiteConfigScalarFieldEnum | WebsiteConfigScalarFieldEnum[]
+  }
+
+  /**
+   * WebsiteConfig create
+   */
+  export type WebsiteConfigCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebsiteConfig
+     */
+    select?: WebsiteConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebsiteConfig
+     */
+    omit?: WebsiteConfigOmit<ExtArgs> | null
+    /**
+     * The data needed to create a WebsiteConfig.
+     */
+    data: XOR<WebsiteConfigCreateInput, WebsiteConfigUncheckedCreateInput>
+  }
+
+  /**
+   * WebsiteConfig createMany
+   */
+  export type WebsiteConfigCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many WebsiteConfigs.
+     */
+    data: WebsiteConfigCreateManyInput | WebsiteConfigCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * WebsiteConfig createManyAndReturn
+   */
+  export type WebsiteConfigCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebsiteConfig
+     */
+    select?: WebsiteConfigSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebsiteConfig
+     */
+    omit?: WebsiteConfigOmit<ExtArgs> | null
+    /**
+     * The data used to create many WebsiteConfigs.
+     */
+    data: WebsiteConfigCreateManyInput | WebsiteConfigCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * WebsiteConfig update
+   */
+  export type WebsiteConfigUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebsiteConfig
+     */
+    select?: WebsiteConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebsiteConfig
+     */
+    omit?: WebsiteConfigOmit<ExtArgs> | null
+    /**
+     * The data needed to update a WebsiteConfig.
+     */
+    data: XOR<WebsiteConfigUpdateInput, WebsiteConfigUncheckedUpdateInput>
+    /**
+     * Choose, which WebsiteConfig to update.
+     */
+    where: WebsiteConfigWhereUniqueInput
+  }
+
+  /**
+   * WebsiteConfig updateMany
+   */
+  export type WebsiteConfigUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update WebsiteConfigs.
+     */
+    data: XOR<WebsiteConfigUpdateManyMutationInput, WebsiteConfigUncheckedUpdateManyInput>
+    /**
+     * Filter which WebsiteConfigs to update
+     */
+    where?: WebsiteConfigWhereInput
+    /**
+     * Limit how many WebsiteConfigs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * WebsiteConfig updateManyAndReturn
+   */
+  export type WebsiteConfigUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebsiteConfig
+     */
+    select?: WebsiteConfigSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebsiteConfig
+     */
+    omit?: WebsiteConfigOmit<ExtArgs> | null
+    /**
+     * The data used to update WebsiteConfigs.
+     */
+    data: XOR<WebsiteConfigUpdateManyMutationInput, WebsiteConfigUncheckedUpdateManyInput>
+    /**
+     * Filter which WebsiteConfigs to update
+     */
+    where?: WebsiteConfigWhereInput
+    /**
+     * Limit how many WebsiteConfigs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * WebsiteConfig upsert
+   */
+  export type WebsiteConfigUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebsiteConfig
+     */
+    select?: WebsiteConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebsiteConfig
+     */
+    omit?: WebsiteConfigOmit<ExtArgs> | null
+    /**
+     * The filter to search for the WebsiteConfig to update in case it exists.
+     */
+    where: WebsiteConfigWhereUniqueInput
+    /**
+     * In case the WebsiteConfig found by the `where` argument doesn't exist, create a new WebsiteConfig with this data.
+     */
+    create: XOR<WebsiteConfigCreateInput, WebsiteConfigUncheckedCreateInput>
+    /**
+     * In case the WebsiteConfig was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<WebsiteConfigUpdateInput, WebsiteConfigUncheckedUpdateInput>
+  }
+
+  /**
+   * WebsiteConfig delete
+   */
+  export type WebsiteConfigDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebsiteConfig
+     */
+    select?: WebsiteConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebsiteConfig
+     */
+    omit?: WebsiteConfigOmit<ExtArgs> | null
+    /**
+     * Filter which WebsiteConfig to delete.
+     */
+    where: WebsiteConfigWhereUniqueInput
+  }
+
+  /**
+   * WebsiteConfig deleteMany
+   */
+  export type WebsiteConfigDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WebsiteConfigs to delete
+     */
+    where?: WebsiteConfigWhereInput
+    /**
+     * Limit how many WebsiteConfigs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * WebsiteConfig without action
+   */
+  export type WebsiteConfigDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WebsiteConfig
+     */
+    select?: WebsiteConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WebsiteConfig
+     */
+    omit?: WebsiteConfigOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -24448,6 +25552,7 @@ export namespace Prisma {
     publishedAt: 'publishedAt',
     featured: 'featured',
     tags: 'tags',
+    duration: 'duration',
     mapLink: 'mapLink',
     seatLayout: 'seatLayout',
     seatRows: 'seatRows',
@@ -24701,6 +25806,17 @@ export namespace Prisma {
   export type PayoutScalarFieldEnum = (typeof PayoutScalarFieldEnum)[keyof typeof PayoutScalarFieldEnum]
 
 
+  export const WebsiteConfigScalarFieldEnum: {
+    id: 'id',
+    banners: 'banners',
+    footerText: 'footerText',
+    socialLinks: 'socialLinks',
+    updatedAt: 'updatedAt'
+  };
+
+  export type WebsiteConfigScalarFieldEnum = (typeof WebsiteConfigScalarFieldEnum)[keyof typeof WebsiteConfigScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -24937,6 +26053,7 @@ export namespace Prisma {
     publishedAt?: DateTimeNullableFilter<"Event"> | Date | string | null
     featured?: BoolFilter<"Event"> | boolean
     tags?: StringFilter<"Event"> | string
+    duration?: StringNullableFilter<"Event"> | string | null
     mapLink?: StringNullableFilter<"Event"> | string | null
     seatLayout?: StringFilter<"Event"> | string
     seatRows?: IntNullableFilter<"Event"> | number | null
@@ -24980,6 +26097,7 @@ export namespace Prisma {
     publishedAt?: SortOrderInput | SortOrder
     featured?: SortOrder
     tags?: SortOrder
+    duration?: SortOrderInput | SortOrder
     mapLink?: SortOrderInput | SortOrder
     seatLayout?: SortOrder
     seatRows?: SortOrderInput | SortOrder
@@ -25026,6 +26144,7 @@ export namespace Prisma {
     publishedAt?: DateTimeNullableFilter<"Event"> | Date | string | null
     featured?: BoolFilter<"Event"> | boolean
     tags?: StringFilter<"Event"> | string
+    duration?: StringNullableFilter<"Event"> | string | null
     mapLink?: StringNullableFilter<"Event"> | string | null
     seatLayout?: StringFilter<"Event"> | string
     seatRows?: IntNullableFilter<"Event"> | number | null
@@ -25069,6 +26188,7 @@ export namespace Prisma {
     publishedAt?: SortOrderInput | SortOrder
     featured?: SortOrder
     tags?: SortOrder
+    duration?: SortOrderInput | SortOrder
     mapLink?: SortOrderInput | SortOrder
     seatLayout?: SortOrder
     seatRows?: SortOrderInput | SortOrder
@@ -25115,6 +26235,7 @@ export namespace Prisma {
     publishedAt?: DateTimeNullableWithAggregatesFilter<"Event"> | Date | string | null
     featured?: BoolWithAggregatesFilter<"Event"> | boolean
     tags?: StringWithAggregatesFilter<"Event"> | string
+    duration?: StringNullableWithAggregatesFilter<"Event"> | string | null
     mapLink?: StringNullableWithAggregatesFilter<"Event"> | string | null
     seatLayout?: StringWithAggregatesFilter<"Event"> | string
     seatRows?: IntNullableWithAggregatesFilter<"Event"> | number | null
@@ -26398,6 +27519,58 @@ export namespace Prisma {
     userId?: StringWithAggregatesFilter<"Payout"> | string
   }
 
+  export type WebsiteConfigWhereInput = {
+    AND?: WebsiteConfigWhereInput | WebsiteConfigWhereInput[]
+    OR?: WebsiteConfigWhereInput[]
+    NOT?: WebsiteConfigWhereInput | WebsiteConfigWhereInput[]
+    id?: StringFilter<"WebsiteConfig"> | string
+    banners?: StringFilter<"WebsiteConfig"> | string
+    footerText?: StringFilter<"WebsiteConfig"> | string
+    socialLinks?: StringFilter<"WebsiteConfig"> | string
+    updatedAt?: DateTimeFilter<"WebsiteConfig"> | Date | string
+  }
+
+  export type WebsiteConfigOrderByWithRelationInput = {
+    id?: SortOrder
+    banners?: SortOrder
+    footerText?: SortOrder
+    socialLinks?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WebsiteConfigWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: WebsiteConfigWhereInput | WebsiteConfigWhereInput[]
+    OR?: WebsiteConfigWhereInput[]
+    NOT?: WebsiteConfigWhereInput | WebsiteConfigWhereInput[]
+    banners?: StringFilter<"WebsiteConfig"> | string
+    footerText?: StringFilter<"WebsiteConfig"> | string
+    socialLinks?: StringFilter<"WebsiteConfig"> | string
+    updatedAt?: DateTimeFilter<"WebsiteConfig"> | Date | string
+  }, "id">
+
+  export type WebsiteConfigOrderByWithAggregationInput = {
+    id?: SortOrder
+    banners?: SortOrder
+    footerText?: SortOrder
+    socialLinks?: SortOrder
+    updatedAt?: SortOrder
+    _count?: WebsiteConfigCountOrderByAggregateInput
+    _max?: WebsiteConfigMaxOrderByAggregateInput
+    _min?: WebsiteConfigMinOrderByAggregateInput
+  }
+
+  export type WebsiteConfigScalarWhereWithAggregatesInput = {
+    AND?: WebsiteConfigScalarWhereWithAggregatesInput | WebsiteConfigScalarWhereWithAggregatesInput[]
+    OR?: WebsiteConfigScalarWhereWithAggregatesInput[]
+    NOT?: WebsiteConfigScalarWhereWithAggregatesInput | WebsiteConfigScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"WebsiteConfig"> | string
+    banners?: StringWithAggregatesFilter<"WebsiteConfig"> | string
+    footerText?: StringWithAggregatesFilter<"WebsiteConfig"> | string
+    socialLinks?: StringWithAggregatesFilter<"WebsiteConfig"> | string
+    updatedAt?: DateTimeWithAggregatesFilter<"WebsiteConfig"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     name: string
@@ -26562,6 +27735,7 @@ export namespace Prisma {
     publishedAt?: Date | string | null
     featured?: boolean
     tags?: string
+    duration?: string | null
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -26604,6 +27778,7 @@ export namespace Prisma {
     publishedAt?: Date | string | null
     featured?: boolean
     tags?: string
+    duration?: string | null
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -26646,6 +27821,7 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
     tags?: StringFieldUpdateOperationsInput | string
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -26688,6 +27864,7 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
     tags?: StringFieldUpdateOperationsInput | string
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -26730,6 +27907,7 @@ export namespace Prisma {
     publishedAt?: Date | string | null
     featured?: boolean
     tags?: string
+    duration?: string | null
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -26768,6 +27946,7 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
     tags?: StringFieldUpdateOperationsInput | string
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -26805,6 +27984,7 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
     tags?: StringFieldUpdateOperationsInput | string
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -28175,6 +29355,62 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
   }
 
+  export type WebsiteConfigCreateInput = {
+    id?: string
+    banners?: string
+    footerText?: string
+    socialLinks?: string
+    updatedAt?: Date | string
+  }
+
+  export type WebsiteConfigUncheckedCreateInput = {
+    id?: string
+    banners?: string
+    footerText?: string
+    socialLinks?: string
+    updatedAt?: Date | string
+  }
+
+  export type WebsiteConfigUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    banners?: StringFieldUpdateOperationsInput | string
+    footerText?: StringFieldUpdateOperationsInput | string
+    socialLinks?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WebsiteConfigUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    banners?: StringFieldUpdateOperationsInput | string
+    footerText?: StringFieldUpdateOperationsInput | string
+    socialLinks?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WebsiteConfigCreateManyInput = {
+    id?: string
+    banners?: string
+    footerText?: string
+    socialLinks?: string
+    updatedAt?: Date | string
+  }
+
+  export type WebsiteConfigUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    banners?: StringFieldUpdateOperationsInput | string
+    footerText?: StringFieldUpdateOperationsInput | string
+    socialLinks?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WebsiteConfigUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    banners?: StringFieldUpdateOperationsInput | string
+    footerText?: StringFieldUpdateOperationsInput | string
+    socialLinks?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -28492,6 +29728,7 @@ export namespace Prisma {
     publishedAt?: SortOrder
     featured?: SortOrder
     tags?: SortOrder
+    duration?: SortOrder
     mapLink?: SortOrder
     seatLayout?: SortOrder
     seatRows?: SortOrder
@@ -28540,6 +29777,7 @@ export namespace Prisma {
     publishedAt?: SortOrder
     featured?: SortOrder
     tags?: SortOrder
+    duration?: SortOrder
     mapLink?: SortOrder
     seatLayout?: SortOrder
     seatRows?: SortOrder
@@ -28578,6 +29816,7 @@ export namespace Prisma {
     publishedAt?: SortOrder
     featured?: SortOrder
     tags?: SortOrder
+    duration?: SortOrder
     mapLink?: SortOrder
     seatLayout?: SortOrder
     seatRows?: SortOrder
@@ -29504,6 +30743,30 @@ export namespace Prisma {
 
   export type PayoutSumOrderByAggregateInput = {
     amount?: SortOrder
+  }
+
+  export type WebsiteConfigCountOrderByAggregateInput = {
+    id?: SortOrder
+    banners?: SortOrder
+    footerText?: SortOrder
+    socialLinks?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WebsiteConfigMaxOrderByAggregateInput = {
+    id?: SortOrder
+    banners?: SortOrder
+    footerText?: SortOrder
+    socialLinks?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type WebsiteConfigMinOrderByAggregateInput = {
+    id?: SortOrder
+    banners?: SortOrder
+    footerText?: SortOrder
+    socialLinks?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type EventCreateNestedManyWithoutPartnerInput = {
@@ -31080,6 +32343,7 @@ export namespace Prisma {
     publishedAt?: Date | string | null
     featured?: boolean
     tags?: string
+    duration?: string | null
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -31121,6 +32385,7 @@ export namespace Prisma {
     publishedAt?: Date | string | null
     featured?: boolean
     tags?: string
+    duration?: string | null
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -31454,6 +32719,7 @@ export namespace Prisma {
     publishedAt?: DateTimeNullableFilter<"Event"> | Date | string | null
     featured?: BoolFilter<"Event"> | boolean
     tags?: StringFilter<"Event"> | string
+    duration?: StringNullableFilter<"Event"> | string | null
     mapLink?: StringNullableFilter<"Event"> | string | null
     seatLayout?: StringFilter<"Event"> | string
     seatRows?: IntNullableFilter<"Event"> | number | null
@@ -32064,6 +33330,7 @@ export namespace Prisma {
     publishedAt?: Date | string | null
     featured?: boolean
     tags?: string
+    duration?: string | null
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -32105,6 +33372,7 @@ export namespace Prisma {
     publishedAt?: Date | string | null
     featured?: boolean
     tags?: string
+    duration?: string | null
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -32186,6 +33454,7 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
     tags?: StringFieldUpdateOperationsInput | string
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -32227,6 +33496,7 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
     tags?: StringFieldUpdateOperationsInput | string
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -32344,6 +33614,7 @@ export namespace Prisma {
     publishedAt?: Date | string | null
     featured?: boolean
     tags?: string
+    duration?: string | null
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -32385,6 +33656,7 @@ export namespace Prisma {
     publishedAt?: Date | string | null
     featured?: boolean
     tags?: string
+    duration?: string | null
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -32601,6 +33873,7 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
     tags?: StringFieldUpdateOperationsInput | string
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -32642,6 +33915,7 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
     tags?: StringFieldUpdateOperationsInput | string
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -32795,6 +34069,7 @@ export namespace Prisma {
     publishedAt?: Date | string | null
     featured?: boolean
     tags?: string
+    duration?: string | null
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -32836,6 +34111,7 @@ export namespace Prisma {
     publishedAt?: Date | string | null
     featured?: boolean
     tags?: string
+    duration?: string | null
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -32967,6 +34243,7 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
     tags?: StringFieldUpdateOperationsInput | string
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -33008,6 +34285,7 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
     tags?: StringFieldUpdateOperationsInput | string
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -33724,6 +35002,7 @@ export namespace Prisma {
     publishedAt?: Date | string | null
     featured?: boolean
     tags?: string
+    duration?: string | null
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -33765,6 +35044,7 @@ export namespace Prisma {
     publishedAt?: Date | string | null
     featured?: boolean
     tags?: string
+    duration?: string | null
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -33877,6 +35157,7 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
     tags?: StringFieldUpdateOperationsInput | string
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -33918,6 +35199,7 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
     tags?: StringFieldUpdateOperationsInput | string
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -35089,6 +36371,7 @@ export namespace Prisma {
     publishedAt?: Date | string | null
     featured?: boolean
     tags?: string
+    duration?: string | null
     mapLink?: string | null
     seatLayout?: string
     seatRows?: number | null
@@ -35210,6 +36493,7 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
     tags?: StringFieldUpdateOperationsInput | string
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -35251,6 +36535,7 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
     tags?: StringFieldUpdateOperationsInput | string
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
@@ -35292,6 +36577,7 @@ export namespace Prisma {
     publishedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     featured?: BoolFieldUpdateOperationsInput | boolean
     tags?: StringFieldUpdateOperationsInput | string
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null

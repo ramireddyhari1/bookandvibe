@@ -87,6 +87,7 @@ const notificationRoutes = require('./routes/notification.routes');
 const userRoutes = require('./routes/user.routes');
 const gamehubRoutes = require('./routes/gamehub.routes');
 const partnerRoutes = require('./routes/partner.routes');
+const configRoutes = require('./routes/config.routes');
 
 // ─── API Routes ───────────────────────────────────────────────────────────────
 app.use('/api/auth', authLimiter, authRoutes);
@@ -97,6 +98,7 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/gamehub', gamehubRoutes);
 app.use('/api/partners', partnerRoutes);
+app.use('/api/config', configRoutes);
 
 // ─── Health Check ─────────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {

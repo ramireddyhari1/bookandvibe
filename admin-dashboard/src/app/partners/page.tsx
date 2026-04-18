@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Shield, UserPlus, Search, Users as UsersIcon, Calendar } from "lucide-react";
+import { Shield, UserPlus, Search, Users as UsersIcon, Calendar, Edit2 } from "lucide-react";
+import EditUserModal from "@/components/users/EditUserModal";
 
 type PartnerRecord = {
   id: string;
@@ -46,15 +47,20 @@ export default function PartnersPage() {
   });
   const [facilities, setFacilities] = useState<{ id: string; name: string }[]>([]);
   const [submitting, setSubmitting] = useState(false);
+  const [editingPartner, setEditingPartner] = useState<any>(null);
 
   const isAdmin = userRole === "ADMIN";
 
   function clearDashboardSession() {
+    sessionStorage.removeItem("admin_dash_token");
+    sessionStorage.removeItem("admin_dash_role");
+    sessionStorage.removeItem("admin_dash_user");
     localStorage.removeItem("admin_dash_token");
     localStorage.removeItem("admin_dash_role");
     localStorage.removeItem("admin_dash_user");
     document.cookie = "admin_dash_token=; path=/; max-age=0; samesite=lax";
     document.cookie = "admin_dash_role=; path=/; max-age=0; samesite=lax";
+    document.cookie = "admin_dash_session=; path=/; max-age=0; samesite=lax";
   }
 
   const loadPartners = useCallback(async () => {
@@ -80,7 +86,7 @@ export default function PartnersPage() {
     let mounted = true;
 
     async function init() {
-      const storedToken = localStorage.getItem("admin_dash_token") || "";
+      const storedToken = sessionStorage.getItem("admin_dash_token") || localStorage.getItem("admin_dash_token") || "";
       if (!storedToken) {
         if (mounted) {
           setError("No dashboard session found. Please login first.");
@@ -391,6 +397,7 @@ export default function PartnersPage() {
                   <th className="p-3">Role</th>
                   <th className="p-3">Status</th>
                   <th className="p-3">Joined</th>
+                  <th className="p-3 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -449,8 +456,17 @@ export default function PartnersPage() {
                         <span className="text-xs font-bold text-slate-700">{toTitle(partner.status)}</span>
                       )}
                     </td>
-                    <td className="p-3 text-xs text-slate-500">
+                     <td className="p-3 text-xs text-slate-500">
                       <span className="inline-flex items-center gap-1"><Calendar size={12} /> {new Date(partner.createdAt).toLocaleDateString("en-IN")}</span>
+                    </td>
+                    <td className="p-3 text-right">
+                      <button 
+                        onClick={() => setEditingPartner(partner)}
+                        className="p-2 rounded-xl bg-slate-50 text-slate-400 hover:bg-emerald-50 hover:text-emerald-600 transition-all active:scale-95"
+                        title="Edit Profile"
+                      >
+                        <Edit2 size={16} />
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -463,6 +479,14 @@ export default function PartnersPage() {
       <section className="rounded-2xl border border-blue-50 bg-blue-50/30 p-5 text-[11px] font-black uppercase tracking-wider text-blue-800/60 leading-relaxed shadow-sm">
         <p className="inline-flex items-center gap-2 italic"><UsersIcon size={14} className="text-blue-500" /> Restriction policy: only ADMIN can create partners and change role/status. Role changes are restricted to USER/PARTNER (no ADMIN escalation).</p>
       </section>
+
+      <EditUserModal 
+        user={editingPartner} 
+        onClose={() => setEditingPartner(null)}
+        onUpdate={(updated) => {
+          setPartners(prev => prev.map(p => p.id === updated.id ? { ...p, ...updated } : p));
+        }}
+      />
     </div>
   );
 }

@@ -17,6 +17,7 @@ const {
 const { validate, seatLockSchema, bookingConfirmSchema } = require('../middleware/validator');
 const { emitSeatStateUpdate } = require('../lib/realtime');
 const { creditPartnerWallet } = require('../services/wallet.service');
+const { notifyBookingSuccess } = require('../services/notification.service');
 
 function rowLabelToIndex(rowLabel) {
   let index = 0;
@@ -474,6 +475,19 @@ router.post('/seat-bookings/confirm', authenticateToken, validate(bookingConfirm
       return createdBooking;
     });
 
+    // Notify Partner & Admins
+    const eventObj = await prisma.event.findUnique({ 
+      where: { id: eventId }, 
+      select: { title: true, partnerId: true } 
+    });
+    await notifyBookingSuccess({
+      partnerId: eventObj?.partnerId,
+      eventTitle: eventObj?.title || 'Event',
+      buyerName: req.user.name || 'A customer',
+      amount: booking.totalAmount,
+      bookingId: booking.id,
+    });
+
     await releaseSeats({
       eventId,
       userId,
@@ -749,6 +763,19 @@ router.post('/shows/:showId/seat-bookings/confirm', authenticateToken, validate(
       return createdBooking;
     });
 
+    // Notify Partner & Admins (Show-based)
+    const eventObj = await prisma.event.findUnique({ 
+      where: { id: booking.eventId }, 
+      select: { title: true, partnerId: true } 
+    });
+    await notifyBookingSuccess({
+      partnerId: eventObj?.partnerId,
+      eventTitle: eventObj?.title || 'Event',
+      buyerName: req.user.name || 'A customer',
+      amount: booking.totalAmount,
+      bookingId: booking.id,
+    });
+
     await releaseSeats({
       scopeKey: `show:${showId}`,
       userId,
@@ -890,6 +917,16 @@ router.post('/', authenticateToken, async (req, res) => {
       }
 
       return booking;
+    });
+
+    // Notify Partner & Admins
+    const eventObj = await prisma.event.findUnique({ where: { id: eventId }, select: { title: true, partnerId: true } });
+    await notifyBookingSuccess({
+      partnerId: eventObj?.partnerId,
+      eventTitle: eventObj?.title || 'Event',
+      buyerName: req.user.name || 'A customer',
+      amount: result.totalAmount,
+      bookingId: result.id,
     });
 
     res.status(201).json({ message: 'Booking successful! 🎉', data: result });

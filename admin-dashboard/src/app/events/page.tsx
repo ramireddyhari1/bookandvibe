@@ -50,6 +50,15 @@ type PartnerOption = {
 
 const ALLOWED_ROLES = new Set(["ADMIN", "PARTNER"]);
 
+function readCookie(name: string): string {
+  if (typeof document === "undefined") return "";
+  const match = document.cookie
+    .split(";")
+    .map((item) => item.trim())
+    .find((item) => item.startsWith(`${name}=`));
+  return match ? decodeURIComponent(match.slice(name.length + 1)) : "";
+}
+
 function CardSkeleton() {
   return (
     <div className="dash-card loading-shimmer overflow-hidden bg-white border-emerald-50">
@@ -92,11 +101,15 @@ export default function EventsPage() {
   const [partners, setPartners] = useState<PartnerOption[]>([]);
 
   function clearDashboardSession() {
+    sessionStorage.removeItem("admin_dash_token");
+    sessionStorage.removeItem("admin_dash_role");
+    sessionStorage.removeItem("admin_dash_user");
     localStorage.removeItem("admin_dash_token");
     localStorage.removeItem("admin_dash_role");
     localStorage.removeItem("admin_dash_user");
     document.cookie = "admin_dash_token=; path=/; max-age=0; samesite=lax";
     document.cookie = "admin_dash_role=; path=/; max-age=0; samesite=lax";
+    document.cookie = "admin_dash_session=; path=/; max-age=0; samesite=lax";
   }
 
   function readPrimaryImage(event: EventItem) {
@@ -116,12 +129,16 @@ export default function EventsPage() {
       setError("");
 
       try {
-        const token = localStorage.getItem("admin_dash_token") || "";
+        const token = sessionStorage.getItem("admin_dash_token") || localStorage.getItem("admin_dash_token") || "";
+        const cookieRole = String(readCookie("admin_dash_role") || "").toUpperCase();
         const role = String(
-          localStorage.getItem("admin_dash_role") ||
+          sessionStorage.getItem("admin_dash_role") ||
+            localStorage.getItem("admin_dash_role") ||
+            cookieRole ||
             (() => {
               try {
-                const user = JSON.parse(localStorage.getItem("admin_dash_user") || "null");
+                const rawUser = sessionStorage.getItem("admin_dash_user") || localStorage.getItem("admin_dash_user") || "null";
+                const user = JSON.parse(rawUser);
                 return user?.role || "";
               } catch {
                 return "";

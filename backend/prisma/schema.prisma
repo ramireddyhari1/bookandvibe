@@ -63,6 +63,7 @@ model Event {
   publishedAt    DateTime?
   featured       Boolean  @default(false)
   tags           String   @default("[]") // JSON array of tags
+  duration       String?  @default("2-3 Hours") // Estimated duration of the event
   mapLink        String?  // Google Maps URL for venue directions
 
   // Seating configuration (stored as JSON)
@@ -366,4 +367,14 @@ model Payout {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, status])
+}
+
+// ─── System & Website Configuration ──────────────────────────────────────────
+
+model WebsiteConfig {
+  id          String   @id @default("global")
+  banners     String   @default("[]") // JSON string of banner configs (image, title, subtitle)
+  footerText  String   @default("")
+  socialLinks String   @default("[]") // JSON string of social links
+  updatedAt   DateTime @updatedAt
 }

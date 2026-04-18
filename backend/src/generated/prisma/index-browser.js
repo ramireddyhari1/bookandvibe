@@ -162,6 +162,7 @@ exports.Prisma.EventScalarFieldEnum = {
   publishedAt: 'publishedAt',
   featured: 'featured',
   tags: 'tags',
+  duration: 'duration',
   mapLink: 'mapLink',
   seatLayout: 'seatLayout',
   seatRows: 'seatRows',
@@ -364,6 +365,14 @@ exports.Prisma.PayoutScalarFieldEnum = {
   userId: 'userId'
 };
 
+exports.Prisma.WebsiteConfigScalarFieldEnum = {
+  id: 'id',
+  banners: 'banners',
+  footerText: 'footerText',
+  socialLinks: 'socialLinks',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -398,7 +407,8 @@ exports.Prisma.ModelName = {
   GamehubBlockedSlot: 'GamehubBlockedSlot',
   Wallet: 'Wallet',
   WalletTransaction: 'WalletTransaction',
-  Payout: 'Payout'
+  Payout: 'Payout',
+  WebsiteConfig: 'WebsiteConfig'
 };
 
 /**

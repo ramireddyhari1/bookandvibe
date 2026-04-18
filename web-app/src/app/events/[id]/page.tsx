@@ -24,6 +24,7 @@ import {
   Info,
   CalendarDays,
   ArrowRight,
+  BadgeCheck,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { fetchApi } from "@/lib/api";
@@ -45,12 +46,28 @@ type EventData = {
   venue: string;
   date: string;
   time: string;
+  duration?: string;
   price: number;
   images: string;
   availableSlots: number;
+  taxPercent?: number;
+  platformFeeType?: string;
+  platformFeeValue?: number;
   vibeTags?: string[];
   highlights?: string[];
+  partner?: {
+    id: string;
+    name: string;
+    avatar: string | null;
+  };
 };
+
+function getInitials(name: string) {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return "O";
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[parts.length - 1][0] ? parts[0][0] + parts[parts.length - 1][0] : parts[0][0]).toUpperCase();
+}
 
 function parseImages(value: string): string[] {
   try {
@@ -206,6 +223,7 @@ export default function EventDetailsPage() {
             id: String(apiEvent.id),
             price: Number(apiEvent.price),
             vibeTags: ["Live", "Trending", "Elite Access"],
+            partner: apiEvent.partner,
             highlights: apiEvent.highlights?.length ? apiEvent.highlights : [
               "Hassle-free digital entry via QR",
               "Access to Premium Lounges",
@@ -264,14 +282,35 @@ export default function EventDetailsPage() {
     return parsed.length ? parsed : ["https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1200"];
   }, [event]);
 
+  const heroImage = useMemo(() => {
+    if (!imageList.length) return "";
+    return imageList[1] || imageList[0];
+  }, [imageList]);
+
+  const ticketSubtotal = useMemo(() => (event?.price || 0) * quantity, [event, quantity]);
+  const isFreeEvent = (event?.price || 0) <= 0;
+  const taxAmount = useMemo(() => {
+    const taxPercent = Number((event as any)?.taxPercent || 0);
+    if (!ticketSubtotal || taxPercent <= 0) return 0;
+    return Math.round((ticketSubtotal * taxPercent) / 100);
+  }, [event, ticketSubtotal]);
+
+  const platformFeeAmount = useMemo(() => {
+    if (!ticketSubtotal || isFreeEvent) return 0;
+    const feeValue = Number((event as any)?.platformFeeValue);
+    if (!Number.isFinite(feeValue) || feeValue <= 0) return 0;
+    const feeType = String((event as any)?.platformFeeType || "PERCENT").toUpperCase();
+    return feeType === "FIXED" ? feeValue : Math.round((ticketSubtotal * feeValue) / 100);
+  }, [event, ticketSubtotal, isFreeEvent]);
+
+  const totalAmount = useMemo(() => ticketSubtotal + taxAmount + platformFeeAmount, [ticketSubtotal, taxAmount, platformFeeAmount]);
+
   const formattedDate = useMemo(() => {
     if (!event) return "";
     return new Date(event.date).toLocaleDateString("en-IN", {
       weekday: "long", day: "numeric", month: "short", year: "numeric",
     });
   }, [event]);
-
-  const totalAmount = useMemo(() => (event?.price || 0) * quantity + 49, [event, quantity]);
 
   const handleCheckout = useCallback(async () => {
     if (!event) return;
@@ -283,14 +322,35 @@ export default function EventDetailsPage() {
 
     setPaymentState("PROCESSING");
 
+    if (isFreeEvent || totalAmount <= 0) {
+      try {
+        await fetchApi("/payments/confirm-booking", {
+          method: "POST",
+          requiresAuth: true,
+          body: JSON.stringify({
+            eventId: event.id,
+            quantity,
+            totalAmount: 0,
+            items: [],
+          }),
+        });
+        setPaymentState("SUCCESS");
+        setTimeout(() => router.push("/profile/bookings"), 1800);
+      } catch {
+        setPaymentState("IDLE");
+        alert("Free booking failed. Please try again.");
+      }
+      return;
+    }
+
     try {
       // 1. Create Razorpay order on backend
       const orderRes: any = await fetchApi("/payments/initiate", {
         method: "POST",
         requiresAuth: true,
         body: JSON.stringify({
-          amount: totalAmount,
           eventId: event.id,
+          quantity,
           currency: "INR",
         }),
       });
@@ -354,17 +414,17 @@ export default function EventDetailsPage() {
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center gap-4">
-        <div className="w-12 h-12 border-4 border-rose-500 border-t-transparent rounded-full animate-spin" />
-        <p className="text-rose-500 font-bold tracking-widest uppercase text-xs">Preparing Experience</p>
+        <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin" />
+        <p className="text-orange-500 font-bold tracking-widest uppercase text-xs">Preparing Experience</p>
       </motion.div>
     </div>
   );
 
   if (!event) return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-gray-50">
-      <AlertCircle size={48} className="text-rose-400 mb-4" />
+      <AlertCircle size={48} className="text-orange-400 mb-4" />
       <h2 className="text-2xl font-black text-gray-900 mb-2">Event Not Found</h2>
-      <button onClick={() => router.back()} className="text-rose-500 font-bold flex items-center gap-2">
+      <button onClick={() => router.back()} className="text-orange-500 font-bold flex items-center gap-2">
         <ArrowLeft size={20} /> Go Back
       </button>
     </div>
@@ -397,7 +457,7 @@ export default function EventDetailsPage() {
              style={{ backgroundColor: headerIconBg, color: headerIconColor }}
              className="w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md transition-colors"
            >
-             <Heart size={20} className={isFavorite ? "fill-rose-500 text-rose-500" : ""} />
+             <Heart size={20} className={isFavorite ? "fill-orange-500 text-orange-500" : ""} />
            </motion.button>
            <motion.button 
              onClick={handleShare}
@@ -418,7 +478,7 @@ export default function EventDetailsPage() {
           style={{ y: heroY, scale: heroScale }}
           className="absolute inset-0"
         >
-          <img src={imageList[0]} className="w-full h-full object-cover" alt="" />
+          <img src={heroImage} className="w-full h-full object-cover" alt="" />
           {/* Subtle fade to white at the very bottom */}
           <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white to-transparent" />
         </motion.div>
@@ -427,7 +487,7 @@ export default function EventDetailsPage() {
       {/* ═══ MASSIVE POSTER BANNER (Desktop) ═══ */}
       <div className="hidden md:block relative w-full pt-[120px] lg:pt-[132px] max-w-[1400px] mx-auto px-4 lg:px-6 mb-8">
         <div className="relative w-full overflow-hidden rounded-[32px] shadow-2xl bg-gray-100" style={{ aspectRatio: '21/9', maxHeight: '600px' }}>
-          <img src={imageList[0]} className="w-full h-full object-cover" alt="" />
+          <img src={heroImage} className="w-full h-full object-cover" alt="" />
         </div>
       </div>
 
@@ -437,36 +497,54 @@ export default function EventDetailsPage() {
         {/* Title Area */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
-             <span className="text-rose-600 text-[11px] font-black tracking-widest uppercase bg-rose-50 px-2.5 py-1 rounded-md">{event.category}</span>
+             <span className="text-orange-600 text-[11px] font-black tracking-widest uppercase bg-orange-50 px-2.5 py-1 rounded-md">{event.category}</span>
              <motion.button 
                onClick={() => setIsFavorite(!isFavorite)}
                whileTap={{ scale: 0.85 }}
-               className="text-gray-400 hover:text-rose-500 transition-colors p-1 -mr-1"
+               className="text-gray-400 hover:text-orange-500 transition-colors p-1 -mr-1"
              >
-               <Heart size={22} className={isFavorite ? "fill-rose-500 text-rose-500" : ""} />
+               <Heart size={22} className={isFavorite ? "fill-orange-500 text-orange-500" : ""} />
              </motion.button>
           </div>
           
           <h1 className="text-4xl font-extrabold text-gray-900 leading-[1.05] tracking-tight mb-2">{event.title}</h1>
           <p className="text-gray-500 text-[14px] font-medium flex items-center gap-1.5"><MapPin size={14}/> {event.venue}</p>
           
-          <div className="flex flex-col gap-4 mt-6 pb-6 border-b border-gray-100">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shrink-0 shadow-sm border border-gray-50 p-1.5">
-                <img src="/icons/calendar_3d.png" alt="Date" className="w-full h-full object-contain" />
+          <div className="flex flex-wrap gap-4 mt-8 pb-8 border-b border-gray-100">
+            {/* Date & Time */}
+            <div className="flex-1 min-w-[240px] flex items-center gap-4 p-4 rounded-2xl border border-gray-200/60 bg-white shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)]">
+              <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center shrink-0 text-orange-600">
+                <CalendarDays size={24} />
               </div>
               <div className="flex flex-col">
-                <p className="text-[15px] text-gray-900 font-bold">{formattedDate}</p>
-                <p className="text-[13px] text-gray-500">12:00 AM - 11:30 PM</p>
+                <span className="text-[11px] uppercase tracking-wider font-extrabold text-gray-400 mb-0.5">Date & Time</span>
+                <span className="text-[15px] font-bold text-gray-900 leading-tight">{formattedDate}</span>
+                <span className="text-[13px] font-semibold text-gray-500">{event.time}</span>
               </div>
             </div>
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shrink-0 shadow-sm border border-gray-50 p-1.5">
-                <img src="/icons/location_3d.png" alt="Location" className="w-full h-full object-contain" />
+
+            {/* Duration */}
+            {event.duration && (
+            <div className="flex-1 min-w-[140px] flex items-center gap-3 p-4 rounded-2xl border border-gray-200/60 bg-white shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)]">
+              <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center shrink-0 text-orange-600">
+                <Clock size={24} />
               </div>
               <div className="flex flex-col">
-                <p className="text-[15px] text-gray-900 font-bold max-w-[200px] truncate">{event.venue}</p>
-                <p className="text-[13px] text-rose-600 font-medium">View on maps</p>
+                <span className="text-[11px] uppercase tracking-wider font-extrabold text-gray-400 mb-0.5">Duration</span>
+                <span className="text-[15px] font-bold text-gray-900">{event.duration}</span>
+              </div>
+            </div>
+            )}
+
+            {/* Location */}
+            <div className="w-full flex items-center gap-4 p-4 rounded-2xl border border-gray-200/60 bg-white shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] cursor-pointer hover:border-orange-300 transition-colors group">
+              <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center shrink-0 text-orange-600 group-hover:scale-105 transition-transform">
+                <MapPin size={24} />
+              </div>
+              <div className="flex flex-col flex-1">
+                <span className="text-[11px] uppercase tracking-wider font-extrabold text-gray-400 mb-0.5">Location</span>
+                <span className="text-[15px] font-bold text-gray-900 line-clamp-1">{event.venue}</span>
+                <span className="text-[13px] font-bold text-orange-600 mt-0.5 group-hover:underline flex items-center gap-1">View on Maps <ArrowRight size={14}/></span>
               </div>
             </div>
           </div>
@@ -477,18 +555,26 @@ export default function EventDetailsPage() {
            <h2 className="text-[18px] font-bold text-gray-900 mb-4 tracking-tight">Hosted By</h2>
            <div className="relative overflow-hidden bg-white rounded-3xl p-5 border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex items-center justify-between group">
               {/* Decorative gradient blur */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-rose-100 to-rose-50 rounded-full blur-3xl opacity-60 -mr-10 -mt-10 pointer-events-none" />
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-orange-100 to-orange-50 rounded-full blur-3xl opacity-60 -mr-10 -mt-10 pointer-events-none" />
               
               <div className="relative flex items-center gap-4">
-                 <div className="w-14 h-14 rounded-full p-0.5 bg-gradient-to-tr from-rose-500 to-orange-400 shrink-0 shadow-md">
+                 <div className="w-14 h-14 rounded-full p-0.5 bg-gradient-to-tr from-orange-500 to-orange-400 shrink-0 shadow-md">
                     <div className="w-full h-full rounded-full border-2 border-white overflow-hidden bg-white flex items-center justify-center">
-                       <span className="text-rose-600 font-extrabold text-xl tracking-tight">JP</span>
+                       {event.partner?.avatar ? (
+                         <img src={event.partner.avatar} className="w-full h-full object-cover" alt="" />
+                       ) : (
+                         <span className="text-orange-600 font-extrabold text-xl tracking-tight">
+                           {getInitials(event.partner?.name || "Organizer")}
+                         </span>
+                       )}
                     </div>
                  </div>
                  <div className="flex flex-col">
                     <div className="flex items-center gap-1.5 line-clamp-1">
-                       <span className="text-gray-900 font-bold text-[17px] tracking-tight">Jaswanth P</span>
-                       <img src="/icons/verified_3d.png" alt="Verified" className="w-4 h-4 object-contain drop-shadow-sm mix-blend-multiply" />
+                       <span className="text-gray-900 font-bold text-[17px] tracking-tight">
+                         {event.partner?.name || "Premium Organizer"}
+                       </span>
+                       <BadgeCheck className="w-5 h-5 text-orange-500 fill-orange-50" />
                     </div>
                     <span className="text-gray-500 text-[13px] font-medium mt-0.5">Premium Organizer</span>
                  </div>
@@ -524,7 +610,7 @@ export default function EventDetailsPage() {
                  {/* Item */}
                  <div>
                     <h3 className="font-bold text-gray-900 mb-2.5 flex items-center gap-2">
-                       <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0"></span>
+                       <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0"></span>
                        Ticket Purchase & Refunds
                     </h3>
                     <ul className="pl-4 space-y-1.5 text-gray-600 font-medium">
@@ -537,7 +623,7 @@ export default function EventDetailsPage() {
                  {/* Item */}
                  <div>
                     <h3 className="font-bold text-gray-900 mb-2.5 flex items-center gap-2">
-                       <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0"></span>
+                       <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0"></span>
                        Walk-In Policy
                     </h3>
                     <p className="text-gray-600 font-medium pl-3.5">(Subject to Availability)</p>
@@ -546,7 +632,7 @@ export default function EventDetailsPage() {
                  {/* Item */}
                  <div>
                     <h3 className="font-bold text-gray-900 mb-2.5 flex items-center gap-2">
-                       <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0"></span>
+                       <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0"></span>
                        Event Access & Re-entry
                     </h3>
                     <p className="text-gray-600 font-medium pl-3.5">No re-entry once you exit. Keep belongings with you.</p>
@@ -555,7 +641,7 @@ export default function EventDetailsPage() {
                  {/* Item */}
                  <div>
                     <h3 className="font-bold text-gray-900 mb-2.5 flex items-center gap-2">
-                       <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0"></span>
+                       <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0"></span>
                        Event Modifications
                     </h3>
                     <p className="text-gray-600 font-medium pl-3.5">Event timing, menu, or activities may change. Major updates will be communicated.</p>
@@ -564,7 +650,7 @@ export default function EventDetailsPage() {
                  {/* Item */}
                  <div>
                     <h3 className="font-bold text-gray-900 mb-2.5 flex items-center gap-2">
-                       <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0"></span>
+                       <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0"></span>
                        Health & Safety
                     </h3>
                     <ul className="pl-4 space-y-1.5 text-gray-600 font-medium">
@@ -577,7 +663,7 @@ export default function EventDetailsPage() {
                  {/* Item */}
                  <div>
                     <h3 className="font-bold text-gray-900 mb-2.5 flex items-center gap-2">
-                       <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0"></span>
+                       <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0"></span>
                        Photography & Media
                     </h3>
                     <ul className="pl-4 space-y-1.5 text-gray-600 font-medium">
@@ -589,7 +675,7 @@ export default function EventDetailsPage() {
                  {/* Item */}
                  <div>
                     <h3 className="font-bold text-gray-900 mb-2.5 flex items-center gap-2">
-                       <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0"></span>
+                       <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0"></span>
                        Food Policy
                     </h3>
                     <p className="text-gray-600 font-medium pl-3.5">No outside food/beverage allowed.</p>
@@ -598,7 +684,7 @@ export default function EventDetailsPage() {
                  {/* Item */}
                  <div>
                     <h3 className="font-bold text-gray-900 mb-2.5 flex items-center gap-2">
-                       <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0"></span>
+                       <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0"></span>
                        Venue Liability
                     </h3>
                     <p className="text-gray-600 font-medium pl-3.5">Organizers not liable for personal loss/damage.</p>
@@ -607,20 +693,20 @@ export default function EventDetailsPage() {
                  {/* Item */}
                  <div>
                     <h3 className="font-bold text-gray-900 mb-2.5 flex items-center gap-2">
-                       <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0"></span>
+                       <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0"></span>
                        Contact
                     </h3>
                     <ul className="pl-4 space-y-1.5 text-gray-600 font-medium">
                        <li className="relative before:content-[''] before:absolute before:-left-4 before:top-2 before:w-1.5 before:h-1.5 before:bg-gray-300 before:rounded-full">WhatsApp: +91 8955578847</li>
                        <li className="relative before:content-[''] before:absolute before:-left-4 before:top-2 before:w-1.5 before:h-1.5 before:bg-gray-300 before:rounded-full">Email: cs@indulgeout.com</li>
-                       <li className="relative before:content-[''] before:absolute before:-left-4 before:top-2 before:w-1.5 before:h-1.5 before:bg-gray-300 before:rounded-full"><a href="https://www.instagram.com/indulgeout/" target="_blank" rel="noopener noreferrer" className="text-rose-500 hover:underline">Instagram: https://www.instagram.com/indulgeout/</a></li>
+                       <li className="relative before:content-[''] before:absolute before:-left-4 before:top-2 before:w-1.5 before:h-1.5 before:bg-gray-300 before:rounded-full"><a href="https://www.instagram.com/indulgeout/" target="_blank" rel="noopener noreferrer" className="text-orange-500 hover:underline">Instagram: https://www.instagram.com/indulgeout/</a></li>
                     </ul>
                  </div>
 
                  {/* Item */}
                  <div>
                     <h3 className="font-bold text-gray-900 mb-2.5 flex items-center gap-2">
-                       <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0"></span>
+                       <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0"></span>
                        Agreement
                     </h3>
                     <p className="text-gray-600 font-medium pl-3.5">By purchasing a ticket, you agree to all the above terms.</p>
@@ -695,7 +781,7 @@ export default function EventDetailsPage() {
             </div>
             <button 
               onClick={() => setShowCheckout(true)}
-              className="bg-rose-600 active:scale-95 transition-transform text-white py-3.5 px-6 rounded-full font-bold text-[14px] flex items-center justify-center gap-2 tracking-wide"
+              className="bg-orange-600 active:scale-95 transition-transform text-white py-3.5 px-6 rounded-full font-bold text-[14px] flex items-center justify-center gap-2 tracking-wide"
             >
               Get Tickets
             </button>
@@ -729,7 +815,7 @@ export default function EventDetailsPage() {
                   <div className="space-y-6">
                      <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
                         <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0">
-                           <img src={imageList[0]} className="w-full h-full object-cover" alt="" />
+                           <img src={heroImage} className="w-full h-full object-cover" alt="" />
                         </div>
                         <div className="space-y-1">
                            <h3 className="font-bold text-[16px] tracking-tight text-gray-900 line-clamp-1">{event.title}</h3>
@@ -749,12 +835,20 @@ export default function EventDetailsPage() {
                      <div className="space-y-3 pt-2">
                         <div className="flex justify-between text-[14px] font-medium text-gray-500">
                            <span>Tickets ({quantity}x)</span>
-                           <span>₹{event.price * quantity}</span>
+                        <span>₹{ticketSubtotal}</span>
                         </div>
+                      {taxAmount > 0 && (
                         <div className="flex justify-between text-[14px] font-medium text-gray-500">
-                           <span>Platform Fee</span>
-                           <span>₹49</span>
+                          <span>Tax</span>
+                          <span>₹{taxAmount}</span>
                         </div>
+                      )}
+                      {platformFeeAmount > 0 && (
+                        <div className="flex justify-between text-[14px] font-medium text-gray-500">
+                          <span>Platform Fee</span>
+                          <span>₹{platformFeeAmount}</span>
+                        </div>
+                      )}
                         <div className="flex justify-between text-[18px] font-bold pt-4 border-t border-gray-100 text-gray-900">
                            <span>Total</span>
                            <span>₹{totalAmount}</span>
@@ -763,16 +857,16 @@ export default function EventDetailsPage() {
 
                      <button 
                        onClick={handleCheckout}
-                       className="w-full bg-rose-600 text-white py-4 rounded-full font-bold text-[16px] flex items-center justify-center gap-2 active:scale-95 transition-transform mt-6 shadow-md shadow-rose-600/30"
+                       className="w-full bg-orange-600 text-white py-4 rounded-full font-bold text-[16px] flex items-center justify-center gap-2 active:scale-95 transition-transform mt-6 shadow-md shadow-orange-600/30"
                      >
-                       Pay ₹{totalAmount}
+                      {isFreeEvent || totalAmount <= 0 ? "Book Free" : `Pay ₹${totalAmount}`}
                      </button>
                   </div>
                 ) : (
                   <div className="py-12 flex flex-col items-center gap-6 text-center h-[380px] justify-center">
                      {paymentState === "PROCESSING" ? (
                         <>
-                          <Loader2 size={48} className="animate-spin text-rose-500" />
+                          <Loader2 size={48} className="animate-spin text-orange-500" />
                           <div className="space-y-1">
                              <h3 className="text-[18px] font-bold text-gray-900 tracking-tight">Processing Payment</h3>
                              <p className="text-gray-500 text-[14px]">Please don't close this screen</p>
@@ -809,11 +903,11 @@ export default function EventDetailsPage() {
 
                            <div className="w-full bg-gray-50 rounded-2xl p-4 border border-gray-100 mt-2 flex items-center gap-4 transition-all hover:bg-white hover:shadow-md">
                               <div className="w-12 h-12 rounded-xl bg-gray-200 overflow-hidden">
-                                <img src={imageList[0]} className="w-full h-full object-cover" alt="" />
+                                <img src={heroImage} className="w-full h-full object-cover" alt="" />
                               </div>
                               <div className="flex-1 text-left">
                                 <p className="text-[14px] font-bold text-gray-900 line-clamp-1">{event.title}</p>
-                                <p className="text-[12px] text-gray-500 font-medium">{quantity} {quantity > 1 ? 'Tickets' : 'Ticket'} • ₹{totalAmount}</p>
+                                <p className="text-[12px] text-gray-500 font-medium">{quantity} {quantity > 1 ? 'Tickets' : 'Ticket'}{totalAmount > 0 ? ` • ₹${totalAmount}` : " • Free"}</p>
                               </div>
                            </div>
                         </motion.div>
@@ -827,3 +921,4 @@ export default function EventDetailsPage() {
     </div>
   );
 }
+
