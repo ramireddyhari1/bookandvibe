@@ -4,8 +4,8 @@
   "description": "Book & Vibe Backend API Server",
   "main": "src/server.js",
   "scripts": {
-    "dev": "nodemon src/app.js",
-    "start": "node src/app.js",
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
     "backfill:earnings": "node scripts/backfillPartnerEarnings.js",
     "seed": "node src/db/seed.js"
   },
