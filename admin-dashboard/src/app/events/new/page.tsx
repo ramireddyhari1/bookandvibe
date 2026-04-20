@@ -24,6 +24,9 @@ import {
   Trash2,
   Type,
   Users,
+  Languages,
+  Baby,
+  Dog,
 } from "lucide-react";
 
 import { fetchApi } from "@/lib/api";
@@ -92,6 +95,14 @@ export default function CreateEventPage() {
     mapLink: "",
     cardImage: "",
     bannerImage: "",
+    terms: "",
+    language: "English",
+    ageLimit: "Entry allowed for all ages",
+    ticketAgeLimit: "Ticket needed for all ages",
+    layout: "Indoor",
+    seating: "Seated",
+    kidsAllowed: true,
+    petsAllowed: false,
   });
   const [cardInputMode, setCardInputMode] = useState<"url" | "upload">("url");
   const [bannerInputMode, setBannerInputMode] = useState<"url" | "upload">("url");
@@ -284,11 +295,19 @@ export default function CreateEventPage() {
     return {
       title: eventDetails.title,
       description: eventDetails.description,
+      terms: eventDetails.terms || "",
       category: eventDetails.category,
       bookingFormat,
       location: eventDetails.location,
       venue: eventDetails.venue,
       mapLink: eventDetails.mapLink || null,
+      language: eventDetails.language,
+      ageLimit: eventDetails.ageLimit,
+      ticketAgeLimit: eventDetails.ticketAgeLimit,
+      layout: eventDetails.layout,
+      seating: eventDetails.seating,
+      kidsAllowed: eventDetails.kidsAllowed,
+      petsAllowed: eventDetails.petsAllowed,
       date: schedule.date,
       time: schedule.time,
       duration: schedule.duration || null,
@@ -530,6 +549,14 @@ export default function CreateEventPage() {
           venue: event.venue || "",
           cardImage: parsedImages[0] || "",
           bannerImage: parsedImages[1] || parsedImages[0] || "",
+          terms: event.terms || "",
+          language: event.language || "English",
+          ageLimit: event.ageLimit || "Entry allowed for all ages",
+          ticketAgeLimit: event.ticketAgeLimit || "Ticket needed for all ages",
+          layout: event.layout || "Indoor",
+          seating: event.seating || "Seated",
+          kidsAllowed: event.kidsAllowed !== false,
+          petsAllowed: !!event.petsAllowed,
         });
         setSchedule({
           date: event.date ? String(event.date).slice(0, 10) : "",
@@ -754,7 +781,17 @@ export default function CreateEventPage() {
                   value={eventDetails.mapLink}
                   onChange={(e) => setEventDetails((v) => ({ ...v, mapLink: e.target.value }))}
                   className={inputClass}
-                  placeholder="https://maps.google.com/..."
+                placeholder="https://maps.google.com/..."
+                />
+              </label>
+              <label className="space-y-2 md:col-span-2">
+                <span className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500"><Info size={13} /> Terms & Conditions <span className="text-slate-400 normal-case font-medium">(optional)</span></span>
+                <textarea
+                  value={eventDetails.terms}
+                  onChange={(e) => setEventDetails((v) => ({ ...v, terms: e.target.value }))}
+                  className={inputClass}
+                  rows={4}
+                  placeholder="Enter specific terms for this event (e.g. No smoking, age limit 18+, no external food)"
                 />
               </label>
               <label className="space-y-2 md:col-span-2">
@@ -838,12 +875,102 @@ export default function CreateEventPage() {
                   />
                 )}
 
-                {eventDetails.bannerImage && (
+                 {eventDetails.bannerImage && (
                   <div className="mt-2 rounded-xl border border-slate-200 overflow-hidden bg-slate-50">
                     <img src={eventDetails.bannerImage} alt="Banner preview" className="w-full h-44 object-cover" />
                   </div>
                 )}
               </label>
+
+              {/* THINGS TO KNOW SECTION */}
+              <div className="mt-8 pt-8 border-t border-slate-100 md:col-span-2">
+                <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400 mb-6 flex items-center gap-2">
+                   <AlertCircle size={14} /> Things to Know (Display Metadata)
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                   <label className="space-y-2">
+                      <span className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500"><Languages size={13} /> Language</span>
+                      <input
+                        value={eventDetails.language}
+                        onChange={(e) => setEventDetails((v) => ({ ...v, language: e.target.value }))}
+                        className={inputClass}
+                        placeholder="e.g. English, Telugu, Hindi"
+                      />
+                   </label>
+                   
+                   <label className="space-y-2">
+                      <span className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500"><LayoutGrid size={13} /> Layout</span>
+                      <select
+                        value={eventDetails.layout}
+                        onChange={(e) => setEventDetails((v) => ({ ...v, layout: e.target.value }))}
+                        className={inputClass}
+                      >
+                        <option value="Indoor">Indoor</option>
+                        <option value="Outdoor">Outdoor</option>
+                        <option value="Mixed">Mixed</option>
+                      </select>
+                   </label>
+
+                   <label className="space-y-2">
+                      <span className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500"><Users size={13} /> Seating Arrangement</span>
+                      <select
+                        value={eventDetails.seating}
+                        onChange={(e) => setEventDetails((v) => ({ ...v, seating: e.target.value }))}
+                        className={inputClass}
+                      >
+                        <option value="Seated">Seated</option>
+                        <option value="Standing">Standing</option>
+                        <option value="Mixed">Mixed</option>
+                      </select>
+                   </label>
+
+                   <label className="space-y-2">
+                      <span className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500"><Shield size={13} /> Entry Age Limit</span>
+                      <input
+                        value={eventDetails.ageLimit}
+                        onChange={(e) => setEventDetails((v) => ({ ...v, ageLimit: e.target.value }))}
+                        className={inputClass}
+                        placeholder="e.g. 21 and above, All ages"
+                      />
+                   </label>
+
+                   <label className="space-y-2">
+                      <span className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500"><Ticket size={13} /> Ticket Needed For</span>
+                      <input
+                        value={eventDetails.ticketAgeLimit}
+                        onChange={(e) => setEventDetails((v) => ({ ...v, ticketAgeLimit: e.target.value }))}
+                        className={inputClass}
+                        placeholder="e.g. Ages 5 and above"
+                      />
+                   </label>
+
+                   <div className="flex items-center gap-8 pt-4">
+                      <div className="flex items-center gap-3 cursor-pointer group">
+                        <div 
+                          onClick={() => setEventDetails(v => ({ ...v, kidsAllowed: !v.kidsAllowed }))}
+                          className={`w-10 h-6 rounded-full transition-colors relative ${eventDetails.kidsAllowed ? 'bg-teal-500' : 'bg-slate-300'}`}
+                        >
+                          <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${eventDetails.kidsAllowed ? 'left-5' : 'left-1'}`} />
+                        </div>
+                        <span className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
+                          <Baby size={16} className={eventDetails.kidsAllowed ? 'text-teal-600' : 'text-slate-400'} /> Kids Welcome
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-3 cursor-pointer group">
+                        <div 
+                          onClick={() => setEventDetails(v => ({ ...v, petsAllowed: !v.petsAllowed }))}
+                          className={`w-10 h-6 rounded-full transition-colors relative ${eventDetails.petsAllowed ? 'bg-teal-500' : 'bg-slate-300'}`}
+                        >
+                          <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${eventDetails.petsAllowed ? 'left-5' : 'left-1'}`} />
+                        </div>
+                        <span className="flex items-center gap-2 text-[13px] font-bold text-slate-700">
+                          <Dog size={16} className={eventDetails.petsAllowed ? 'text-teal-600' : 'text-slate-400'} /> Pets Welcome
+                        </span>
+                      </div>
+                   </div>
+                </div>
+              </div>
             </div>
           </section>
         )}

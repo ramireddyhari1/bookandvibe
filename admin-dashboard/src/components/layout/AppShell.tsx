@@ -131,8 +131,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         mobileOpen={isMobileMenuOpen} 
         onMobileClose={() => setIsMobileMenuOpen(false)} 
       />
-      <main className="app-main relative z-10 min-h-screen px-4 pb-10 pt-4 md:px-8 md:pt-6">
-        <header className="dash-card sticky top-2 lg:top-4 z-30 mb-6 flex items-center justify-between gap-3 border-emerald-100/50 bg-white/80 px-3 py-2.5 transition-all md:px-5 md:py-3 lg:top-4">
+      <main className="app-main relative min-h-screen px-4 pb-10 pt-4 md:px-8 md:pt-6">
+        <header className="dash-card sticky top-2 lg:top-4 z-20 mb-6 flex items-center justify-between gap-3 border-emerald-100/50 bg-white/80 px-3 py-2.5 transition-all md:px-5 md:py-3 lg:top-4">
           <div className="flex items-center gap-3 min-w-0">
             {/* Hamburger Button */}
             <button 

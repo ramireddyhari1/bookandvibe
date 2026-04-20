@@ -89,11 +89,46 @@ function computeGamehubBookingAmount(facility) {
   return roundCurrency(Number(facility?.pricePerHour) || 0);
 }
 
+// ─── Coupon Helper ────────────────────────────────────────────────────────
+async function calculateCouponDiscount(couponCode, orderAmount, userId, applicableTo) {
+  if (!couponCode || orderAmount <= 0) return { discountAmount: 0, coupon: null };
+
+  const coupon = await prisma.coupon.findUnique({
+    where: { code: couponCode.toUpperCase().trim() }
+  });
+
+  if (!coupon || !coupon.isActive) return { discountAmount: 0, coupon: null, error: 'Invalid or inactive promo code' };
+  if (coupon.expiresAt && new Date() > new Date(coupon.expiresAt)) return { discountAmount: 0, coupon: null, error: 'Promo code has expired' };
+  if (coupon.applicableTo !== 'ALL' && applicableTo !== 'ALL' && coupon.applicableTo !== applicableTo) return { discountAmount: 0, coupon: null, error: 'Promo code not applicable' };
+  if (orderAmount < coupon.minOrderAmount) return { discountAmount: 0, coupon: null, error: `Minimum order amount of ₹${coupon.minOrderAmount} required` };
+  if (coupon.usageLimit !== null && coupon.usedCount >= coupon.usageLimit) return { discountAmount: 0, coupon: null, error: 'Usage limit reached' };
+
+  if (coupon.perUserLimit > 0) {
+      const [eventBookings, gamehubBookings] = await Promise.all([
+         prisma.booking.count({ where: { userId, couponCode: coupon.code, status: { not: 'CANCELLED' } } }),
+         prisma.gamehubBooking.count({ where: { userId, couponCode: coupon.code, status: { not: 'CANCELLED' } } })
+      ]);
+      if (eventBookings + gamehubBookings >= coupon.perUserLimit) return { discountAmount: 0, coupon: null, error: 'User usage limit reached' };
+  }
+
+  let discountAmount = 0;
+  if (coupon.discountType === 'PERCENT') {
+      discountAmount = (orderAmount * coupon.discountValue) / 100;
+      if (coupon.maxDiscount && discountAmount > coupon.maxDiscount) discountAmount = coupon.maxDiscount;
+  } else {
+      discountAmount = coupon.discountValue;
+  }
+  discountAmount = Math.min(discountAmount, orderAmount);
+  discountAmount = Math.round((discountAmount + Number.EPSILON) * 100) / 100;
+
+  return { discountAmount, coupon };
+}
+
 // ─── POST /api/payments/initiate ─────────────────────────────────────────────
 // Creates a real Razorpay order and returns order details to frontend
 router.post('/initiate', authenticateToken, async (req, res) => {
   try {
-    const { currency = 'INR', eventId, facilityId, quantity = 1, items = [], notes = {} } = req.body;
+    const { currency = 'INR', eventId, facilityId, quantity = 1, items = [], couponCode, notes = {} } = req.body;
 
     if (!eventId && !facilityId) {
       return res.status(400).json({ error: 'eventId or facilityId is required' });
@@ -138,6 +173,14 @@ router.post('/initiate', authenticateToken, async (req, res) => {
 
     if (resolvedAmount <= 0) {
       return res.status(400).json({ error: 'A valid amount is required' });
+    }
+
+    if (couponCode) {
+      const { discountAmount, error } = await calculateCouponDiscount(couponCode, resolvedAmount, req.user.id, eventId ? 'EVENTS' : 'GAMEHUB');
+      if (error) return res.status(400).json({ error });
+      resolvedAmount = Math.max(0, resolvedAmount - discountAmount);
+      resolvedNotes.couponCode = couponCode;
+      resolvedNotes.discountAmount = discountAmount;
     }
 
     const options = {
@@ -217,6 +260,7 @@ router.post('/confirm-booking', authenticateToken, async (req, res) => {
       razorpay_signature,
       eventId,
       quantity,
+      couponCode,
       items = [],
     } = req.body;
 
@@ -231,7 +275,16 @@ router.post('/confirm-booking', authenticateToken, async (req, res) => {
     }
 
     const summary = computeEventBookingSummary(event, quantity, items);
-    const isFreeBooking = summary.totalAmount <= 0;
+    
+    let discountAmount = 0;
+    if (couponCode) {
+      const couponCheck = await calculateCouponDiscount(couponCode, summary.totalAmount, userId, 'EVENTS');
+      if (couponCheck.error) return res.status(400).json({ error: couponCheck.error });
+      discountAmount = couponCheck.discountAmount;
+    }
+
+    const finalAmount = Math.max(0, summary.totalAmount - discountAmount);
+    const isFreeBooking = finalAmount <= 0;
 
     if (!isFreeBooking) {
       // 1. Verify Razorpay signature
@@ -279,9 +332,11 @@ router.post('/confirm-booking', authenticateToken, async (req, res) => {
       const booking = await tx.booking.create({
         data: {
           quantity: liveSummary.totalQty,
-          totalAmount: summary.totalAmount,
+          totalAmount: finalAmount,
           status: 'CONFIRMED',
           qrCode: `TKT-${Math.random().toString(36).substring(2, 10).toUpperCase()}`,
+          couponCode: couponCode ? couponCode.toUpperCase() : null,
+          discount: discountAmount,
           userId,
           eventId,
           ...(liveSummary.bookingItems.length > 0
@@ -296,7 +351,7 @@ router.post('/confirm-booking', authenticateToken, async (req, res) => {
       // 3. Create payment record with payment details
       const payment = await tx.payment.create({
         data: {
-          amount: summary.totalAmount,
+          amount: finalAmount,
           method: isFreeBooking ? 'FREE' : 'RAZORPAY',
           transactionId: isFreeBooking ? freePaymentId : razorpay_payment_id,
           status: 'SUCCESS',
@@ -304,12 +359,25 @@ router.post('/confirm-booking', authenticateToken, async (req, res) => {
         },
       });
 
+      // Update coupon optionally
+      if (couponCode && discountAmount > 0) {
+        const updatedCoupon = await tx.coupon.update({
+          where: { code: couponCode.toUpperCase().trim() },
+          data: { usedCount: { increment: 1 } }
+        });
+
+        // Strict limit verification after atomic increment
+        if (updatedCoupon.usageLimit !== null && updatedCoupon.usedCount > updatedCoupon.usageLimit) {
+          throw new Error('This promo code has reached its maximum usage limit');
+        }
+      }
+
       // 4. Credit Partner Wallet
       const eventTitle = liveEvent.title || 'Event Entrance';
       await creditPartnerWallet(
         tx,
         liveEvent.partnerId,
-        summary.totalAmount,
+        finalAmount,
         `Earning from: ${eventTitle} (Booking #${booking.id.slice(0, 8)})`,
         booking.id
       );
@@ -345,6 +413,7 @@ router.post('/confirm-gamehub', authenticateToken, async (req, res) => {
       facilityId,
       slotLabel,
       date,
+      couponCode,
       meta = {},
     } = req.body;
 
@@ -359,7 +428,16 @@ router.post('/confirm-gamehub', authenticateToken, async (req, res) => {
     }
 
     const resolvedAmount = computeGamehubBookingAmount(facility);
-    const isFreeBooking = resolvedAmount <= 0;
+    
+    let discountAmount = 0;
+    if (couponCode) {
+      const couponCheck = await calculateCouponDiscount(couponCode, resolvedAmount, userId, 'GAMEHUB');
+      if (couponCheck.error) return res.status(400).json({ error: couponCheck.error });
+      discountAmount = couponCheck.discountAmount;
+    }
+
+    const finalAmount = Math.max(0, resolvedAmount - discountAmount);
+    const isFreeBooking = finalAmount <= 0;
 
     if (!isFreeBooking) {
       // 1. Verify Razorpay signature
@@ -387,9 +465,11 @@ router.post('/confirm-gamehub', authenticateToken, async (req, res) => {
         data: {
           bookingDate: new Date(date),
           slotLabel,
-          totalAmount: resolvedAmount,
+          totalAmount: finalAmount,
           currency: 'INR',
           status: 'CONFIRMED',
+          couponCode: couponCode ? couponCode.toUpperCase() : null,
+          discount: discountAmount,
           paymentMethod: isFreeBooking ? 'FREE' : 'RAZORPAY',
           paymentStatus: 'SUCCESS',
           transactionId: isFreeBooking ? `FREE-${Date.now()}` : razorpay_payment_id,
@@ -398,12 +478,23 @@ router.post('/confirm-gamehub', authenticateToken, async (req, res) => {
         },
       });
 
+      if (couponCode && discountAmount > 0) {
+        const updatedCoupon = await tx.coupon.update({
+          where: { code: couponCode.toUpperCase().trim() },
+          data: { usedCount: { increment: 1 } }
+        });
+
+        if (updatedCoupon.usageLimit !== null && updatedCoupon.usedCount > updatedCoupon.usageLimit) {
+          throw new Error('This promo code has reached its maximum usage limit');
+        }
+      }
+
       // Credit Partner Wallet
       if (liveFacility.partnerId) {
         await creditPartnerWallet(
           tx,
           liveFacility.partnerId,
-          resolvedAmount,
+          finalAmount,
           `Venue Earning: ${liveFacility.name} (Slot: ${slotLabel})`,
           createdBooking.id
         );

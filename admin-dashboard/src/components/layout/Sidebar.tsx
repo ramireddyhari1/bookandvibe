@@ -19,6 +19,7 @@ import {
   QrCode,
   Wallet,
   ArrowUpToLine,
+  Tag,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { fetchApi } from "@/lib/api";
@@ -127,6 +128,7 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
           items: [
             { name: "Bookings", href: "/bookings", icon: CreditCard },
             { name: "Events", href: "/events", icon: Ticket },
+            { name: "Coupons", href: "/coupons", icon: Tag },
           ],
         }
       ] : []),

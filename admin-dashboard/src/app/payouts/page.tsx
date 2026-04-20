@@ -13,7 +13,8 @@ import {
   User, 
   RefreshCw,
   MoreVertical,
-  Banknote
+  Banknote,
+  CreditCard
 } from "lucide-react";
 import { fetchApi } from "@/lib/api";
 

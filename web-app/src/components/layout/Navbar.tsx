@@ -18,9 +18,11 @@ export default function Navbar() {
   const isHome = pathname === "/";
   const isGamehub = pathname?.includes("/gamehub");
   const isEvents = pathname?.includes("/events");
-  const logoSrc = isGamehub ? "/bv-green.png" : isEvents ? "/bv-orange.png" : "/bv-white.png";
+
   // Pages that should use the immersive dark navbar (like Homepage)
-  const isDarkPage = isHome || pathname === "/profile/bookings";
+  const isDarkPage = isHome;
+  
+  const logoSrc = isGamehub ? "/bv-green.png" : isDarkPage ? "/bv-white.png" : "/bv-orange.png";
 
   const getTheme = () => {
     if (isGamehub) {

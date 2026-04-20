@@ -87,14 +87,9 @@ router.post('/login', validate(loginSchema), async (req, res) => {
       return res.status(400).json({ error: 'Invalid email or password' });
     }
 
-    if(user.password === 'guest_password') {
-       // Allow legacy guest fallback
-       if (password !== 'guest_password') return res.status(400).json({ error: 'Invalid email or password' });
-    } else {
-       const isMatch = await bcrypt.compare(password, user.password);
-       if (!isMatch) {
-         return res.status(400).json({ error: 'Invalid email or password' });
-       }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ error: 'Invalid email or password' });
     }
 
     const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '7d' });

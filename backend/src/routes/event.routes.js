@@ -602,6 +602,14 @@ router.post('/', authenticateToken, requireAdminOrPartner, async (req, res) => {
       data: {
         title: req.body.title,
         description: req.body.description,
+        terms: req.body.terms || "",
+        language: req.body.language || "English",
+        ageLimit: req.body.ageLimit || "Entry allowed for all ages",
+        ticketAgeLimit: req.body.ticketAgeLimit || "Ticket needed for all ages",
+        layout: req.body.layout || "Indoor",
+        seating: req.body.seatingPreference || req.body.seating || "Seated",
+        kidsAllowed: req.body.kidsAllowed ?? true,
+        petsAllowed: req.body.petsAllowed ?? false,
         category: req.body.category || 'MUSIC',
         bookingFormat,
         visibility,
@@ -699,6 +707,7 @@ router.put('/:id', authenticateToken, requireAdminOrPartner, async (req, res) =>
     const fields = [
       'title',
       'description',
+      'terms',
       'category',
       'location',
       'venue',
@@ -709,6 +718,13 @@ router.put('/:id', authenticateToken, requireAdminOrPartner, async (req, res) =>
       'currency',
       'mapLink',
       'duration',
+      'language',
+      'ageLimit',
+      'ticketAgeLimit',
+      'layout',
+      'seating',
+      'kidsAllowed',
+      'petsAllowed',
     ];
     fields.forEach(f => { if (req.body[f] !== undefined) updateData[f] = req.body[f]; });
 

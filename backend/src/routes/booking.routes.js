@@ -429,9 +429,9 @@ router.post('/seat-bookings/confirm', authenticateToken, validate(bookingConfirm
 
       const finalAmount = parseFloat(event.price) * normalizedSeats.length;
       
-      // Verification log if client tried to send a different amount
+      // Strict validation for payment amount mismatch
       if (totalAmount && Math.abs(parseFloat(totalAmount) - finalAmount) > 0.01) {
-        console.warn(`[Security] User ${userId} attempted to pay ${totalAmount} for seats costing ${finalAmount}`);
+        throw new Error(`Payment mismatch detected. Recalculated cost is ₹${finalAmount} but received ₹${totalAmount}. Process aborted.`);
       }
 
       const createdBooking = await tx.booking.create({

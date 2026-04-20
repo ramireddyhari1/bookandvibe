@@ -25,6 +25,12 @@ import {
   CalendarDays,
   ArrowRight,
   BadgeCheck,
+  FileText,
+  X,
+  Languages,
+  Baby,
+  Dog,
+  Accessibility
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { fetchApi } from "@/lib/api";
@@ -60,6 +66,14 @@ type EventData = {
     name: string;
     avatar: string | null;
   };
+  terms?: string;
+  language?: string;
+  ageLimit?: string;
+  ticketAgeLimit?: string;
+  layout?: string;
+  seating?: string;
+  kidsAllowed?: boolean;
+  petsAllowed?: boolean;
 };
 
 function getInitials(name: string) {
@@ -174,6 +188,14 @@ export default function EventDetailsPage() {
   const [quantity, setQuantity] = useState(1);
   const [paymentState, setPaymentState] = useState<PaymentState>("IDLE");
   const [isFavorite, setIsFavorite] = useState(false);
+
+  const [couponInput, setCouponInput] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<{code: string, discountAmount: number} | null>(null);
+  const [couponError, setCouponError] = useState("");
+  const [couponSuccess, setCouponSuccess] = useState("");
+  const [validatingCoupon, setValidatingCoupon] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [showCouponInput, setShowCouponInput] = useState(false);
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -304,6 +326,44 @@ export default function EventDetailsPage() {
   }, [event, ticketSubtotal, isFreeEvent]);
 
   const totalAmount = useMemo(() => ticketSubtotal + taxAmount + platformFeeAmount, [ticketSubtotal, taxAmount, platformFeeAmount]);
+  const finalTotalAmount = Math.max(0, totalAmount - (appliedCoupon?.discountAmount || 0));
+
+  const validateCoupon = async () => {
+    if (!couponInput) return;
+    if (!isAuthenticated) {
+      router.push(`/login?redirect=/events/${eventId}`);
+      return;
+    }
+    setValidatingCoupon(true);
+    setCouponError("");
+    setCouponSuccess("");
+    try {
+      const res = await fetchApi("/coupons/validate", {
+        method: "POST",
+        requiresAuth: true,
+        body: JSON.stringify({
+          code: couponInput,
+          orderAmount: totalAmount,
+          applicableTo: "EVENTS"
+        })
+      });
+      setAppliedCoupon({ code: res.data.code, discountAmount: res.data.discountAmount });
+      setCouponSuccess(`Promo code applied! You saved ₹${res.data.discountAmount}`);
+      setShowCouponInput(false);
+    } catch (err: any) {
+      setCouponError(err.message || "Invalid promo code");
+      setAppliedCoupon(null);
+    } finally {
+      setValidatingCoupon(false);
+    }
+  };
+
+  const removeCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponInput("");
+    setCouponSuccess("");
+    setCouponError("");
+  };
 
   const formattedDate = useMemo(() => {
     if (!event) return "";
@@ -322,7 +382,7 @@ export default function EventDetailsPage() {
 
     setPaymentState("PROCESSING");
 
-    if (isFreeEvent || totalAmount <= 0) {
+    if (isFreeEvent || finalTotalAmount <= 0) {
       try {
         await fetchApi("/payments/confirm-booking", {
           method: "POST",
@@ -331,6 +391,7 @@ export default function EventDetailsPage() {
             eventId: event.id,
             quantity,
             totalAmount: 0,
+            couponCode: appliedCoupon?.code,
             items: [],
           }),
         });
@@ -352,6 +413,7 @@ export default function EventDetailsPage() {
           eventId: event.id,
           quantity,
           currency: "INR",
+          couponCode: appliedCoupon?.code,
         }),
       });
 
@@ -382,7 +444,7 @@ export default function EventDetailsPage() {
                 razorpay_signature: response.razorpay_signature,
                 eventId: event.id,
                 quantity,
-                totalAmount,
+                couponCode: appliedCoupon?.code,
               }),
             });
             setPaymentState("SUCCESS");
@@ -409,7 +471,7 @@ export default function EventDetailsPage() {
       setPaymentState("IDLE");
       alert("Could not initiate payment. Please try again.");
     }
-  }, [event, isAuthenticated, quantity, totalAmount, router, user]);
+  }, [event, isAuthenticated, quantity, finalTotalAmount, router, user, appliedCoupon]);
 
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -589,9 +651,11 @@ export default function EventDetailsPage() {
         {/* The Vibe */}
         <section className="mb-10">
            <h2 className="text-[18px] font-bold text-gray-900 mb-3 tracking-tight">The Vibe</h2>
-           <p className="text-gray-600 leading-relaxed text-[15px]">
+           <p className="text-gray-600 leading-relaxed text-[15px] font-medium whitespace-pre-line">
              {event.description}
            </p>
+           
+
            <div className="mt-5 flex flex-wrap gap-2">
               {event.vibeTags?.map(tag => (
                 <span key={tag} className="px-3 py-1.5 bg-gray-50 text-gray-700 rounded-lg text-[12px] font-medium border border-gray-100">
@@ -601,120 +665,22 @@ export default function EventDetailsPage() {
            </div>
         </section>
 
-        {/* Terms and conditions */}
+        {/* More Section */}
         <section className="mb-12">
-           <h2 className="text-[18px] font-bold text-gray-900 mb-4 tracking-tight">Terms & Conditions</h2>
-           <div className="bg-gray-50/80 rounded-3xl p-6 border border-gray-100">
-              <div className="space-y-6 text-[14px]">
-                 
-                 {/* Item */}
-                 <div>
-                    <h3 className="font-bold text-gray-900 mb-2.5 flex items-center gap-2">
-                       <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0"></span>
-                       Ticket Purchase & Refunds
-                    </h3>
-                    <ul className="pl-4 space-y-1.5 text-gray-600 font-medium">
-                       <li className="relative before:content-[''] before:absolute before:-left-4 before:top-2 before:w-1.5 before:h-1.5 before:bg-gray-300 before:rounded-full">All sales are final. No refunds/exchanges.</li>
-                       <li className="relative before:content-[''] before:absolute before:-left-4 before:top-2 before:w-1.5 before:h-1.5 before:bg-gray-300 before:rounded-full">Tickets valid only for the specified date/time.</li>
-                       <li className="relative before:content-[''] before:absolute before:-left-4 before:top-2 before:w-1.5 before:h-1.5 before:bg-gray-300 before:rounded-full">Carry valid ID proof for entry.</li>
-                    </ul>
-                 </div>
-
-                 {/* Item */}
-                 <div>
-                    <h3 className="font-bold text-gray-900 mb-2.5 flex items-center gap-2">
-                       <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0"></span>
-                       Walk-In Policy
-                    </h3>
-                    <p className="text-gray-600 font-medium pl-3.5">(Subject to Availability)</p>
-                 </div>
-
-                 {/* Item */}
-                 <div>
-                    <h3 className="font-bold text-gray-900 mb-2.5 flex items-center gap-2">
-                       <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0"></span>
-                       Event Access & Re-entry
-                    </h3>
-                    <p className="text-gray-600 font-medium pl-3.5">No re-entry once you exit. Keep belongings with you.</p>
-                 </div>
-
-                 {/* Item */}
-                 <div>
-                    <h3 className="font-bold text-gray-900 mb-2.5 flex items-center gap-2">
-                       <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0"></span>
-                       Event Modifications
-                    </h3>
-                    <p className="text-gray-600 font-medium pl-3.5">Event timing, menu, or activities may change. Major updates will be communicated.</p>
-                 </div>
-
-                 {/* Item */}
-                 <div>
-                    <h3 className="font-bold text-gray-900 mb-2.5 flex items-center gap-2">
-                       <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0"></span>
-                       Health & Safety
-                    </h3>
-                    <ul className="pl-4 space-y-1.5 text-gray-600 font-medium">
-                       <li className="relative before:content-[''] before:absolute before:-left-4 before:top-2 before:w-1.5 before:h-1.5 before:bg-gray-300 before:rounded-full">Follow all safety & COVID-19 protocols.</li>
-                       <li className="relative before:content-[''] before:absolute before:-left-4 before:top-2 before:w-1.5 before:h-1.5 before:bg-gray-300 before:rounded-full">No hazardous items (weapons, knives, fireworks, drugs, etc.) allowed. Confiscated if found.</li>
-                       <li className="relative before:content-[''] before:absolute before:-left-4 before:top-2 before:w-1.5 before:h-1.5 before:bg-gray-300 before:rounded-full">Organizers not liable for injuries, accidents, or item loss.</li>
-                    </ul>
-                 </div>
-
-                 {/* Item */}
-                 <div>
-                    <h3 className="font-bold text-gray-900 mb-2.5 flex items-center gap-2">
-                       <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0"></span>
-                       Photography & Media
-                    </h3>
-                    <ul className="pl-4 space-y-1.5 text-gray-600 font-medium">
-                       <li className="relative before:content-[''] before:absolute before:-left-4 before:top-2 before:w-1.5 before:h-1.5 before:bg-gray-300 before:rounded-full">Entry implies consent to photos/videos for promo.</li>
-                       <li className="relative before:content-[''] before:absolute before:-left-4 before:top-2 before:w-1.5 before:h-1.5 before:bg-gray-300 before:rounded-full">Don't wish to appear? Inform staff onsite.</li>
-                    </ul>
-                 </div>
-
-                 {/* Item */}
-                 <div>
-                    <h3 className="font-bold text-gray-900 mb-2.5 flex items-center gap-2">
-                       <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0"></span>
-                       Food Policy
-                    </h3>
-                    <p className="text-gray-600 font-medium pl-3.5">No outside food/beverage allowed.</p>
-                 </div>
-
-                 {/* Item */}
-                 <div>
-                    <h3 className="font-bold text-gray-900 mb-2.5 flex items-center gap-2">
-                       <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0"></span>
-                       Venue Liability
-                    </h3>
-                    <p className="text-gray-600 font-medium pl-3.5">Organizers not liable for personal loss/damage.</p>
-                 </div>
-
-                 {/* Item */}
-                 <div>
-                    <h3 className="font-bold text-gray-900 mb-2.5 flex items-center gap-2">
-                       <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0"></span>
-                       Contact
-                    </h3>
-                    <ul className="pl-4 space-y-1.5 text-gray-600 font-medium">
-                       <li className="relative before:content-[''] before:absolute before:-left-4 before:top-2 before:w-1.5 before:h-1.5 before:bg-gray-300 before:rounded-full">WhatsApp: +91 8955578847</li>
-                       <li className="relative before:content-[''] before:absolute before:-left-4 before:top-2 before:w-1.5 before:h-1.5 before:bg-gray-300 before:rounded-full">Email: cs@indulgeout.com</li>
-                       <li className="relative before:content-[''] before:absolute before:-left-4 before:top-2 before:w-1.5 before:h-1.5 before:bg-gray-300 before:rounded-full"><a href="https://www.instagram.com/indulgeout/" target="_blank" rel="noopener noreferrer" className="text-orange-500 hover:underline">Instagram: https://www.instagram.com/indulgeout/</a></li>
-                    </ul>
-                 </div>
-
-                 {/* Item */}
-                 <div>
-                    <h3 className="font-bold text-gray-900 mb-2.5 flex items-center gap-2">
-                       <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0"></span>
-                       Agreement
-                    </h3>
-                    <p className="text-gray-600 font-medium pl-3.5">By purchasing a ticket, you agree to all the above terms.</p>
-                 </div>
-
-              </div>
-           </div>
-        </section>
+            <h2 className="text-[22px] font-bold text-gray-900 mb-6 tracking-tight">More</h2>
+            <button 
+              onClick={() => setShowTermsModal(true)}
+              className="w-full bg-white border border-gray-100 rounded-[20px] p-5 flex items-center justify-between group active:scale-[0.98] transition-all hover:border-gray-200 shadow-sm"
+            >
+               <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:text-gray-600 transition-colors">
+                     <FileText size={20} />
+                  </div>
+                  <span className="text-[16px] font-bold text-gray-800 tracking-tight">Terms and Conditions</span>
+               </div>
+               <ChevronRight size={18} className="text-gray-300 group-hover:text-gray-500 transition-all" />
+            </button>
+         </section>
 
         {/* Gallery Section */}
         {imageList && imageList.length > 0 && (
@@ -843,23 +809,83 @@ export default function EventDetailsPage() {
                           <span>₹{taxAmount}</span>
                         </div>
                       )}
+                      
                       {platformFeeAmount > 0 && (
-                        <div className="flex justify-between text-[14px] font-medium text-gray-500">
-                          <span>Platform Fee</span>
-                          <span>₹{platformFeeAmount}</span>
+                        <div className="flex justify-between text-[14px] font-medium text-gray-500 pb-4 border-b border-gray-100">
+                           <span>Platform Fee</span>
+                           <span>₹{platformFeeAmount}</span>
                         </div>
                       )}
-                        <div className="flex justify-between text-[18px] font-bold pt-4 border-t border-gray-100 text-gray-900">
-                           <span>Total</span>
-                           <span>₹{totalAmount}</span>
+
+                      {/* Coupon Section */}
+                      <div className="pt-2">
+                        {appliedCoupon ? (
+                          <div className="flex items-center justify-between p-3 bg-emerald-50 border border-emerald-100 rounded-xl">
+                            <div className="flex items-center gap-2">
+                              <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
+                                <Ticket size={16} />
+                              </div>
+                              <div className="flex flex-col">
+                                <span className="text-[12px] font-black uppercase tracking-wider text-emerald-700">{appliedCoupon.code}</span>
+                                <span className="text-[11px] font-bold text-emerald-600/70">Discount applied</span>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <span className="font-bold text-emerald-600">-₹{appliedCoupon.discountAmount}</span>
+                              <button onClick={removeCoupon} className="text-slate-400 hover:text-red-500 transition-colors p-1" title="Remove">
+                                <AlertCircle size={16} className="rotate-45" />
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <>
+                            {!showCouponInput ? (
+                              <button 
+                                onClick={() => setShowCouponInput(true)}
+                                className="w-full flex items-center justify-between p-3.5 bg-gray-50 hover:bg-orange-50/50 border border-gray-100 hover:border-orange-100 rounded-xl transition-all group"
+                              >
+                                <div className="flex items-center gap-2.5 text-gray-600 group-hover:text-orange-600 font-bold text-[14px]">
+                                  <Ticket size={18} />
+                                  <span>Have a promo code?</span>
+                                </div>
+                                <ChevronRight size={16} className="text-gray-400 group-hover:text-orange-500" />
+                              </button>
+                            ) : (
+                              <div className="flex flex-col gap-2">
+                                <div className="flex items-center gap-2">
+                                  <input 
+                                    type="text" 
+                                    value={couponInput}
+                                    onChange={e => setCouponInput(e.target.value.toUpperCase())}
+                                    placeholder="Enter code"
+                                    className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 uppercase transition-all"
+                                  />
+                                  <button 
+                                    onClick={validateCoupon}
+                                    disabled={!couponInput || validatingCoupon}
+                                    className="bg-gray-900 hover:bg-black disabled:opacity-50 text-white px-5 py-3 rounded-xl font-bold transition-all whitespace-nowrap min-w-[80px]"
+                                  >
+                                    {validatingCoupon ? <Loader2 size={20} className="animate-spin mx-auto" /> : "Apply"}
+                                  </button>
+                                </div>
+                                {couponError && <p className="text-[12px] font-bold text-red-500 ml-1 flex items-center gap-1"><AlertCircle size={12}/> {couponError}</p>}
+                              </div>
+                            )}
+                          </>
+                        )}
+                      </div>
+
+                        <div className="flex justify-between items-end pt-4 mt-2 border-t border-gray-100">
+                           <span className="text-[14px] font-bold text-gray-500 mb-1">Total to pay</span>
+                           <span className="text-[24px] font-black tracking-tight text-gray-900">₹{finalTotalAmount}</span>
                         </div>
                      </div>
 
                      <button 
                        onClick={handleCheckout}
-                       className="w-full bg-orange-600 text-white py-4 rounded-full font-bold text-[16px] flex items-center justify-center gap-2 active:scale-95 transition-transform mt-6 shadow-md shadow-orange-600/30"
+                       className="w-full bg-orange-600 text-white py-4 rounded-xl font-bold text-[16px] flex items-center justify-center gap-2 active:scale-95 transition-transform mt-6 shadow-md shadow-orange-600/30"
                      >
-                      {isFreeEvent || totalAmount <= 0 ? "Book Free" : `Pay ₹${totalAmount}`}
+                      {isFreeEvent || finalTotalAmount <= 0 ? "Book Free" : `Pay ₹${finalTotalAmount}`}
                      </button>
                   </div>
                 ) : (
@@ -917,8 +943,60 @@ export default function EventDetailsPage() {
              </motion.div>
           </motion.div>
         )}
+        {/* ═══ TERMS MODAL ═══ */}
+         {showTermsModal && (
+           <motion.div 
+             initial={{ opacity: 0 }}
+             animate={{ opacity: 1 }}
+             exit={{ opacity: 0 }}
+             className="fixed inset-0 z-[300] bg-black/40 backdrop-blur-sm flex items-end justify-center p-0 md:p-6"
+           >
+              <div className="absolute inset-0" onClick={() => setShowTermsModal(false)} />
+ 
+              <motion.div 
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                exit={{ y: "100%" }}
+                transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                className="w-full max-w-lg bg-white rounded-t-[32px] md:rounded-[32px] overflow-hidden shadow-2xl relative z-10 flex flex-col max-h-[85vh]"
+              >
+                 <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mt-4 mb-2 shrink-0 md:hidden" />
+                 
+                 <div className="px-6 py-6 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white z-10">
+                    <h2 className="text-xl font-bold text-gray-900 tracking-tight">Terms & Conditions</h2>
+                    <button 
+                      onClick={() => setShowTermsModal(false)}
+                      className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors"
+                    >
+                       <X size={18} />
+                    </button>
+                 </div>
+ 
+                 <div className="flex-1 overflow-y-auto px-6 py-8">
+                    {event.terms ? (
+                      <div className="space-y-6">
+                        <div className="p-6 bg-orange-50/50 rounded-2xl border border-orange-100/50">
+                          <h3 className="font-extrabold text-orange-900 mb-3 flex items-center gap-2 uppercase tracking-wide text-[12px]">
+                            <Shield size={16} className="text-orange-500" /> Event Specific Policy
+                          </h3>
+                          <p className="text-gray-700 leading-relaxed font-semibold whitespace-pre-line text-[14px]">
+                            {event.terms}
+                          </p>
+                        </div>
+                        <p className="text-[12px] text-gray-400 font-bold flex items-center gap-2 uppercase tracking-wider text-center justify-center pt-4">
+                          <Info size={14} /> By booking, you agree to these event terms.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="py-12 text-center text-gray-400 font-medium">
+                        Standard platform terms apply to this event.
+                      </div>
+                    )}
+                 </div>
+              </motion.div>
+           </motion.div>
+         )}
       </AnimatePresence>
     </div>
   );
 }
-

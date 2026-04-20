@@ -24,10 +24,8 @@ import {
   Shield,
   Star,
   Flame,
-  ArrowRight,
   ChevronRight,
-  IndianRupee,
-  Eye,
+  ArrowRight,
 } from "lucide-react";
 import { fetchApi } from "@/lib/api";
 
@@ -36,46 +34,36 @@ type BookingTab = "all" | "events" | "courts";
 /* ─── Status config ──────────────────────────────────────── */
 const STATUS_CONFIG: Record<
   string,
-  { bg: string; text: string; border: string; dot: string; icon: React.ReactNode; label: string }
+  { bg: string; text: string; border: string; label: string }
 > = {
   CONFIRMED: {
-    bg: "bg-emerald-500/10",
-    text: "text-emerald-400",
-    border: "border-emerald-500/20",
-    dot: "bg-emerald-400",
-    icon: <CheckCircle2 size={12} />,
+    bg: "bg-emerald-50",
+    text: "text-emerald-700",
+    border: "border-emerald-200",
     label: "Confirmed",
   },
   PENDING: {
-    bg: "bg-amber-500/10",
-    text: "text-amber-400",
-    border: "border-amber-500/20",
-    dot: "bg-amber-400",
-    icon: <Loader2 size={12} className="animate-spin" />,
+    bg: "bg-amber-50",
+    text: "text-amber-700",
+    border: "border-amber-200",
     label: "Pending",
   },
   CANCELLED: {
-    bg: "bg-red-500/10",
-    text: "text-red-400",
-    border: "border-red-500/20",
-    dot: "bg-red-400",
-    icon: <XCircle size={12} />,
+    bg: "bg-red-50",
+    text: "text-red-700",
+    border: "border-red-200",
     label: "Cancelled",
   },
   USED: {
-    bg: "bg-slate-500/10",
-    text: "text-slate-400",
-    border: "border-slate-500/20",
-    dot: "bg-slate-400",
-    icon: <CheckCircle2 size={12} />,
+    bg: "bg-gray-100",
+    text: "text-gray-700",
+    border: "border-gray-200",
     label: "Used",
   },
   SUCCESS: {
-    bg: "bg-emerald-500/10",
-    text: "text-emerald-400",
-    border: "border-emerald-500/20",
-    dot: "bg-emerald-400",
-    icon: <CheckCircle2 size={12} />,
+    bg: "bg-emerald-50",
+    text: "text-emerald-700",
+    border: "border-emerald-200",
     label: "Success",
   },
 };
@@ -84,7 +72,7 @@ function getStatusStyle(status: string) {
   return STATUS_CONFIG[status?.toUpperCase()] || STATUS_CONFIG.CONFIRMED;
 }
 
-/* ─── QR Ticket Modal ────────────────────────────────────── */
+/* ─── QR Ticket Modal (Kept Mostly Original for Contrast) ── */
 function QrTicketModal({
   booking,
   onClose,
@@ -127,7 +115,7 @@ function QrTicketModal({
       <div className="absolute inset-0 bg-black/80 backdrop-blur-xl" onClick={onClose} />
 
       <div className="relative w-full max-w-[370px] animate-in zoom-in-95 fade-in duration-300">
-        <div className="bg-white rounded-[24px] shadow-2xl shadow-black/30 overflow-hidden">
+        <div className="bg-white rounded-[32px] shadow-2xl shadow-black/30 overflow-hidden">
           
           {/* Header with poster */}
           <div className="relative bg-[#0a0a0a] px-6 pt-5 pb-6 text-white overflow-hidden min-h-[160px] flex flex-col justify-end">
@@ -144,9 +132,25 @@ function QrTicketModal({
             </button>
 
             <div className="relative z-10">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-7 h-7 bg-gradient-to-br from-rose-500 to-rose-600 rounded-lg flex items-center justify-center">
-                  <Flame size={14} className="text-white" />
+              <div className="flex items-center gap-3 mb-3">
+                <div className="relative flex items-center justify-center w-[40px] h-[28px] shrink-0 drop-shadow-md">
+                  <svg 
+                    className="absolute inset-0 w-full h-full z-0 overflow-visible" 
+                    viewBox="0 0 200 140" 
+                    fill="none" 
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <defs>
+                       <linearGradient id="ticketG" x1="0%" y1="0%" x2="100%" y2="100%">
+                         <stop offset="0%" stopColor="#f97316" />
+                         <stop offset="100%" stopColor="#ea580c" />
+                       </linearGradient>
+                    </defs>
+                    <path d="M 14 4 L 186 4 Q 196 4 196 14 L 196 50 A 20 20 0 0 0 196 90 L 196 126 Q 196 136 186 136 L 14 136 Q 4 136 4 126 L 4 90 A 20 20 0 0 0 4 50 L 4 14 Q 4 4 14 4 Z" 
+                          fill="url(#ticketG)" />
+                    <line x1="100" y1="6" x2="100" y2="134" stroke="white" strokeWidth="8" strokeDasharray="16 12" opacity="0.4" strokeLinecap="round" />
+                  </svg>
+                  <img src="/bv-white.png" alt="BV Logo" className="relative z-10 w-[55%] h-auto object-contain" />
                 </div>
                 <div>
                   <p className="text-[11px] font-extrabold tracking-tight leading-none text-white">BOOK & VIBE</p>
@@ -158,8 +162,8 @@ function QrTicketModal({
               
               <div className="flex flex-wrap items-center gap-1.5 mt-3">
                 {dateStr && (
-                  <span className="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full text-[11px] font-bold text-white/90 border border-white/10">
-                    <Calendar size={11} className="text-rose-400" />
+                  <span className="flex items-center gap-1.5 bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-[12px] text-[11px] font-bold text-white/90 border border-white/10">
+                    <Calendar size={11} className="text-orange-400" />
                     {new Date(dateStr).toLocaleDateString("en-IN", { weekday: "short", day: "2-digit", month: "short" })}
                   </span>
                 )}
@@ -167,7 +171,7 @@ function QrTicketModal({
                   href={directionsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 bg-rose-500/20 hover:bg-rose-500/30 backdrop-blur-sm px-3 py-1.5 rounded-full text-[11px] font-bold text-rose-300 border border-rose-500/20 transition-all"
+                  className="flex items-center gap-1.5 bg-orange-500/20 hover:bg-orange-500/30 backdrop-blur-sm px-3 py-1.5 rounded-[12px] text-[11px] font-bold text-orange-300 border border-orange-500/20 transition-all"
                 >
                   <Navigation size={11} />
                   Directions
@@ -175,7 +179,7 @@ function QrTicketModal({
               </div>
               {(venue || location) && (
                 <p className="flex items-center gap-1.5 text-white/60 text-[11px] font-medium mt-2">
-                  <MapPin size={11} className="text-rose-400/70" />
+                  <MapPin size={11} className="text-orange-400/70" />
                   {[venue, location].filter(Boolean).join(", ")}
                 </p>
               )}
@@ -184,20 +188,20 @@ function QrTicketModal({
 
           {/* Perforated Divider */}
           <div className="relative h-6 flex items-center">
-            <div className="absolute -left-4 w-8 h-8 bg-[#f5f5f5] rounded-full" style={{ top: '-16px' }} />
-            <div className="absolute -right-4 w-8 h-8 bg-[#f5f5f5] rounded-full" style={{ top: '-16px' }} />
+            <div className="absolute -left-4 w-8 h-8 bg-black/80 rounded-full" style={{ top: '-16px' }} />
+            <div className="absolute -right-4 w-8 h-8 bg-black/80 rounded-full" style={{ top: '-16px' }} />
             <div className="w-full border-t-2 border-dashed border-gray-200 mx-8" />
           </div>
 
           {/* QR Code */}
           <div className="px-6 pb-3 flex flex-col items-center">
             <div className="relative p-1.5">
-              <div className="absolute top-0 left-0 w-5 h-5 border-t-[2.5px] border-l-[2.5px] border-rose-500 rounded-tl-md" />
-              <div className="absolute top-0 right-0 w-5 h-5 border-t-[2.5px] border-r-[2.5px] border-rose-500 rounded-tr-md" />
-              <div className="absolute bottom-0 left-0 w-5 h-5 border-b-[2.5px] border-l-[2.5px] border-rose-500 rounded-bl-md" />
-              <div className="absolute bottom-0 right-0 w-5 h-5 border-b-[2.5px] border-r-[2.5px] border-rose-500 rounded-br-md" />
+              <div className="absolute top-0 left-0 w-5 h-5 border-t-[2.5px] border-l-[2.5px] border-orange-500 rounded-tl-md" />
+              <div className="absolute top-0 right-0 w-5 h-5 border-t-[2.5px] border-r-[2.5px] border-orange-500 rounded-tr-md" />
+              <div className="absolute bottom-0 left-0 w-5 h-5 border-b-[2.5px] border-l-[2.5px] border-orange-500 rounded-bl-md" />
+              <div className="absolute bottom-0 right-0 w-5 h-5 border-b-[2.5px] border-r-[2.5px] border-orange-500 rounded-br-md" />
               <div className="p-3">
-                <img src={qrDataUrl} alt="QR Code" className="w-40 h-40 rounded-lg" />
+                <img src={qrDataUrl} alt="QR Code" className="w-40 h-40 rounded-xl" />
               </div>
             </div>
             <p className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.25em] mt-1.5">Scan at venue</p>
@@ -205,28 +209,28 @@ function QrTicketModal({
 
           {/* Booking Code */}
           <div className="mx-6 mb-3">
-            <div className="bg-gray-50 rounded-xl p-3 flex items-center justify-between">
+            <div className="bg-gray-50 rounded-[16px] p-3 flex items-center justify-between border border-gray-100">
               <div>
                 <p className="text-[8px] font-bold uppercase tracking-[0.15em] text-gray-400">Booking Code</p>
                 <p className="text-[14px] font-black text-gray-900 tracking-wider font-mono mt-0.5">{qrCode}</p>
               </div>
-              <button onClick={handleCopy} className="p-2 rounded-lg bg-white border border-gray-200 hover:border-rose-300 hover:bg-rose-50 transition-all text-gray-400 hover:text-rose-500">
+              <button onClick={handleCopy} className="p-2 rounded-xl bg-white border border-gray-200 hover:border-orange-300 hover:bg-orange-50 transition-all text-gray-400 hover:text-orange-500">
                 {copied ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
               </button>
             </div>
           </div>
 
           {/* Details Grid */}
-          <div className="mx-6 mb-4 grid grid-cols-3 gap-1.5">
-            <div className="bg-gray-50 rounded-xl px-3 py-2.5 text-center">
+          <div className="mx-6 mb-4 grid grid-cols-3 gap-2">
+            <div className="bg-gray-50 rounded-[16px] px-3 py-2.5 text-center border border-gray-100">
               <p className="text-[8px] font-bold uppercase tracking-wider text-gray-400">{isEvent ? "Tickets" : "Slot"}</p>
               <p className="font-black text-gray-900 text-[15px] mt-0.5">{isEvent ? `${booking.quantity || 1}` : "1"}</p>
             </div>
-            <div className="bg-gray-50 rounded-xl px-3 py-2.5 text-center">
+            <div className="bg-gray-50 rounded-[16px] px-3 py-2.5 text-center border border-gray-100">
               <p className="text-[8px] font-bold uppercase tracking-wider text-gray-400">Amount</p>
               <p className="font-black text-gray-900 text-[15px] mt-0.5">₹{(booking.totalAmount || 0).toLocaleString("en-IN")}</p>
             </div>
-            <div className="bg-gray-50 rounded-xl px-3 py-2.5 text-center">
+            <div className="bg-gray-50 rounded-[16px] px-3 py-2.5 text-center border border-gray-100">
               <p className="text-[8px] font-bold uppercase tracking-wider text-gray-400">Status</p>
               <p className={`font-black text-[12px] mt-0.5 ${statusStyle.text}`}>{statusStyle.label}</p>
             </div>
@@ -238,11 +242,11 @@ function QrTicketModal({
               const seats = JSON.parse(booking.seatNumbers);
               if (Array.isArray(seats) && seats.length > 0) {
                 return (
-                  <div className="mx-6 mb-4 bg-gray-50 rounded-xl px-4 py-3">
-                    <p className="text-[8px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">Assigned Seats</p>
+                  <div className="mx-6 mb-4 bg-gray-50 border border-gray-100 rounded-[16px] px-4 py-3">
+                    <p className="text-[8px] font-bold uppercase tracking-wider text-gray-400 mb-2">Assigned Seats</p>
                     <div className="flex flex-wrap gap-1.5">
                       {seats.map((s: string) => (
-                        <span key={s} className="bg-white border border-gray-200 text-gray-900 font-bold text-xs px-2.5 py-1 rounded-lg">{s}</span>
+                        <span key={s} className="bg-white border border-gray-200 text-gray-900 font-bold text-xs px-2.5 py-1 rounded-[10px] shadow-sm">{s}</span>
                       ))}
                     </div>
                   </div>
@@ -253,15 +257,15 @@ function QrTicketModal({
           })()}
 
           {/* Footer */}
-          <div className="bg-gray-50 border-t border-gray-100 px-6 py-3 flex items-center justify-between">
+          <div className="bg-gray-50 border-t border-gray-100 px-6 py-4 flex items-center justify-between rounded-b-[32px]">
             <div className="flex items-center gap-2">
-              <Shield size={13} className="text-gray-300" />
-              <span className="text-[10px] font-bold text-gray-400">Secured by Book & Vibe</span>
+              <Shield size={13} className="text-gray-400" />
+              <span className="text-[10px] font-bold text-gray-500">Secured by Book & Vibe</span>
             </div>
             <div className="flex items-center gap-0.5">
-              <Star size={9} className="text-rose-400 fill-rose-400" />
-              <Star size={9} className="text-rose-400 fill-rose-400" />
-              <Star size={9} className="text-rose-400 fill-rose-400" />
+              <Star size={10} className="text-orange-400 fill-orange-400" />
+              <Star size={10} className="text-orange-400 fill-orange-400" />
+              <Star size={10} className="text-orange-400 fill-orange-400" />
             </div>
           </div>
         </div>
@@ -329,229 +333,210 @@ export default function BookingsPage() {
   const totalSpent = allBookings.reduce((s, b) => s + (b.totalAmount || 0), 0);
 
   const tabs: { key: BookingTab; label: string; icon: React.ReactNode; count: number }[] = [
-    { key: "all", label: "All Passes", icon: <Ticket size={15} />, count: allBookings.length },
-    { key: "events", label: "Events", icon: <Music size={15} />, count: eventBookings.length },
-    { key: "courts", label: "Courts", icon: <Gamepad2 size={15} />, count: courtBookings.length },
+    { key: "all", label: "All Passes", icon: <Ticket size={16} />, count: allBookings.length },
+    { key: "events", label: "Events", icon: <Music size={16} />, count: eventBookings.length },
+    { key: "courts", label: "Courts", icon: <Gamepad2 size={16} />, count: courtBookings.length },
   ];
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white">
+    <div className="min-h-screen bg-[#fafafa] pt-[130px] pb-16 selection:bg-orange-500/20">
       {/* QR Modal */}
       {selectedBooking && <QrTicketModal booking={selectedBooking} onClose={() => setSelectedBooking(null)} />}
 
-      {/* ─── Cinematic Hero ─── */}
-      <div className="relative overflow-hidden">
-        {/* Background imagery — abstract concert lights */}
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-rose-900/30 via-[#0a0a0a] to-[#0a0a0a]" />
-          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-rose-600/8 rounded-full blur-[150px]" />
-          <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-violet-600/5 rounded-full blur-[120px]" />
+      <div className="max-w-[1100px] mx-auto px-4 lg:px-8">
+        
+        {/* Back Button */}
+        <button onClick={() => router.push('/profile')} className="flex items-center gap-2 text-gray-500 hover:text-orange-500 font-bold text-[14px] mb-6 transition-colors group">
+          <div className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center shadow-sm group-hover:border-orange-500 transition-colors">
+            <ArrowLeft size={16} className="group-hover:-translate-x-0.5 transition-transform" />
+          </div>
+          Back to Profile
+        </button>
+
+        {/* ─── Bento Hero Header ─── */}
+        <div className="bg-white rounded-[32px] p-8 md:p-10 border border-gray-100 shadow-[0_4px_30px_rgb(0,0,0,0.02)] mb-8 flex flex-col md:flex-row md:items-end justify-between gap-8 relative overflow-hidden">
+          {/* Subtle decoration */}
+          <div className="absolute -top-32 -right-32 w-96 h-96 bg-gradient-to-br from-orange-500/10 to-[#42B460]/10 rounded-full blur-[100px] pointer-events-none" />
+
+          <div className="relative z-10">
+            <h1 className="text-4xl md:text-[42px] font-black text-gray-900 tracking-[-0.02em] leading-tight mb-2">My Bookings</h1>
+            <p className="text-gray-500 font-medium text-[15px] max-w-sm">Your confirmed tickets, court reservations, and everything in between.</p>
+          </div>
+
+          {!loading && (
+            <div className="relative z-10 flex items-center gap-6 md:gap-8 bg-gray-50/80 backdrop-blur-md rounded-[24px] px-8 py-5 border border-gray-100 self-start md:self-auto shrink-0 shadow-sm">
+              <div className="text-center">
+                <p className="text-[26px] leading-none font-black text-gray-900">{allBookings.length}</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mt-1.5">Total</p>
+              </div>
+              <div className="w-px h-10 bg-gray-200" />
+              <div className="text-center">
+                <p className="text-[26px] leading-none font-black text-gray-900">{eventBookings.length}</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mt-1.5">Events</p>
+              </div>
+              <div className="w-px h-10 bg-gray-200" />
+              <div className="text-center">
+                <p className="text-[26px] leading-none font-black text-orange-500">₹{totalSpent.toLocaleString("en-IN")}</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mt-1.5">Spent</p>
+              </div>
+            </div>
+          )}
         </div>
 
-        <div className="relative max-w-6xl mx-auto px-6 pt-28 pb-12">
-          {/* Back nav */}
-          <Link
-            href="/profile"
-            className="inline-flex items-center gap-2 text-white/40 hover:text-white text-[13px] font-medium transition-colors mb-8 group"
-          >
-            <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-            Back to Profile
-          </Link>
+        {/* ─── Tabs + Search ─── */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 sticky top-20 z-40">
+          {/* Tabs */}
+          <div className="flex items-center gap-2 bg-white p-1.5 rounded-[20px] border border-gray-100 shadow-sm w-full md:w-auto overflow-x-auto scrollbar-hide">
+            {tabs.map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-[16px] text-[13px] font-bold transition-all duration-200 whitespace-nowrap ${
+                  activeTab === tab.key
+                    ? "bg-gray-900 text-white shadow-md"
+                    : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+                }`}
+              >
+                <div className={`${activeTab === tab.key ? "text-orange-400" : "text-gray-400"}`}>
+                  {tab.icon}
+                </div>
+                {tab.label}
+                <span className={`text-[11px] font-black px-2 py-0.5 rounded-lg ${
+                  activeTab === tab.key ? "bg-white/20 text-white" : "bg-gray-100 text-gray-500"
+                }`}>
+                  {tab.count}
+                </span>
+              </button>
+            ))}
+          </div>
 
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10">
-            {/* Title */}
-            <div>
-              <h1 className="text-5xl lg:text-6xl font-black tracking-tighter leading-[0.9]">
-                My<br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-rose-400 to-orange-400">Bookings.</span>
-              </h1>
-              <p className="text-white/30 text-[15px] font-medium mt-4 max-w-md leading-relaxed">
-                Your confirmed tickets, court reservations,<br />and everything in between.
-              </p>
-            </div>
-
-            {/* Stats row */}
-            {!loading && (
-              <div className="flex items-center gap-4 sm:gap-8 w-full lg:w-auto justify-between lg:justify-start">
-                <div className="text-center flex-1 lg:flex-none">
-                  <p className="text-2xl sm:text-3xl font-black text-white">{allBookings.length}</p>
-                  <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.1em] sm:tracking-[0.2em] text-white/25 mt-1">Bookings</p>
-                </div>
-                <div className="w-px h-8 sm:h-10 bg-white/10" />
-                <div className="text-center flex-1 lg:flex-none">
-                  <p className="text-2xl sm:text-3xl font-black text-white">{eventBookings.length}</p>
-                  <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.1em] sm:tracking-[0.2em] text-white/25 mt-1">Events</p>
-                </div>
-                <div className="w-px h-8 sm:h-10 bg-white/10" />
-                <div className="text-center flex-1 lg:flex-none">
-                  <p className="text-2xl sm:text-3xl font-black text-rose-400">₹{totalSpent.toLocaleString("en-IN")}</p>
-                  <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.1em] sm:tracking-[0.2em] text-white/25 mt-1">Spent</p>
-                </div>
-              </div>
+          {/* Search */}
+          <div className="flex items-center gap-2 bg-white border border-gray-100 shadow-sm rounded-[20px] px-5 py-3 w-full md:w-80 focus-within:border-orange-500 focus-within:ring-4 focus-within:ring-orange-500/10 transition-all">
+            <Search size={16} className="text-gray-400 shrink-0" />
+            <input
+              type="text"
+              placeholder="Search bookings..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="bg-transparent border-none outline-none text-[14px] font-bold text-gray-900 placeholder:text-gray-400 w-full"
+            />
+            {searchQuery && (
+              <button onClick={() => setSearchQuery("")} className="text-gray-400 hover:text-gray-600 shrink-0">
+                <X size={14} />
+              </button>
             )}
           </div>
         </div>
-      </div>
 
-      {/* ─── Tabs + Search ─── */}
-      <div className="sticky top-0 z-40 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/5">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 py-3">
-            {/* Tab buttons */}
-            <div className="flex items-center gap-1 w-full lg:w-auto overflow-x-auto scrollbar-hide pb-1 lg:pb-0">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.key}
-                  onClick={() => setActiveTab(tab.key)}
-                  className={`flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-[12px] sm:text-[13px] font-bold transition-all duration-200 whitespace-nowrap ${
-                    activeTab === tab.key
-                      ? "bg-white text-black shadow-lg shadow-white/10"
-                      : "text-white/40 hover:text-white/70 hover:bg-white/5"
-                  }`}
-                >
-                  {tab.icon}
-                  {tab.label}
-                  <span className={`text-[10px] sm:text-[11px] font-black px-1.5 py-0.5 rounded-md ${
-                    activeTab === tab.key ? "bg-black/10 text-black/60" : "bg-white/5 text-white/30"
-                  }`}>
-                    {tab.count}
-                  </span>
-                </button>
-              ))}
+        {/* ─── Booking Cards ─── */}
+        <div>
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-24 bg-white rounded-[32px] border border-gray-100 shadow-sm">
+              <div className="w-10 h-10 border-4 border-gray-100 border-t-orange-500 rounded-full animate-spin mb-5" />
+              <p className="text-gray-400 font-bold text-[14px] tracking-wide">Loading your passes...</p>
             </div>
-
-            {/* Search */}
-            <div className="flex items-center gap-2 bg-white/5 border border-white/5 rounded-full px-4 py-2.5 w-full lg:w-72 focus-within:border-rose-500/30 focus-within:bg-white/8 transition-all">
-              <Search size={15} className="text-white/30 shrink-0" />
-              <input
-                type="text"
-                placeholder="Search..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="bg-transparent border-none outline-none text-[13px] font-medium text-white placeholder:text-white/20 w-full"
-              />
-              {searchQuery && (
-                <button onClick={() => setSearchQuery("")} className="text-white/30 hover:text-white shrink-0">
-                  <X size={14} />
-                </button>
+          ) : filtered.length === 0 ? (
+            <div className="text-center py-20 bg-white rounded-[32px] border border-gray-100 shadow-sm">
+              <div className="w-20 h-20 mx-auto rounded-[24px] bg-gray-50 border border-gray-100 flex items-center justify-center mb-6">
+                <Ticket size={32} className="text-gray-400" />
+              </div>
+              <h3 className="text-[22px] font-black text-gray-900 tracking-tight mb-2">
+                {searchQuery ? "No matches found" : "No bookings yet"}
+              </h3>
+              <p className="text-gray-500 text-[14px] max-w-xs mx-auto font-medium">
+                {searchQuery ? "Try adjusting your search terms" : "Discover top events and book your first experience"}
+              </p>
+              {!searchQuery && (
+                <Link
+                  href="/events"
+                  className="inline-flex items-center gap-2 bg-gray-900 hover:bg-orange-500 text-white px-8 py-3.5 rounded-xl font-bold text-[14px] mt-8 transition-all shadow-md shadow-gray-900/10 hover:shadow-orange-500/20 active:scale-95"
+                >
+                  Browse Events <ArrowRight size={16} />
+                </Link>
               )}
             </div>
-          </div>
-        </div>
-      </div>
+          ) : (
+            <div className="grid gap-4">
+              {filtered.map((booking: any) => {
+                const isEvent = booking._type === "event";
+                const title = isEvent ? booking.event?.title : booking.facility?.name;
+                const venue = isEvent ? booking.event?.venue : booking.facility?.venue;
+                const location = isEvent ? booking.event?.location : booking.facility?.location;
+                const dateStr = isEvent ? booking.event?.date : booking.bookingDate;
+                const timeStr = isEvent ? booking.event?.time : booking.slotLabel;
+                const status = booking.status || "CONFIRMED";
+                const statusStyle = getStatusStyle(status);
+                const amount = booking.totalAmount || 0;
+                const imageUrl = isEvent ? getEventImage(booking.event?.images) : booking.facility?.image || "";
 
-      {/* ─── Booking Cards ─── */}
-      <div className="max-w-6xl mx-auto px-6 py-8 pb-24">
-        {loading ? (
-          <div className="flex flex-col items-center justify-center py-32">
-            <div className="w-10 h-10 border-2 border-rose-500 border-t-transparent rounded-full animate-spin mb-5" />
-            <p className="text-white/20 font-bold text-sm tracking-wide">Loading your passes...</p>
-          </div>
-        ) : filtered.length === 0 ? (
-          <div className="text-center py-28">
-            <div className="w-20 h-20 mx-auto rounded-full bg-white/3 border border-white/5 flex items-center justify-center mb-6">
-              <Ticket size={32} className="text-white/10" />
-            </div>
-            <h3 className="text-2xl font-black text-white tracking-tight mb-2">
-              {searchQuery ? "No matches" : "No bookings yet"}
-            </h3>
-            <p className="text-white/25 text-sm max-w-xs mx-auto font-medium">
-              {searchQuery ? "Try a different search" : "Discover events and book your first experience"}
-            </p>
-            {!searchQuery && (
-              <Link
-                href="/events"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 text-white px-8 py-3.5 rounded-full font-bold text-sm mt-8 transition-all shadow-lg shadow-rose-600/20 active:scale-95"
-              >
-                Browse Events <ArrowRight size={16} />
-              </Link>
-            )}
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {filtered.map((booking: any) => {
-              const isEvent = booking._type === "event";
-              const title = isEvent ? booking.event?.title : booking.facility?.name;
-              const venue = isEvent ? booking.event?.venue : booking.facility?.venue;
-              const location = isEvent ? booking.event?.location : booking.facility?.location;
-              const dateStr = isEvent ? booking.event?.date : booking.bookingDate;
-              const timeStr = isEvent ? booking.event?.time : booking.slotLabel;
-              const status = booking.status || "CONFIRMED";
-              const statusStyle = getStatusStyle(status);
-              const amount = booking.totalAmount || 0;
-              const imageUrl = isEvent ? getEventImage(booking.event?.images) : booking.facility?.image || "";
+                const formattedDate = dateStr
+                  ? new Date(dateStr).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
+                  : "TBD";
 
-              const formattedDate = dateStr
-                ? new Date(dateStr).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
-                : "TBD";
-
-              return (
-                <div
-                  key={booking.id}
-                  className="group relative bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06] hover:border-white/[0.12] rounded-2xl overflow-hidden transition-all duration-300"
-                >
-                  <div className="flex flex-col md:flex-row">
+                return (
+                  <div
+                    key={booking.id}
+                    className="group bg-white rounded-[28px] p-3 border border-gray-100 shadow-sm hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:border-gray-200 transition-all duration-300 flex flex-col md:flex-row gap-5"
+                  >
                     {/* Image */}
-                    <div className="relative w-full md:w-56 h-44 md:h-auto shrink-0 overflow-hidden">
+                    <div className="relative w-full md:w-[220px] h-[180px] md:h-auto shrink-0 rounded-[24px] overflow-hidden bg-gray-50 border border-gray-100">
                       {imageUrl ? (
-                        <>
-                          <img
-                            src={imageUrl}
-                            alt={title || "Booking"}
-                            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent md:bg-gradient-to-r md:from-transparent md:via-transparent md:to-[#0a0a0a]" />
-                        </>
+                        <img
+                          src={imageUrl}
+                          alt={title || "Booking"}
+                          className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        />
                       ) : (
-                        <div className="absolute inset-0 bg-gradient-to-br from-rose-950/30 to-[#0a0a0a] flex items-center justify-center">
-                          {isEvent ? <Music size={40} className="text-white/5" /> : <Gamepad2 size={40} className="text-white/5" />}
+                        <div className="absolute inset-0 flex items-center justify-center">
+                           {isEvent ? <Music size={32} className="text-gray-300" /> : <Gamepad2 size={32} className="text-gray-300" />}
                         </div>
                       )}
+                      
+                      <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-transparent to-transparent opacity-60 md:opacity-0 group-hover:opacity-10 transition-opacity" />
 
                       {/* Type badge */}
-                      <div className={`absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider backdrop-blur-md ${
+                      <div className={`absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1.5 rounded-[12px] text-[10px] font-black uppercase tracking-wider shadow-sm backdrop-blur-md ${
                         isEvent
-                          ? "bg-rose-500/80 text-white"
-                          : "bg-emerald-500/80 text-white"
+                          ? "bg-rose-500/90 text-white"
+                          : "bg-[#42B460]/90 text-white"
                       }`}>
-                        {isEvent ? <Music size={10} /> : <Gamepad2 size={10} />}
+                        {isEvent ? <Music size={12} /> : <Gamepad2 size={12} />}
                         {isEvent ? "Event" : "Court"}
                       </div>
-
+                      
                       {/* Date overlay on mobile */}
                       <div className="absolute bottom-3 left-3 md:hidden">
-                        <p className="text-white font-black text-lg leading-none">{formattedDate}</p>
+                        <p className="text-white font-black text-[15px] leading-none drop-shadow-md">{formattedDate}</p>
                       </div>
                     </div>
 
                     {/* Content */}
-                    <div className="flex-1 p-5 md:p-6 flex flex-col justify-between min-w-0">
+                    <div className="flex-1 py-1 pr-1 md:py-3 md:pr-4 flex flex-col justify-between">
                       <div>
                         <div className="flex items-start justify-between gap-4 mb-3">
-                          <h3 className="text-lg md:text-xl font-extrabold text-white leading-tight tracking-tight line-clamp-1 group-hover:text-rose-400 transition-colors">
+                          <h3 className="text-[20px] font-black text-gray-900 tracking-tight line-clamp-1 group-hover:text-orange-500 transition-colors">
                             {title || "Untitled"}
                           </h3>
-                          <span className={`shrink-0 flex items-center gap-1.5 text-[10px] font-black px-2.5 py-1 rounded-full border ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border}`}>
-                            <span className={`w-1.5 h-1.5 rounded-full ${statusStyle.dot}`} />
-                            {statusStyle.label}
+                          <span className={`shrink-0 flex items-center gap-1.5 text-[10px] font-bold px-3 py-1.5 rounded-[10px] border ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border}`}>
+                             {statusStyle.label}
                           </span>
                         </div>
 
                         {/* Info row */}
-                        <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5">
+                        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mb-4">
                           {(venue || location) && (
-                            <span className="flex items-center gap-1.5 text-[12px] font-medium text-white/30">
-                              <MapPin size={12} className="text-rose-500/50" />
+                            <span className="flex items-center gap-1.5 text-[13px] font-bold text-gray-500">
+                              <MapPin size={14} className="text-gray-400" />
                               {[venue, location].filter(Boolean).join(", ")}
                             </span>
                           )}
-                          <span className="hidden md:flex items-center gap-1.5 text-[12px] font-medium text-white/30">
-                            <Calendar size={12} className="text-rose-500/50" />
+                          <span className="hidden md:flex items-center gap-1.5 text-[13px] font-bold text-gray-500">
+                            <Calendar size={14} className="text-gray-400" />
                             {formattedDate}
                           </span>
                           {timeStr && (
-                            <span className="flex items-center gap-1.5 text-[12px] font-medium text-white/30">
-                              <Clock size={12} className="text-rose-500/50" />
+                            <span className="flex items-center gap-1.5 text-[13px] font-bold text-gray-500">
+                              <Clock size={14} className="text-gray-400" />
                               {timeStr}
                             </span>
                           )}
@@ -559,10 +544,10 @@ export default function BookingsPage() {
 
                         {/* Tier breakdown */}
                         {isEvent && booking.items && booking.items.length > 0 && (
-                          <div className="mt-3 flex flex-wrap gap-1.5">
+                          <div className="flex flex-wrap gap-2 mb-2">
                             {booking.items.map((item: any) => (
-                              <span key={item.id} className="inline-flex items-center gap-1 text-[10px] font-bold bg-rose-500/10 text-rose-400 px-2.5 py-1 rounded-full border border-rose-500/10">
-                                <Users size={10} /> {item.quantity}× {item.tier?.name || "General"}
+                              <span key={item.id} className="inline-flex items-center gap-1.5 text-[11px] font-bold bg-gray-50 text-gray-600 px-3 py-1.5 rounded-xl border border-gray-100">
+                                <Users size={12} className="text-gray-400" /> {item.quantity}× {item.tier?.name || "General"}
                               </span>
                             ))}
                           </div>
@@ -570,18 +555,18 @@ export default function BookingsPage() {
                       </div>
 
                       {/* Footer */}
-                      <div className="flex items-center justify-between mt-5 pt-4 border-t border-white/5">
-                        <div className="flex items-center gap-6">
+                      <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
+                        <div className="flex items-center gap-6 md:gap-8">
                           <div>
-                            <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/20">Amount</p>
-                            <p className="font-black text-white text-lg mt-0.5">₹{amount.toLocaleString("en-IN")}</p>
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Total Paid</p>
+                            <p className="font-black text-gray-900 text-[18px] mt-0.5">₹{amount.toLocaleString("en-IN")}</p>
                           </div>
                           {isEvent && (
                             <>
-                              <div className="h-8 w-px bg-white/5" />
+                              <div className="h-8 w-px bg-gray-200" />
                               <div>
-                                <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/20">Qty</p>
-                                <p className="font-black text-white text-lg mt-0.5">{booking.quantity || 1}</p>
+                                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Tickets</p>
+                                <p className="font-black text-gray-900 text-[18px] mt-0.5">{booking.quantity || 1}</p>
                               </div>
                             </>
                           )}
@@ -589,20 +574,20 @@ export default function BookingsPage() {
 
                         <button
                           onClick={() => setSelectedBooking(booking)}
-                          className="flex items-center gap-2 bg-white hover:bg-rose-500 text-black hover:text-white px-5 py-2.5 rounded-full text-[12px] font-bold transition-all duration-200 active:scale-95 group/btn"
+                          className="flex items-center gap-2 bg-gray-900 hover:bg-orange-500 text-white px-5 py-2.5 rounded-xl text-[13px] font-bold transition-all shadow-md shadow-gray-900/10 hover:shadow-orange-500/25 active:scale-95 group/btn"
                         >
-                          <QrCode size={14} />
+                          <QrCode size={16} />
                           View Ticket
-                          <ChevronRight size={14} className="opacity-0 -ml-2 group-hover/btn:opacity-100 group-hover/btn:ml-0 transition-all" />
+                          <ChevronRight size={16} className="opacity-0 -ml-2 group-hover/btn:opacity-100 group-hover/btn:ml-0 transition-all font-bold text-white/50 group-hover/btn:text-white" />
                         </button>
                       </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

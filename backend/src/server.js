@@ -50,7 +50,7 @@ const limiter = rateLimit({
 // Strict limiter for authentication endpoints
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100, // Increased for development (was 10)
+  max: 10, // Hardened to 10 attempts
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many login attempts. Please try again after 15 minutes.' }
@@ -67,8 +67,19 @@ morgan.token('auth-status', (req, res) => {
 
 app.use(helmet());
 app.use(limiter);
+
+const allowedOrigins = process.env.ALLOWED_ORIGINS 
+  ? process.env.ALLOWED_ORIGINS.split(',') 
+  : ['http://localhost:3000', 'http://localhost:3001'];
+
 app.use(cors({
-  origin: true,
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   credentials: true
 }));
@@ -88,6 +99,7 @@ const userRoutes = require('./routes/user.routes');
 const gamehubRoutes = require('./routes/gamehub.routes');
 const partnerRoutes = require('./routes/partner.routes');
 const configRoutes = require('./routes/config.routes');
+const couponRoutes = require('./routes/coupon.routes');
 
 // ─── API Routes ───────────────────────────────────────────────────────────────
 app.use('/api/auth', authLimiter, authRoutes);
@@ -99,6 +111,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/gamehub', gamehubRoutes);
 app.use('/api/partners', partnerRoutes);
 app.use('/api/config', configRoutes);
+app.use('/api/coupons', couponRoutes);
 
 // ─── Health Check ─────────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {

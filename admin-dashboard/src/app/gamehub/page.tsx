@@ -29,6 +29,7 @@ type GameHubFacility = {
   battleModes?: Array<{ name: string; players: string; duration: string }>;
   slotTemplate?: Array<{ label: string; isBooked?: boolean }>;
   availableSports?: string[];
+  terms?: string;
   partnerId?: string | null;
   partner?: { id: string; name: string; email: string } | null;
 };
@@ -73,6 +74,7 @@ type FacilityFormState = {
   pricingRules: string;
   slotTemplate: string;
   availableSports: string;
+  terms: string;
   slotStartHour: string;
   slotEndHour: string;
   slotInterval: string;
@@ -109,6 +111,7 @@ type GameHubFacility = {
   battleModes?: Array<{ name: string; players: string; duration: string }>;
   slotTemplate?: Array<{ label: string; isBooked?: boolean }>;
   availableSports?: string[];
+  terms?: string;
   partnerId?: string | null;
   partner?: { id: string; name: string; email: string } | null;
 };
@@ -153,6 +156,7 @@ type FacilityFormState = {
   pricingRules: string;
   slotTemplate: string;
   availableSports: string;
+  terms: string;
   slotStartHour: string;
   slotEndHour: string;
   slotInterval: string;
@@ -187,6 +191,7 @@ const emptyFormState: FacilityFormState = {
   pricingRules: "",
   slotTemplate: "",
   availableSports: "",
+  terms: "",
   slotStartHour: "6",
   slotEndHour: "22",
   slotInterval: "60",
@@ -239,6 +244,7 @@ function mapFacilityToForm(facility: GameHubFacility): FacilityFormState {
     pricingRules: JSON.stringify(facility.pricingRules || [], null, 2),
     slotTemplate: JSON.stringify(facility.slotTemplate || [], null, 2),
     availableSports: listToCsv(facility.availableSports),
+    terms: facility.terms || "",
     slotStartHour: "6",
     slotEndHour: "22",
     slotInterval: "60",
@@ -430,6 +436,7 @@ export default function GameHubAdminPage() {
       battleModes: [],
       slotTemplate: Array.isArray(parsedSlotTemplate) ? parsedSlotTemplate : [],
       availableSports: csvToList(formState.availableSports),
+      terms: formState.terms.trim(),
     };
 
     try {
@@ -883,6 +890,7 @@ export default function GameHubAdminPage() {
               <input value={formState.image} onChange={(e) => handleFormChange("image", e.target.value)} placeholder="Cover Image URL" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" />
               <textarea value={formState.description} onChange={(e) => handleFormChange("description", e.target.value)} placeholder="Description" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" rows={3} />
               <input value={formState.openHours} onChange={(e) => handleFormChange("openHours", e.target.value)} placeholder="Open Hours" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
+              <textarea value={formState.terms} onChange={(e) => handleFormChange("terms", e.target.value)} placeholder="Terms & Conditions (optional)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" rows={3} />
               {editorExperience === "advanced" ? (
                 <>
                   <input value={formState.distance} onChange={(e) => handleFormChange("distance", e.target.value)} placeholder="Distance" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />

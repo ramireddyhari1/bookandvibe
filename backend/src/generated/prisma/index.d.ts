@@ -108,6 +108,11 @@ export type Payout = $Result.DefaultSelection<Prisma.$PayoutPayload>
  * 
  */
 export type WebsiteConfig = $Result.DefaultSelection<Prisma.$WebsiteConfigPayload>
+/**
+ * Model Coupon
+ * 
+ */
+export type Coupon = $Result.DefaultSelection<Prisma.$CouponPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -419,6 +424,16 @@ export class PrismaClient<
     * ```
     */
   get websiteConfig(): Prisma.WebsiteConfigDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.coupon`: Exposes CRUD operations for the **Coupon** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Coupons
+    * const coupons = await prisma.coupon.findMany()
+    * ```
+    */
+  get coupon(): Prisma.CouponDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -871,7 +886,8 @@ export namespace Prisma {
     Wallet: 'Wallet',
     WalletTransaction: 'WalletTransaction',
     Payout: 'Payout',
-    WebsiteConfig: 'WebsiteConfig'
+    WebsiteConfig: 'WebsiteConfig',
+    Coupon: 'Coupon'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -887,7 +903,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "event" | "tier" | "booking" | "show" | "showSeat" | "bookingSeat" | "bookingItem" | "payment" | "notification" | "review" | "gamehubFacility" | "gamehubReview" | "gamehubBooking" | "gamehubBlockedSlot" | "wallet" | "walletTransaction" | "payout" | "websiteConfig"
+      modelProps: "user" | "event" | "tier" | "booking" | "show" | "showSeat" | "bookingSeat" | "bookingItem" | "payment" | "notification" | "review" | "gamehubFacility" | "gamehubReview" | "gamehubBooking" | "gamehubBlockedSlot" | "wallet" | "walletTransaction" | "payout" | "websiteConfig" | "coupon"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2297,6 +2313,80 @@ export namespace Prisma {
           }
         }
       }
+      Coupon: {
+        payload: Prisma.$CouponPayload<ExtArgs>
+        fields: Prisma.CouponFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CouponFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CouponPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CouponFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CouponPayload>
+          }
+          findFirst: {
+            args: Prisma.CouponFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CouponPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CouponFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CouponPayload>
+          }
+          findMany: {
+            args: Prisma.CouponFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CouponPayload>[]
+          }
+          create: {
+            args: Prisma.CouponCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CouponPayload>
+          }
+          createMany: {
+            args: Prisma.CouponCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CouponCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CouponPayload>[]
+          }
+          delete: {
+            args: Prisma.CouponDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CouponPayload>
+          }
+          update: {
+            args: Prisma.CouponUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CouponPayload>
+          }
+          deleteMany: {
+            args: Prisma.CouponDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CouponUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CouponUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CouponPayload>[]
+          }
+          upsert: {
+            args: Prisma.CouponUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CouponPayload>
+          }
+          aggregate: {
+            args: Prisma.CouponAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCoupon>
+          }
+          groupBy: {
+            args: Prisma.CouponGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CouponGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CouponCountArgs<ExtArgs>
+            result: $Utils.Optional<CouponCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2424,6 +2514,7 @@ export namespace Prisma {
     walletTransaction?: WalletTransactionOmit
     payout?: PayoutOmit
     websiteConfig?: WebsiteConfigOmit
+    coupon?: CouponOmit
   }
 
   /* Types for Logging */
@@ -4255,6 +4346,14 @@ export namespace Prisma {
     tags: string | null
     duration: string | null
     mapLink: string | null
+    terms: string | null
+    language: string | null
+    ageLimit: string | null
+    ticketAgeLimit: string | null
+    layout: string | null
+    seating: string | null
+    kidsAllowed: boolean | null
+    petsAllowed: boolean | null
     seatLayout: string | null
     seatRows: number | null
     seatsPerRow: number | null
@@ -4294,6 +4393,14 @@ export namespace Prisma {
     tags: string | null
     duration: string | null
     mapLink: string | null
+    terms: string | null
+    language: string | null
+    ageLimit: string | null
+    ticketAgeLimit: string | null
+    layout: string | null
+    seating: string | null
+    kidsAllowed: boolean | null
+    petsAllowed: boolean | null
     seatLayout: string | null
     seatRows: number | null
     seatsPerRow: number | null
@@ -4333,6 +4440,14 @@ export namespace Prisma {
     tags: number
     duration: number
     mapLink: number
+    terms: number
+    language: number
+    ageLimit: number
+    ticketAgeLimit: number
+    layout: number
+    seating: number
+    kidsAllowed: number
+    petsAllowed: number
     seatLayout: number
     seatRows: number
     seatsPerRow: number
@@ -4394,6 +4509,14 @@ export namespace Prisma {
     tags?: true
     duration?: true
     mapLink?: true
+    terms?: true
+    language?: true
+    ageLimit?: true
+    ticketAgeLimit?: true
+    layout?: true
+    seating?: true
+    kidsAllowed?: true
+    petsAllowed?: true
     seatLayout?: true
     seatRows?: true
     seatsPerRow?: true
@@ -4433,6 +4556,14 @@ export namespace Prisma {
     tags?: true
     duration?: true
     mapLink?: true
+    terms?: true
+    language?: true
+    ageLimit?: true
+    ticketAgeLimit?: true
+    layout?: true
+    seating?: true
+    kidsAllowed?: true
+    petsAllowed?: true
     seatLayout?: true
     seatRows?: true
     seatsPerRow?: true
@@ -4472,6 +4603,14 @@ export namespace Prisma {
     tags?: true
     duration?: true
     mapLink?: true
+    terms?: true
+    language?: true
+    ageLimit?: true
+    ticketAgeLimit?: true
+    layout?: true
+    seating?: true
+    kidsAllowed?: true
+    petsAllowed?: true
     seatLayout?: true
     seatRows?: true
     seatsPerRow?: true
@@ -4598,6 +4737,14 @@ export namespace Prisma {
     tags: string
     duration: string | null
     mapLink: string | null
+    terms: string | null
+    language: string | null
+    ageLimit: string | null
+    ticketAgeLimit: string | null
+    layout: string | null
+    seating: string | null
+    kidsAllowed: boolean
+    petsAllowed: boolean
     seatLayout: string
     seatRows: number | null
     seatsPerRow: number | null
@@ -4656,6 +4803,14 @@ export namespace Prisma {
     tags?: boolean
     duration?: boolean
     mapLink?: boolean
+    terms?: boolean
+    language?: boolean
+    ageLimit?: boolean
+    ticketAgeLimit?: boolean
+    layout?: boolean
+    seating?: boolean
+    kidsAllowed?: boolean
+    petsAllowed?: boolean
     seatLayout?: boolean
     seatRows?: boolean
     seatsPerRow?: boolean
@@ -4701,6 +4856,14 @@ export namespace Prisma {
     tags?: boolean
     duration?: boolean
     mapLink?: boolean
+    terms?: boolean
+    language?: boolean
+    ageLimit?: boolean
+    ticketAgeLimit?: boolean
+    layout?: boolean
+    seating?: boolean
+    kidsAllowed?: boolean
+    petsAllowed?: boolean
     seatLayout?: boolean
     seatRows?: boolean
     seatsPerRow?: boolean
@@ -4741,6 +4904,14 @@ export namespace Prisma {
     tags?: boolean
     duration?: boolean
     mapLink?: boolean
+    terms?: boolean
+    language?: boolean
+    ageLimit?: boolean
+    ticketAgeLimit?: boolean
+    layout?: boolean
+    seating?: boolean
+    kidsAllowed?: boolean
+    petsAllowed?: boolean
     seatLayout?: boolean
     seatRows?: boolean
     seatsPerRow?: boolean
@@ -4781,6 +4952,14 @@ export namespace Prisma {
     tags?: boolean
     duration?: boolean
     mapLink?: boolean
+    terms?: boolean
+    language?: boolean
+    ageLimit?: boolean
+    ticketAgeLimit?: boolean
+    layout?: boolean
+    seating?: boolean
+    kidsAllowed?: boolean
+    petsAllowed?: boolean
     seatLayout?: boolean
     seatRows?: boolean
     seatsPerRow?: boolean
@@ -4791,7 +4970,7 @@ export namespace Prisma {
     partnerId?: boolean
   }
 
-  export type EventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "category" | "bookingFormat" | "visibility" | "accessCode" | "location" | "venue" | "date" | "time" | "bookingStartAt" | "bookingEndAt" | "price" | "currency" | "taxPercent" | "platformFeeType" | "platformFeeValue" | "totalSlots" | "availableSlots" | "images" | "status" | "isPublished" | "publishedAt" | "featured" | "tags" | "duration" | "mapLink" | "seatLayout" | "seatRows" | "seatsPerRow" | "numberedSeats" | "seatSelection" | "createdAt" | "updatedAt" | "partnerId", ExtArgs["result"]["event"]>
+  export type EventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "category" | "bookingFormat" | "visibility" | "accessCode" | "location" | "venue" | "date" | "time" | "bookingStartAt" | "bookingEndAt" | "price" | "currency" | "taxPercent" | "platformFeeType" | "platformFeeValue" | "totalSlots" | "availableSlots" | "images" | "status" | "isPublished" | "publishedAt" | "featured" | "tags" | "duration" | "mapLink" | "terms" | "language" | "ageLimit" | "ticketAgeLimit" | "layout" | "seating" | "kidsAllowed" | "petsAllowed" | "seatLayout" | "seatRows" | "seatsPerRow" | "numberedSeats" | "seatSelection" | "createdAt" | "updatedAt" | "partnerId", ExtArgs["result"]["event"]>
   export type EventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     partner?: boolean | UserDefaultArgs<ExtArgs>
     bookings?: boolean | Event$bookingsArgs<ExtArgs>
@@ -4845,6 +5024,14 @@ export namespace Prisma {
       tags: string
       duration: string | null
       mapLink: string | null
+      terms: string | null
+      language: string | null
+      ageLimit: string | null
+      ticketAgeLimit: string | null
+      layout: string | null
+      seating: string | null
+      kidsAllowed: boolean
+      petsAllowed: boolean
       seatLayout: string
       seatRows: number | null
       seatsPerRow: number | null
@@ -5309,6 +5496,14 @@ export namespace Prisma {
     readonly tags: FieldRef<"Event", 'String'>
     readonly duration: FieldRef<"Event", 'String'>
     readonly mapLink: FieldRef<"Event", 'String'>
+    readonly terms: FieldRef<"Event", 'String'>
+    readonly language: FieldRef<"Event", 'String'>
+    readonly ageLimit: FieldRef<"Event", 'String'>
+    readonly ticketAgeLimit: FieldRef<"Event", 'String'>
+    readonly layout: FieldRef<"Event", 'String'>
+    readonly seating: FieldRef<"Event", 'String'>
+    readonly kidsAllowed: FieldRef<"Event", 'Boolean'>
+    readonly petsAllowed: FieldRef<"Event", 'Boolean'>
     readonly seatLayout: FieldRef<"Event", 'String'>
     readonly seatRows: FieldRef<"Event", 'Int'>
     readonly seatsPerRow: FieldRef<"Event", 'Int'>
@@ -7021,11 +7216,13 @@ export namespace Prisma {
   export type BookingAvgAggregateOutputType = {
     quantity: number | null
     totalAmount: number | null
+    discount: number | null
   }
 
   export type BookingSumAggregateOutputType = {
     quantity: number | null
     totalAmount: number | null
+    discount: number | null
   }
 
   export type BookingMinAggregateOutputType = {
@@ -7035,6 +7232,8 @@ export namespace Prisma {
     status: string | null
     qrCode: string | null
     seatNumbers: string | null
+    couponCode: string | null
+    discount: number | null
     createdAt: Date | null
     updatedAt: Date | null
     userId: string | null
@@ -7049,6 +7248,8 @@ export namespace Prisma {
     status: string | null
     qrCode: string | null
     seatNumbers: string | null
+    couponCode: string | null
+    discount: number | null
     createdAt: Date | null
     updatedAt: Date | null
     userId: string | null
@@ -7063,6 +7264,8 @@ export namespace Prisma {
     status: number
     qrCode: number
     seatNumbers: number
+    couponCode: number
+    discount: number
     createdAt: number
     updatedAt: number
     userId: number
@@ -7075,11 +7278,13 @@ export namespace Prisma {
   export type BookingAvgAggregateInputType = {
     quantity?: true
     totalAmount?: true
+    discount?: true
   }
 
   export type BookingSumAggregateInputType = {
     quantity?: true
     totalAmount?: true
+    discount?: true
   }
 
   export type BookingMinAggregateInputType = {
@@ -7089,6 +7294,8 @@ export namespace Prisma {
     status?: true
     qrCode?: true
     seatNumbers?: true
+    couponCode?: true
+    discount?: true
     createdAt?: true
     updatedAt?: true
     userId?: true
@@ -7103,6 +7310,8 @@ export namespace Prisma {
     status?: true
     qrCode?: true
     seatNumbers?: true
+    couponCode?: true
+    discount?: true
     createdAt?: true
     updatedAt?: true
     userId?: true
@@ -7117,6 +7326,8 @@ export namespace Prisma {
     status?: true
     qrCode?: true
     seatNumbers?: true
+    couponCode?: true
+    discount?: true
     createdAt?: true
     updatedAt?: true
     userId?: true
@@ -7218,6 +7429,8 @@ export namespace Prisma {
     status: string
     qrCode: string | null
     seatNumbers: string | null
+    couponCode: string | null
+    discount: number
     createdAt: Date
     updatedAt: Date
     userId: string
@@ -7251,6 +7464,8 @@ export namespace Prisma {
     status?: boolean
     qrCode?: boolean
     seatNumbers?: boolean
+    couponCode?: boolean
+    discount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     userId?: boolean
@@ -7272,6 +7487,8 @@ export namespace Prisma {
     status?: boolean
     qrCode?: boolean
     seatNumbers?: boolean
+    couponCode?: boolean
+    discount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     userId?: boolean
@@ -7289,6 +7506,8 @@ export namespace Prisma {
     status?: boolean
     qrCode?: boolean
     seatNumbers?: boolean
+    couponCode?: boolean
+    discount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     userId?: boolean
@@ -7306,6 +7525,8 @@ export namespace Prisma {
     status?: boolean
     qrCode?: boolean
     seatNumbers?: boolean
+    couponCode?: boolean
+    discount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     userId?: boolean
@@ -7313,7 +7534,7 @@ export namespace Prisma {
     showId?: boolean
   }
 
-  export type BookingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "quantity" | "totalAmount" | "status" | "qrCode" | "seatNumbers" | "createdAt" | "updatedAt" | "userId" | "eventId" | "showId", ExtArgs["result"]["booking"]>
+  export type BookingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "quantity" | "totalAmount" | "status" | "qrCode" | "seatNumbers" | "couponCode" | "discount" | "createdAt" | "updatedAt" | "userId" | "eventId" | "showId", ExtArgs["result"]["booking"]>
   export type BookingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     event?: boolean | EventDefaultArgs<ExtArgs>
@@ -7351,6 +7572,8 @@ export namespace Prisma {
       status: string
       qrCode: string | null
       seatNumbers: string | null
+      couponCode: string | null
+      discount: number
       createdAt: Date
       updatedAt: Date
       userId: string
@@ -7791,6 +8014,8 @@ export namespace Prisma {
     readonly status: FieldRef<"Booking", 'String'>
     readonly qrCode: FieldRef<"Booking", 'String'>
     readonly seatNumbers: FieldRef<"Booking", 'String'>
+    readonly couponCode: FieldRef<"Booking", 'String'>
+    readonly discount: FieldRef<"Booking", 'Float'>
     readonly createdAt: FieldRef<"Booking", 'DateTime'>
     readonly updatedAt: FieldRef<"Booking", 'DateTime'>
     readonly userId: FieldRef<"Booking", 'String'>
@@ -16205,6 +16430,7 @@ export namespace Prisma {
     battleModes: string | null
     slotTemplate: string | null
     availableSports: string | null
+    terms: string | null
     createdAt: Date | null
     updatedAt: Date | null
     partnerId: string | null
@@ -16235,6 +16461,7 @@ export namespace Prisma {
     battleModes: string | null
     slotTemplate: string | null
     availableSports: string | null
+    terms: string | null
     createdAt: Date | null
     updatedAt: Date | null
     partnerId: string | null
@@ -16265,6 +16492,7 @@ export namespace Prisma {
     battleModes: number
     slotTemplate: number
     availableSports: number
+    terms: number
     createdAt: number
     updatedAt: number
     partnerId: number
@@ -16309,6 +16537,7 @@ export namespace Prisma {
     battleModes?: true
     slotTemplate?: true
     availableSports?: true
+    terms?: true
     createdAt?: true
     updatedAt?: true
     partnerId?: true
@@ -16339,6 +16568,7 @@ export namespace Prisma {
     battleModes?: true
     slotTemplate?: true
     availableSports?: true
+    terms?: true
     createdAt?: true
     updatedAt?: true
     partnerId?: true
@@ -16369,6 +16599,7 @@ export namespace Prisma {
     battleModes?: true
     slotTemplate?: true
     availableSports?: true
+    terms?: true
     createdAt?: true
     updatedAt?: true
     partnerId?: true
@@ -16486,6 +16717,7 @@ export namespace Prisma {
     battleModes: string
     slotTemplate: string
     availableSports: string
+    terms: string | null
     createdAt: Date
     updatedAt: Date
     partnerId: string | null
@@ -16535,6 +16767,7 @@ export namespace Prisma {
     battleModes?: boolean
     slotTemplate?: boolean
     availableSports?: boolean
+    terms?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     partnerId?: boolean
@@ -16570,6 +16803,7 @@ export namespace Prisma {
     battleModes?: boolean
     slotTemplate?: boolean
     availableSports?: boolean
+    terms?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     partnerId?: boolean
@@ -16601,6 +16835,7 @@ export namespace Prisma {
     battleModes?: boolean
     slotTemplate?: boolean
     availableSports?: boolean
+    terms?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     partnerId?: boolean
@@ -16632,12 +16867,13 @@ export namespace Prisma {
     battleModes?: boolean
     slotTemplate?: boolean
     availableSports?: boolean
+    terms?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     partnerId?: boolean
   }
 
-  export type GamehubFacilityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "type" | "location" | "venue" | "distance" | "rating" | "reviewsCount" | "pricePerHour" | "unit" | "priceRange" | "image" | "description" | "phone" | "openHours" | "status" | "pricingRules" | "amenities" | "features" | "tags" | "gallery" | "battleModes" | "slotTemplate" | "availableSports" | "createdAt" | "updatedAt" | "partnerId", ExtArgs["result"]["gamehubFacility"]>
+  export type GamehubFacilityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "type" | "location" | "venue" | "distance" | "rating" | "reviewsCount" | "pricePerHour" | "unit" | "priceRange" | "image" | "description" | "phone" | "openHours" | "status" | "pricingRules" | "amenities" | "features" | "tags" | "gallery" | "battleModes" | "slotTemplate" | "availableSports" | "terms" | "createdAt" | "updatedAt" | "partnerId", ExtArgs["result"]["gamehubFacility"]>
   export type GamehubFacilityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     partner?: boolean | GamehubFacility$partnerArgs<ExtArgs>
     reviews?: boolean | GamehubFacility$reviewsArgs<ExtArgs>
@@ -16685,6 +16921,7 @@ export namespace Prisma {
       battleModes: string
       slotTemplate: string
       availableSports: string
+      terms: string | null
       createdAt: Date
       updatedAt: Date
       partnerId: string | null
@@ -17139,6 +17376,7 @@ export namespace Prisma {
     readonly battleModes: FieldRef<"GamehubFacility", 'String'>
     readonly slotTemplate: FieldRef<"GamehubFacility", 'String'>
     readonly availableSports: FieldRef<"GamehubFacility", 'String'>
+    readonly terms: FieldRef<"GamehubFacility", 'String'>
     readonly createdAt: FieldRef<"GamehubFacility", 'DateTime'>
     readonly updatedAt: FieldRef<"GamehubFacility", 'DateTime'>
     readonly partnerId: FieldRef<"GamehubFacility", 'String'>
@@ -18806,10 +19044,12 @@ export namespace Prisma {
 
   export type GamehubBookingAvgAggregateOutputType = {
     totalAmount: number | null
+    discount: number | null
   }
 
   export type GamehubBookingSumAggregateOutputType = {
     totalAmount: number | null
+    discount: number | null
   }
 
   export type GamehubBookingMinAggregateOutputType = {
@@ -18822,6 +19062,8 @@ export namespace Prisma {
     paymentMethod: string | null
     paymentStatus: string | null
     transactionId: string | null
+    couponCode: string | null
+    discount: number | null
     createdAt: Date | null
     updatedAt: Date | null
     userId: string | null
@@ -18838,6 +19080,8 @@ export namespace Prisma {
     paymentMethod: string | null
     paymentStatus: string | null
     transactionId: string | null
+    couponCode: string | null
+    discount: number | null
     createdAt: Date | null
     updatedAt: Date | null
     userId: string | null
@@ -18854,6 +19098,8 @@ export namespace Prisma {
     paymentMethod: number
     paymentStatus: number
     transactionId: number
+    couponCode: number
+    discount: number
     createdAt: number
     updatedAt: number
     userId: number
@@ -18864,10 +19110,12 @@ export namespace Prisma {
 
   export type GamehubBookingAvgAggregateInputType = {
     totalAmount?: true
+    discount?: true
   }
 
   export type GamehubBookingSumAggregateInputType = {
     totalAmount?: true
+    discount?: true
   }
 
   export type GamehubBookingMinAggregateInputType = {
@@ -18880,6 +19128,8 @@ export namespace Prisma {
     paymentMethod?: true
     paymentStatus?: true
     transactionId?: true
+    couponCode?: true
+    discount?: true
     createdAt?: true
     updatedAt?: true
     userId?: true
@@ -18896,6 +19146,8 @@ export namespace Prisma {
     paymentMethod?: true
     paymentStatus?: true
     transactionId?: true
+    couponCode?: true
+    discount?: true
     createdAt?: true
     updatedAt?: true
     userId?: true
@@ -18912,6 +19164,8 @@ export namespace Prisma {
     paymentMethod?: true
     paymentStatus?: true
     transactionId?: true
+    couponCode?: true
+    discount?: true
     createdAt?: true
     updatedAt?: true
     userId?: true
@@ -19015,6 +19269,8 @@ export namespace Prisma {
     paymentMethod: string
     paymentStatus: string
     transactionId: string
+    couponCode: string | null
+    discount: number
     createdAt: Date
     updatedAt: Date
     userId: string
@@ -19050,6 +19306,8 @@ export namespace Prisma {
     paymentMethod?: boolean
     paymentStatus?: boolean
     transactionId?: boolean
+    couponCode?: boolean
+    discount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     userId?: boolean
@@ -19068,6 +19326,8 @@ export namespace Prisma {
     paymentMethod?: boolean
     paymentStatus?: boolean
     transactionId?: boolean
+    couponCode?: boolean
+    discount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     userId?: boolean
@@ -19086,6 +19346,8 @@ export namespace Prisma {
     paymentMethod?: boolean
     paymentStatus?: boolean
     transactionId?: boolean
+    couponCode?: boolean
+    discount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     userId?: boolean
@@ -19104,13 +19366,15 @@ export namespace Prisma {
     paymentMethod?: boolean
     paymentStatus?: boolean
     transactionId?: boolean
+    couponCode?: boolean
+    discount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     userId?: boolean
     facilityId?: boolean
   }
 
-  export type GamehubBookingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "bookingDate" | "slotLabel" | "totalAmount" | "currency" | "status" | "paymentMethod" | "paymentStatus" | "transactionId" | "createdAt" | "updatedAt" | "userId" | "facilityId", ExtArgs["result"]["gamehubBooking"]>
+  export type GamehubBookingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "bookingDate" | "slotLabel" | "totalAmount" | "currency" | "status" | "paymentMethod" | "paymentStatus" | "transactionId" | "couponCode" | "discount" | "createdAt" | "updatedAt" | "userId" | "facilityId", ExtArgs["result"]["gamehubBooking"]>
   export type GamehubBookingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
@@ -19140,6 +19404,8 @@ export namespace Prisma {
       paymentMethod: string
       paymentStatus: string
       transactionId: string
+      couponCode: string | null
+      discount: number
       createdAt: Date
       updatedAt: Date
       userId: string
@@ -19578,6 +19844,8 @@ export namespace Prisma {
     readonly paymentMethod: FieldRef<"GamehubBooking", 'String'>
     readonly paymentStatus: FieldRef<"GamehubBooking", 'String'>
     readonly transactionId: FieldRef<"GamehubBooking", 'String'>
+    readonly couponCode: FieldRef<"GamehubBooking", 'String'>
+    readonly discount: FieldRef<"GamehubBooking", 'Float'>
     readonly createdAt: FieldRef<"GamehubBooking", 'DateTime'>
     readonly updatedAt: FieldRef<"GamehubBooking", 'DateTime'>
     readonly userId: FieldRef<"GamehubBooking", 'String'>
@@ -25494,6 +25762,1190 @@ export namespace Prisma {
 
 
   /**
+   * Model Coupon
+   */
+
+  export type AggregateCoupon = {
+    _count: CouponCountAggregateOutputType | null
+    _avg: CouponAvgAggregateOutputType | null
+    _sum: CouponSumAggregateOutputType | null
+    _min: CouponMinAggregateOutputType | null
+    _max: CouponMaxAggregateOutputType | null
+  }
+
+  export type CouponAvgAggregateOutputType = {
+    discountValue: number | null
+    minOrderAmount: number | null
+    maxDiscount: number | null
+    usageLimit: number | null
+    usedCount: number | null
+    perUserLimit: number | null
+  }
+
+  export type CouponSumAggregateOutputType = {
+    discountValue: number | null
+    minOrderAmount: number | null
+    maxDiscount: number | null
+    usageLimit: number | null
+    usedCount: number | null
+    perUserLimit: number | null
+  }
+
+  export type CouponMinAggregateOutputType = {
+    id: string | null
+    code: string | null
+    description: string | null
+    discountType: string | null
+    discountValue: number | null
+    minOrderAmount: number | null
+    maxDiscount: number | null
+    usageLimit: number | null
+    usedCount: number | null
+    perUserLimit: number | null
+    applicableTo: string | null
+    isActive: boolean | null
+    expiresAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CouponMaxAggregateOutputType = {
+    id: string | null
+    code: string | null
+    description: string | null
+    discountType: string | null
+    discountValue: number | null
+    minOrderAmount: number | null
+    maxDiscount: number | null
+    usageLimit: number | null
+    usedCount: number | null
+    perUserLimit: number | null
+    applicableTo: string | null
+    isActive: boolean | null
+    expiresAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CouponCountAggregateOutputType = {
+    id: number
+    code: number
+    description: number
+    discountType: number
+    discountValue: number
+    minOrderAmount: number
+    maxDiscount: number
+    usageLimit: number
+    usedCount: number
+    perUserLimit: number
+    applicableTo: number
+    isActive: number
+    expiresAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type CouponAvgAggregateInputType = {
+    discountValue?: true
+    minOrderAmount?: true
+    maxDiscount?: true
+    usageLimit?: true
+    usedCount?: true
+    perUserLimit?: true
+  }
+
+  export type CouponSumAggregateInputType = {
+    discountValue?: true
+    minOrderAmount?: true
+    maxDiscount?: true
+    usageLimit?: true
+    usedCount?: true
+    perUserLimit?: true
+  }
+
+  export type CouponMinAggregateInputType = {
+    id?: true
+    code?: true
+    description?: true
+    discountType?: true
+    discountValue?: true
+    minOrderAmount?: true
+    maxDiscount?: true
+    usageLimit?: true
+    usedCount?: true
+    perUserLimit?: true
+    applicableTo?: true
+    isActive?: true
+    expiresAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CouponMaxAggregateInputType = {
+    id?: true
+    code?: true
+    description?: true
+    discountType?: true
+    discountValue?: true
+    minOrderAmount?: true
+    maxDiscount?: true
+    usageLimit?: true
+    usedCount?: true
+    perUserLimit?: true
+    applicableTo?: true
+    isActive?: true
+    expiresAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CouponCountAggregateInputType = {
+    id?: true
+    code?: true
+    description?: true
+    discountType?: true
+    discountValue?: true
+    minOrderAmount?: true
+    maxDiscount?: true
+    usageLimit?: true
+    usedCount?: true
+    perUserLimit?: true
+    applicableTo?: true
+    isActive?: true
+    expiresAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type CouponAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Coupon to aggregate.
+     */
+    where?: CouponWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Coupons to fetch.
+     */
+    orderBy?: CouponOrderByWithRelationInput | CouponOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CouponWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Coupons from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Coupons.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Coupons
+    **/
+    _count?: true | CouponCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CouponAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CouponSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CouponMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CouponMaxAggregateInputType
+  }
+
+  export type GetCouponAggregateType<T extends CouponAggregateArgs> = {
+        [P in keyof T & keyof AggregateCoupon]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCoupon[P]>
+      : GetScalarType<T[P], AggregateCoupon[P]>
+  }
+
+
+
+
+  export type CouponGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CouponWhereInput
+    orderBy?: CouponOrderByWithAggregationInput | CouponOrderByWithAggregationInput[]
+    by: CouponScalarFieldEnum[] | CouponScalarFieldEnum
+    having?: CouponScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CouponCountAggregateInputType | true
+    _avg?: CouponAvgAggregateInputType
+    _sum?: CouponSumAggregateInputType
+    _min?: CouponMinAggregateInputType
+    _max?: CouponMaxAggregateInputType
+  }
+
+  export type CouponGroupByOutputType = {
+    id: string
+    code: string
+    description: string
+    discountType: string
+    discountValue: number
+    minOrderAmount: number
+    maxDiscount: number | null
+    usageLimit: number | null
+    usedCount: number
+    perUserLimit: number
+    applicableTo: string
+    isActive: boolean
+    expiresAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: CouponCountAggregateOutputType | null
+    _avg: CouponAvgAggregateOutputType | null
+    _sum: CouponSumAggregateOutputType | null
+    _min: CouponMinAggregateOutputType | null
+    _max: CouponMaxAggregateOutputType | null
+  }
+
+  type GetCouponGroupByPayload<T extends CouponGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CouponGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CouponGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CouponGroupByOutputType[P]>
+            : GetScalarType<T[P], CouponGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CouponSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    description?: boolean
+    discountType?: boolean
+    discountValue?: boolean
+    minOrderAmount?: boolean
+    maxDiscount?: boolean
+    usageLimit?: boolean
+    usedCount?: boolean
+    perUserLimit?: boolean
+    applicableTo?: boolean
+    isActive?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["coupon"]>
+
+  export type CouponSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    description?: boolean
+    discountType?: boolean
+    discountValue?: boolean
+    minOrderAmount?: boolean
+    maxDiscount?: boolean
+    usageLimit?: boolean
+    usedCount?: boolean
+    perUserLimit?: boolean
+    applicableTo?: boolean
+    isActive?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["coupon"]>
+
+  export type CouponSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    description?: boolean
+    discountType?: boolean
+    discountValue?: boolean
+    minOrderAmount?: boolean
+    maxDiscount?: boolean
+    usageLimit?: boolean
+    usedCount?: boolean
+    perUserLimit?: boolean
+    applicableTo?: boolean
+    isActive?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["coupon"]>
+
+  export type CouponSelectScalar = {
+    id?: boolean
+    code?: boolean
+    description?: boolean
+    discountType?: boolean
+    discountValue?: boolean
+    minOrderAmount?: boolean
+    maxDiscount?: boolean
+    usageLimit?: boolean
+    usedCount?: boolean
+    perUserLimit?: boolean
+    applicableTo?: boolean
+    isActive?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type CouponOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "code" | "description" | "discountType" | "discountValue" | "minOrderAmount" | "maxDiscount" | "usageLimit" | "usedCount" | "perUserLimit" | "applicableTo" | "isActive" | "expiresAt" | "createdAt" | "updatedAt", ExtArgs["result"]["coupon"]>
+
+  export type $CouponPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Coupon"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      code: string
+      description: string
+      discountType: string
+      discountValue: number
+      minOrderAmount: number
+      maxDiscount: number | null
+      usageLimit: number | null
+      usedCount: number
+      perUserLimit: number
+      applicableTo: string
+      isActive: boolean
+      expiresAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["coupon"]>
+    composites: {}
+  }
+
+  type CouponGetPayload<S extends boolean | null | undefined | CouponDefaultArgs> = $Result.GetResult<Prisma.$CouponPayload, S>
+
+  type CouponCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CouponFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CouponCountAggregateInputType | true
+    }
+
+  export interface CouponDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Coupon'], meta: { name: 'Coupon' } }
+    /**
+     * Find zero or one Coupon that matches the filter.
+     * @param {CouponFindUniqueArgs} args - Arguments to find a Coupon
+     * @example
+     * // Get one Coupon
+     * const coupon = await prisma.coupon.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CouponFindUniqueArgs>(args: SelectSubset<T, CouponFindUniqueArgs<ExtArgs>>): Prisma__CouponClient<$Result.GetResult<Prisma.$CouponPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Coupon that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CouponFindUniqueOrThrowArgs} args - Arguments to find a Coupon
+     * @example
+     * // Get one Coupon
+     * const coupon = await prisma.coupon.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CouponFindUniqueOrThrowArgs>(args: SelectSubset<T, CouponFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CouponClient<$Result.GetResult<Prisma.$CouponPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Coupon that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CouponFindFirstArgs} args - Arguments to find a Coupon
+     * @example
+     * // Get one Coupon
+     * const coupon = await prisma.coupon.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CouponFindFirstArgs>(args?: SelectSubset<T, CouponFindFirstArgs<ExtArgs>>): Prisma__CouponClient<$Result.GetResult<Prisma.$CouponPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Coupon that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CouponFindFirstOrThrowArgs} args - Arguments to find a Coupon
+     * @example
+     * // Get one Coupon
+     * const coupon = await prisma.coupon.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CouponFindFirstOrThrowArgs>(args?: SelectSubset<T, CouponFindFirstOrThrowArgs<ExtArgs>>): Prisma__CouponClient<$Result.GetResult<Prisma.$CouponPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Coupons that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CouponFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Coupons
+     * const coupons = await prisma.coupon.findMany()
+     * 
+     * // Get first 10 Coupons
+     * const coupons = await prisma.coupon.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const couponWithIdOnly = await prisma.coupon.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CouponFindManyArgs>(args?: SelectSubset<T, CouponFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CouponPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Coupon.
+     * @param {CouponCreateArgs} args - Arguments to create a Coupon.
+     * @example
+     * // Create one Coupon
+     * const Coupon = await prisma.coupon.create({
+     *   data: {
+     *     // ... data to create a Coupon
+     *   }
+     * })
+     * 
+     */
+    create<T extends CouponCreateArgs>(args: SelectSubset<T, CouponCreateArgs<ExtArgs>>): Prisma__CouponClient<$Result.GetResult<Prisma.$CouponPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Coupons.
+     * @param {CouponCreateManyArgs} args - Arguments to create many Coupons.
+     * @example
+     * // Create many Coupons
+     * const coupon = await prisma.coupon.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CouponCreateManyArgs>(args?: SelectSubset<T, CouponCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Coupons and returns the data saved in the database.
+     * @param {CouponCreateManyAndReturnArgs} args - Arguments to create many Coupons.
+     * @example
+     * // Create many Coupons
+     * const coupon = await prisma.coupon.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Coupons and only return the `id`
+     * const couponWithIdOnly = await prisma.coupon.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CouponCreateManyAndReturnArgs>(args?: SelectSubset<T, CouponCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CouponPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Coupon.
+     * @param {CouponDeleteArgs} args - Arguments to delete one Coupon.
+     * @example
+     * // Delete one Coupon
+     * const Coupon = await prisma.coupon.delete({
+     *   where: {
+     *     // ... filter to delete one Coupon
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CouponDeleteArgs>(args: SelectSubset<T, CouponDeleteArgs<ExtArgs>>): Prisma__CouponClient<$Result.GetResult<Prisma.$CouponPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Coupon.
+     * @param {CouponUpdateArgs} args - Arguments to update one Coupon.
+     * @example
+     * // Update one Coupon
+     * const coupon = await prisma.coupon.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CouponUpdateArgs>(args: SelectSubset<T, CouponUpdateArgs<ExtArgs>>): Prisma__CouponClient<$Result.GetResult<Prisma.$CouponPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Coupons.
+     * @param {CouponDeleteManyArgs} args - Arguments to filter Coupons to delete.
+     * @example
+     * // Delete a few Coupons
+     * const { count } = await prisma.coupon.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CouponDeleteManyArgs>(args?: SelectSubset<T, CouponDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Coupons.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CouponUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Coupons
+     * const coupon = await prisma.coupon.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CouponUpdateManyArgs>(args: SelectSubset<T, CouponUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Coupons and returns the data updated in the database.
+     * @param {CouponUpdateManyAndReturnArgs} args - Arguments to update many Coupons.
+     * @example
+     * // Update many Coupons
+     * const coupon = await prisma.coupon.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Coupons and only return the `id`
+     * const couponWithIdOnly = await prisma.coupon.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CouponUpdateManyAndReturnArgs>(args: SelectSubset<T, CouponUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CouponPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Coupon.
+     * @param {CouponUpsertArgs} args - Arguments to update or create a Coupon.
+     * @example
+     * // Update or create a Coupon
+     * const coupon = await prisma.coupon.upsert({
+     *   create: {
+     *     // ... data to create a Coupon
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Coupon we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CouponUpsertArgs>(args: SelectSubset<T, CouponUpsertArgs<ExtArgs>>): Prisma__CouponClient<$Result.GetResult<Prisma.$CouponPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Coupons.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CouponCountArgs} args - Arguments to filter Coupons to count.
+     * @example
+     * // Count the number of Coupons
+     * const count = await prisma.coupon.count({
+     *   where: {
+     *     // ... the filter for the Coupons we want to count
+     *   }
+     * })
+    **/
+    count<T extends CouponCountArgs>(
+      args?: Subset<T, CouponCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CouponCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Coupon.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CouponAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CouponAggregateArgs>(args: Subset<T, CouponAggregateArgs>): Prisma.PrismaPromise<GetCouponAggregateType<T>>
+
+    /**
+     * Group by Coupon.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CouponGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CouponGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CouponGroupByArgs['orderBy'] }
+        : { orderBy?: CouponGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CouponGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCouponGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Coupon model
+   */
+  readonly fields: CouponFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Coupon.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CouponClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Coupon model
+   */
+  interface CouponFieldRefs {
+    readonly id: FieldRef<"Coupon", 'String'>
+    readonly code: FieldRef<"Coupon", 'String'>
+    readonly description: FieldRef<"Coupon", 'String'>
+    readonly discountType: FieldRef<"Coupon", 'String'>
+    readonly discountValue: FieldRef<"Coupon", 'Float'>
+    readonly minOrderAmount: FieldRef<"Coupon", 'Float'>
+    readonly maxDiscount: FieldRef<"Coupon", 'Float'>
+    readonly usageLimit: FieldRef<"Coupon", 'Int'>
+    readonly usedCount: FieldRef<"Coupon", 'Int'>
+    readonly perUserLimit: FieldRef<"Coupon", 'Int'>
+    readonly applicableTo: FieldRef<"Coupon", 'String'>
+    readonly isActive: FieldRef<"Coupon", 'Boolean'>
+    readonly expiresAt: FieldRef<"Coupon", 'DateTime'>
+    readonly createdAt: FieldRef<"Coupon", 'DateTime'>
+    readonly updatedAt: FieldRef<"Coupon", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Coupon findUnique
+   */
+  export type CouponFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Coupon
+     */
+    select?: CouponSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Coupon
+     */
+    omit?: CouponOmit<ExtArgs> | null
+    /**
+     * Filter, which Coupon to fetch.
+     */
+    where: CouponWhereUniqueInput
+  }
+
+  /**
+   * Coupon findUniqueOrThrow
+   */
+  export type CouponFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Coupon
+     */
+    select?: CouponSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Coupon
+     */
+    omit?: CouponOmit<ExtArgs> | null
+    /**
+     * Filter, which Coupon to fetch.
+     */
+    where: CouponWhereUniqueInput
+  }
+
+  /**
+   * Coupon findFirst
+   */
+  export type CouponFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Coupon
+     */
+    select?: CouponSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Coupon
+     */
+    omit?: CouponOmit<ExtArgs> | null
+    /**
+     * Filter, which Coupon to fetch.
+     */
+    where?: CouponWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Coupons to fetch.
+     */
+    orderBy?: CouponOrderByWithRelationInput | CouponOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Coupons.
+     */
+    cursor?: CouponWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Coupons from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Coupons.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Coupons.
+     */
+    distinct?: CouponScalarFieldEnum | CouponScalarFieldEnum[]
+  }
+
+  /**
+   * Coupon findFirstOrThrow
+   */
+  export type CouponFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Coupon
+     */
+    select?: CouponSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Coupon
+     */
+    omit?: CouponOmit<ExtArgs> | null
+    /**
+     * Filter, which Coupon to fetch.
+     */
+    where?: CouponWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Coupons to fetch.
+     */
+    orderBy?: CouponOrderByWithRelationInput | CouponOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Coupons.
+     */
+    cursor?: CouponWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Coupons from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Coupons.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Coupons.
+     */
+    distinct?: CouponScalarFieldEnum | CouponScalarFieldEnum[]
+  }
+
+  /**
+   * Coupon findMany
+   */
+  export type CouponFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Coupon
+     */
+    select?: CouponSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Coupon
+     */
+    omit?: CouponOmit<ExtArgs> | null
+    /**
+     * Filter, which Coupons to fetch.
+     */
+    where?: CouponWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Coupons to fetch.
+     */
+    orderBy?: CouponOrderByWithRelationInput | CouponOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Coupons.
+     */
+    cursor?: CouponWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Coupons from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Coupons.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Coupons.
+     */
+    distinct?: CouponScalarFieldEnum | CouponScalarFieldEnum[]
+  }
+
+  /**
+   * Coupon create
+   */
+  export type CouponCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Coupon
+     */
+    select?: CouponSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Coupon
+     */
+    omit?: CouponOmit<ExtArgs> | null
+    /**
+     * The data needed to create a Coupon.
+     */
+    data: XOR<CouponCreateInput, CouponUncheckedCreateInput>
+  }
+
+  /**
+   * Coupon createMany
+   */
+  export type CouponCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Coupons.
+     */
+    data: CouponCreateManyInput | CouponCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Coupon createManyAndReturn
+   */
+  export type CouponCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Coupon
+     */
+    select?: CouponSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Coupon
+     */
+    omit?: CouponOmit<ExtArgs> | null
+    /**
+     * The data used to create many Coupons.
+     */
+    data: CouponCreateManyInput | CouponCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Coupon update
+   */
+  export type CouponUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Coupon
+     */
+    select?: CouponSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Coupon
+     */
+    omit?: CouponOmit<ExtArgs> | null
+    /**
+     * The data needed to update a Coupon.
+     */
+    data: XOR<CouponUpdateInput, CouponUncheckedUpdateInput>
+    /**
+     * Choose, which Coupon to update.
+     */
+    where: CouponWhereUniqueInput
+  }
+
+  /**
+   * Coupon updateMany
+   */
+  export type CouponUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Coupons.
+     */
+    data: XOR<CouponUpdateManyMutationInput, CouponUncheckedUpdateManyInput>
+    /**
+     * Filter which Coupons to update
+     */
+    where?: CouponWhereInput
+    /**
+     * Limit how many Coupons to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Coupon updateManyAndReturn
+   */
+  export type CouponUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Coupon
+     */
+    select?: CouponSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Coupon
+     */
+    omit?: CouponOmit<ExtArgs> | null
+    /**
+     * The data used to update Coupons.
+     */
+    data: XOR<CouponUpdateManyMutationInput, CouponUncheckedUpdateManyInput>
+    /**
+     * Filter which Coupons to update
+     */
+    where?: CouponWhereInput
+    /**
+     * Limit how many Coupons to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Coupon upsert
+   */
+  export type CouponUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Coupon
+     */
+    select?: CouponSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Coupon
+     */
+    omit?: CouponOmit<ExtArgs> | null
+    /**
+     * The filter to search for the Coupon to update in case it exists.
+     */
+    where: CouponWhereUniqueInput
+    /**
+     * In case the Coupon found by the `where` argument doesn't exist, create a new Coupon with this data.
+     */
+    create: XOR<CouponCreateInput, CouponUncheckedCreateInput>
+    /**
+     * In case the Coupon was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CouponUpdateInput, CouponUncheckedUpdateInput>
+  }
+
+  /**
+   * Coupon delete
+   */
+  export type CouponDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Coupon
+     */
+    select?: CouponSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Coupon
+     */
+    omit?: CouponOmit<ExtArgs> | null
+    /**
+     * Filter which Coupon to delete.
+     */
+    where: CouponWhereUniqueInput
+  }
+
+  /**
+   * Coupon deleteMany
+   */
+  export type CouponDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Coupons to delete
+     */
+    where?: CouponWhereInput
+    /**
+     * Limit how many Coupons to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Coupon without action
+   */
+  export type CouponDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Coupon
+     */
+    select?: CouponSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Coupon
+     */
+    omit?: CouponOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -25554,6 +27006,14 @@ export namespace Prisma {
     tags: 'tags',
     duration: 'duration',
     mapLink: 'mapLink',
+    terms: 'terms',
+    language: 'language',
+    ageLimit: 'ageLimit',
+    ticketAgeLimit: 'ticketAgeLimit',
+    layout: 'layout',
+    seating: 'seating',
+    kidsAllowed: 'kidsAllowed',
+    petsAllowed: 'petsAllowed',
     seatLayout: 'seatLayout',
     seatRows: 'seatRows',
     seatsPerRow: 'seatsPerRow',
@@ -25588,6 +27048,8 @@ export namespace Prisma {
     status: 'status',
     qrCode: 'qrCode',
     seatNumbers: 'seatNumbers',
+    couponCode: 'couponCode',
+    discount: 'discount',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     userId: 'userId',
@@ -25713,6 +27175,7 @@ export namespace Prisma {
     battleModes: 'battleModes',
     slotTemplate: 'slotTemplate',
     availableSports: 'availableSports',
+    terms: 'terms',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     partnerId: 'partnerId'
@@ -25745,6 +27208,8 @@ export namespace Prisma {
     paymentMethod: 'paymentMethod',
     paymentStatus: 'paymentStatus',
     transactionId: 'transactionId',
+    couponCode: 'couponCode',
+    discount: 'discount',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     userId: 'userId',
@@ -25815,6 +27280,27 @@ export namespace Prisma {
   };
 
   export type WebsiteConfigScalarFieldEnum = (typeof WebsiteConfigScalarFieldEnum)[keyof typeof WebsiteConfigScalarFieldEnum]
+
+
+  export const CouponScalarFieldEnum: {
+    id: 'id',
+    code: 'code',
+    description: 'description',
+    discountType: 'discountType',
+    discountValue: 'discountValue',
+    minOrderAmount: 'minOrderAmount',
+    maxDiscount: 'maxDiscount',
+    usageLimit: 'usageLimit',
+    usedCount: 'usedCount',
+    perUserLimit: 'perUserLimit',
+    applicableTo: 'applicableTo',
+    isActive: 'isActive',
+    expiresAt: 'expiresAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type CouponScalarFieldEnum = (typeof CouponScalarFieldEnum)[keyof typeof CouponScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -26055,6 +27541,14 @@ export namespace Prisma {
     tags?: StringFilter<"Event"> | string
     duration?: StringNullableFilter<"Event"> | string | null
     mapLink?: StringNullableFilter<"Event"> | string | null
+    terms?: StringNullableFilter<"Event"> | string | null
+    language?: StringNullableFilter<"Event"> | string | null
+    ageLimit?: StringNullableFilter<"Event"> | string | null
+    ticketAgeLimit?: StringNullableFilter<"Event"> | string | null
+    layout?: StringNullableFilter<"Event"> | string | null
+    seating?: StringNullableFilter<"Event"> | string | null
+    kidsAllowed?: BoolFilter<"Event"> | boolean
+    petsAllowed?: BoolFilter<"Event"> | boolean
     seatLayout?: StringFilter<"Event"> | string
     seatRows?: IntNullableFilter<"Event"> | number | null
     seatsPerRow?: IntNullableFilter<"Event"> | number | null
@@ -26099,6 +27593,14 @@ export namespace Prisma {
     tags?: SortOrder
     duration?: SortOrderInput | SortOrder
     mapLink?: SortOrderInput | SortOrder
+    terms?: SortOrderInput | SortOrder
+    language?: SortOrderInput | SortOrder
+    ageLimit?: SortOrderInput | SortOrder
+    ticketAgeLimit?: SortOrderInput | SortOrder
+    layout?: SortOrderInput | SortOrder
+    seating?: SortOrderInput | SortOrder
+    kidsAllowed?: SortOrder
+    petsAllowed?: SortOrder
     seatLayout?: SortOrder
     seatRows?: SortOrderInput | SortOrder
     seatsPerRow?: SortOrderInput | SortOrder
@@ -26146,6 +27648,14 @@ export namespace Prisma {
     tags?: StringFilter<"Event"> | string
     duration?: StringNullableFilter<"Event"> | string | null
     mapLink?: StringNullableFilter<"Event"> | string | null
+    terms?: StringNullableFilter<"Event"> | string | null
+    language?: StringNullableFilter<"Event"> | string | null
+    ageLimit?: StringNullableFilter<"Event"> | string | null
+    ticketAgeLimit?: StringNullableFilter<"Event"> | string | null
+    layout?: StringNullableFilter<"Event"> | string | null
+    seating?: StringNullableFilter<"Event"> | string | null
+    kidsAllowed?: BoolFilter<"Event"> | boolean
+    petsAllowed?: BoolFilter<"Event"> | boolean
     seatLayout?: StringFilter<"Event"> | string
     seatRows?: IntNullableFilter<"Event"> | number | null
     seatsPerRow?: IntNullableFilter<"Event"> | number | null
@@ -26190,6 +27700,14 @@ export namespace Prisma {
     tags?: SortOrder
     duration?: SortOrderInput | SortOrder
     mapLink?: SortOrderInput | SortOrder
+    terms?: SortOrderInput | SortOrder
+    language?: SortOrderInput | SortOrder
+    ageLimit?: SortOrderInput | SortOrder
+    ticketAgeLimit?: SortOrderInput | SortOrder
+    layout?: SortOrderInput | SortOrder
+    seating?: SortOrderInput | SortOrder
+    kidsAllowed?: SortOrder
+    petsAllowed?: SortOrder
     seatLayout?: SortOrder
     seatRows?: SortOrderInput | SortOrder
     seatsPerRow?: SortOrderInput | SortOrder
@@ -26237,6 +27755,14 @@ export namespace Prisma {
     tags?: StringWithAggregatesFilter<"Event"> | string
     duration?: StringNullableWithAggregatesFilter<"Event"> | string | null
     mapLink?: StringNullableWithAggregatesFilter<"Event"> | string | null
+    terms?: StringNullableWithAggregatesFilter<"Event"> | string | null
+    language?: StringNullableWithAggregatesFilter<"Event"> | string | null
+    ageLimit?: StringNullableWithAggregatesFilter<"Event"> | string | null
+    ticketAgeLimit?: StringNullableWithAggregatesFilter<"Event"> | string | null
+    layout?: StringNullableWithAggregatesFilter<"Event"> | string | null
+    seating?: StringNullableWithAggregatesFilter<"Event"> | string | null
+    kidsAllowed?: BoolWithAggregatesFilter<"Event"> | boolean
+    petsAllowed?: BoolWithAggregatesFilter<"Event"> | boolean
     seatLayout?: StringWithAggregatesFilter<"Event"> | string
     seatRows?: IntNullableWithAggregatesFilter<"Event"> | number | null
     seatsPerRow?: IntNullableWithAggregatesFilter<"Event"> | number | null
@@ -26332,6 +27858,8 @@ export namespace Prisma {
     status?: StringFilter<"Booking"> | string
     qrCode?: StringNullableFilter<"Booking"> | string | null
     seatNumbers?: StringNullableFilter<"Booking"> | string | null
+    couponCode?: StringNullableFilter<"Booking"> | string | null
+    discount?: FloatFilter<"Booking"> | number
     createdAt?: DateTimeFilter<"Booking"> | Date | string
     updatedAt?: DateTimeFilter<"Booking"> | Date | string
     userId?: StringFilter<"Booking"> | string
@@ -26352,6 +27880,8 @@ export namespace Prisma {
     status?: SortOrder
     qrCode?: SortOrderInput | SortOrder
     seatNumbers?: SortOrderInput | SortOrder
+    couponCode?: SortOrderInput | SortOrder
+    discount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     userId?: SortOrder
@@ -26375,6 +27905,8 @@ export namespace Prisma {
     status?: StringFilter<"Booking"> | string
     qrCode?: StringNullableFilter<"Booking"> | string | null
     seatNumbers?: StringNullableFilter<"Booking"> | string | null
+    couponCode?: StringNullableFilter<"Booking"> | string | null
+    discount?: FloatFilter<"Booking"> | number
     createdAt?: DateTimeFilter<"Booking"> | Date | string
     updatedAt?: DateTimeFilter<"Booking"> | Date | string
     userId?: StringFilter<"Booking"> | string
@@ -26395,6 +27927,8 @@ export namespace Prisma {
     status?: SortOrder
     qrCode?: SortOrderInput | SortOrder
     seatNumbers?: SortOrderInput | SortOrder
+    couponCode?: SortOrderInput | SortOrder
+    discount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     userId?: SortOrder
@@ -26417,6 +27951,8 @@ export namespace Prisma {
     status?: StringWithAggregatesFilter<"Booking"> | string
     qrCode?: StringNullableWithAggregatesFilter<"Booking"> | string | null
     seatNumbers?: StringNullableWithAggregatesFilter<"Booking"> | string | null
+    couponCode?: StringNullableWithAggregatesFilter<"Booking"> | string | null
+    discount?: FloatWithAggregatesFilter<"Booking"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Booking"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Booking"> | Date | string
     userId?: StringWithAggregatesFilter<"Booking"> | string
@@ -26930,6 +28466,7 @@ export namespace Prisma {
     battleModes?: StringFilter<"GamehubFacility"> | string
     slotTemplate?: StringFilter<"GamehubFacility"> | string
     availableSports?: StringFilter<"GamehubFacility"> | string
+    terms?: StringNullableFilter<"GamehubFacility"> | string | null
     createdAt?: DateTimeFilter<"GamehubFacility"> | Date | string
     updatedAt?: DateTimeFilter<"GamehubFacility"> | Date | string
     partnerId?: StringNullableFilter<"GamehubFacility"> | string | null
@@ -26964,6 +28501,7 @@ export namespace Prisma {
     battleModes?: SortOrder
     slotTemplate?: SortOrder
     availableSports?: SortOrder
+    terms?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     partnerId?: SortOrderInput | SortOrder
@@ -27001,6 +28539,7 @@ export namespace Prisma {
     battleModes?: StringFilter<"GamehubFacility"> | string
     slotTemplate?: StringFilter<"GamehubFacility"> | string
     availableSports?: StringFilter<"GamehubFacility"> | string
+    terms?: StringNullableFilter<"GamehubFacility"> | string | null
     createdAt?: DateTimeFilter<"GamehubFacility"> | Date | string
     updatedAt?: DateTimeFilter<"GamehubFacility"> | Date | string
     partnerId?: StringNullableFilter<"GamehubFacility"> | string | null
@@ -27035,6 +28574,7 @@ export namespace Prisma {
     battleModes?: SortOrder
     slotTemplate?: SortOrder
     availableSports?: SortOrder
+    terms?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     partnerId?: SortOrderInput | SortOrder
@@ -27073,6 +28613,7 @@ export namespace Prisma {
     battleModes?: StringWithAggregatesFilter<"GamehubFacility"> | string
     slotTemplate?: StringWithAggregatesFilter<"GamehubFacility"> | string
     availableSports?: StringWithAggregatesFilter<"GamehubFacility"> | string
+    terms?: StringNullableWithAggregatesFilter<"GamehubFacility"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"GamehubFacility"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"GamehubFacility"> | Date | string
     partnerId?: StringNullableWithAggregatesFilter<"GamehubFacility"> | string | null
@@ -27163,6 +28704,8 @@ export namespace Prisma {
     paymentMethod?: StringFilter<"GamehubBooking"> | string
     paymentStatus?: StringFilter<"GamehubBooking"> | string
     transactionId?: StringFilter<"GamehubBooking"> | string
+    couponCode?: StringNullableFilter<"GamehubBooking"> | string | null
+    discount?: FloatFilter<"GamehubBooking"> | number
     createdAt?: DateTimeFilter<"GamehubBooking"> | Date | string
     updatedAt?: DateTimeFilter<"GamehubBooking"> | Date | string
     userId?: StringFilter<"GamehubBooking"> | string
@@ -27181,6 +28724,8 @@ export namespace Prisma {
     paymentMethod?: SortOrder
     paymentStatus?: SortOrder
     transactionId?: SortOrder
+    couponCode?: SortOrderInput | SortOrder
+    discount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     userId?: SortOrder
@@ -27202,6 +28747,8 @@ export namespace Prisma {
     status?: StringFilter<"GamehubBooking"> | string
     paymentMethod?: StringFilter<"GamehubBooking"> | string
     paymentStatus?: StringFilter<"GamehubBooking"> | string
+    couponCode?: StringNullableFilter<"GamehubBooking"> | string | null
+    discount?: FloatFilter<"GamehubBooking"> | number
     createdAt?: DateTimeFilter<"GamehubBooking"> | Date | string
     updatedAt?: DateTimeFilter<"GamehubBooking"> | Date | string
     userId?: StringFilter<"GamehubBooking"> | string
@@ -27220,6 +28767,8 @@ export namespace Prisma {
     paymentMethod?: SortOrder
     paymentStatus?: SortOrder
     transactionId?: SortOrder
+    couponCode?: SortOrderInput | SortOrder
+    discount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     userId?: SortOrder
@@ -27244,6 +28793,8 @@ export namespace Prisma {
     paymentMethod?: StringWithAggregatesFilter<"GamehubBooking"> | string
     paymentStatus?: StringWithAggregatesFilter<"GamehubBooking"> | string
     transactionId?: StringWithAggregatesFilter<"GamehubBooking"> | string
+    couponCode?: StringNullableWithAggregatesFilter<"GamehubBooking"> | string | null
+    discount?: FloatWithAggregatesFilter<"GamehubBooking"> | number
     createdAt?: DateTimeWithAggregatesFilter<"GamehubBooking"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"GamehubBooking"> | Date | string
     userId?: StringWithAggregatesFilter<"GamehubBooking"> | string
@@ -27571,6 +29122,110 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"WebsiteConfig"> | Date | string
   }
 
+  export type CouponWhereInput = {
+    AND?: CouponWhereInput | CouponWhereInput[]
+    OR?: CouponWhereInput[]
+    NOT?: CouponWhereInput | CouponWhereInput[]
+    id?: StringFilter<"Coupon"> | string
+    code?: StringFilter<"Coupon"> | string
+    description?: StringFilter<"Coupon"> | string
+    discountType?: StringFilter<"Coupon"> | string
+    discountValue?: FloatFilter<"Coupon"> | number
+    minOrderAmount?: FloatFilter<"Coupon"> | number
+    maxDiscount?: FloatNullableFilter<"Coupon"> | number | null
+    usageLimit?: IntNullableFilter<"Coupon"> | number | null
+    usedCount?: IntFilter<"Coupon"> | number
+    perUserLimit?: IntFilter<"Coupon"> | number
+    applicableTo?: StringFilter<"Coupon"> | string
+    isActive?: BoolFilter<"Coupon"> | boolean
+    expiresAt?: DateTimeNullableFilter<"Coupon"> | Date | string | null
+    createdAt?: DateTimeFilter<"Coupon"> | Date | string
+    updatedAt?: DateTimeFilter<"Coupon"> | Date | string
+  }
+
+  export type CouponOrderByWithRelationInput = {
+    id?: SortOrder
+    code?: SortOrder
+    description?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    minOrderAmount?: SortOrder
+    maxDiscount?: SortOrderInput | SortOrder
+    usageLimit?: SortOrderInput | SortOrder
+    usedCount?: SortOrder
+    perUserLimit?: SortOrder
+    applicableTo?: SortOrder
+    isActive?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CouponWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    code?: string
+    AND?: CouponWhereInput | CouponWhereInput[]
+    OR?: CouponWhereInput[]
+    NOT?: CouponWhereInput | CouponWhereInput[]
+    description?: StringFilter<"Coupon"> | string
+    discountType?: StringFilter<"Coupon"> | string
+    discountValue?: FloatFilter<"Coupon"> | number
+    minOrderAmount?: FloatFilter<"Coupon"> | number
+    maxDiscount?: FloatNullableFilter<"Coupon"> | number | null
+    usageLimit?: IntNullableFilter<"Coupon"> | number | null
+    usedCount?: IntFilter<"Coupon"> | number
+    perUserLimit?: IntFilter<"Coupon"> | number
+    applicableTo?: StringFilter<"Coupon"> | string
+    isActive?: BoolFilter<"Coupon"> | boolean
+    expiresAt?: DateTimeNullableFilter<"Coupon"> | Date | string | null
+    createdAt?: DateTimeFilter<"Coupon"> | Date | string
+    updatedAt?: DateTimeFilter<"Coupon"> | Date | string
+  }, "id" | "code">
+
+  export type CouponOrderByWithAggregationInput = {
+    id?: SortOrder
+    code?: SortOrder
+    description?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    minOrderAmount?: SortOrder
+    maxDiscount?: SortOrderInput | SortOrder
+    usageLimit?: SortOrderInput | SortOrder
+    usedCount?: SortOrder
+    perUserLimit?: SortOrder
+    applicableTo?: SortOrder
+    isActive?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: CouponCountOrderByAggregateInput
+    _avg?: CouponAvgOrderByAggregateInput
+    _max?: CouponMaxOrderByAggregateInput
+    _min?: CouponMinOrderByAggregateInput
+    _sum?: CouponSumOrderByAggregateInput
+  }
+
+  export type CouponScalarWhereWithAggregatesInput = {
+    AND?: CouponScalarWhereWithAggregatesInput | CouponScalarWhereWithAggregatesInput[]
+    OR?: CouponScalarWhereWithAggregatesInput[]
+    NOT?: CouponScalarWhereWithAggregatesInput | CouponScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Coupon"> | string
+    code?: StringWithAggregatesFilter<"Coupon"> | string
+    description?: StringWithAggregatesFilter<"Coupon"> | string
+    discountType?: StringWithAggregatesFilter<"Coupon"> | string
+    discountValue?: FloatWithAggregatesFilter<"Coupon"> | number
+    minOrderAmount?: FloatWithAggregatesFilter<"Coupon"> | number
+    maxDiscount?: FloatNullableWithAggregatesFilter<"Coupon"> | number | null
+    usageLimit?: IntNullableWithAggregatesFilter<"Coupon"> | number | null
+    usedCount?: IntWithAggregatesFilter<"Coupon"> | number
+    perUserLimit?: IntWithAggregatesFilter<"Coupon"> | number
+    applicableTo?: StringWithAggregatesFilter<"Coupon"> | string
+    isActive?: BoolWithAggregatesFilter<"Coupon"> | boolean
+    expiresAt?: DateTimeNullableWithAggregatesFilter<"Coupon"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Coupon"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Coupon"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     name: string
@@ -27737,6 +29392,14 @@ export namespace Prisma {
     tags?: string
     duration?: string | null
     mapLink?: string | null
+    terms?: string | null
+    language?: string | null
+    ageLimit?: string | null
+    ticketAgeLimit?: string | null
+    layout?: string | null
+    seating?: string | null
+    kidsAllowed?: boolean
+    petsAllowed?: boolean
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -27780,6 +29443,14 @@ export namespace Prisma {
     tags?: string
     duration?: string | null
     mapLink?: string | null
+    terms?: string | null
+    language?: string | null
+    ageLimit?: string | null
+    ticketAgeLimit?: string | null
+    layout?: string | null
+    seating?: string | null
+    kidsAllowed?: boolean
+    petsAllowed?: boolean
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -27823,6 +29494,14 @@ export namespace Prisma {
     tags?: StringFieldUpdateOperationsInput | string
     duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    ageLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    ticketAgeLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    layout?: NullableStringFieldUpdateOperationsInput | string | null
+    seating?: NullableStringFieldUpdateOperationsInput | string | null
+    kidsAllowed?: BoolFieldUpdateOperationsInput | boolean
+    petsAllowed?: BoolFieldUpdateOperationsInput | boolean
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -27866,6 +29545,14 @@ export namespace Prisma {
     tags?: StringFieldUpdateOperationsInput | string
     duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    ageLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    ticketAgeLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    layout?: NullableStringFieldUpdateOperationsInput | string | null
+    seating?: NullableStringFieldUpdateOperationsInput | string | null
+    kidsAllowed?: BoolFieldUpdateOperationsInput | boolean
+    petsAllowed?: BoolFieldUpdateOperationsInput | boolean
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -27909,6 +29596,14 @@ export namespace Prisma {
     tags?: string
     duration?: string | null
     mapLink?: string | null
+    terms?: string | null
+    language?: string | null
+    ageLimit?: string | null
+    ticketAgeLimit?: string | null
+    layout?: string | null
+    seating?: string | null
+    kidsAllowed?: boolean
+    petsAllowed?: boolean
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -27948,6 +29643,14 @@ export namespace Prisma {
     tags?: StringFieldUpdateOperationsInput | string
     duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    ageLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    ticketAgeLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    layout?: NullableStringFieldUpdateOperationsInput | string | null
+    seating?: NullableStringFieldUpdateOperationsInput | string | null
+    kidsAllowed?: BoolFieldUpdateOperationsInput | boolean
+    petsAllowed?: BoolFieldUpdateOperationsInput | boolean
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -27986,6 +29689,14 @@ export namespace Prisma {
     tags?: StringFieldUpdateOperationsInput | string
     duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    ageLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    ticketAgeLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    layout?: NullableStringFieldUpdateOperationsInput | string | null
+    seating?: NullableStringFieldUpdateOperationsInput | string | null
+    kidsAllowed?: BoolFieldUpdateOperationsInput | boolean
+    petsAllowed?: BoolFieldUpdateOperationsInput | boolean
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -28083,6 +29794,8 @@ export namespace Prisma {
     status?: string
     qrCode?: string | null
     seatNumbers?: string | null
+    couponCode?: string | null
+    discount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutBookingsInput
@@ -28100,6 +29813,8 @@ export namespace Prisma {
     status?: string
     qrCode?: string | null
     seatNumbers?: string | null
+    couponCode?: string | null
+    discount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     userId: string
@@ -28117,6 +29832,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     seatNumbers?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutBookingsNestedInput
@@ -28134,6 +29851,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     seatNumbers?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
@@ -28151,6 +29870,8 @@ export namespace Prisma {
     status?: string
     qrCode?: string | null
     seatNumbers?: string | null
+    couponCode?: string | null
+    discount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     userId: string
@@ -28165,6 +29886,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     seatNumbers?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28176,6 +29899,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     seatNumbers?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
@@ -28693,6 +30418,7 @@ export namespace Prisma {
     battleModes?: string
     slotTemplate?: string
     availableSports?: string
+    terms?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     partner?: UserCreateNestedOneWithoutGamehubFacilitiesInput
@@ -28726,6 +30452,7 @@ export namespace Prisma {
     battleModes?: string
     slotTemplate?: string
     availableSports?: string
+    terms?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     partnerId?: string | null
@@ -28759,6 +30486,7 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partner?: UserUpdateOneWithoutGamehubFacilitiesNestedInput
@@ -28792,6 +30520,7 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28825,6 +30554,7 @@ export namespace Prisma {
     battleModes?: string
     slotTemplate?: string
     availableSports?: string
+    terms?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     partnerId?: string | null
@@ -28855,6 +30585,7 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28884,6 +30615,7 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28975,6 +30707,8 @@ export namespace Prisma {
     paymentMethod?: string
     paymentStatus?: string
     transactionId: string
+    couponCode?: string | null
+    discount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutGamehubBookingsInput
@@ -28991,6 +30725,8 @@ export namespace Prisma {
     paymentMethod?: string
     paymentStatus?: string
     transactionId: string
+    couponCode?: string | null
+    discount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     userId: string
@@ -29007,6 +30743,8 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     paymentStatus?: StringFieldUpdateOperationsInput | string
     transactionId?: StringFieldUpdateOperationsInput | string
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutGamehubBookingsNestedInput
@@ -29023,6 +30761,8 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     paymentStatus?: StringFieldUpdateOperationsInput | string
     transactionId?: StringFieldUpdateOperationsInput | string
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
@@ -29039,6 +30779,8 @@ export namespace Prisma {
     paymentMethod?: string
     paymentStatus?: string
     transactionId: string
+    couponCode?: string | null
+    discount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     userId: string
@@ -29055,6 +30797,8 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     paymentStatus?: StringFieldUpdateOperationsInput | string
     transactionId?: StringFieldUpdateOperationsInput | string
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29069,6 +30813,8 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     paymentStatus?: StringFieldUpdateOperationsInput | string
     transactionId?: StringFieldUpdateOperationsInput | string
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
@@ -29411,6 +31157,132 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CouponCreateInput = {
+    id?: string
+    code: string
+    description?: string
+    discountType?: string
+    discountValue: number
+    minOrderAmount?: number
+    maxDiscount?: number | null
+    usageLimit?: number | null
+    usedCount?: number
+    perUserLimit?: number
+    applicableTo?: string
+    isActive?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CouponUncheckedCreateInput = {
+    id?: string
+    code: string
+    description?: string
+    discountType?: string
+    discountValue: number
+    minOrderAmount?: number
+    maxDiscount?: number | null
+    usageLimit?: number | null
+    usedCount?: number
+    perUserLimit?: number
+    applicableTo?: string
+    isActive?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CouponUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: FloatFieldUpdateOperationsInput | number
+    minOrderAmount?: FloatFieldUpdateOperationsInput | number
+    maxDiscount?: NullableFloatFieldUpdateOperationsInput | number | null
+    usageLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    usedCount?: IntFieldUpdateOperationsInput | number
+    perUserLimit?: IntFieldUpdateOperationsInput | number
+    applicableTo?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CouponUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: FloatFieldUpdateOperationsInput | number
+    minOrderAmount?: FloatFieldUpdateOperationsInput | number
+    maxDiscount?: NullableFloatFieldUpdateOperationsInput | number | null
+    usageLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    usedCount?: IntFieldUpdateOperationsInput | number
+    perUserLimit?: IntFieldUpdateOperationsInput | number
+    applicableTo?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CouponCreateManyInput = {
+    id?: string
+    code: string
+    description?: string
+    discountType?: string
+    discountValue: number
+    minOrderAmount?: number
+    maxDiscount?: number | null
+    usageLimit?: number | null
+    usedCount?: number
+    perUserLimit?: number
+    applicableTo?: string
+    isActive?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CouponUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: FloatFieldUpdateOperationsInput | number
+    minOrderAmount?: FloatFieldUpdateOperationsInput | number
+    maxDiscount?: NullableFloatFieldUpdateOperationsInput | number | null
+    usageLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    usedCount?: IntFieldUpdateOperationsInput | number
+    perUserLimit?: IntFieldUpdateOperationsInput | number
+    applicableTo?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CouponUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    discountType?: StringFieldUpdateOperationsInput | string
+    discountValue?: FloatFieldUpdateOperationsInput | number
+    minOrderAmount?: FloatFieldUpdateOperationsInput | number
+    maxDiscount?: NullableFloatFieldUpdateOperationsInput | number | null
+    usageLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    usedCount?: IntFieldUpdateOperationsInput | number
+    perUserLimit?: IntFieldUpdateOperationsInput | number
+    applicableTo?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -29730,6 +31602,14 @@ export namespace Prisma {
     tags?: SortOrder
     duration?: SortOrder
     mapLink?: SortOrder
+    terms?: SortOrder
+    language?: SortOrder
+    ageLimit?: SortOrder
+    ticketAgeLimit?: SortOrder
+    layout?: SortOrder
+    seating?: SortOrder
+    kidsAllowed?: SortOrder
+    petsAllowed?: SortOrder
     seatLayout?: SortOrder
     seatRows?: SortOrder
     seatsPerRow?: SortOrder
@@ -29779,6 +31659,14 @@ export namespace Prisma {
     tags?: SortOrder
     duration?: SortOrder
     mapLink?: SortOrder
+    terms?: SortOrder
+    language?: SortOrder
+    ageLimit?: SortOrder
+    ticketAgeLimit?: SortOrder
+    layout?: SortOrder
+    seating?: SortOrder
+    kidsAllowed?: SortOrder
+    petsAllowed?: SortOrder
     seatLayout?: SortOrder
     seatRows?: SortOrder
     seatsPerRow?: SortOrder
@@ -29818,6 +31706,14 @@ export namespace Prisma {
     tags?: SortOrder
     duration?: SortOrder
     mapLink?: SortOrder
+    terms?: SortOrder
+    language?: SortOrder
+    ageLimit?: SortOrder
+    ticketAgeLimit?: SortOrder
+    layout?: SortOrder
+    seating?: SortOrder
+    kidsAllowed?: SortOrder
+    petsAllowed?: SortOrder
     seatLayout?: SortOrder
     seatRows?: SortOrder
     seatsPerRow?: SortOrder
@@ -29995,6 +31891,8 @@ export namespace Prisma {
     status?: SortOrder
     qrCode?: SortOrder
     seatNumbers?: SortOrder
+    couponCode?: SortOrder
+    discount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     userId?: SortOrder
@@ -30005,6 +31903,7 @@ export namespace Prisma {
   export type BookingAvgOrderByAggregateInput = {
     quantity?: SortOrder
     totalAmount?: SortOrder
+    discount?: SortOrder
   }
 
   export type BookingMaxOrderByAggregateInput = {
@@ -30014,6 +31913,8 @@ export namespace Prisma {
     status?: SortOrder
     qrCode?: SortOrder
     seatNumbers?: SortOrder
+    couponCode?: SortOrder
+    discount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     userId?: SortOrder
@@ -30028,6 +31929,8 @@ export namespace Prisma {
     status?: SortOrder
     qrCode?: SortOrder
     seatNumbers?: SortOrder
+    couponCode?: SortOrder
+    discount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     userId?: SortOrder
@@ -30038,6 +31941,7 @@ export namespace Prisma {
   export type BookingSumOrderByAggregateInput = {
     quantity?: SortOrder
     totalAmount?: SortOrder
+    discount?: SortOrder
   }
 
   export type ShowSeatListRelationFilter = {
@@ -30403,6 +32307,7 @@ export namespace Prisma {
     battleModes?: SortOrder
     slotTemplate?: SortOrder
     availableSports?: SortOrder
+    terms?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     partnerId?: SortOrder
@@ -30439,6 +32344,7 @@ export namespace Prisma {
     battleModes?: SortOrder
     slotTemplate?: SortOrder
     availableSports?: SortOrder
+    terms?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     partnerId?: SortOrder
@@ -30469,6 +32375,7 @@ export namespace Prisma {
     battleModes?: SortOrder
     slotTemplate?: SortOrder
     availableSports?: SortOrder
+    terms?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     partnerId?: SortOrder
@@ -30538,6 +32445,8 @@ export namespace Prisma {
     paymentMethod?: SortOrder
     paymentStatus?: SortOrder
     transactionId?: SortOrder
+    couponCode?: SortOrder
+    discount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     userId?: SortOrder
@@ -30546,6 +32455,7 @@ export namespace Prisma {
 
   export type GamehubBookingAvgOrderByAggregateInput = {
     totalAmount?: SortOrder
+    discount?: SortOrder
   }
 
   export type GamehubBookingMaxOrderByAggregateInput = {
@@ -30558,6 +32468,8 @@ export namespace Prisma {
     paymentMethod?: SortOrder
     paymentStatus?: SortOrder
     transactionId?: SortOrder
+    couponCode?: SortOrder
+    discount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     userId?: SortOrder
@@ -30574,6 +32486,8 @@ export namespace Prisma {
     paymentMethod?: SortOrder
     paymentStatus?: SortOrder
     transactionId?: SortOrder
+    couponCode?: SortOrder
+    discount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     userId?: SortOrder
@@ -30582,6 +32496,7 @@ export namespace Prisma {
 
   export type GamehubBookingSumOrderByAggregateInput = {
     totalAmount?: SortOrder
+    discount?: SortOrder
   }
 
   export type GamehubBlockedSlotCountOrderByAggregateInput = {
@@ -30767,6 +32682,78 @@ export namespace Prisma {
     footerText?: SortOrder
     socialLinks?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type CouponCountOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    description?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    minOrderAmount?: SortOrder
+    maxDiscount?: SortOrder
+    usageLimit?: SortOrder
+    usedCount?: SortOrder
+    perUserLimit?: SortOrder
+    applicableTo?: SortOrder
+    isActive?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CouponAvgOrderByAggregateInput = {
+    discountValue?: SortOrder
+    minOrderAmount?: SortOrder
+    maxDiscount?: SortOrder
+    usageLimit?: SortOrder
+    usedCount?: SortOrder
+    perUserLimit?: SortOrder
+  }
+
+  export type CouponMaxOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    description?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    minOrderAmount?: SortOrder
+    maxDiscount?: SortOrder
+    usageLimit?: SortOrder
+    usedCount?: SortOrder
+    perUserLimit?: SortOrder
+    applicableTo?: SortOrder
+    isActive?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CouponMinOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    description?: SortOrder
+    discountType?: SortOrder
+    discountValue?: SortOrder
+    minOrderAmount?: SortOrder
+    maxDiscount?: SortOrder
+    usageLimit?: SortOrder
+    usedCount?: SortOrder
+    perUserLimit?: SortOrder
+    applicableTo?: SortOrder
+    isActive?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CouponSumOrderByAggregateInput = {
+    discountValue?: SortOrder
+    minOrderAmount?: SortOrder
+    maxDiscount?: SortOrder
+    usageLimit?: SortOrder
+    usedCount?: SortOrder
+    perUserLimit?: SortOrder
   }
 
   export type EventCreateNestedManyWithoutPartnerInput = {
@@ -32345,6 +34332,14 @@ export namespace Prisma {
     tags?: string
     duration?: string | null
     mapLink?: string | null
+    terms?: string | null
+    language?: string | null
+    ageLimit?: string | null
+    ticketAgeLimit?: string | null
+    layout?: string | null
+    seating?: string | null
+    kidsAllowed?: boolean
+    petsAllowed?: boolean
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -32387,6 +34382,14 @@ export namespace Prisma {
     tags?: string
     duration?: string | null
     mapLink?: string | null
+    terms?: string | null
+    language?: string | null
+    ageLimit?: string | null
+    ticketAgeLimit?: string | null
+    layout?: string | null
+    seating?: string | null
+    kidsAllowed?: boolean
+    petsAllowed?: boolean
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -32417,6 +34420,8 @@ export namespace Prisma {
     status?: string
     qrCode?: string | null
     seatNumbers?: string | null
+    couponCode?: string | null
+    discount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     event: EventCreateNestedOneWithoutBookingsInput
@@ -32433,6 +34438,8 @@ export namespace Prisma {
     status?: string
     qrCode?: string | null
     seatNumbers?: string | null
+    couponCode?: string | null
+    discount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     eventId: string
@@ -32462,6 +34469,8 @@ export namespace Prisma {
     paymentMethod?: string
     paymentStatus?: string
     transactionId: string
+    couponCode?: string | null
+    discount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     facility: GamehubFacilityCreateNestedOneWithoutBookingsInput
@@ -32477,6 +34486,8 @@ export namespace Prisma {
     paymentMethod?: string
     paymentStatus?: string
     transactionId: string
+    couponCode?: string | null
+    discount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     facilityId: string
@@ -32571,6 +34582,7 @@ export namespace Prisma {
     battleModes?: string
     slotTemplate?: string
     availableSports?: string
+    terms?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviews?: GamehubReviewCreateNestedManyWithoutFacilityInput
@@ -32603,6 +34615,7 @@ export namespace Prisma {
     battleModes?: string
     slotTemplate?: string
     availableSports?: string
+    terms?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviews?: GamehubReviewUncheckedCreateNestedManyWithoutFacilityInput
@@ -32721,6 +34734,14 @@ export namespace Prisma {
     tags?: StringFilter<"Event"> | string
     duration?: StringNullableFilter<"Event"> | string | null
     mapLink?: StringNullableFilter<"Event"> | string | null
+    terms?: StringNullableFilter<"Event"> | string | null
+    language?: StringNullableFilter<"Event"> | string | null
+    ageLimit?: StringNullableFilter<"Event"> | string | null
+    ticketAgeLimit?: StringNullableFilter<"Event"> | string | null
+    layout?: StringNullableFilter<"Event"> | string | null
+    seating?: StringNullableFilter<"Event"> | string | null
+    kidsAllowed?: BoolFilter<"Event"> | boolean
+    petsAllowed?: BoolFilter<"Event"> | boolean
     seatLayout?: StringFilter<"Event"> | string
     seatRows?: IntNullableFilter<"Event"> | number | null
     seatsPerRow?: IntNullableFilter<"Event"> | number | null
@@ -32757,6 +34778,8 @@ export namespace Prisma {
     status?: StringFilter<"Booking"> | string
     qrCode?: StringNullableFilter<"Booking"> | string | null
     seatNumbers?: StringNullableFilter<"Booking"> | string | null
+    couponCode?: StringNullableFilter<"Booking"> | string | null
+    discount?: FloatFilter<"Booking"> | number
     createdAt?: DateTimeFilter<"Booking"> | Date | string
     updatedAt?: DateTimeFilter<"Booking"> | Date | string
     userId?: StringFilter<"Booking"> | string
@@ -32793,6 +34816,8 @@ export namespace Prisma {
     paymentMethod?: StringFilter<"GamehubBooking"> | string
     paymentStatus?: StringFilter<"GamehubBooking"> | string
     transactionId?: StringFilter<"GamehubBooking"> | string
+    couponCode?: StringNullableFilter<"GamehubBooking"> | string | null
+    discount?: FloatFilter<"GamehubBooking"> | number
     createdAt?: DateTimeFilter<"GamehubBooking"> | Date | string
     updatedAt?: DateTimeFilter<"GamehubBooking"> | Date | string
     userId?: StringFilter<"GamehubBooking"> | string
@@ -32900,6 +34925,7 @@ export namespace Prisma {
     battleModes?: StringFilter<"GamehubFacility"> | string
     slotTemplate?: StringFilter<"GamehubFacility"> | string
     availableSports?: StringFilter<"GamehubFacility"> | string
+    terms?: StringNullableFilter<"GamehubFacility"> | string | null
     createdAt?: DateTimeFilter<"GamehubFacility"> | Date | string
     updatedAt?: DateTimeFilter<"GamehubFacility"> | Date | string
     partnerId?: StringNullableFilter<"GamehubFacility"> | string | null
@@ -33020,6 +35046,8 @@ export namespace Prisma {
     status?: string
     qrCode?: string | null
     seatNumbers?: string | null
+    couponCode?: string | null
+    discount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutBookingsInput
@@ -33036,6 +35064,8 @@ export namespace Prisma {
     status?: string
     qrCode?: string | null
     seatNumbers?: string | null
+    couponCode?: string | null
+    discount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     userId: string
@@ -33332,6 +35362,14 @@ export namespace Prisma {
     tags?: string
     duration?: string | null
     mapLink?: string | null
+    terms?: string | null
+    language?: string | null
+    ageLimit?: string | null
+    ticketAgeLimit?: string | null
+    layout?: string | null
+    seating?: string | null
+    kidsAllowed?: boolean
+    petsAllowed?: boolean
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -33374,6 +35412,14 @@ export namespace Prisma {
     tags?: string
     duration?: string | null
     mapLink?: string | null
+    terms?: string | null
+    language?: string | null
+    ageLimit?: string | null
+    ticketAgeLimit?: string | null
+    layout?: string | null
+    seating?: string | null
+    kidsAllowed?: boolean
+    petsAllowed?: boolean
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -33456,6 +35502,14 @@ export namespace Prisma {
     tags?: StringFieldUpdateOperationsInput | string
     duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    ageLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    ticketAgeLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    layout?: NullableStringFieldUpdateOperationsInput | string | null
+    seating?: NullableStringFieldUpdateOperationsInput | string | null
+    kidsAllowed?: BoolFieldUpdateOperationsInput | boolean
+    petsAllowed?: BoolFieldUpdateOperationsInput | boolean
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -33498,6 +35552,14 @@ export namespace Prisma {
     tags?: StringFieldUpdateOperationsInput | string
     duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    ageLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    ticketAgeLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    layout?: NullableStringFieldUpdateOperationsInput | string | null
+    seating?: NullableStringFieldUpdateOperationsInput | string | null
+    kidsAllowed?: BoolFieldUpdateOperationsInput | boolean
+    petsAllowed?: BoolFieldUpdateOperationsInput | boolean
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -33616,6 +35678,14 @@ export namespace Prisma {
     tags?: string
     duration?: string | null
     mapLink?: string | null
+    terms?: string | null
+    language?: string | null
+    ageLimit?: string | null
+    ticketAgeLimit?: string | null
+    layout?: string | null
+    seating?: string | null
+    kidsAllowed?: boolean
+    petsAllowed?: boolean
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -33658,6 +35728,14 @@ export namespace Prisma {
     tags?: string
     duration?: string | null
     mapLink?: string | null
+    terms?: string | null
+    language?: string | null
+    ageLimit?: string | null
+    ticketAgeLimit?: string | null
+    layout?: string | null
+    seating?: string | null
+    kidsAllowed?: boolean
+    petsAllowed?: boolean
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -33875,6 +35953,14 @@ export namespace Prisma {
     tags?: StringFieldUpdateOperationsInput | string
     duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    ageLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    ticketAgeLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    layout?: NullableStringFieldUpdateOperationsInput | string | null
+    seating?: NullableStringFieldUpdateOperationsInput | string | null
+    kidsAllowed?: BoolFieldUpdateOperationsInput | boolean
+    petsAllowed?: BoolFieldUpdateOperationsInput | boolean
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -33917,6 +36003,14 @@ export namespace Prisma {
     tags?: StringFieldUpdateOperationsInput | string
     duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    ageLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    ticketAgeLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    layout?: NullableStringFieldUpdateOperationsInput | string | null
+    seating?: NullableStringFieldUpdateOperationsInput | string | null
+    kidsAllowed?: BoolFieldUpdateOperationsInput | boolean
+    petsAllowed?: BoolFieldUpdateOperationsInput | boolean
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -34071,6 +36165,14 @@ export namespace Prisma {
     tags?: string
     duration?: string | null
     mapLink?: string | null
+    terms?: string | null
+    language?: string | null
+    ageLimit?: string | null
+    ticketAgeLimit?: string | null
+    layout?: string | null
+    seating?: string | null
+    kidsAllowed?: boolean
+    petsAllowed?: boolean
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -34113,6 +36215,14 @@ export namespace Prisma {
     tags?: string
     duration?: string | null
     mapLink?: string | null
+    terms?: string | null
+    language?: string | null
+    ageLimit?: string | null
+    ticketAgeLimit?: string | null
+    layout?: string | null
+    seating?: string | null
+    kidsAllowed?: boolean
+    petsAllowed?: boolean
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -34170,6 +36280,8 @@ export namespace Prisma {
     status?: string
     qrCode?: string | null
     seatNumbers?: string | null
+    couponCode?: string | null
+    discount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutBookingsInput
@@ -34186,6 +36298,8 @@ export namespace Prisma {
     status?: string
     qrCode?: string | null
     seatNumbers?: string | null
+    couponCode?: string | null
+    discount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     userId: string
@@ -34245,6 +36359,14 @@ export namespace Prisma {
     tags?: StringFieldUpdateOperationsInput | string
     duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    ageLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    ticketAgeLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    layout?: NullableStringFieldUpdateOperationsInput | string | null
+    seating?: NullableStringFieldUpdateOperationsInput | string | null
+    kidsAllowed?: BoolFieldUpdateOperationsInput | boolean
+    petsAllowed?: BoolFieldUpdateOperationsInput | boolean
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -34287,6 +36409,14 @@ export namespace Prisma {
     tags?: StringFieldUpdateOperationsInput | string
     duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    ageLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    ticketAgeLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    layout?: NullableStringFieldUpdateOperationsInput | string | null
+    seating?: NullableStringFieldUpdateOperationsInput | string | null
+    kidsAllowed?: BoolFieldUpdateOperationsInput | boolean
+    petsAllowed?: BoolFieldUpdateOperationsInput | boolean
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -34469,6 +36599,8 @@ export namespace Prisma {
     status?: string
     qrCode?: string | null
     seatNumbers?: string | null
+    couponCode?: string | null
+    discount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutBookingsInput
@@ -34485,6 +36617,8 @@ export namespace Prisma {
     status?: string
     qrCode?: string | null
     seatNumbers?: string | null
+    couponCode?: string | null
+    discount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     userId: string
@@ -34544,6 +36678,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     seatNumbers?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutBookingsNestedInput
@@ -34560,6 +36696,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     seatNumbers?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
@@ -34609,6 +36747,8 @@ export namespace Prisma {
     status?: string
     qrCode?: string | null
     seatNumbers?: string | null
+    couponCode?: string | null
+    discount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutBookingsInput
@@ -34625,6 +36765,8 @@ export namespace Prisma {
     status?: string
     qrCode?: string | null
     seatNumbers?: string | null
+    couponCode?: string | null
+    discount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     userId: string
@@ -34684,6 +36826,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     seatNumbers?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutBookingsNestedInput
@@ -34700,6 +36844,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     seatNumbers?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
@@ -34749,6 +36895,8 @@ export namespace Prisma {
     status?: string
     qrCode?: string | null
     seatNumbers?: string | null
+    couponCode?: string | null
+    discount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutBookingsInput
@@ -34765,6 +36913,8 @@ export namespace Prisma {
     status?: string
     qrCode?: string | null
     seatNumbers?: string | null
+    couponCode?: string | null
+    discount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     userId: string
@@ -34797,6 +36947,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     seatNumbers?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutBookingsNestedInput
@@ -34813,6 +36965,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     seatNumbers?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
@@ -35004,6 +37158,14 @@ export namespace Prisma {
     tags?: string
     duration?: string | null
     mapLink?: string | null
+    terms?: string | null
+    language?: string | null
+    ageLimit?: string | null
+    ticketAgeLimit?: string | null
+    layout?: string | null
+    seating?: string | null
+    kidsAllowed?: boolean
+    petsAllowed?: boolean
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -35046,6 +37208,14 @@ export namespace Prisma {
     tags?: string
     duration?: string | null
     mapLink?: string | null
+    terms?: string | null
+    language?: string | null
+    ageLimit?: string | null
+    ticketAgeLimit?: string | null
+    layout?: string | null
+    seating?: string | null
+    kidsAllowed?: boolean
+    petsAllowed?: boolean
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -35159,6 +37329,14 @@ export namespace Prisma {
     tags?: StringFieldUpdateOperationsInput | string
     duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    ageLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    ticketAgeLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    layout?: NullableStringFieldUpdateOperationsInput | string | null
+    seating?: NullableStringFieldUpdateOperationsInput | string | null
+    kidsAllowed?: BoolFieldUpdateOperationsInput | boolean
+    petsAllowed?: BoolFieldUpdateOperationsInput | boolean
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -35201,6 +37379,14 @@ export namespace Prisma {
     tags?: StringFieldUpdateOperationsInput | string
     duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    ageLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    ticketAgeLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    layout?: NullableStringFieldUpdateOperationsInput | string | null
+    seating?: NullableStringFieldUpdateOperationsInput | string | null
+    kidsAllowed?: BoolFieldUpdateOperationsInput | boolean
+    petsAllowed?: BoolFieldUpdateOperationsInput | boolean
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -35303,6 +37489,8 @@ export namespace Prisma {
     paymentMethod?: string
     paymentStatus?: string
     transactionId: string
+    couponCode?: string | null
+    discount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutGamehubBookingsInput
@@ -35318,6 +37506,8 @@ export namespace Prisma {
     paymentMethod?: string
     paymentStatus?: string
     transactionId: string
+    couponCode?: string | null
+    discount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     userId: string
@@ -35516,6 +37706,7 @@ export namespace Prisma {
     battleModes?: string
     slotTemplate?: string
     availableSports?: string
+    terms?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     partner?: UserCreateNestedOneWithoutGamehubFacilitiesInput
@@ -35548,6 +37739,7 @@ export namespace Prisma {
     battleModes?: string
     slotTemplate?: string
     availableSports?: string
+    terms?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     partnerId?: string | null
@@ -35596,6 +37788,7 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partner?: UserUpdateOneWithoutGamehubFacilitiesNestedInput
@@ -35628,6 +37821,7 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35709,6 +37903,7 @@ export namespace Prisma {
     battleModes?: string
     slotTemplate?: string
     availableSports?: string
+    terms?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     partner?: UserCreateNestedOneWithoutGamehubFacilitiesInput
@@ -35741,6 +37936,7 @@ export namespace Prisma {
     battleModes?: string
     slotTemplate?: string
     availableSports?: string
+    terms?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     partnerId?: string | null
@@ -35844,6 +38040,7 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partner?: UserUpdateOneWithoutGamehubFacilitiesNestedInput
@@ -35876,6 +38073,7 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35908,6 +38106,7 @@ export namespace Prisma {
     battleModes?: string
     slotTemplate?: string
     availableSports?: string
+    terms?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     partner?: UserCreateNestedOneWithoutGamehubFacilitiesInput
@@ -35940,6 +38139,7 @@ export namespace Prisma {
     battleModes?: string
     slotTemplate?: string
     availableSports?: string
+    terms?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     partnerId?: string | null
@@ -35988,6 +38188,7 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partner?: UserUpdateOneWithoutGamehubFacilitiesNestedInput
@@ -36020,6 +38221,7 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36373,6 +38575,14 @@ export namespace Prisma {
     tags?: string
     duration?: string | null
     mapLink?: string | null
+    terms?: string | null
+    language?: string | null
+    ageLimit?: string | null
+    ticketAgeLimit?: string | null
+    layout?: string | null
+    seating?: string | null
+    kidsAllowed?: boolean
+    petsAllowed?: boolean
     seatLayout?: string
     seatRows?: number | null
     seatsPerRow?: number | null
@@ -36389,6 +38599,8 @@ export namespace Prisma {
     status?: string
     qrCode?: string | null
     seatNumbers?: string | null
+    couponCode?: string | null
+    discount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     eventId: string
@@ -36405,6 +38617,8 @@ export namespace Prisma {
     paymentMethod?: string
     paymentStatus?: string
     transactionId: string
+    couponCode?: string | null
+    discount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     facilityId: string
@@ -36452,6 +38666,7 @@ export namespace Prisma {
     battleModes?: string
     slotTemplate?: string
     availableSports?: string
+    terms?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -36495,6 +38710,14 @@ export namespace Prisma {
     tags?: StringFieldUpdateOperationsInput | string
     duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    ageLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    ticketAgeLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    layout?: NullableStringFieldUpdateOperationsInput | string | null
+    seating?: NullableStringFieldUpdateOperationsInput | string | null
+    kidsAllowed?: BoolFieldUpdateOperationsInput | boolean
+    petsAllowed?: BoolFieldUpdateOperationsInput | boolean
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -36537,6 +38760,14 @@ export namespace Prisma {
     tags?: StringFieldUpdateOperationsInput | string
     duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    ageLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    ticketAgeLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    layout?: NullableStringFieldUpdateOperationsInput | string | null
+    seating?: NullableStringFieldUpdateOperationsInput | string | null
+    kidsAllowed?: BoolFieldUpdateOperationsInput | boolean
+    petsAllowed?: BoolFieldUpdateOperationsInput | boolean
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -36579,6 +38810,14 @@ export namespace Prisma {
     tags?: StringFieldUpdateOperationsInput | string
     duration?: NullableStringFieldUpdateOperationsInput | string | null
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
+    language?: NullableStringFieldUpdateOperationsInput | string | null
+    ageLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    ticketAgeLimit?: NullableStringFieldUpdateOperationsInput | string | null
+    layout?: NullableStringFieldUpdateOperationsInput | string | null
+    seating?: NullableStringFieldUpdateOperationsInput | string | null
+    kidsAllowed?: BoolFieldUpdateOperationsInput | boolean
+    petsAllowed?: BoolFieldUpdateOperationsInput | boolean
     seatLayout?: StringFieldUpdateOperationsInput | string
     seatRows?: NullableIntFieldUpdateOperationsInput | number | null
     seatsPerRow?: NullableIntFieldUpdateOperationsInput | number | null
@@ -36595,6 +38834,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     seatNumbers?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     event?: EventUpdateOneRequiredWithoutBookingsNestedInput
@@ -36611,6 +38852,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     seatNumbers?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     eventId?: StringFieldUpdateOperationsInput | string
@@ -36627,6 +38870,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     seatNumbers?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     eventId?: StringFieldUpdateOperationsInput | string
@@ -36643,6 +38888,8 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     paymentStatus?: StringFieldUpdateOperationsInput | string
     transactionId?: StringFieldUpdateOperationsInput | string
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     facility?: GamehubFacilityUpdateOneRequiredWithoutBookingsNestedInput
@@ -36658,6 +38905,8 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     paymentStatus?: StringFieldUpdateOperationsInput | string
     transactionId?: StringFieldUpdateOperationsInput | string
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     facilityId?: StringFieldUpdateOperationsInput | string
@@ -36673,6 +38922,8 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     paymentStatus?: StringFieldUpdateOperationsInput | string
     transactionId?: StringFieldUpdateOperationsInput | string
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     facilityId?: StringFieldUpdateOperationsInput | string
@@ -36754,6 +39005,7 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviews?: GamehubReviewUpdateManyWithoutFacilityNestedInput
@@ -36786,6 +39038,7 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviews?: GamehubReviewUncheckedUpdateManyWithoutFacilityNestedInput
@@ -36818,6 +39071,7 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -36859,6 +39113,8 @@ export namespace Prisma {
     status?: string
     qrCode?: string | null
     seatNumbers?: string | null
+    couponCode?: string | null
+    discount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     userId: string
@@ -36903,6 +39159,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     seatNumbers?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutBookingsNestedInput
@@ -36919,6 +39177,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     seatNumbers?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
@@ -36935,6 +39195,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     seatNumbers?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
@@ -37137,6 +39399,8 @@ export namespace Prisma {
     status?: string
     qrCode?: string | null
     seatNumbers?: string | null
+    couponCode?: string | null
+    discount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     userId: string
@@ -37182,6 +39446,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     seatNumbers?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutBookingsNestedInput
@@ -37198,6 +39464,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     seatNumbers?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
@@ -37214,6 +39482,8 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     qrCode?: NullableStringFieldUpdateOperationsInput | string | null
     seatNumbers?: NullableStringFieldUpdateOperationsInput | string | null
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
@@ -37240,6 +39510,8 @@ export namespace Prisma {
     paymentMethod?: string
     paymentStatus?: string
     transactionId: string
+    couponCode?: string | null
+    discount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     userId: string
@@ -37294,6 +39566,8 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     paymentStatus?: StringFieldUpdateOperationsInput | string
     transactionId?: StringFieldUpdateOperationsInput | string
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutGamehubBookingsNestedInput
@@ -37309,6 +39583,8 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     paymentStatus?: StringFieldUpdateOperationsInput | string
     transactionId?: StringFieldUpdateOperationsInput | string
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
@@ -37324,6 +39600,8 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     paymentStatus?: StringFieldUpdateOperationsInput | string
     transactionId?: StringFieldUpdateOperationsInput | string
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string

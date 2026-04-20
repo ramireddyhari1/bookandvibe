@@ -63,7 +63,7 @@ export default function ProfilePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#fafafa] pt-24 pb-16 selection:bg-orange-500/20">
+    <div className="min-h-screen bg-[#fafafa] pt-[130px] pb-16 selection:bg-orange-500/20">
       <div className="max-w-[1100px] mx-auto px-4 lg:px-8">
         
         {/* Back Button */}

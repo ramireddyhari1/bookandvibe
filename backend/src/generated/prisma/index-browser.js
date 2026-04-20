@@ -164,6 +164,14 @@ exports.Prisma.EventScalarFieldEnum = {
   tags: 'tags',
   duration: 'duration',
   mapLink: 'mapLink',
+  terms: 'terms',
+  language: 'language',
+  ageLimit: 'ageLimit',
+  ticketAgeLimit: 'ticketAgeLimit',
+  layout: 'layout',
+  seating: 'seating',
+  kidsAllowed: 'kidsAllowed',
+  petsAllowed: 'petsAllowed',
   seatLayout: 'seatLayout',
   seatRows: 'seatRows',
   seatsPerRow: 'seatsPerRow',
@@ -192,6 +200,8 @@ exports.Prisma.BookingScalarFieldEnum = {
   status: 'status',
   qrCode: 'qrCode',
   seatNumbers: 'seatNumbers',
+  couponCode: 'couponCode',
+  discount: 'discount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   userId: 'userId',
@@ -293,6 +303,7 @@ exports.Prisma.GamehubFacilityScalarFieldEnum = {
   battleModes: 'battleModes',
   slotTemplate: 'slotTemplate',
   availableSports: 'availableSports',
+  terms: 'terms',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   partnerId: 'partnerId'
@@ -319,6 +330,8 @@ exports.Prisma.GamehubBookingScalarFieldEnum = {
   paymentMethod: 'paymentMethod',
   paymentStatus: 'paymentStatus',
   transactionId: 'transactionId',
+  couponCode: 'couponCode',
+  discount: 'discount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   userId: 'userId',
@@ -373,6 +386,24 @@ exports.Prisma.WebsiteConfigScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.CouponScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  description: 'description',
+  discountType: 'discountType',
+  discountValue: 'discountValue',
+  minOrderAmount: 'minOrderAmount',
+  maxDiscount: 'maxDiscount',
+  usageLimit: 'usageLimit',
+  usedCount: 'usedCount',
+  perUserLimit: 'perUserLimit',
+  applicableTo: 'applicableTo',
+  isActive: 'isActive',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -408,7 +439,8 @@ exports.Prisma.ModelName = {
   Wallet: 'Wallet',
   WalletTransaction: 'WalletTransaction',
   Payout: 'Payout',
-  WebsiteConfig: 'WebsiteConfig'
+  WebsiteConfig: 'WebsiteConfig',
+  Coupon: 'Coupon'
 };
 
 /**

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState, useCallback } from "react";
 import Link from "next/link";
 import Script from "next/script";
 import { useParams, useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Activity,
   ArrowLeft,
@@ -23,7 +24,8 @@ import {
   Trophy,
   Users,
   X,
-  Zap
+  Zap,
+  FileText
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { fetchApi } from "@/lib/api";
@@ -74,6 +76,7 @@ type Facility = {
   slotTemplate: Array<{ label: string; isBooked: boolean }>;
   pricingRules?: PricingRule[];
   availableSports?: string[];
+  terms?: string;
   reviews?: Review[];
 };
 
@@ -111,6 +114,7 @@ export default function FacilityDetailPage() {
   const [showPriceChart, setShowPriceChart] = useState(false);
   const [showBookingSheet, setShowBookingSheet] = useState(false);
   const [activeChartSport, setActiveChartSport] = useState("");
+  const [showTermsModal, setShowTermsModal] = useState(false);
 
   const sportsList = useMemo(() => {
     if (!facility) return [];
@@ -433,6 +437,23 @@ export default function FacilityDetailPage() {
                     </div>
                   ))}
                </div>
+            </div>
+
+            {/* More Section */}
+            <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
+               <h2 className="text-[22px] font-black mb-6 tracking-tight">More</h2>
+               <button 
+                 onClick={() => setShowTermsModal(true)}
+                 className="w-full bg-white border border-gray-100 rounded-2xl p-5 flex items-center justify-between group active:scale-[0.98] transition-all hover:border-gray-200 shadow-sm"
+               >
+                  <div className="flex items-center gap-4">
+                     <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:text-[#42B460] transition-colors">
+                        <FileText size={20} />
+                     </div>
+                     <span className="text-[16px] font-black text-gray-800 tracking-tight">Terms and Conditions</span>
+                  </div>
+                  <ChevronRight size={18} className="text-gray-300 group-hover:text-gray-500 transition-all" />
+               </button>
             </div>
 
             {/* Location / Contact */}
@@ -810,8 +831,64 @@ export default function FacilityDetailPage() {
         sport={activeChartSport}
         basePrice={facility.pricePerHour}
         unit={facility.unit}
-        pricingRules={facility.pricingRules || []}
-      />
-    </div>
-  );
-}
+         pricingRules={facility.pricingRules || []}
+       />
+ 
+       {/* ═══ TERMS MODAL ═══ */}
+       <AnimatePresence>
+         {showTermsModal && (
+           <motion.div 
+             initial={{ opacity: 0 }}
+             animate={{ opacity: 1 }}
+             exit={{ opacity: 0 }}
+             className="fixed inset-0 z-[400] bg-black/40 backdrop-blur-sm flex items-end justify-center p-0 md:p-6"
+           >
+              <div className="absolute inset-0" onClick={() => setShowTermsModal(false)} />
+ 
+              <motion.div 
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                exit={{ y: "100%" }}
+                transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                className="w-full max-w-lg bg-white rounded-t-[32px] md:rounded-[32px] overflow-hidden shadow-2xl relative z-10 flex flex-col max-h-[85vh]"
+              >
+                 <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mt-4 mb-2 shrink-0 md:hidden" />
+                 
+                 <div className="px-6 py-6 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white z-10">
+                    <h2 className="text-xl font-black text-gray-900 tracking-tight">Terms & Conditions</h2>
+                    <button 
+                      onClick={() => setShowTermsModal(false)}
+                      className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors"
+                    >
+                       <X size={18} />
+                    </button>
+                 </div>
+ 
+                 <div className="flex-1 overflow-y-auto px-6 py-8">
+                    {facility.terms ? (
+                      <div className="space-y-6">
+                        <div className="p-6 bg-[#42B460]/5 rounded-2xl border border-[#42B460]/10">
+                          <h3 className="font-extrabold text-[#42B460] mb-3 flex items-center gap-2 uppercase tracking-wide text-[12px]">
+                            <ShieldCheck size={16} /> Venue Specific Rules
+                          </h3>
+                          <p className="text-gray-700 leading-relaxed font-semibold whitespace-pre-line text-[14px]">
+                            {facility.terms}
+                          </p>
+                        </div>
+                        <p className="text-[12px] text-gray-400 font-bold flex items-center gap-2 uppercase tracking-wider text-center justify-center pt-4">
+                          <Info size={14} /> By booking, you agree to these venue terms.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="py-12 text-center text-gray-400 font-medium">
+                        Standard facility terms apply to this venue.
+                      </div>
+                    )}
+                 </div>
+              </motion.div>
+           </motion.div>
+         )}
+       </AnimatePresence>
+     </div>
+   );
+ }

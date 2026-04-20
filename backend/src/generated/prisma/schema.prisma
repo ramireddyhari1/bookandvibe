@@ -65,6 +65,14 @@ model Event {
   tags             String    @default("[]") // JSON array of tags
   duration         String?   @default("2-3 Hours") // Estimated duration of the event
   mapLink          String? // Google Maps URL for venue directions
+  terms            String?   @default("") // Custom Terms & Conditions for the event
+  language         String?   @default("English")
+  ageLimit         String?   @default("Entry allowed for all ages")
+  ticketAgeLimit   String?   @default("Ticket needed for all ages")
+  layout           String?   @default("Indoor")
+  seating          String?   @default("Seated")
+  kidsAllowed      Boolean   @default(true)
+  petsAllowed      Boolean   @default(false)
 
   // Seating configuration (stored as JSON)
   seatLayout    String  @default("standard") // standard, theater, stadium, openground, custom
@@ -108,6 +116,8 @@ model Booking {
   status      String   @default("CONFIRMED") // CONFIRMED, CANCELLED, USED, PENDING
   qrCode      String?
   seatNumbers String? // JSON array of selected seat numbers
+  couponCode  String?
+  discount    Float    @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -254,6 +264,7 @@ model GamehubFacility {
   battleModes     String   @default("[]")
   slotTemplate    String   @default("[]")
   availableSports String   @default("[]")
+  terms           String?  @default("") // Custom Terms & Conditions for the facility
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   partnerId       String?
@@ -297,6 +308,8 @@ model GamehubBooking {
   paymentMethod String   @default("MOCK")
   paymentStatus String   @default("SUCCESS")
   transactionId String   @unique
+  couponCode    String?
+  discount      Float    @default(0)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -377,4 +390,24 @@ model WebsiteConfig {
   footerText  String   @default("")
   socialLinks String   @default("[]") // JSON string of social links
   updatedAt   DateTime @updatedAt
+}
+
+// ─── Coupons & Promotions ────────────────────────────────────────────────────
+
+model Coupon {
+  id             String    @id @default(uuid())
+  code           String    @unique // e.g. "WELCOME20", "FLAT100"
+  description    String    @default("")
+  discountType   String    @default("PERCENT") // PERCENT or FIXED
+  discountValue  Float // 20 = 20% or ₹20
+  minOrderAmount Float     @default(0) // Min cart total to use
+  maxDiscount    Float? // Cap on discount (for PERCENT)
+  usageLimit     Int? // Total uses allowed (null = unlimited)
+  usedCount      Int       @default(0) // How many times used
+  perUserLimit   Int       @default(1) // Max uses per user
+  applicableTo   String    @default("ALL") // ALL, EVENTS, GAMEHUB
+  isActive       Boolean   @default(true)
+  expiresAt      DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 }
