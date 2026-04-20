@@ -512,7 +512,7 @@ export default function BookingsPage() {
                 const status = booking.status || "CONFIRMED";
                 const statusStyle = getStatusStyle(status);
                 const amount = booking.totalAmount || 0;
-                const imageUrl = isEvent ? getEventImage(booking.event?.images) : booking.facility?.image || "";
+                const imageUrl = isEvent ? getEventImage(booking.event?.images || "") : booking.facility?.image || "";
 
                 const formattedDate = dateStr
                   ? new Date(dateStr).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })

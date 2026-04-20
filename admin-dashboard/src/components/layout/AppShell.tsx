@@ -35,11 +35,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const [resolvedRole, setResolvedRole] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const cookieRole = typeof window !== "undefined" ? String(readCookie("admin_dash_role") || "").toUpperCase() : "";
 
   useEffect(() => {
     Promise.resolve().then(() => setMounted(true));
     const raw = sessionStorage.getItem("admin_dash_user") || localStorage.getItem("admin_dash_user");
-    const cookieRole = String(readCookie("admin_dash_role") || "").toUpperCase();
 
     if (raw) {
       try {

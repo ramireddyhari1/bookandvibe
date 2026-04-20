@@ -9,7 +9,7 @@ export const API_BASE = process.env.NEXT_PUBLIC_API_URL || getBaseUrl();
 
 type FetchOptions = RequestInit & { requiresAuth?: boolean };
 
-export async function fetchApi(endpoint: string, options: FetchOptions = {}) {
+export async function fetchApi<T = any>(endpoint: string, options: FetchOptions = {}): Promise<T> {
   const { requiresAuth = true, ...customConfig } = options;
   
   const headers: HeadersInit = {
@@ -37,7 +37,7 @@ export async function fetchApi(endpoint: string, options: FetchOptions = {}) {
   const response = await fetch(url, config);
   
   // Handle empty responses
-  let data = {};
+  let data: any = {};
   const contentType = response.headers.get("content-type");
   if (contentType && contentType.includes("application/json")) {
     data = await response.json();

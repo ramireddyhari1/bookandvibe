@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Calendar, Edit2, Search, Shield, Users as UsersIcon } from "lucide-react";
 import EditUserModal from "@/components/users/EditUserModal";
+import { fetchApi } from "@/lib/api";
 
 type UserRecord = {
   id: string;
@@ -239,7 +240,7 @@ export default function UsersPage() {
       </section>
 
       <EditUserModal 
-        user={editingUser} 
+        user={editingUser as any} 
         onClose={() => setEditingUser(null)}
         onUpdate={(updated) => {
           setUsers(prev => prev.map(u => u.id === updated.id ? { ...u, ...updated } : u));

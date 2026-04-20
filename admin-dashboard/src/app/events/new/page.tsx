@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   AlertCircle,
@@ -57,7 +57,7 @@ const DEFAULT_TIERS: Tier[] = [
   { id: "2", name: "General", price: "", quantity: "", description: "General admission", color: "blue" },
 ];
 
-export default function CreateEventPage() {
+function CreateEventPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const eventIdFromQuery = String(searchParams.get("eventId") || "");
@@ -305,7 +305,6 @@ export default function CreateEventPage() {
       ageLimit: eventDetails.ageLimit,
       ticketAgeLimit: eventDetails.ticketAgeLimit,
       layout: eventDetails.layout,
-      seating: eventDetails.seating,
       kidsAllowed: eventDetails.kidsAllowed,
       petsAllowed: eventDetails.petsAllowed,
       date: schedule.date,
@@ -527,26 +526,27 @@ export default function CreateEventPage() {
         if (!eventIdFromQuery) return;
 
         const eventPayload = await fetchApi(`/events/manage/${eventIdFromQuery}`) as { data?: Record<string, unknown> };
-        const event = eventPayload?.data;
+        const event = eventPayload?.data as Record<string, any>; // Use any here for the large data object to avoid complex interface mapping in the short term, but satisfies the assignment needs
         if (!event || !mounted) return;
 
         const parsedImages = (() => {
           try {
-            const arr = JSON.parse(event.images || "[]");
+            const arr = JSON.parse((event.images as string) || "[]");
             return Array.isArray(arr) ? arr : [];
           } catch {
             return [];
           }
         })();
 
-        setDraftId(event.id);
+        setDraftId(event.id as string);
         setBookingFormat((event.bookingFormat || "HYBRID") as BookingFormat);
         setEventDetails({
-          title: event.title || "",
+          title: (event.title as string) || "",
           description: event.description || "",
           category: event.category || "MUSIC",
           location: event.location || "",
           venue: event.venue || "",
+          mapLink: event.mapLink || "",
           cardImage: parsedImages[0] || "",
           bannerImage: parsedImages[1] || parsedImages[0] || "",
           terms: event.terms || "",
@@ -1410,5 +1410,13 @@ export default function CreateEventPage() {
         </p>
       </section>
     </div>
+  );
+}
+
+export default function CreateEventPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-[#070b1d] text-white">Loading builder...</div>}>
+      <CreateEventPageContent />
+    </Suspense>
   );
 }

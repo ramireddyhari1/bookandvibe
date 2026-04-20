@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight, Building2, Eye, EyeOff, ShieldCheck, Sparkles, Users } from "lucide-react";
 
@@ -22,7 +22,7 @@ function setAuthCookies(token: string, role: string) {
   document.cookie = "admin_dash_session=1; path=/; samesite=lax";
 }
 
-export default function AdminLoginPage() {
+function LoginPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
@@ -45,11 +45,11 @@ export default function AdminLoginPage() {
     setError("");
 
     try {
-      const payload = await fetchApi("/auth/login", {
+      const payload = (await fetchApi("/auth/login", {
         method: "POST",
         requiresAuth: false,
         body: JSON.stringify({ email: email.trim(), password }),
-      });
+      })) as any;
 
       const token = String(payload?.token || "");
       const user = payload?.user as LoginUser | undefined;
@@ -215,5 +215,13 @@ export default function AdminLoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AdminLoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#070b1d] flex items-center justify-center text-white">Loading...</div>}>
+      <LoginPageContent />
+    </Suspense>
   );
 }

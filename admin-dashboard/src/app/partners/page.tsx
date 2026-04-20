@@ -15,6 +15,7 @@ type PartnerRecord = {
   partnerType?: string | null;
   eventHostId?: string | null;
   gamehubFacilities?: { id: string; name: string }[];
+  avatar?: string | null;
   createdAt: string;
 };
 
@@ -481,7 +482,7 @@ export default function PartnersPage() {
       </section>
 
       <EditUserModal 
-        user={editingPartner} 
+        user={editingPartner as any} 
         onClose={() => setEditingPartner(null)}
         onUpdate={(updated) => {
           setPartners(prev => prev.map(p => p.id === updated.id ? { ...p, ...updated } : p));

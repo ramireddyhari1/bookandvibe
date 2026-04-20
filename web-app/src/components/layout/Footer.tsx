@@ -45,7 +45,7 @@ export default function Footer() {
     Pinterest: FaPinterestP,
   };
 
-  const socialLinks = websiteConfig?.socialLinks?.length > 0 ? websiteConfig.socialLinks : [
+  const socialLinks = (websiteConfig?.socialLinks && websiteConfig.socialLinks.length > 0) ? websiteConfig.socialLinks : [
     { platform: "Facebook", url: "#" },
     { platform: "Twitter", url: "#" },
     { platform: "Instagram", url: "#" },

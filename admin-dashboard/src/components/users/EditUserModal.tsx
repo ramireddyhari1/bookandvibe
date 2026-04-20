@@ -33,6 +33,7 @@ export default function EditUserModal({ user, onClose, onUpdate }: EditUserModal
   if (!user) return null;
 
   async function handleSubmit(e: React.FormEvent) {
+    if (!user) return;
     e.preventDefault();
     setLoading(true);
     setError("");

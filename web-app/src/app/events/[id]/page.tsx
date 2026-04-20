@@ -26,7 +26,6 @@ import {
   Info,
   CalendarDays,
   ArrowRight,
-  BadgeCheck,
   FileText,
   X,
   Languages,
