@@ -2,17 +2,92 @@ version: '3.8'
 
 services:
   db:
-    image: postgres:15
-    container_name: book_vibe_postgres
+    image: postgres:15-alpine
+    container_name: bv-db
+    restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password123
-      POSTGRES_DB: book_and_vibe
-    ports:
-      - "5433:5432"
+      POSTGRES_USER: ${DB_USER:-bv_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-bv_pass}
+      POSTGRES_DB: ${DB_NAME:-book_and_vibe}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    restart: unless-stopped
+    networks:
+      - bv-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: bv-redis
+    restart: always
+    networks:
+      - bv-net
+
+  backend:
+    build:
+      context: ./backend
+    container_name: bv-backend
+    restart: always
+    env_file:
+      - ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://${DB_USER:-bv_user}:${DB_PASSWORD:-bv_pass}@db:5432/${DB_NAME:-book_and_vibe}?schema=public
+      REDIS_URL: redis://redis:6379
+      PORT: 5000
+      ALLOWED_ORIGINS: https://bookandvibe.in,https://admin.bookandvibe.in,https://www.bookandvibe.in
+    depends_on:
+      - db
+      - redis
+    networks:
+      - bv-net
+
+  web-app:
+    build:
+      context: ./web-app
+      args:
+        NEXT_PUBLIC_API_URL: https://api.bookandvibe.in/api
+    container_name: bv-web
+    restart: always
+    environment:
+      - PORT=3000
+    depends_on:
+      - backend
+    networks:
+      - bv-net
+
+  admin-dashboard:
+    build:
+      context: ./admin-dashboard
+      args:
+        NEXT_PUBLIC_API_URL: https://api.bookandvibe.in/api
+    container_name: bv-admin
+    restart: always
+    environment:
+      - PORT=3001
+    depends_on:
+      - backend
+    networks:
+      - bv-net
+
+  npm:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: bv-proxy
+    restart: always
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - ./nginx/data:/data
+      - ./nginx/letsencrypt:/etc/letsencrypt
+    depends_on:
+      - web-app
+      - admin-dashboard
+      - backend
+    networks:
+      - bv-net
+
+networks:
+  bv-net:
+    driver: bridge
 
 volumes:
   postgres_data:
