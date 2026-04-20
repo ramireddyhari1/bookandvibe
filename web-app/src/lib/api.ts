@@ -1,6 +1,14 @@
 const getBaseUrl = () => {
   if (typeof window !== "undefined") {
-    return `http://${window.location.hostname}:5000/api`;
+    const hostname = window.location.hostname;
+    const protocol = window.location.protocol;
+
+    // Production Smart Fallback
+    if (hostname.includes("bookandvibe.in")) {
+      return `https://api.bookandvibe.in/api`;
+    }
+
+    return `${protocol}//${hostname}:5000/api`;
   }
   return "http://127.0.0.1:5000/api";
 };
