@@ -230,7 +230,7 @@ export default function Navbar() {
                       ))
                     ) : (
                       <div className="p-4 text-center text-sm font-medium text-gray-500">
-                        No cities found matching "{searchQuery}"
+                        No cities found matching &quot;{searchQuery}&quot;
                       </div>
                     )}
                   </div>

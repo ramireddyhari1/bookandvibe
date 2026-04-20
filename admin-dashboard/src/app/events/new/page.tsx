@@ -366,9 +366,9 @@ export default function CreateEventPage() {
     const data = await fetchApi("/events", {
       method: "POST",
       body: JSON.stringify(payload),
-    });
-    setDraftId((data as any)?.data?.id || "");
-    return (data as any)?.data?.id || "";
+    }) as { data?: { id?: string } };
+    setDraftId(data?.data?.id || "");
+    return data?.data?.id || "";
   };
 
   const handleSaveDraft = async () => {
@@ -411,10 +411,10 @@ export default function CreateEventPage() {
 
       const validateData = await fetchApi(`/events/${eventId}/validate-publish`, {
         method: "POST",
-      });
+      }) as { data?: { canPublish?: boolean, failures?: string[] } };
 
-      if (!(validateData as any)?.data?.canPublish) {
-        const failures = (validateData as any)?.data?.failures || ["Event is incomplete."];
+      if (!validateData?.data?.canPublish) {
+        const failures = validateData?.data?.failures || ["Event is incomplete."];
         setReviewIssues(failures);
         setError(failures[0] || "Publish blocked by backend validation.");
         return;
@@ -505,7 +505,7 @@ export default function CreateEventPage() {
       }
 
       try {
-        const sessionPayload: any = await fetchApi("/auth/me");
+        const sessionPayload = await fetchApi("/auth/me") as { user?: { role: string } };
         const role = String(sessionPayload?.user?.role || "").toUpperCase();
         const isManager = (role === "ADMIN" || role === "PARTNER");
 
@@ -526,7 +526,7 @@ export default function CreateEventPage() {
 
         if (!eventIdFromQuery) return;
 
-        const eventPayload: any = await fetchApi(`/events/manage/${eventIdFromQuery}`);
+        const eventPayload = await fetchApi(`/events/manage/${eventIdFromQuery}`) as { data?: Record<string, unknown> };
         const event = eventPayload?.data;
         if (!event || !mounted) return;
 
@@ -598,7 +598,7 @@ export default function CreateEventPage() {
         setTags(event.tags ? JSON.parse(event.tags) : []);
       } catch (loadErr) {
         if (mounted) {
-          const status = (loadErr as any).status || 0;
+          const status = (loadErr as { status?: number }).status || 0;
           if ([401, 403, 404].includes(status)) {
             clearDashboardSession();
             setGlobalError("Session expired. Please login again as ADMIN or PARTNER.");

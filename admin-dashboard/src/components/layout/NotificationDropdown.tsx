@@ -37,7 +37,7 @@ export default function NotificationDropdown() {
     if (!isOpen) return;
 
     if (!hasLoaded) {
-      void loadNotifications();
+      void Promise.resolve().then(() => loadNotifications());
     }
 
     const interval = window.setInterval(() => {

@@ -16,19 +16,6 @@ type UserRecord = {
   totalSpent?: number;
 };
 
-import { fetchApi } from "@/lib/api";
-
-type UserRecord = {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  status: string;
-  createdAt: string;
-  _count?: { bookings?: number };
-  totalSpent?: number;
-};
-
 function toTitle(value: string): string {
   const normalized = String(value || "").toLowerCase();
   if (!normalized) return "Unknown";
@@ -71,7 +58,7 @@ export default function UsersPage() {
           return;
         }
 
-        const sessionPayload: any = await fetchApi("/auth/me");
+        const sessionPayload = await fetchApi("/auth/me") as { user: { role: string } };
         const role = String(sessionPayload?.user?.role || "").toUpperCase();
         if (role !== "ADMIN") {
           setError("Only ADMIN can view users data.");
@@ -81,10 +68,10 @@ export default function UsersPage() {
           return;
         }
 
-        const payload: any = await fetchApi("/users");
+        const payload = await fetchApi("/users") as { data: UserRecord[] };
         setUsers(Array.isArray(payload?.data) ? payload.data : []);
       } catch (err) {
-        const status = (err as any).status || 0;
+        const status = (err as { status?: number }).status || 0;
         if ([401, 403, 404].includes(status)) {
           clearDashboardSession();
           setError("Session expired. Please login again.");

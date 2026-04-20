@@ -77,8 +77,8 @@ export default function WithdrawPage() {
       } else {
         setError(response.error || "Failed to submit payout request");
       }
-    } catch (err: any) {
-      setError(err.message || "Error submitting request");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error submitting request");
     } finally {
       setSubmitting(false);
     }

@@ -71,14 +71,14 @@ export default function GamezonePage() {
         params.set("sortOrder", "asc");
         params.set("limit", "50");
 
-        const payload: any = await fetchApi(`/gamehub/facilities?${params.toString()}`, { requiresAuth: false });
+        const payload = await fetchApi(`/gamehub/facilities?${params.toString()}`, { requiresAuth: false }) as { data?: Facility[] };
 
         let apiData = Array.isArray(payload?.data) ? payload.data : [];
 
         if (selectedLocation.city && apiData.length === 0) {
           const fallbackParams = new URLSearchParams(params);
           fallbackParams.delete("city");
-          const fallbackPayload: any = await fetchApi(`/gamehub/facilities?${fallbackParams.toString()}`, { requiresAuth: false });
+          const fallbackPayload = await fetchApi(`/gamehub/facilities?${fallbackParams.toString()}`, { requiresAuth: false }) as { data?: Facility[] };
           apiData = Array.isArray(fallbackPayload?.data) ? fallbackPayload.data : [];
 
           if (apiData.length > 0) {

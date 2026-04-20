@@ -30,6 +30,12 @@ type Payout = {
   };
 };
 
+interface BankDetails {
+  bankName?: string;
+  accountNumber?: string;
+  ifscCode?: string;
+}
+
 export default function AdminPayoutsPage() {
   const [payouts, setPayouts] = useState<Payout[]>([]);
   const [loading, setLoading] = useState(true);
@@ -145,8 +151,8 @@ export default function AdminPayoutsPage() {
                 </tr>
               ) : payouts.length > 0 ? (
                 payouts.map((p) => {
-                  let bank = {};
-                  try { bank = JSON.parse(p.bankDetails); } catch {}
+                  let bank: BankDetails = {};
+                  try { bank = JSON.parse(p.bankDetails) as BankDetails; } catch {}
                   return (
                     <tr key={p.id} className="group transition hover:bg-slate-50/30">
                       <td className="p-4 pl-6">
@@ -170,11 +176,11 @@ export default function AdminPayoutsPage() {
                         <div className="rounded-xl border border-slate-100 bg-slate-50/30 p-2.5 text-[10px] font-bold text-slate-600 leading-relaxed">
                           <div className="flex items-center gap-1.5 mb-0.5">
                             <Building2 size={10} className="text-slate-400" />
-                            {(bank as any).bankName || "Unknown Bank"}
+                            {bank.bankName || "Unknown Bank"}
                           </div>
                           <div className="flex items-center gap-1.5">
                             <CreditCard size={10} className="text-slate-400" />
-                            {(bank as any).accountNumber || "N/A"} ({(bank as any).ifscCode || "N/A"})
+                            {bank.accountNumber || "N/A"} ({bank.ifscCode || "N/A"})
                           </div>
                         </div>
                       </td>

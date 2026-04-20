@@ -38,18 +38,18 @@ export default function EditUserModal({ user, onClose, onUpdate }: EditUserModal
     setError("");
 
     try {
-      const res: any = await fetchApi(`/users/${user.id}`, {
+      const res = await fetchApi(`/users/${user.id}`, {
         method: "PUT",
         requiresAuth: true,
         body: JSON.stringify({ name, avatar }),
-      });
+      }) as { data: UserRecord };
 
       if (res.data) {
         onUpdate(res.data);
         onClose();
       }
-    } catch (err: any) {
-      setError(err.message || "Failed to update user");
+    } catch (err) {
+      setError((err as Error).message || "Failed to update user");
     } finally {
       setLoading(false);
     }

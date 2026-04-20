@@ -87,86 +87,6 @@ type FacilityFormState = {
 
 import { fetchApi } from "@/lib/api";
 
-type GameHubFacility = {
-  id: string;
-  name: string;
-  type: string;
-  location: string;
-  venue: string;
-  rating: number;
-  priceRange: string;
-  pricePerHour?: number;
-  unit?: string;
-  distance?: string;
-  description?: string;
-  phone?: string;
-  openHours?: string;
-  status?: "ACTIVE" | "INACTIVE" | "MAINTENANCE";
-  pricingRules?: Array<{ type: string; time?: string; day?: string; price: number }>;
-  features?: string[];
-  amenities?: string[];
-  image?: string;
-  tags?: string[];
-  gallery?: string[];
-  battleModes?: Array<{ name: string; players: string; duration: string }>;
-  slotTemplate?: Array<{ label: string; isBooked?: boolean }>;
-  availableSports?: string[];
-  terms?: string;
-  partnerId?: string | null;
-  partner?: { id: string; name: string; email: string } | null;
-};
-
-type PartnerOption = {
-  id: string;
-  name: string;
-  email: string;
-};
-
-type CalendarDay = {
-  date: string;
-  bookingCount: number;
-  blockedCount: number;
-  bookings: Array<{ id: string; slotLabel: string; status: string }>;
-  blocks: Array<{ id: string; slotLabel: string; reason: string; createdAt: string }>;
-};
-
-type CalendarGridCell = {
-  date: string;
-  inCurrentMonth: boolean;
-};
-
-type FacilityFormState = {
-  name: string;
-  type: string;
-  location: string;
-  venue: string;
-  distance: string;
-  rating: string;
-  priceRange: string;
-  pricePerHour: string;
-  unit: string;
-  image: string;
-  description: string;
-  phone: string;
-  openHours: string;
-  amenities: string;
-  features: string;
-  tags: string;
-  gallery: string;
-  pricingRules: string;
-  slotTemplate: string;
-  availableSports: string;
-  terms: string;
-  slotStartHour: string;
-  slotEndHour: string;
-  slotInterval: string;
-  peakStartHour: string;
-  peakEndHour: string;
-  peakPrice: string;
-  weekendPrice: string;
-  status: "ACTIVE" | "INACTIVE" | "MAINTENANCE";
-};
-
 const defaultImage = "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1200";
 const WEEKDAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -355,7 +275,7 @@ export default function GameHubAdminPage() {
 
     setActionError("");
     try {
-      const payload: any = await fetchApi("/gamehub/facilities/slot-template/generate", {
+      const payload = await fetchApi("/gamehub/facilities/slot-template/generate", {
         method: "POST",
         body: JSON.stringify({
           startHour: Number(formState.slotStartHour || 6),
@@ -367,7 +287,7 @@ export default function GameHubAdminPage() {
           peakPrice: Number(formState.peakPrice || 800),
           weekendPrice: Number(formState.weekendPrice || 1000),
         }),
-      });
+      }) as { data: Array<{ label: string; isBooked?: boolean; price?: number; weekendPrice?: number }> };
 
       setFormState((prev) => ({
         ...prev,
@@ -444,12 +364,12 @@ export default function GameHubAdminPage() {
       const endpoint = isEdit ? `/gamehub/facilities/${editingFacilityId}` : "/gamehub/facilities";
       const method = isEdit ? "PATCH" : "POST";
 
-      const data: any = await fetchApi(endpoint, {
+      const data = await fetchApi(endpoint, {
         method,
         body: JSON.stringify(payload),
-      });
+      }) as { data: GameHubFacility };
 
-      const facility = data?.data as GameHubFacility;
+      const facility = data?.data;
       if (isEdit && editingFacilityId) {
         setFacilities((prev) => prev.map((item) => (item.id === editingFacilityId ? { ...item, ...facility } : item)));
         setActionMessage("Facility updated successfully.");
@@ -499,12 +419,12 @@ export default function GameHubAdminPage() {
     setActionMessage("");
 
     try {
-      const payload: any = await fetchApi(`/gamehub/facilities/${facilityId}/assign-partner`, {
+      const payload = await fetchApi(`/gamehub/facilities/${facilityId}/assign-partner`, {
         method: "PATCH",
         body: JSON.stringify({ partnerId }),
-      });
+      }) as { data: GameHubFacility };
 
-      const updated = payload?.data as GameHubFacility;
+      const updated = payload?.data;
       setFacilities((prev) => prev.map((item) => (item.id === facilityId ? { ...item, ...updated } : item)));
       setActionMessage("Facility partner updated successfully.");
     } catch (err) {
@@ -536,7 +456,7 @@ export default function GameHubAdminPage() {
       }
 
       try {
-        const payload: any = await fetchApi("/auth/me");
+        const payload = await fetchApi("/auth/me") as { user: { role: string } };
         const normalizedRole = String(payload?.user?.role || "").toUpperCase();
         const isAdmin = Boolean(normalizedRole === "ADMIN" || normalizedRole === "PARTNER");
         if (mounted) {
@@ -548,7 +468,7 @@ export default function GameHubAdminPage() {
 
         if (mounted && normalizedRole === "ADMIN") {
           try {
-            const partnerPayload: any = await fetchApi("/users/partners?status=ACTIVE&limit=200");
+            const partnerPayload = await fetchApi("/users/partners?status=ACTIVE&limit=200") as { data: PartnerOption[] };
             if (mounted) {
               setPartners(Array.isArray(partnerPayload?.data) ? partnerPayload.data : []);
             }
@@ -558,7 +478,7 @@ export default function GameHubAdminPage() {
         }
       } catch (err) {
         if (mounted) {
-          const status = (err as any).status || 0;
+          const status = (err as { status?: number }).status || 0;
           if ([401, 403, 404].includes(status)) {
             clearDashboardSession();
             setHasAdminAccess(false);
@@ -597,7 +517,7 @@ export default function GameHubAdminPage() {
         const params = new URLSearchParams();
         if (search.trim()) params.set("search", search.trim());
 
-        const payload: any = await fetchApi(`/gamehub/facilities/manage/list?${params.toString()}`);
+        const payload = await fetchApi(`/gamehub/facilities/manage/list?${params.toString()}`) as { data: GameHubFacility[] };
         if (mounted) setFacilities(Array.isArray(payload?.data) ? payload.data : []);
       } catch (err) {
         if (mounted) {
@@ -645,7 +565,7 @@ export default function GameHubAdminPage() {
       setCalendarLoading(true);
       setActionError("");
       try {
-        const payload: any = await fetchApi(`/gamehub/facilities/${selectedCalendarFacilityId}/calendar?month=${calendarMonth}`);
+        const payload = await fetchApi(`/gamehub/facilities/${selectedCalendarFacilityId}/calendar?month=${calendarMonth}`) as { data: { days: CalendarDay[] } };
         setCalendarDays(Array.isArray(payload?.data?.days) ? payload.data.days : []);
       } catch (err) {
         setActionError(err instanceof Error ? err.message : "Failed to load calendar");
@@ -691,7 +611,7 @@ export default function GameHubAdminPage() {
       setActionMessage("Slots blocked successfully.");
       setBlockSlotsInput("");
 
-      const refreshedPayload: any = await fetchApi(`/gamehub/facilities/${selectedCalendarFacilityId}/calendar?month=${calendarMonth}`);
+      const refreshedPayload = await fetchApi(`/gamehub/facilities/${selectedCalendarFacilityId}/calendar?month=${calendarMonth}`) as { data: { days: CalendarDay[] } };
       setCalendarDays(Array.isArray(refreshedPayload?.data?.days) ? refreshedPayload.data.days : []);
     } catch (err) {
       setActionError(err instanceof Error ? err.message : "Failed to block slots");
@@ -719,7 +639,7 @@ export default function GameHubAdminPage() {
 
       setActionMessage("Blocked slot removed.");
 
-      const refreshedPayload: any = await fetchApi(`/gamehub/facilities/${selectedCalendarFacilityId}/calendar?month=${calendarMonth}`);
+      const refreshedPayload = await fetchApi(`/gamehub/facilities/${selectedCalendarFacilityId}/calendar?month=${calendarMonth}`) as { data: { days: CalendarDay[] } };
       setCalendarDays(Array.isArray(refreshedPayload?.data?.days) ? refreshedPayload.data.days : []);
     } catch (err) {
       setActionError(err instanceof Error ? err.message : "Failed to unblock slot");

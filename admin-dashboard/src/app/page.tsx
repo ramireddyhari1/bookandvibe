@@ -92,8 +92,8 @@ export default function AdminDashboard() {
 
     try {
       const [statsPayload, bookingsPayload] = await Promise.all([
-        fetchApi("/events/stats"),
-        fetchApi("/bookings/manage/list?limit=5"),
+        fetchApi("/events/stats") as Promise<{ data: { totalUsers?: number, totalEvents?: number, totalBookings?: number, totalRevenue?: number } }>,
+        fetchApi("/bookings/manage/list?limit=5") as Promise<{ data: Array<{ id: string; user?: { name: string }; userName?: string; event?: { title: string }; eventTitle?: string; slotLabel?: string; totalAmount?: number; amount?: number; status?: string; createdAt?: string; }> }>,
       ]);
 
       const stats = statsPayload?.data || {};
@@ -103,9 +103,20 @@ export default function AdminDashboard() {
       const totalRevenue = stats.totalRevenue || 0;
 
       const bookings = Array.isArray(bookingsPayload?.data) ? bookingsPayload.data : [];
-      const recentBookings: DashboardData["recentBookings"] = bookings.map((b: any) => {
+      const recentBookings: DashboardData["recentBookings"] = bookings.map((b: { 
+        id: string; 
+        user?: { name: string }; 
+        userName?: string; 
+        event?: { title: string }; 
+        eventTitle?: string; 
+        slotLabel?: string; 
+        totalAmount?: number; 
+        amount?: number; 
+        status?: string; 
+        createdAt?: string; 
+      }) => {
         const name = b.user?.name || b.userName || "User";
-        const initials = name.split(" ").map((w: string) => w[0]).join("").slice(0, 2).toUpperCase();
+        const initials = name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
         return {
           id: b.id,
           user: name,
@@ -140,7 +151,7 @@ export default function AdminDashboard() {
 
     // Fetch live activity feed
     try {
-      const activityPayload = await fetchApi("/config/activity?limit=8");
+      const activityPayload = await fetchApi("/config/activity?limit=8") as { data: { type: string; text: string; createdAt: string }[] };
       if (Array.isArray(activityPayload?.data)) {
         setActivityFeed(activityPayload.data);
       }
@@ -207,7 +218,7 @@ export default function AdminDashboard() {
     { label: "Seat Locks", state: "Healthy", icon: CircleCheck, tone: "text-emerald-700 bg-emerald-50 border-emerald-100/50 shadow-[0_8px_20px_rgba(16,185,129,0.08)]" },
   ];
 
-  const activityIconMap: Record<string, { icon: any; iconBg: string; iconColor: string }> = {
+  const activityIconMap: Record<string, { icon: React.ElementType; iconBg: string; iconColor: string }> = {
     user_registered: { icon: UserPlus, iconBg: "bg-emerald-50", iconColor: "text-emerald-600" },
     partner_joined: { icon: Users, iconBg: "bg-emerald-100", iconColor: "text-emerald-700" },
     event_published: { icon: Ticket, iconBg: "bg-emerald-50", iconColor: "text-emerald-600" },

@@ -62,6 +62,20 @@ const DATE_FILTERS = [
   { label: "This Week", value: "week" },
 ];
 
+interface Event {
+  id: string;
+  title: string;
+  venue: string;
+  category: string;
+  date: string;
+  time: string;
+  price: number;
+  images: string;
+  featured: boolean;
+  description: string;
+  location?: string;
+}
+
 export default function EventsPage() {
   const router = useRouter();
   const { selectedLocation } = useLocation();
@@ -73,7 +87,7 @@ export default function EventsPage() {
     }
   }, [router]);
 
-  const [events, setEvents] = useState<any[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
@@ -105,7 +119,7 @@ export default function EventsPage() {
         if (priceRange.min > 0) params.append("minPrice", priceRange.min.toString());
         if (priceRange.max !== Infinity) params.append("maxPrice", priceRange.max.toString());
 
-        const payload: any = await fetchApi(`/events?${params.toString()}`, { requiresAuth: false });
+        const payload: { data: Event[] } = await fetchApi(`/events?${params.toString()}`, { requiresAuth: false });
         
         // Use realistic fallbacks if DB has no matches for the city so the UI doesn't look empty
         if (!payload.data || payload.data.length === 0) {
@@ -194,9 +208,9 @@ export default function EventsPage() {
           setEvents(payload.data);
         }
 
-      } catch (err: any) {
+      } catch (err) {
         console.error("Error fetching events:", err);
-        setError(err.message || "Failed to load events. Please try again later.");
+        setError((err as Error).message || "Failed to load events. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -210,7 +224,7 @@ export default function EventsPage() {
   }, [selectedLocation, activeCategory, searchQuery, selectedPriceRange, selectedDateFilter]);
 
   const matchesLocation = useCallback(
-    (event: any) => {
+    (event: Event) => {
       const city = String(selectedLocation.city || "").trim().toLowerCase();
       if (!city) return true;
       const location = `${event.location || ""} ${event.venue || ""}`.toLowerCase();
@@ -617,7 +631,7 @@ export default function EventsPage() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                  {trendingEvents.slice(0, 3).map((event: any, idx: number) => (
+                  {trendingEvents.slice(0, 3).map((event, idx) => (
                     <Link href={`/events/${event.id}`} key={event.id} className="block group">
                       <div className="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-md hover:shadow-2xl transition-all duration-300 h-full flex group-hover:-translate-y-2 relative">
                         <div className="absolute top-4 left-4 z-20 bg-gradient-to-br from-amber-400 to-orange-500 text-white w-9 h-9 rounded-xl flex items-center justify-center font-black text-sm shadow-lg font-sans">
@@ -678,7 +692,7 @@ export default function EventsPage() {
 
             {events.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 font-sans">
-                {events.map((event: any) => (
+                {events.map((event) => (
                   <Link href={`/events/${event.id}`} key={event.id} className="block group">
                     <div className="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-md hover:shadow-2xl transition-all duration-300 h-full flex flex-col group-hover:-translate-y-2 relative font-sans">
                       <div className="aspect-[4/5] relative overflow-hidden bg-gray-100 font-sans">

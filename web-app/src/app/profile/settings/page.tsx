@@ -23,6 +23,22 @@ import {
   FileText,
 } from "lucide-react";
 
+const Toggle = ({
+  enabled,
+  onToggle,
+}: {
+  enabled: boolean;
+  onToggle: () => void;
+}) => (
+  <button onClick={onToggle} className="transition-all">
+    {enabled ? (
+      <ToggleRight size={28} className="text-[#42B460]" />
+    ) : (
+      <ToggleLeft size={28} className="text-gray-300" />
+    )}
+  </button>
+);
+
 export default function SettingsPage() {
   const { isAuthenticated, logout } = useAuth();
   const router = useRouter();
@@ -36,22 +52,6 @@ export default function SettingsPage() {
   useEffect(() => {
     if (!isAuthenticated) router.push("/login");
   }, [isAuthenticated, router]);
-
-  const Toggle = ({
-    enabled,
-    onToggle,
-  }: {
-    enabled: boolean;
-    onToggle: () => void;
-  }) => (
-    <button onClick={onToggle} className="transition-all">
-      {enabled ? (
-        <ToggleRight size={28} className="text-[#42B460]" />
-      ) : (
-        <ToggleLeft size={28} className="text-gray-300" />
-      )}
-    </button>
-  );
 
   return (
     <div className="min-h-screen bg-gray-50 pt-28 pb-16">

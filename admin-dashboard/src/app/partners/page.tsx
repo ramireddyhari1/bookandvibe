@@ -47,7 +47,7 @@ export default function PartnersPage() {
   });
   const [facilities, setFacilities] = useState<{ id: string; name: string }[]>([]);
   const [submitting, setSubmitting] = useState(false);
-  const [editingPartner, setEditingPartner] = useState<any>(null);
+  const [editingPartner, setEditingPartner] = useState<PartnerRecord | null>(null);
 
   const isAdmin = userRole === "ADMIN";
 
@@ -72,7 +72,7 @@ export default function PartnersPage() {
       if (search.trim()) params.set("search", search.trim());
       if (statusFilter !== "All") params.set("status", statusFilter.toUpperCase());
 
-      const payload: any = await fetchApi(`/users/partners?${params.toString()}`);
+      const payload = await fetchApi(`/users/partners?${params.toString()}`) as { data: PartnerRecord[] };
       setPartners(Array.isArray(payload?.data) ? payload.data : []);
     } catch (err) {
       setPartners([]);
@@ -96,7 +96,7 @@ export default function PartnersPage() {
       }
 
       try {
-        const mePayload: any = await fetchApi("/auth/me");
+        const mePayload = await fetchApi("/auth/me") as { user: { role: string } };
         const normalizedRole = String(mePayload?.user?.role || "").toUpperCase();
         
         if (mounted) {
@@ -112,7 +112,7 @@ export default function PartnersPage() {
         }
 
         // Fetch facilities for the dropdown
-        const facPayload: any = await fetchApi("/gamehub/facilities/manage/list?limit=100");
+        const facPayload = await fetchApi("/gamehub/facilities/manage/list?limit=100") as { data: { id: string, name: string }[] };
         if (mounted) {
           setFacilities(Array.isArray(facPayload?.data) ? facPayload.data : []);
         }
@@ -120,7 +120,7 @@ export default function PartnersPage() {
         await loadPartners();
       } catch (err) {
         if (mounted) {
-          const status = (err as any).status || 0;
+          const status = (err as { status?: number }).status || 0;
           if (status === 401 || status === 403 || status === 404) {
             clearDashboardSession();
             setError("Session expired. Please login again as ADMIN.");

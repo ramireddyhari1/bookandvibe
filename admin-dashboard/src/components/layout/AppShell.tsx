@@ -37,7 +37,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    Promise.resolve().then(() => setMounted(true));
     const raw = sessionStorage.getItem("admin_dash_user") || localStorage.getItem("admin_dash_user");
     const cookieRole = String(readCookie("admin_dash_role") || "").toUpperCase();
 
@@ -48,8 +48,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         const normalizedRole = cookieRole || storageRole;
         const normalizedUser = normalizedRole ? { ...parsedUser, role: normalizedRole } : parsedUser;
 
-        setSessionUser(normalizedUser);
-        setResolvedRole(normalizedRole);
+        Promise.resolve().then(() => {
+          setSessionUser(normalizedUser);
+          setResolvedRole(normalizedRole);
+        });
 
         if (normalizedRole && normalizedRole !== storageRole) {
           sessionStorage.setItem("admin_dash_user", JSON.stringify(normalizedUser));
@@ -57,16 +59,16 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         }
       } catch (e) {
         console.error("Failed to parse session user", e);
-        setResolvedRole(cookieRole);
+        Promise.resolve().then(() => setResolvedRole(cookieRole));
       }
     } else {
-      setResolvedRole(cookieRole);
+      Promise.resolve().then(() => setResolvedRole(cookieRole));
     }
-  }, []);
+  }, [cookieRole]);
 
   // Close mobile menu on path changes
   useEffect(() => {
-    setIsMobileMenuOpen(false);
+    Promise.resolve().then(() => setIsMobileMenuOpen(false));
   }, [pathname]);
 
   const userName = sessionUser?.name || "Dashboard User";
@@ -113,12 +115,14 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   const [today, setToday] = useState("");
   useEffect(() => {
-    setToday(new Date().toLocaleDateString("en-US", {
-      weekday: "short",
-      month: "short",
-      day: "2-digit",
-      year: "numeric",
-    }));
+    Promise.resolve().then(() => {
+      setToday(new Date().toLocaleDateString("en-US", {
+        weekday: "short",
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+      }));
+    });
   }, []);
 
   if (isAuthRoute) {

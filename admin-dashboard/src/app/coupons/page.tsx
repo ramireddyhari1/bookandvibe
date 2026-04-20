@@ -47,9 +47,9 @@ export default function CouponsPage() {
 
   const loadCoupons = async () => {
     try {
-      const res = await fetchApi("/coupons");
+      const res = await fetchApi("/coupons") as { data: Coupon[] };
       setCoupons(res.data || []);
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
     } finally {
       setLoading(false);
@@ -130,8 +130,8 @@ export default function CouponsPage() {
       }
       setShowModal(false);
       loadCoupons();
-    } catch (err: any) {
-      setErrorMsg(err.message || "Failed to save coupon");
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : "Failed to save coupon");
     } finally {
       setSaving(false);
     }
@@ -144,7 +144,7 @@ export default function CouponsPage() {
         body: JSON.stringify({ isActive: !c.isActive })
       });
       loadCoupons();
-    } catch (err: any) {
+    } catch (err) {
       alert("Failed to update status");
     }
   };
@@ -154,7 +154,7 @@ export default function CouponsPage() {
     try {
       await fetchApi(`/coupons/${id}`, { method: "DELETE" });
       loadCoupons();
-    } catch (err: any) {
+    } catch (err) {
       alert("Failed to delete coupon");
     }
   };

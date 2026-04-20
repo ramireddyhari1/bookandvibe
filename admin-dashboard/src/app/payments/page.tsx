@@ -47,8 +47,8 @@ export default function PaymentsPage() {
       } else {
         setError("Failed to load wallet data");
       }
-    } catch (err: any) {
-      setError(err.message || "Error fetching wallet data");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error fetching wallet data");
     } finally {
       setLoading(false);
     }

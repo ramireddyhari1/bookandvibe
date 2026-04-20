@@ -38,7 +38,7 @@ export default function BookingsPage() {
       setLoading(true);
       setError("");
       try {
-        const payload = await fetchApi("/bookings/manage/list");
+        const payload = await fetchApi("/bookings/manage/list") as { data: BookingRecord[] };
         setBookings(Array.isArray(payload?.data) ? payload.data : []);
       } catch (err) {
         const message = err instanceof Error ? err.message : "Failed to fetch bookings";

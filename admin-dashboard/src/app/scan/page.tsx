@@ -51,8 +51,8 @@ export default function ScanQRPage() {
       } else {
         setError(response.error || "Invalid ticket code");
       }
-    } catch (err: any) {
-      setError(err.message || "Verification failed");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Verification failed");
     } finally {
       setLoading(false);
     }

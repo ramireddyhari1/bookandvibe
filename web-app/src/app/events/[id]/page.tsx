@@ -8,7 +8,9 @@ import {
   AlertCircle,
   ArrowLeft,
   Calendar,
-  CheckCircle,
+  BadgeCheck,
+  Check,
+  CheckCircle2,
   Clock,
   CreditCard,
   Loader2,
@@ -37,7 +39,10 @@ import { fetchApi } from "@/lib/api";
 
 declare global {
   interface Window {
-    Razorpay: any;
+    Razorpay: new (options: Record<string, unknown>) => {
+      open: () => void;
+      on: (event: string, callback: (response: unknown) => void) => void;
+    };
   }
 }
 
@@ -233,9 +238,9 @@ export default function EventDetailsPage() {
     async function init() {
       setLoading(true);
       try {
-        const [eventPayload, allEventsPayload]: any = await Promise.all([
-          fetchApi(`/events/${eventId}`, { requiresAuth: false }),
-          fetchApi("/events", { requiresAuth: false })
+        const [eventPayload, allEventsPayload] = await Promise.all([
+          fetchApi(`/events/${eventId}`, { requiresAuth: false }) as Promise<{ data: EventData }>,
+          fetchApi("/events", { requiresAuth: false }) as Promise<{ data: EventData[] }>
         ]);
 
         if (eventPayload?.data) {
@@ -270,7 +275,7 @@ export default function EventDetailsPage() {
         }
 
         if (allEventsPayload?.data) {
-          setSuggestedEvents(allEventsPayload.data.filter((e: any) => String(e.id) !== eventId).slice(0, 4));
+          setSuggestedEvents(allEventsPayload.data.filter((e) => String(e.id) !== eventId).slice(0, 4));
         } else {
           setSuggestedEvents(FALLBACK_EVENTS.filter(e => e.id !== eventId).slice(0, 4));
         }
@@ -312,16 +317,16 @@ export default function EventDetailsPage() {
   const ticketSubtotal = useMemo(() => (event?.price || 0) * quantity, [event, quantity]);
   const isFreeEvent = (event?.price || 0) <= 0;
   const taxAmount = useMemo(() => {
-    const taxPercent = Number((event as any)?.taxPercent || 0);
+    const taxPercent = Number(event?.taxPercent || 0);
     if (!ticketSubtotal || taxPercent <= 0) return 0;
     return Math.round((ticketSubtotal * taxPercent) / 100);
   }, [event, ticketSubtotal]);
 
   const platformFeeAmount = useMemo(() => {
     if (!ticketSubtotal || isFreeEvent) return 0;
-    const feeValue = Number((event as any)?.platformFeeValue);
+    const feeValue = Number(event?.platformFeeValue);
     if (!Number.isFinite(feeValue) || feeValue <= 0) return 0;
-    const feeType = String((event as any)?.platformFeeType || "PERCENT").toUpperCase();
+    const feeType = String(event?.platformFeeType || "PERCENT").toUpperCase();
     return feeType === "FIXED" ? feeValue : Math.round((ticketSubtotal * feeValue) / 100);
   }, [event, ticketSubtotal, isFreeEvent]);
 
@@ -348,10 +353,10 @@ export default function EventDetailsPage() {
         })
       });
       setAppliedCoupon({ code: res.data.code, discountAmount: res.data.discountAmount });
-      setCouponSuccess(`Promo code applied! You saved ₹${res.data.discountAmount}`);
+      setCouponSuccess(`Promo code applied! You saved â‚¹${res.data.discountAmount}`);
       setShowCouponInput(false);
-    } catch (err: any) {
-      setCouponError(err.message || "Invalid promo code");
+    } catch (err) {
+      setCouponError(err instanceof Error ? err.message : "Invalid promo code");
       setAppliedCoupon(null);
     } finally {
       setValidatingCoupon(false);
@@ -406,7 +411,7 @@ export default function EventDetailsPage() {
 
     try {
       // 1. Create Razorpay order on backend
-      const orderRes: any = await fetchApi("/payments/initiate", {
+      const orderRes = await fetchApi("/payments/initiate", {
         method: "POST",
         requiresAuth: true,
         body: JSON.stringify({
@@ -415,9 +420,9 @@ export default function EventDetailsPage() {
           currency: "INR",
           couponCode: appliedCoupon?.code,
         }),
-      });
+      }) as { data: { orderId: string, keyId: string, amount: number, currency: string } };
 
-      const { orderId, keyId, amount: orderAmount, currency } = orderRes.data;
+      const { orderId, keyId, amount: orderAmount, currency } = orderRes.data as { orderId: string, keyId: string, amount: number, currency: string };
 
       // 2. Open Razorpay checkout popup
       const options = {
@@ -432,7 +437,7 @@ export default function EventDetailsPage() {
           email: user?.email || "",
         },
         theme: { color: "#e11d48" },
-        handler: async (response: any) => {
+        handler: async (response: { razorpay_order_id: string, razorpay_payment_id: string, razorpay_signature: string }) => {
           try {
             // 3. Verify payment & create booking on backend
             await fetchApi("/payments/confirm-booking", {
@@ -495,7 +500,7 @@ export default function EventDetailsPage() {
   return (
     <div className="min-h-screen bg-white">
       <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
-      {/* ═══ CLEAN MINIMAL HEADER (Mobile) ═══ */}
+      {/* â•â•â• CLEAN MINIMAL HEADER (Mobile) â•â•â• */}
       <motion.nav 
         style={{ backgroundColor: headerBg, backdropFilter: headerBlurVal, boxShadow: headerShadow }}
         className="md:hidden fixed top-0 left-0 right-0 z-[100] px-5 py-[max(env(safe-area-inset-top),16px)] flex items-center justify-between transition-all duration-300"
@@ -534,7 +539,7 @@ export default function EventDetailsPage() {
 
 
 
-      {/* ═══ APP-NATIVE HERO IMAGE (Mobile) ═══ */}
+      {/* â•â•â• APP-NATIVE HERO IMAGE (Mobile) â•â•â• */}
       <div className="md:hidden relative h-[45vh] w-full overflow-hidden bg-gray-100">
         <motion.div 
           style={{ y: heroY, scale: heroScale }}
@@ -546,14 +551,14 @@ export default function EventDetailsPage() {
         </motion.div>
       </div>
 
-      {/* ═══ MASSIVE POSTER BANNER (Desktop) ═══ */}
+      {/* â•â•â• MASSIVE POSTER BANNER (Desktop) â•â•â• */}
       <div className="hidden md:block relative w-full pt-[120px] lg:pt-[132px] max-w-[1400px] mx-auto px-4 lg:px-6 mb-8">
         <div className="relative w-full overflow-hidden rounded-[32px] shadow-2xl bg-gray-100" style={{ aspectRatio: '21/9', maxHeight: '600px' }}>
           <img src={heroImage} className="w-full h-full object-cover" alt="" />
         </div>
       </div>
 
-      {/* ═══ CRISP CONTENT LAYOUT ═══ */}
+      {/* â•â•â• CRISP CONTENT LAYOUT â•â•â• */}
       <div className="relative z-20 bg-white -mt-10 md:mt-0 rounded-t-[32px] md:rounded-none md:pt-4 px-6 pt-8 pb-32 max-w-[1000px] mx-auto min-h-screen">
         
         {/* Title Area */}
@@ -724,7 +729,7 @@ export default function EventDetailsPage() {
                          <img src={parseImages(e.images)[0]} className="w-full h-full object-cover" alt="" />
                       </div>
                       <h3 className="text-gray-900 text-[14px] font-bold leading-snug line-clamp-1">{e.title}</h3>
-                      <p className="text-[12px] text-gray-500">{e.venue.split(',')[0]} • ₹{e.price}</p>
+                      <p className="text-[12px] text-gray-500">{e.venue.split(',')[0]} â€¢ â‚¹{e.price}</p>
                    </motion.div>
                 ))}
              </div>
@@ -732,7 +737,7 @@ export default function EventDetailsPage() {
         )}
       </div>
 
-      {/* ═══ SLEEK ACTION PILL ═══ */}
+      {/* â•â•â• SLEEK ACTION PILL â•â•â• */}
       <div className="fixed bottom-6 left-0 right-0 z-[110] px-4 md:px-0 pointer-events-none flex justify-center">
          <motion.div 
            initial={{ y: 50, opacity: 0 }}
@@ -741,7 +746,7 @@ export default function EventDetailsPage() {
          >
             <div className="flex flex-col pl-4 text-white">
                <div className="flex items-baseline gap-1">
-                  <span className="text-[20px] font-bold tracking-tight">₹{event.price}</span>
+                  <span className="text-[20px] font-bold tracking-tight">â‚¹{event.price}</span>
                   <span className="text-[10px] text-gray-400 font-medium">/person</span>
                </div>
             </div>
@@ -754,7 +759,7 @@ export default function EventDetailsPage() {
          </motion.div>
       </div>
 
-      {/* ═══ CLEAN CHECKOUT SHEET ═══ */}
+      {/* â•â•â• CLEAN CHECKOUT SHEET â•â•â• */}
       <AnimatePresence>
         {showCheckout && (
           <motion.div 
@@ -801,19 +806,19 @@ export default function EventDetailsPage() {
                      <div className="space-y-3 pt-2">
                         <div className="flex justify-between text-[14px] font-medium text-gray-500">
                            <span>Tickets ({quantity}x)</span>
-                        <span>₹{ticketSubtotal}</span>
+                        <span>â‚¹{ticketSubtotal}</span>
                         </div>
                       {taxAmount > 0 && (
                         <div className="flex justify-between text-[14px] font-medium text-gray-500">
                           <span>Tax</span>
-                          <span>₹{taxAmount}</span>
+                          <span>â‚¹{taxAmount}</span>
                         </div>
                       )}
                       
                       {platformFeeAmount > 0 && (
                         <div className="flex justify-between text-[14px] font-medium text-gray-500 pb-4 border-b border-gray-100">
                            <span>Platform Fee</span>
-                           <span>₹{platformFeeAmount}</span>
+                           <span>â‚¹{platformFeeAmount}</span>
                         </div>
                       )}
 
@@ -831,7 +836,7 @@ export default function EventDetailsPage() {
                               </div>
                             </div>
                             <div className="flex items-center gap-3">
-                              <span className="font-bold text-emerald-600">-₹{appliedCoupon.discountAmount}</span>
+                              <span className="font-bold text-emerald-600">-â‚¹{appliedCoupon.discountAmount}</span>
                               <button onClick={removeCoupon} className="text-slate-400 hover:text-red-500 transition-colors p-1" title="Remove">
                                 <AlertCircle size={16} className="rotate-45" />
                               </button>
@@ -877,7 +882,7 @@ export default function EventDetailsPage() {
 
                         <div className="flex justify-between items-end pt-4 mt-2 border-t border-gray-100">
                            <span className="text-[14px] font-bold text-gray-500 mb-1">Total to pay</span>
-                           <span className="text-[24px] font-black tracking-tight text-gray-900">₹{finalTotalAmount}</span>
+                           <span className="text-[24px] font-black tracking-tight text-gray-900">â‚¹{finalTotalAmount}</span>
                         </div>
                      </div>
 
@@ -885,7 +890,7 @@ export default function EventDetailsPage() {
                        onClick={handleCheckout}
                        className="w-full bg-orange-600 text-white py-4 rounded-xl font-bold text-[16px] flex items-center justify-center gap-2 active:scale-95 transition-transform mt-6 shadow-md shadow-orange-600/30"
                      >
-                      {isFreeEvent || finalTotalAmount <= 0 ? "Book Free" : `Pay ₹${finalTotalAmount}`}
+                      {isFreeEvent || finalTotalAmount <= 0 ? "Book Free" : `Pay â‚¹${finalTotalAmount}`}
                      </button>
                   </div>
                 ) : (
@@ -895,7 +900,7 @@ export default function EventDetailsPage() {
                           <Loader2 size={48} className="animate-spin text-orange-500" />
                           <div className="space-y-1">
                              <h3 className="text-[18px] font-bold text-gray-900 tracking-tight">Processing Payment</h3>
-                             <p className="text-gray-500 text-[14px]">Please don't close this screen</p>
+                             <p className="text-gray-500 text-[14px]">Please don&apos;t close this screen</p>
                           </div>
                         </>
                      ) : (
@@ -912,7 +917,7 @@ export default function EventDetailsPage() {
                                 transition={{ delay: 0.2, type: "spring" }}
                                 className="w-24 h-24 rounded-full bg-gradient-to-br from-emerald-400 to-green-600 flex items-center justify-center text-white shadow-xl shadow-green-200 relative z-10"
                               >
-                                 <CheckCircle size={48} strokeWidth={2.5} />
+                                 <CheckCircle2 size={48} strokeWidth={2.5} />
                               </motion.div>
                               <motion.div 
                                 animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.2, 0.5] }}
@@ -933,7 +938,7 @@ export default function EventDetailsPage() {
                               </div>
                               <div className="flex-1 text-left">
                                 <p className="text-[14px] font-bold text-gray-900 line-clamp-1">{event.title}</p>
-                                <p className="text-[12px] text-gray-500 font-medium">{quantity} {quantity > 1 ? 'Tickets' : 'Ticket'}{totalAmount > 0 ? ` • ₹${totalAmount}` : " • Free"}</p>
+                                <p className="text-[12px] text-gray-500 font-medium">{quantity} {quantity > 1 ? 'Tickets' : 'Ticket'}{totalAmount > 0 ? ` â€¢ â‚¹${totalAmount}` : " â€¢ Free"}</p>
                               </div>
                            </div>
                         </motion.div>
@@ -943,7 +948,7 @@ export default function EventDetailsPage() {
              </motion.div>
           </motion.div>
         )}
-        {/* ═══ TERMS MODAL ═══ */}
+        {/* â•â•â• TERMS MODAL â•â•â• */}
          {showTermsModal && (
            <motion.div 
              initial={{ opacity: 0 }}

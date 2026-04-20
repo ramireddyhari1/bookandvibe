@@ -53,7 +53,9 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   }
 
   useEffect(() => {
-    loadUnreadCount();
+    Promise.resolve().then(() => {
+      loadUnreadCount();
+    });
     const interval = setInterval(loadUnreadCount, 30000);
     return () => clearInterval(interval);
   }, []);
@@ -61,20 +63,24 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   useEffect(() => {
     // Read from localStorage only on the client after hydration
     const storedState = localStorage.getItem("dash_sidebar_collapsed");
-    if (storedState) {
-      setCollapsed(storedState === "1");
-    } else if (window.matchMedia("(max-width: 1024px)").matches) {
-      setCollapsed(true);
-    }
+    Promise.resolve().then(() => {
+      if (storedState) {
+        setCollapsed(storedState === "1");
+      } else if (window.matchMedia("(max-width: 1024px)").matches) {
+        setCollapsed(true);
+      }
+    });
 
     const raw = sessionStorage.getItem("admin_dash_user") || localStorage.getItem("admin_dash_user");
     if (raw) {
       try {
         const parsed = JSON.parse(raw) as SessionUser;
-        if (parsed?.id) setSessionUser(parsed);
+        if (parsed?.id) {
+          Promise.resolve().then(() => setSessionUser(parsed));
+        }
       } catch {}
     }
-    setHydrated(true);
+    Promise.resolve().then(() => setHydrated(true));
   }, []);
 
   const initials = useMemo(() => {

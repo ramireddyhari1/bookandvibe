@@ -5,13 +5,18 @@ import { usePathname } from "next/navigation";
 import { fetchApi } from "@/lib/api";
 import { FaFacebookF, FaTwitter, FaInstagram, FaYoutube, FaPinterestP } from "react-icons/fa";
 
+interface WebsiteConfig {
+  footerText?: string;
+  socialLinks?: { platform: string; url: string }[];
+}
+
 export default function Footer() {
-  const [websiteConfig, setWebsiteConfig] = useState<any>(null);
+  const [websiteConfig, setWebsiteConfig] = useState<WebsiteConfig | null>(null);
 
   useEffect(() => {
     fetchApi('/config/website')
       .then(res => {
-        if (res.data) setWebsiteConfig(res.data);
+        if (res.data) setWebsiteConfig(res.data as WebsiteConfig);
       })
       .catch(console.error);
   }, []);
@@ -32,7 +37,7 @@ export default function Footer() {
     logoSrc: isGamehub ? "/bv-green.png" : isEvents ? "/bv-orange.png" : "/bv-white.png",
   };
 
-  const iconMap: Record<string, any> = {
+  const iconMap: Record<string, React.ComponentType<{ size?: number }>> = {
     Facebook: FaFacebookF,
     Twitter: FaTwitter,
     Instagram: FaInstagram,
@@ -56,7 +61,7 @@ export default function Footer() {
         <div className={`h-px w-full mb-5 ${theme.accentRule} opacity-55`} />
         <div className="max-w-5xl mx-auto text-center">
           <div className="flex items-center justify-center gap-6 mb-3 text-[24px]">
-            {socialLinks.map(({ platform, url }: any) => {
+            {socialLinks.map(({ platform, url }) => {
               const Icon = iconMap[platform] || FaFacebookF;
               return (
                 <a

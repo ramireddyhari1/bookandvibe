@@ -10,8 +10,10 @@ import {
   ArrowLeft,
   Award,
   Calendar,
+  CheckCircle2,
   ChevronRight,
   Clock,
+  FileText,
   Gamepad2,
   Heart,
   Info,
@@ -24,8 +26,7 @@ import {
   Trophy,
   Users,
   X,
-  Zap,
-  FileText
+  Zap
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { fetchApi } from "@/lib/api";
@@ -35,7 +36,10 @@ import PremiumDatePicker from "@/components/ui/PremiumDatePicker";
 
 declare global {
   interface Window {
-    Razorpay: any;
+    Razorpay: new (options: Record<string, unknown>) => {
+      open: () => void;
+      on: (event: string, callback: (response: unknown) => void) => void;
+    };
   }
 }
 
@@ -161,10 +165,10 @@ export default function FacilityDetailPage() {
       setLoading(true);
       setError("");
       try {
-        const [facilityPayload, listPayload, availabilityPayload]: any[] = await Promise.all([
-          fetchApi(`/gamehub/facilities/${facilityId}`, { requiresAuth: false }),
-          fetchApi("/gamehub/facilities", { requiresAuth: false }),
-          fetchApi(`/gamehub/facilities/${facilityId}/availability?date=${bookingDate}${user?.id ? `&userId=${user.id}` : ""}`, { requiresAuth: false }),
+        const [facilityPayload, listPayload, availabilityPayload] = await Promise.all([
+          fetchApi(`/gamehub/facilities/${facilityId}`, { requiresAuth: false }) as Promise<{ data: Facility }>,
+          fetchApi("/gamehub/facilities", { requiresAuth: false }) as Promise<{ data: Facility[] }>,
+          fetchApi(`/gamehub/facilities/${facilityId}/availability?date=${bookingDate}${user?.id ? `&userId=${user.id}` : ""}`, { requiresAuth: false }) as Promise<{ data: { slots: AvailabilitySlot[] } }>,
         ]);
 
         if (facilityPayload?.data) {
@@ -210,7 +214,7 @@ export default function FacilityDetailPage() {
       });
 
       // 2. Create Razorpay order
-      const orderRes: any = await fetchApi("/payments/initiate", {
+      const orderRes = await fetchApi("/payments/initiate", {
         method: "POST",
         requiresAuth: true,
         body: JSON.stringify({
@@ -219,7 +223,7 @@ export default function FacilityDetailPage() {
         }),
       });
 
-      const { orderId, keyId, amount: orderAmount, currency } = orderRes.data;
+      const { orderId, keyId, amount: orderAmount, currency } = orderRes.data as { orderId: string, keyId: string, amount: number, currency: string };
 
       // 3. Open Razorpay checkout popup
       const options = {
@@ -234,7 +238,7 @@ export default function FacilityDetailPage() {
           email: user?.email || "",
         },
         theme: { color: "#42B460" },
-        handler: async (response: any) => {
+        handler: async (response: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }) => {
           try {
             // 4. Verify payment & create gamehub booking on backend
             await fetchApi("/payments/confirm-gamehub", {
@@ -256,7 +260,7 @@ export default function FacilityDetailPage() {
             setSelectedSlot(null);
 
             // Refresh availability
-            const refreshPayload: any = await fetchApi(`/gamehub/facilities/${facilityId}/availability?date=${bookingDate}`, { requiresAuth: false });
+            const refreshPayload = await fetchApi(`/gamehub/facilities/${facilityId}/availability?date=${bookingDate}`, { requiresAuth: false }) as { data?: { slots: AvailabilitySlot[] } };
             setAvailabilitySlots(refreshPayload.data?.slots || []);
           } catch (err) {
             setBookingError(err instanceof Error ? err.message : "Booking failed after payment");
@@ -765,7 +769,7 @@ export default function FacilityDetailPage() {
                         className="bg-gradient-to-br from-emerald-50 to-green-50 border border-green-100 p-6 rounded-[24px] text-center space-y-4 shadow-xl shadow-green-900/5"
                       >
                          <div className="w-16 h-16 rounded-full bg-green-500 flex items-center justify-center text-white mx-auto shadow-lg shadow-green-500/20">
-                            <CheckCircle size={32} strokeWidth={3} />
+                            <CheckCircle2 size={32} strokeWidth={3} />
                          </div>
                          <div className="space-y-1">
                             <h4 className="text-[18px] font-black text-gray-900 leading-none">Booking Vibe Confirmed!</h4>

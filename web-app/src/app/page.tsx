@@ -7,9 +7,9 @@ import { fetchApi } from "@/lib/api";
 import MobileHome from "@/components/mobile/MobileHome";
 
 export default function Home() {
-  const [events, setEvents] = useState<any[]>([]);
+  const [events, setEvents] = useState<{ id: string; location?: string; venue?: string }[]>([]);
   const [loading, setLoading] = useState(true);
-  const [websiteConfig, setWebsiteConfig] = useState<any>(null);
+  const [websiteConfig, setWebsiteConfig] = useState<{ banners?: { id: string; buttonLink?: string; buttonText?: string }[] } | null>(null);
   const { selectedLocation } = useLocation();
 
   const filteredEvents = events.filter((e) => {
@@ -37,7 +37,7 @@ export default function Home() {
       .catch(console.error);
   }, []);
 
-  const eventBanner = websiteConfig?.banners?.find((b: any) => b.id === "event-banner") || {
+  const eventBanner = websiteConfig?.banners?.find((b: { id: string }) => b.id === "event-banner") || {
     image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=2074",
     title: "THE VIBE.",
     subtitle: "Discover concerts, events & experiences near you",
@@ -45,7 +45,7 @@ export default function Home() {
     buttonLink: "/events"
   };
 
-  const gamehubBanner = websiteConfig?.banners?.find((b: any) => b.id === "gamehub-banner") || {
+  const gamehubBanner = websiteConfig?.banners?.find((b: { id: string }) => b.id === "gamehub-banner") || {
     image: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=2000",
     title: "THE GAME.",
     subtitle: "Book turfs, play matches & compete locally",

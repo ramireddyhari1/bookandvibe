@@ -12,6 +12,29 @@ import { useLocation } from "@/context/LocationContext";
 import { useAuth } from "@/context/AuthContext";
 import { fetchApi } from "@/lib/api";
 
+interface Event {
+  id: string;
+  title: string;
+  venue: string;
+  category: string;
+  date: string;
+  price: number;
+  images: string;
+  featured?: boolean;
+  description?: string;
+  tags?: string;
+}
+
+interface Facility {
+  id: string;
+  name: string;
+  type: string;
+  location: string;
+  rating: number;
+  pricePerHour: number;
+  image: string;
+}
+
 // ─── Constants ─────────────────────────────────────────────
 const FACILITY_CATEGORIES = [
   { id: "cricket", title: "Cricket", imgSrc: "/icons/gamehub/cricket.png", color: "#FF7A00" },
@@ -108,7 +131,7 @@ const FALLBACK_EVENTS = [
 
 // ─── Sub-components ────────────────────────────────────────
 
-function HeroPosterCard({ event }: { event: any }) {
+function HeroPosterCard({ event }: { event: Event }) {
   const statusLine = "Tickets selling fast!";
   return (
     <Link href={`/events/${event.id}`} className="block shrink-0 w-[85vw] sm:w-[320px] snap-center">
@@ -166,7 +189,7 @@ function HeroPosterCard({ event }: { event: any }) {
   );
 }
 
-function PosterBannerCarousel({ events }: { events: any[] }) {
+function PosterBannerCarousel({ events }: { events: Event[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -233,7 +256,7 @@ function PosterBannerCarousel({ events }: { events: any[] }) {
   );
 }
 
-function SectionEventCard({ event }: { event: any }) {
+function SectionEventCard({ event }: { event: Event }) {
   const formatCurrency = (v: number) => `₹${new Intl.NumberFormat("en-IN").format(v || 0)}`;
   return (
     <Link href={`/events/${event.id}`} className="block shrink-0 w-[65vw] max-w-[240px] snap-start">
@@ -257,7 +280,7 @@ function SectionEventCard({ event }: { event: any }) {
   );
 }
 
-function GridEventCard({ event }: { event: any }) {
+function GridEventCard({ event }: { event: Event }) {
   const tags = useMemo(() => {
     try {
       const parsed = JSON.parse(event.tags || "[]");
@@ -298,7 +321,7 @@ function GridEventCard({ event }: { event: any }) {
   );
 }
 
-function FacilityCard({ facility }: { facility: any }) {
+function FacilityCard({ facility }: { facility: Facility }) {
   return (
     <Link href={`/gamehub/${facility.id}`} className="block shrink-0 w-[60vw] max-w-[220px] snap-start">
       <div className="w-full">
@@ -345,7 +368,7 @@ export default function MobileHome() {
   // Update state if URL changes (e.g. on back navigation)
   useEffect(() => {
     if (urlTab && urlTab !== activeTab) {
-      setActiveTab(urlTab);
+      Promise.resolve().then(() => setActiveTab(urlTab));
     }
   }, [urlTab, activeTab]);
 
@@ -355,8 +378,8 @@ export default function MobileHome() {
     router.replace(`/?tab=${tab}`, { scroll: false });
   };
 
-  const [events, setEvents] = useState<any[]>(FALLBACK_EVENTS);
-  const [facilities, setFacilities] = useState<any[]>(FALLBACK_FACILITIES);
+  const [events, setEvents] = useState<Event[]>(FALLBACK_EVENTS);
+  const [facilities, setFacilities] = useState<Facility[]>(FALLBACK_FACILITIES);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const { selectedLocation } = useLocation();

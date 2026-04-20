@@ -44,7 +44,8 @@ export async function fetchApi(endpoint: string, options: FetchOptions = {}) {
   }
 
   if (!response.ok) {
-    throw new Error((data as any).error || (data as any).message || "Something went wrong");
+    const errorData = data as { error?: string; message?: string };
+    throw new Error(errorData.error || errorData.message || "Something went wrong");
   }
 
   return data;

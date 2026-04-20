@@ -40,14 +40,6 @@ type PartnerOption = {
 
 import { fetchApi } from "@/lib/api";
 
-// Removed redundant type declaration
-
-type PartnerOption = {
-  id: string;
-  name: string;
-  email: string;
-};
-
 const ALLOWED_ROLES = new Set(["ADMIN", "PARTNER"]);
 
 function readCookie(name: string): string {
@@ -163,7 +155,7 @@ export default function EventsPage() {
 
         if (role === "ADMIN") {
           try {
-            const partnersPayload = await fetchApi("/users/partners?status=ACTIVE&limit=200");
+            const partnersPayload = await fetchApi("/users/partners?status=ACTIVE&limit=200") as { data: PartnerOption[] };
             if (mounted) {
               setPartners(Array.isArray(partnersPayload?.data) ? partnersPayload.data : []);
             }
@@ -172,14 +164,14 @@ export default function EventsPage() {
           }
         }
 
-        const payload = await fetchApi("/events/manage/list");
+        const payload = await fetchApi("/events/manage/list") as { data: EventItem[] };
         if (mounted) {
           setEvents(Array.isArray(payload?.data) ? payload.data : []);
         }
       } catch (err) {
         console.error("Failed to fetch events:", err);
         if (mounted) {
-          const status = (err as any).status || 0;
+          const status = (err as { status?: number })?.status || 0;
           if ([401, 403, 404].includes(status)) {
             clearDashboardSession();
             setError("Session expired. Please login again.");
@@ -214,7 +206,7 @@ export default function EventsPage() {
         await fetchApi(`/events/${id}`, { method: "DELETE" });
         setEvents((prev) => prev.filter((event) => event.id !== id));
       } catch (deleteError) {
-        const status = (deleteError as any).status || 0;
+        const status = (deleteError as { status?: number })?.status || 0;
         if ([401, 403, 404].includes(status)) {
           clearDashboardSession();
           setError("Session expired. Please login again.");

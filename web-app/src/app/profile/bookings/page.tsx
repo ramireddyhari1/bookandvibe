@@ -31,6 +31,51 @@ import { fetchApi } from "@/lib/api";
 
 type BookingTab = "all" | "events" | "courts";
 
+interface BookingEvent {
+  id: string;
+  title: string;
+  venue: string;
+  location?: string;
+  date: string;
+  time: string;
+  images: string;
+  mapLink?: string;
+}
+
+interface BookingFacility {
+  id: string;
+  name: string;
+  venue?: string;
+  location: string;
+  image: string;
+  mapLink?: string;
+}
+
+interface BookingItem {
+  id: string;
+  quantity: number;
+  tier?: {
+    name: string;
+  };
+}
+
+interface Booking {
+  id: string;
+  _type: "event" | "court";
+  event?: BookingEvent;
+  facility?: BookingFacility;
+  bookingDate?: string;
+  slotLabel?: string;
+  qrCode?: string;
+  transactionId?: string;
+  status: string;
+  quantity?: number;
+  totalAmount: number;
+  seatNumbers?: string;
+  items?: BookingItem[];
+  createdAt?: string;
+}
+
 /* ─── Status config ──────────────────────────────────────── */
 const STATUS_CONFIG: Record<
   string,
@@ -77,7 +122,7 @@ function QrTicketModal({
   booking,
   onClose,
 }: {
-  booking: any;
+  booking: Booking;
   onClose: () => void;
 }) {
   const [copied, setCopied] = useState(false);
@@ -281,9 +326,9 @@ export default function BookingsPage() {
   const [activeTab, setActiveTab] = useState<BookingTab>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
-  const [eventBookings, setEventBookings] = useState<any[]>([]);
-  const [courtBookings, setCourtBookings] = useState<any[]>([]);
-  const [selectedBooking, setSelectedBooking] = useState<any | null>(null);
+  const [eventBookings, setEventBookings] = useState<Booking[]>([]);
+  const [courtBookings, setCourtBookings] = useState<Booking[]>([]);
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
 
   useEffect(() => {
     if (!isAuthenticated) { router.push("/login"); return; }
@@ -296,10 +341,10 @@ export default function BookingsPage() {
           fetchApi("/gamehub/bookings", { requiresAuth: true }),
         ]);
         if (evtRes.status === "fulfilled") {
-          setEventBookings(((evtRes.value as any)?.data || []).map((b: any) => ({ ...b, _type: "event" })));
+          setEventBookings(((evtRes.value as { data: Booking[] })?.data || []).map((b) => ({ ...b, _type: "event" })));
         }
         if (courtRes.status === "fulfilled") {
-          setCourtBookings(((courtRes.value as any)?.data || []).map((b: any) => ({ ...b, _type: "court" })));
+          setCourtBookings(((courtRes.value as { data: Booking[] })?.data || []).map((b) => ({ ...b, _type: "court" })));
         }
       } catch (err) { console.error("Failed to load bookings:", err); }
       finally { setLoading(false); }
@@ -457,7 +502,7 @@ export default function BookingsPage() {
             </div>
           ) : (
             <div className="grid gap-4">
-              {filtered.map((booking: any) => {
+              {filtered.map((booking: Booking) => {
                 const isEvent = booking._type === "event";
                 const title = isEvent ? booking.event?.title : booking.facility?.name;
                 const venue = isEvent ? booking.event?.venue : booking.facility?.venue;
@@ -545,7 +590,7 @@ export default function BookingsPage() {
                         {/* Tier breakdown */}
                         {isEvent && booking.items && booking.items.length > 0 && (
                           <div className="flex flex-wrap gap-2 mb-2">
-                            {booking.items.map((item: any) => (
+                            {booking.items.map((item) => (
                               <span key={item.id} className="inline-flex items-center gap-1.5 text-[11px] font-bold bg-gray-50 text-gray-600 px-3 py-1.5 rounded-xl border border-gray-100">
                                 <Users size={12} className="text-gray-400" /> {item.quantity}× {item.tier?.name || "General"}
                               </span>

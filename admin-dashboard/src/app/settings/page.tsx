@@ -21,13 +21,31 @@ import {
   LayoutTemplate,
 } from "lucide-react";
 
+interface Banner {
+  id: string;
+  title: string;
+  subtitle: string;
+  image: string;
+}
+
+interface SocialLink {
+  platform: string;
+  url: string;
+}
+
+interface WebsiteConfig {
+  banners: Banner[];
+  footerText: string;
+  socialLinks: SocialLink[];
+}
+
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("general");
   const [saved, setSaved] = useState(false);
   const [showApiKey, setShowApiKey] = useState(false);
 
   // Website Content State
-  const [websiteConfig, setWebsiteConfig] = useState<any>({
+  const [websiteConfig, setWebsiteConfig] = useState<WebsiteConfig>({
     banners: [],
     footerText: "",
     socialLinks: []
@@ -36,10 +54,10 @@ export default function SettingsPage() {
 
   useEffect(() => {
     if (activeTab === "website" && !websiteConfig.footerText) {
-      setConfigLoading(true);
+      Promise.resolve().then(() => setConfigLoading(true));
       fetchApi('/config/website')
         .then(res => {
-          if (res.data) setWebsiteConfig(res.data);
+          if (res.data) setWebsiteConfig(res.data as WebsiteConfig);
         })
         .catch(console.error)
         .finally(() => setConfigLoading(false));
@@ -515,7 +533,7 @@ export default function SettingsPage() {
                   <div>
                     <h3 className="font-black text-slate-800 uppercase text-sm tracking-tight mb-4">Hero Banners</h3>
                     <div className="space-y-6">
-                      {websiteConfig.banners?.map((banner: any, index: number) => (
+                      {websiteConfig.banners?.map((banner, index) => (
                         <div key={banner.id} className="p-5 border border-emerald-50 rounded-xl bg-emerald-50/10">
                           <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600 mb-4">{banner.id}</p>
                           <div className="space-y-4">
@@ -581,7 +599,7 @@ export default function SettingsPage() {
                       <div className="pt-2">
                         <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-1">Social Media Links</label>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          {websiteConfig.socialLinks?.map((link: any, index: number) => (
+                          {websiteConfig.socialLinks?.map((link, index) => (
                             <div key={index} className="flex flex-col gap-1">
                               <span className="text-[11px] font-bold text-slate-600">{link.platform}</span>
                               <input

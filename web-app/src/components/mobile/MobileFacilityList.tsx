@@ -5,15 +5,24 @@ import { ArrowLeft, Search, MapPin, Filter } from "lucide-react";
 import { fetchApi } from "@/lib/api";
 import { useLocation } from "@/context/LocationContext";
 
+interface Facility {
+  id: string;
+  name: string;
+  location: string;
+  pricePerHour: number | string;
+  image: string;
+  type: string;
+}
+
 export default function MobileFacilityList() {
-  const [facilities, setFacilities] = useState<any[]>([]);
+  const [facilities, setFacilities] = useState<Facility[]>([]);
   const [loading, setLoading] = useState(true);
   const { selectedLocation } = useLocation();
 
   useEffect(() => {
     fetchApi("/gamehub/facilities")
       .then(d => {
-        let facs = Array.isArray(d) ? d : (d.data && Array.isArray(d.data)) ? d.data : [];
+        const facs = Array.isArray(d) ? d : (d.data && Array.isArray(d.data)) ? d.data : [];
         setFacilities(facs);
       })
       .catch(() => setFacilities([]))
@@ -51,7 +60,7 @@ export default function MobileFacilityList() {
           {loading ? (
             <div className="py-20 flex justify-center"><div className="w-8 h-8 border-4 border-[#10B981] border-t-transparent rounded-full animate-spin" /></div>
           ) : (
-            filteredFacilities.length > 0 ? filteredFacilities.map((f: any) => (
+            filteredFacilities.length > 0 ? filteredFacilities.map((f) => (
               <Link href={`/gamehub/${f.id}`} key={f.id} className="block">
                 <div className="w-full relative h-[200px] rounded-[24px] overflow-hidden bg-gray-100 shadow-sm border border-gray-100 mb-3">
                   <img src={f.image} alt={f.name} className="w-full h-full object-cover" />

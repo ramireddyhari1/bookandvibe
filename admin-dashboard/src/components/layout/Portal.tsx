@@ -12,7 +12,7 @@ export default function Portal({ children, selector }: PortalProps) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    Promise.resolve().then(() => setMounted(true));
     return () => setMounted(false);
   }, []);
 
