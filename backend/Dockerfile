@@ -31,4 +31,4 @@ COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 EXPOSE 5000
 
 # Sync schema and start the server
-CMD ["sh", "-c", "npx prisma db push --skip-generate && node src/server.js"]
+CMD ["sh", "-c", "npx prisma db push && node src/server.js"]
