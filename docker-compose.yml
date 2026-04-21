@@ -29,8 +29,10 @@ services:
     env_file:
       - ./backend/.env
     environment:
+      DATABASE_URL: postgresql://bv_user:bv_pass@bv-db:5432/book_and_vibe
       REDIS_URL: redis://redis:6379
       PORT: 5000
+      NODE_ENV: production
       ALLOWED_ORIGINS: https://bookandvibe.in,https://admin.bookandvibe.in,https://www.bookandvibe.in
     depends_on:
       - db
@@ -47,6 +49,7 @@ services:
     restart: always
     environment:
       - PORT=3000
+      - NODE_ENV=production
     depends_on:
       - backend
     networks:
@@ -61,6 +64,7 @@ services:
     restart: always
     environment:
       - PORT=3001
+      - NODE_ENV=production
     depends_on:
       - backend
     networks:

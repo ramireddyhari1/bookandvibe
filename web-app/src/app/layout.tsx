@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="" suppressHydrationWarning>
-      <body className={`${inter.className} bg-rose-50 text-slate-900 antialiased`}>
+      <body className={`${inter.className} bg-rose-50 text-slate-900 antialiased`.trim()}>
         <LocationProvider>
           <AuthProvider>
             <Navbar />

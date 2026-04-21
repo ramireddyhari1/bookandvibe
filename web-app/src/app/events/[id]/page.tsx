@@ -57,6 +57,7 @@ type EventData = {
   date: string;
   time: string;
   duration?: string;
+  distance?: string;
   price: number;
   images: string;
   availableSlots: number;
@@ -200,6 +201,11 @@ export default function EventDetailsPage() {
   const [validatingCoupon, setValidatingCoupon] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [showCouponInput, setShowCouponInput] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -352,7 +358,7 @@ export default function EventDetailsPage() {
         })
       });
       setAppliedCoupon({ code: res.data.code, discountAmount: res.data.discountAmount });
-      setCouponSuccess(`Promo code applied! You saved â‚¹${res.data.discountAmount}`);
+      setCouponSuccess(`Promo code applied! You saved ₹${res.data.discountAmount}`);
       setShowCouponInput(false);
     } catch (err) {
       setCouponError(err instanceof Error ? err.message : "Invalid promo code");
@@ -370,11 +376,11 @@ export default function EventDetailsPage() {
   };
 
   const formattedDate = useMemo(() => {
-    if (!event) return "";
+    if (!event || !isMounted) return "";
     return new Date(event.date).toLocaleDateString("en-IN", {
       weekday: "long", day: "numeric", month: "short", year: "numeric",
     });
-  }, [event]);
+  }, [event, isMounted]);
 
   const handleCheckout = useCallback(async () => {
     if (!event) return;
@@ -558,186 +564,334 @@ export default function EventDetailsPage() {
       </div>
 
       {/* â•â•â• CRISP CONTENT LAYOUT â•â•â• */}
-      <div className="relative z-20 bg-white -mt-10 md:mt-0 rounded-t-[32px] md:rounded-none md:pt-4 px-6 pt-8 pb-32 max-w-[1000px] mx-auto min-h-screen">
-        
-        {/* Title Area */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-4">
-             <span className="text-orange-600 text-[11px] font-black tracking-widest uppercase bg-orange-50 px-2.5 py-1 rounded-md">{event.category}</span>
-             <motion.button 
-               onClick={() => setIsFavorite(!isFavorite)}
-               whileTap={{ scale: 0.85 }}
-               className="text-gray-400 hover:text-orange-500 transition-colors p-1 -mr-1"
-             >
-               <Heart size={22} className={isFavorite ? "fill-orange-500 text-orange-500" : ""} />
-             </motion.button>
-          </div>
-          
-          <h1 className="text-4xl font-extrabold text-gray-900 leading-[1.05] tracking-tight mb-2">{event.title}</h1>
-          <p className="text-gray-500 text-[14px] font-medium flex items-center gap-1.5"><MapPin size={14}/> {event.venue}</p>
-          
-          <div className="flex flex-wrap gap-4 mt-8 pb-8 border-b border-gray-100">
-            {/* Date & Time */}
-            <div className="flex-1 min-w-[240px] flex items-center gap-4 p-4 rounded-2xl border border-gray-200/60 bg-white shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)]">
-              <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center shrink-0 text-orange-600">
-                <CalendarDays size={24} />
+      <div className="relative z-20 bg-white -mt-10 md:mt-0 rounded-t-[32px] md:rounded-none md:pt-4 px-6 pt-8 pb-32 max-w-[1240px] mx-auto min-h-screen">
+        <div className="lg:grid lg:grid-cols-12 lg:gap-12">
+          {/* Main Column */}
+          <div className="lg:col-span-7">
+            {/* Title Area */}
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-4">
+                 <span className="text-orange-600 text-[11px] font-black tracking-widest uppercase bg-orange-50 px-2.5 py-1 rounded-md">{event.category}</span>
+                 <motion.button 
+                   onClick={() => setIsFavorite(!isFavorite)}
+                   whileTap={{ scale: 0.85 }}
+                   className="text-gray-400 hover:text-orange-500 transition-colors p-1 -mr-1"
+                 >
+                   <Heart size={22} className={isFavorite ? "fill-orange-500 text-orange-500" : ""} />
+                 </motion.button>
               </div>
-              <div className="flex flex-col">
-                <span className="text-[11px] uppercase tracking-wider font-extrabold text-gray-400 mb-0.5">Date & Time</span>
-                <span className="text-[15px] font-bold text-gray-900 leading-tight">{formattedDate}</span>
-                <span className="text-[13px] font-semibold text-gray-500">{event.time}</span>
+              
+              <h1 className="text-4xl font-extrabold text-gray-900 leading-[1.05] tracking-tight mb-2">{event.title}</h1>
+              <p className="text-gray-500 text-[14px] font-medium flex items-center gap-1.5"><MapPin size={14}/> {event.venue}</p>
+              
+              <div className="lg:hidden flex flex-wrap gap-4 mt-8 pb-8 border-b border-gray-100">
+                {/* Date & Time (Mobile Only) */}
+                <div className="flex-1 min-w-[240px] flex items-center gap-4 p-4 rounded-2xl border border-gray-200/60 bg-white shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)]">
+                  <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center shrink-0 text-orange-600">
+                    <CalendarDays size={24} />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[11px] uppercase tracking-wider font-extrabold text-gray-400 mb-0.5">Date & Time</span>
+                    <span className="text-[15px] font-bold text-gray-900 leading-tight">{formattedDate}</span>
+                    <span className="text-[13px] font-semibold text-gray-500">{event.time}</span>
+                  </div>
+                </div>
+
+                {/* Duration (Mobile Only) */}
+                {event.duration && (
+                <div className="flex-1 min-w-[140px] flex items-center gap-3 p-4 rounded-2xl border border-gray-200/60 bg-white shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)]">
+                  <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center shrink-0 text-orange-600">
+                    <Clock size={24} />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[11px] uppercase tracking-wider font-extrabold text-gray-400 mb-0.5">Duration</span>
+                    <span className="text-[15px] font-bold text-gray-900">{event.duration}</span>
+                  </div>
+                </div>
+                )}
               </div>
             </div>
 
-            {/* Duration */}
-            {event.duration && (
-            <div className="flex-1 min-w-[140px] flex items-center gap-3 p-4 rounded-2xl border border-gray-200/60 bg-white shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)]">
-              <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center shrink-0 text-orange-600">
-                <Clock size={24} />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-[11px] uppercase tracking-wider font-extrabold text-gray-400 mb-0.5">Duration</span>
-                <span className="text-[15px] font-bold text-gray-900">{event.duration}</span>
-              </div>
-            </div>
+            {/* About (Formerly The Vibe) */}
+            <section className="mb-10">
+               <h2 className="text-[22px] font-black text-gray-900 mb-4 tracking-tight">About</h2>
+               <p className="text-gray-600 leading-relaxed text-[15px] font-medium whitespace-pre-line">
+                 {event.description}
+               </p>
+
+               <div className="mt-5 flex flex-wrap gap-2 pb-8 border-b border-gray-100">
+                  {event.vibeTags?.map(tag => (
+                    <span key={tag} className="px-3 py-1.5 bg-gray-50 text-gray-700 rounded-lg text-[12px] font-medium border border-gray-100">
+                       #{tag}
+                    </span>
+                  ))}
+               </div>
+            </section>
+
+            {/* Host (Premium Redesign) */}
+            <section className="mb-10">
+               <h2 className="text-[18px] font-bold text-gray-900 mb-4 tracking-tight">Hosted By</h2>
+               <div className="relative overflow-hidden bg-white rounded-3xl p-5 border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex items-center justify-between group">
+                  {/* Decorative gradient blur */}
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-orange-100 to-orange-50 rounded-full blur-3xl opacity-60 -mr-10 -mt-10 pointer-events-none" />
+                  
+                  <div className="relative flex items-center gap-4">
+                     <div className="w-14 h-14 rounded-full p-0.5 bg-gradient-to-tr from-orange-500 to-orange-400 shrink-0 shadow-md">
+                        <div className="w-full h-full rounded-full border-2 border-white overflow-hidden bg-white flex items-center justify-center">
+                           {event.partner?.avatar ? (
+                             <img src={event.partner.avatar} className="w-full h-full object-cover" alt="" />
+                           ) : (
+                             <span className="text-orange-600 font-extrabold text-xl tracking-tight">
+                               {getInitials(event.partner?.name || "Organizer")}
+                             </span>
+                           )}
+                        </div>
+                     </div>
+                     <div className="flex flex-col">
+                        <div className="flex items-center gap-1.5 line-clamp-1">
+                           <span className="text-gray-900 font-bold text-[17px] tracking-tight">
+                             {event.partner?.name || "Premium Organizer"}
+                           </span>
+                           <BadgeCheck className="w-5 h-5 text-orange-500 fill-orange-50" />
+                        </div>
+                        <span className="text-gray-500 text-[13px] font-medium mt-0.5">Premium Organizer</span>
+                     </div>
+                  </div>
+
+                  <div className="relative w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center shrink-0 transition-transform active:scale-95 border border-gray-100 shadow-sm">
+                     <ChevronRight size={18} className="text-gray-400" />
+                  </div>
+               </div>
+            </section>
+
+            {/* ——— SIGNATURE PROTOCOL HEADER ——— */}
+            <section className="mb-20 relative px-6 md:px-0">
+               {/* Aesthetic Watermark */}
+               <div className="absolute -top-12 left-0 text-[100px] md:text-[140px] font-black text-gray-900/5 select-none pointer-events-none tracking-tighter z-0">
+                  ESSENTIAL
+               </div>
+
+               <div className="relative z-10 flex flex-col md:flex-row md:items-center gap-8">
+                  {/* Vertical Signature Anchor */}
+                  <div className="hidden md:block absolute -left-10 top-0 bottom-0 w-[5px] bg-gradient-to-b from-orange-600 via-pink-500 to-transparent rounded-full shadow-[0_0_20px_rgba(249,115,22,0.3)]" />
+                  
+                  <div className="flex-1 space-y-4">
+                     <div className="flex items-center gap-3">
+                        <div className="px-2 py-1 border border-gray-900/10 rounded-md bg-white/50 backdrop-blur-sm">
+                           <span className="text-[10px] font-mono font-bold text-gray-400 tracking-tighter uppercase tracking-widest leading-none">
+                              [ SEC : PROTOCOL_04 ]
+                           </span>
+                        </div>
+                        <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse shadow-[0_0_10px_rgba(249,115,22,0.5)]" />
+                     </div>
+
+                     <h2 className="text-[38px] md:text-[56px] leading-[0.9] font-medium tracking-tight text-gray-900">
+                        Know Before <br />
+                        <span className="font-black tracking-tighter">
+                           You <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-pink-600 to-rose-600">Go.</span>
+                        </span>
+                     </h2>
+                  </div>
+
+                  {/* Subtext with Editorial Line */}
+                  <div className="md:w-px md:h-24 md:bg-gray-200 relative">
+                     <p className="md:absolute md:top-0 md:left-8 md:w-64 text-gray-500 font-bold text-[14px] leading-relaxed uppercase tracking-[0.1em]">
+                        Curated guidelines for an <span className="text-gray-900 underline decoration-orange-500/30 decoration-4 underline-offset-4">elite event</span> experience.
+                     </p>
+                  </div>
+               </div>
+
+               {/* The Bento Glass Container */}
+               <div className="relative overflow-hidden bg-gray-50/30 border border-gray-100 rounded-[40px] p-4 md:p-8">
+                  {/* Mesh Blobs */}
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-orange-200/20 rounded-full blur-[100px] -mr-32 -mt-32 animate-pulse" />
+                  <div className="absolute bottom-0 left-0 w-64 h-64 bg-pink-200/20 rounded-full blur-[100px] -ml-32 -mb-32 animate-pulse" style={{ animationDelay: '1s' }} />
+                  
+                  <motion.div 
+                    initial="hidden"
+                    whileInView="show"
+                    viewport={{ once: true, margin: "-100px" }}
+                    variants={{
+                      hidden: { opacity: 0 },
+                      show: {
+                        opacity: 1,
+                        transition: {
+                          staggerChildren: 0.08
+                        }
+                      }
+                    }}
+                    className="grid grid-cols-2 lg:grid-cols-4 gap-4 relative z-10"
+                  >
+                     {/* Tiles */}
+                     {[
+                        { label: "Language", value: event.language || "English / Multi", icon: <Languages size={20} /> },
+                        { label: "Duration", value: event.duration || "2+ Hours", icon: <Clock size={20} /> },
+                        { label: "Passholders", value: event.ticketAgeLimit || "All Ages Welcome", icon: <Ticket size={20} className="-rotate-45" /> },
+                        { label: "Entry Policy", value: event.ageLimit || "Standard Entry", icon: <BadgeCheck size={20} /> },
+                        { label: "Venue Style", value: event.layout || "Contemporary Indoor", icon: <Accessibility size={20} /> },
+                        { label: "Seating", value: event.seating || "Open Access", icon: <Users size={20} /> },
+                        { label: "Family Policy", value: event.kidsAllowed ? "Family Friendly" : "Adults Exclusive", icon: <Baby size={20} /> },
+                        { label: "Pet Access", value: event.petsAllowed ? "Pets Allowed" : "No Pets Permitted", icon: <Dog size={20} /> }
+                     ].map((tile, i) => (
+                        <motion.div 
+                          key={i}
+                          variants={{
+                            hidden: { opacity: 0, y: 30, scale: 0.95 },
+                            show: { 
+                              opacity: 1, 
+                              y: 0, 
+                              scale: 1,
+                              transition: { type: "spring", stiffness: 100, damping: 20 }
+                            }
+                          }}
+                          whileHover={{ y: -8, scale: 1.02 }}
+                          className="group/tile relative bg-white/60 backdrop-blur-xl border border-white/50 rounded-[28px] p-5 shadow-sm hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-300 overflow-hidden"
+                        >
+                           {/* Inner Glow hover */}
+                           <div className="absolute inset-0 bg-gradient-to-br from-orange-500/0 to-orange-500/0 group-hover/tile:from-orange-50/40 group-hover/tile:to-transparent transition-colors duration-500" />
+                           
+                           <div className="relative flex flex-col h-full">
+                              <div className="w-12 h-12 rounded-2xl bg-white shadow-xl shadow-gray-200/50 flex items-center justify-center text-gray-900 mb-6 group-hover/tile:scale-110 group-hover/tile:rotate-3 transition-transform">
+                                 <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-pink-600 opacity-0 group-hover/tile:opacity-10 rounded-2xl transition-opacity" />
+                                 {tile.icon}
+                              </div>
+                              <div className="space-y-1">
+                                 <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">{tile.label}</p>
+                                 <h3 className="text-[15px] font-bold text-gray-900 leading-tight group-hover/tile:text-orange-600 transition-colors">
+                                    {tile.value}
+                                 </h3>
+                              </div>
+                           </div>
+
+                           {/* Bottom accent bar */}
+                           <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-500 to-pink-600 scale-x-0 group-hover/tile:scale-x-100 transition-transform origin-left duration-500" />
+                        </motion.div>
+                     ))}
+                  </motion.div>
+               </div>
+            </section>
+
+            {/* More Section */}
+            <section className="mb-12">
+                <h2 className="text-[22px] font-bold text-gray-900 mb-6 tracking-tight">More</h2>
+                <button 
+                  onClick={() => setShowTermsModal(true)}
+                  className="w-full bg-white border border-gray-100 rounded-[20px] p-5 flex items-center justify-between group active:scale-[0.98] transition-all hover:border-gray-200 shadow-sm"
+                >
+                   <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:text-gray-600 transition-colors">
+                         <FileText size={20} />
+                      </div>
+                      <span className="text-[16px] font-bold text-gray-800 tracking-tight">Terms and Conditions</span>
+                   </div>
+                   <ChevronRight size={18} className="text-gray-300 group-hover:text-gray-500 transition-all" />
+                </button>
+             </section>
+
+            {/* Gallery Section */}
+            {imageList && imageList.length > 0 && (
+              <section className="mb-12">
+                 <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-[18px] font-bold text-gray-900 tracking-tight">Gallery</h2>
+                 </div>
+                 <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x">
+                    {imageList.map((src, idx) => (
+                      <div 
+                        key={idx} 
+                        className="relative shrink-0 w-[260px] md:w-[320px] aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100 snap-start shadow-sm border border-gray-100"
+                      >
+                        <img 
+                          src={src} 
+                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-700 ease-out" 
+                          alt="Gallery image" 
+                        />
+                      </div>
+                    ))}
+                 </div>
+              </section>
             )}
 
-            {/* Location */}
-            <div className="w-full flex items-center gap-4 p-4 rounded-2xl border border-gray-200/60 bg-white shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] cursor-pointer hover:border-orange-300 transition-colors group">
-              <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center shrink-0 text-orange-600 group-hover:scale-105 transition-transform">
-                <MapPin size={24} />
+            {/* Suggestions */}
+            {suggestedEvents.length > 0 && (
+              <div className="pt-8 border-t border-gray-100">
+                 <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-[18px] font-bold text-gray-900 tracking-tight">You might also like</h2>
+                 </div>
+                 
+                 <div className="flex gap-4 overflow-x-auto pb-6 scrollbar-hide snap-x">
+                    {suggestedEvents.map((e, i) => (
+                       <motion.div 
+                         key={e.id}
+                         whileTap={{ scale: 0.98 }}
+                         onClick={() => router.push(`/events/${e.id}`)}
+                         className="shrink-0 w-[200px] snap-start"
+                       >
+                          <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-gray-100 mb-2">
+                             <img src={parseImages(e.images)[0]} className="w-full h-full object-cover" alt="" />
+                          </div>
+                          <h3 className="text-gray-900 text-[14px] font-bold leading-snug line-clamp-1">{e.title}</h3>
+                          <p className="text-[12px] text-gray-500">{e.venue.split(',')[0]} â€¢ â‚¹{e.price}</p>
+                       </motion.div>
+                    ))}
+                 </div>
               </div>
-              <div className="flex flex-col flex-1">
-                <span className="text-[11px] uppercase tracking-wider font-extrabold text-gray-400 mb-0.5">Location</span>
-                <span className="text-[15px] font-bold text-gray-900 line-clamp-1">{event.venue}</span>
-                <span className="text-[13px] font-bold text-orange-600 mt-0.5 group-hover:underline flex items-center gap-1">View on Maps <ArrowRight size={14}/></span>
+            )}
+          </div>
+
+          {/* Sidebar Column (Desktop Only) */}
+          <div className="hidden lg:block lg:col-span-5">
+            <div className="sticky top-28 space-y-6">
+              <div className="bg-white border border-gray-100 rounded-[32px] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.06)]">
+                
+                {/* Location Row */}
+                <div className="flex items-start gap-4 p-4 rounded-2xl hover:bg-gray-50 transition-colors group cursor-pointer border border-transparent hover:border-gray-100">
+                  <div className="w-12 h-12 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-900 shrink-0 group-hover:scale-105 transition-transform">
+                    <MapPin size={20} />
+                  </div>
+                  <div className="flex-1 flex flex-col">
+                    <h3 className="font-bold text-[15px] text-gray-900 leading-tight">
+                      {event.venue}
+                    </h3>
+                    {event.distance && <span className="text-[12px] font-bold text-gray-400 mt-1">{event.distance} away</span>}
+                  </div>
+                  <ChevronRight size={18} className="text-gray-300 mt-1" />
+                </div>
+
+                {/* Time Row */}
+                <div className="mt-2 flex items-center gap-4 p-4 rounded-2xl hover:bg-gray-50 transition-colors group cursor-pointer border border-transparent hover:border-gray-100">
+                  <div className="w-12 h-12 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-900 shrink-0 group-hover:scale-105 transition-transform">
+                    <CalendarDays size={20} />
+                  </div>
+                  <div className="flex-1 flex flex-col">
+                    <h3 className="font-bold text-[15px] text-gray-900">Starts at {event.time}</h3>
+                    <span className="text-[12px] font-bold text-orange-600 mt-1">View full schedule & timeline</span>
+                  </div>
+                  <ChevronRight size={18} className="text-gray-300" />
+                </div>
+
+                {/* Booking Row */}
+                <div className="mt-6 pt-6 border-t border-gray-100 flex items-center justify-between">
+                  <div className="flex flex-col">
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-2xl font-black text-gray-900">{isMounted ? "₹" : ""}{event.price}</span>
+                      <span className="text-[12px] font-bold text-gray-400">onwards</span>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => setShowCheckout(true)}
+                    className="bg-gray-900 hover:bg-black active:scale-95 transition-all text-white py-4 px-10 rounded-[18px] font-black text-[15px] shadow-lg shadow-black/10"
+                  >
+                    Book Tickets
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
-
-        {/* Host (Premium Redesign) */}
-        <section className="mb-10">
-           <h2 className="text-[18px] font-bold text-gray-900 mb-4 tracking-tight">Hosted By</h2>
-           <div className="relative overflow-hidden bg-white rounded-3xl p-5 border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex items-center justify-between group">
-              {/* Decorative gradient blur */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-orange-100 to-orange-50 rounded-full blur-3xl opacity-60 -mr-10 -mt-10 pointer-events-none" />
-              
-              <div className="relative flex items-center gap-4">
-                 <div className="w-14 h-14 rounded-full p-0.5 bg-gradient-to-tr from-orange-500 to-orange-400 shrink-0 shadow-md">
-                    <div className="w-full h-full rounded-full border-2 border-white overflow-hidden bg-white flex items-center justify-center">
-                       {event.partner?.avatar ? (
-                         <img src={event.partner.avatar} className="w-full h-full object-cover" alt="" />
-                       ) : (
-                         <span className="text-orange-600 font-extrabold text-xl tracking-tight">
-                           {getInitials(event.partner?.name || "Organizer")}
-                         </span>
-                       )}
-                    </div>
-                 </div>
-                 <div className="flex flex-col">
-                    <div className="flex items-center gap-1.5 line-clamp-1">
-                       <span className="text-gray-900 font-bold text-[17px] tracking-tight">
-                         {event.partner?.name || "Premium Organizer"}
-                       </span>
-                       <BadgeCheck className="w-5 h-5 text-orange-500 fill-orange-50" />
-                    </div>
-                    <span className="text-gray-500 text-[13px] font-medium mt-0.5">Premium Organizer</span>
-                 </div>
-              </div>
-
-              <div className="relative w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center shrink-0 transition-transform active:scale-95 border border-gray-100 shadow-sm">
-                 <ChevronRight size={18} className="text-gray-400" />
-              </div>
-           </div>
-        </section>
-
-        {/* The Vibe */}
-        <section className="mb-10">
-           <h2 className="text-[18px] font-bold text-gray-900 mb-3 tracking-tight">The Vibe</h2>
-           <p className="text-gray-600 leading-relaxed text-[15px] font-medium whitespace-pre-line">
-             {event.description}
-           </p>
-           
-
-           <div className="mt-5 flex flex-wrap gap-2">
-              {event.vibeTags?.map(tag => (
-                <span key={tag} className="px-3 py-1.5 bg-gray-50 text-gray-700 rounded-lg text-[12px] font-medium border border-gray-100">
-                   #{tag}
-                </span>
-              ))}
-           </div>
-        </section>
-
-        {/* More Section */}
-        <section className="mb-12">
-            <h2 className="text-[22px] font-bold text-gray-900 mb-6 tracking-tight">More</h2>
-            <button 
-              onClick={() => setShowTermsModal(true)}
-              className="w-full bg-white border border-gray-100 rounded-[20px] p-5 flex items-center justify-between group active:scale-[0.98] transition-all hover:border-gray-200 shadow-sm"
-            >
-               <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:text-gray-600 transition-colors">
-                     <FileText size={20} />
-                  </div>
-                  <span className="text-[16px] font-bold text-gray-800 tracking-tight">Terms and Conditions</span>
-               </div>
-               <ChevronRight size={18} className="text-gray-300 group-hover:text-gray-500 transition-all" />
-            </button>
-         </section>
-
-        {/* Gallery Section */}
-        {imageList && imageList.length > 0 && (
-          <section className="mb-12">
-             <div className="flex items-center justify-between mb-4">
-                <h2 className="text-[18px] font-bold text-gray-900 tracking-tight">Gallery</h2>
-             </div>
-             <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x">
-                {imageList.map((src, idx) => (
-                  <div 
-                    key={idx} 
-                    className="relative shrink-0 w-[260px] md:w-[320px] aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100 snap-start shadow-sm border border-gray-100"
-                  >
-                    <img 
-                      src={src} 
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-700 ease-out" 
-                      alt="Gallery image" 
-                    />
-                  </div>
-                ))}
-             </div>
-          </section>
-        )}
-
-        {/* Suggestions */}
-        {suggestedEvents.length > 0 && (
-          <div className="pt-8 border-t border-gray-100">
-             <div className="flex items-center justify-between mb-4">
-                <h2 className="text-[18px] font-bold text-gray-900 tracking-tight">You might also like</h2>
-             </div>
-             
-             <div className="flex gap-4 overflow-x-auto pb-6 scrollbar-hide snap-x">
-                {suggestedEvents.map((e, i) => (
-                   <motion.div 
-                     key={e.id}
-                     whileTap={{ scale: 0.98 }}
-                     onClick={() => router.push(`/events/${e.id}`)}
-                     className="shrink-0 w-[200px] snap-start"
-                   >
-                      <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-gray-100 mb-2">
-                         <img src={parseImages(e.images)[0]} className="w-full h-full object-cover" alt="" />
-                      </div>
-                      <h3 className="text-gray-900 text-[14px] font-bold leading-snug line-clamp-1">{e.title}</h3>
-                      <p className="text-[12px] text-gray-500">{e.venue.split(',')[0]} â€¢ â‚¹{e.price}</p>
-                   </motion.div>
-                ))}
-             </div>
-          </div>
-        )}
       </div>
 
-      {/* â•â•â• SLEEK ACTION PILL â•â•â• */}
-      <div className="fixed bottom-6 left-0 right-0 z-[110] px-4 md:px-0 pointer-events-none flex justify-center">
+      {/* ——— SLEEK ACTION PILL ——— */}
+      <div className="fixed bottom-6 left-0 right-0 z-[110] px-4 md:px-0 pointer-events-none flex justify-center lg:hidden">
          <motion.div 
            initial={{ y: 50, opacity: 0 }}
            animate={{ y: 0, opacity: 1 }}
@@ -745,7 +899,7 @@ export default function EventDetailsPage() {
          >
             <div className="flex flex-col pl-4 text-white">
                <div className="flex items-baseline gap-1">
-                  <span className="text-[20px] font-bold tracking-tight">â‚¹{event.price}</span>
+                  <span className="text-[20px] font-bold tracking-tight">{isMounted ? "₹" : ""}{event.price}</span>
                   <span className="text-[10px] text-gray-400 font-medium">/person</span>
                </div>
             </div>
@@ -758,7 +912,7 @@ export default function EventDetailsPage() {
          </motion.div>
       </div>
 
-      {/* â•â•â• CLEAN CHECKOUT SHEET â•â•â• */}
+      {/* ——— CLEAN CHECKOUT SHEET ——— */}
       <AnimatePresence>
         {showCheckout && (
           <motion.div 
@@ -802,22 +956,22 @@ export default function EventDetailsPage() {
                         </div>
                      </div>
 
-                     <div className="space-y-3 pt-2">
+                      <div className="space-y-3 pt-2">
                         <div className="flex justify-between text-[14px] font-medium text-gray-500">
                            <span>Tickets ({quantity}x)</span>
-                        <span>â‚¹{ticketSubtotal}</span>
+                        <span>{isMounted ? "₹" : ""}{ticketSubtotal}</span>
                         </div>
                       {taxAmount > 0 && (
                         <div className="flex justify-between text-[14px] font-medium text-gray-500">
                           <span>Tax</span>
-                          <span>â‚¹{taxAmount}</span>
+                          <span>{isMounted ? "₹" : ""}{taxAmount}</span>
                         </div>
                       )}
                       
                       {platformFeeAmount > 0 && (
                         <div className="flex justify-between text-[14px] font-medium text-gray-500 pb-4 border-b border-gray-100">
                            <span>Platform Fee</span>
-                           <span>â‚¹{platformFeeAmount}</span>
+                           <span>{isMounted ? "₹" : ""}{platformFeeAmount}</span>
                         </div>
                       )}
 
@@ -835,7 +989,7 @@ export default function EventDetailsPage() {
                               </div>
                             </div>
                             <div className="flex items-center gap-3">
-                              <span className="font-bold text-emerald-600">-â‚¹{appliedCoupon.discountAmount}</span>
+                              <span className="font-bold text-emerald-600">-{isMounted ? "₹" : ""}{appliedCoupon.discountAmount}</span>
                               <button onClick={removeCoupon} className="text-slate-400 hover:text-red-500 transition-colors p-1" title="Remove">
                                 <AlertCircle size={16} className="rotate-45" />
                               </button>
@@ -881,7 +1035,7 @@ export default function EventDetailsPage() {
 
                         <div className="flex justify-between items-end pt-4 mt-2 border-t border-gray-100">
                            <span className="text-[14px] font-bold text-gray-500 mb-1">Total to pay</span>
-                           <span className="text-[24px] font-black tracking-tight text-gray-900">â‚¹{finalTotalAmount}</span>
+                           <span className="text-[24px] font-black tracking-tight text-gray-900">{isMounted ? "₹" : ""}{finalTotalAmount}</span>
                         </div>
                      </div>
 
@@ -889,7 +1043,7 @@ export default function EventDetailsPage() {
                        onClick={handleCheckout}
                        className="w-full bg-orange-600 text-white py-4 rounded-xl font-bold text-[16px] flex items-center justify-center gap-2 active:scale-95 transition-transform mt-6 shadow-md shadow-orange-600/30"
                      >
-                      {isFreeEvent || finalTotalAmount <= 0 ? "Book Free" : `Pay â‚¹${finalTotalAmount}`}
+                      {isFreeEvent || finalTotalAmount <= 0 ? "Book Free" : (isMounted ? `Pay ₹${finalTotalAmount}` : "Pay...")}
                      </button>
                   </div>
                 ) : (
@@ -937,7 +1091,7 @@ export default function EventDetailsPage() {
                               </div>
                               <div className="flex-1 text-left">
                                 <p className="text-[14px] font-bold text-gray-900 line-clamp-1">{event.title}</p>
-                                <p className="text-[12px] text-gray-500 font-medium">{quantity} {quantity > 1 ? 'Tickets' : 'Ticket'}{totalAmount > 0 ? ` â€¢ â‚¹${totalAmount}` : " â€¢ Free"}</p>
+                                <p className="text-[12px] text-gray-500 font-medium">{quantity} {quantity > 1 ? 'Tickets' : 'Ticket'}{totalAmount > 0 ? (isMounted ? ` â€¢ ₹${totalAmount}` : "") : " â€¢ Free"}</p>
                               </div>
                            </div>
                         </motion.div>
