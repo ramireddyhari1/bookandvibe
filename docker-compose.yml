@@ -11,6 +11,11 @@ services:
       POSTGRES_DB: ${DB_NAME:-book_and_vibe}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - bv-net
 
@@ -18,6 +23,11 @@ services:
     image: redis:7-alpine
     container_name: bv-redis
     restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - bv-net
 
@@ -27,16 +37,17 @@ services:
     container_name: bv-backend
     restart: always
     env_file:
-      - ./backend/.env
+      - .env.production
     environment:
-      DATABASE_URL: postgresql://bv_user:bv_pass@bv-db:5432/book_and_vibe
-      REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgresql://${DB_USER:-bv_user}:${DB_PASSWORD:-bv_pass}@bv-db:5432/${DB_NAME:-book_and_vibe}
+      REDIS_URL: redis://bv-redis:6379
       PORT: 5000
       NODE_ENV: production
-      ALLOWED_ORIGINS: https://bookandvibe.in,https://admin.bookandvibe.in,https://www.bookandvibe.in
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
       - bv-net
 
