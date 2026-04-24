@@ -41,8 +41,8 @@ export default function MobileBottomNav() {
           style={{
             width: "calc(100% / 3 - 4px)",
             left: `calc(${activeIndex} * (100% / 3) + 2px)`,
-            background: isGameHub ? "#F0FDF4" : "#fff1f2",
-            border: `1px solid ${isGameHub ? "#00A63E" : "#fda4af"}`,
+            background: isGameHub ? "#F0FDF4" : "#fff7ed",
+            border: `1px solid ${isGameHub ? "#00A63E" : "#ffedd5"}`,
           }}
         />
 
@@ -52,8 +52,8 @@ export default function MobileBottomNav() {
             const isActive = activeIndex === idx;
             const Icon = item.icon;
 
-            const activeColor = isGameHub ? "#00A63E" : "#e11d48";
-            const inactiveColor = isGameHub ? "rgba(0,166,62,0.3)" : "rgba(225,29,72,0.3)";
+            const activeColor = isGameHub ? "#00A63E" : "#D53F17";
+            const inactiveColor = isGameHub ? "rgba(0,166,62,0.3)" : "rgba(213, 63, 23, 0.3)";
 
             return (
               <Link

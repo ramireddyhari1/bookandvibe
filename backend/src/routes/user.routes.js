@@ -186,10 +186,10 @@ router.post('/partners', authenticateToken, requireAdmin, async (req, res) => {
 });
 
 // GET /api/users/:id - Get user profile with stats
-router.get('/:id', authenticateToken, requireAdminOrPartner, async (req, res) => {
+router.get('/:id', authenticateToken, async (req, res) => {
   try {
     const requesterRole = String(req.user?.role || '').toUpperCase();
-    if (requesterRole === 'PARTNER' && String(req.user.id) !== String(req.params.id)) {
+    if (requesterRole !== 'ADMIN' && String(req.user.id) !== String(req.params.id)) {
       return res.status(403).json({ error: 'You do not have permission to view this user' });
     }
 
@@ -214,10 +214,10 @@ router.get('/:id', authenticateToken, requireAdminOrPartner, async (req, res) =>
 });
 
 // PUT /api/users/:id - Update user profile
-router.put('/:id', authenticateToken, requireAdminOrPartner, async (req, res) => {
+router.put('/:id', authenticateToken, async (req, res) => {
   try {
     const requesterRole = String(req.user?.role || '').toUpperCase();
-    if (requesterRole === 'PARTNER' && String(req.user.id) !== String(req.params.id)) {
+    if (requesterRole !== 'ADMIN' && String(req.user.id) !== String(req.params.id)) {
       return res.status(403).json({ error: 'You do not have permission to update this user' });
     }
 

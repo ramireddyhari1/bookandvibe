@@ -16,6 +16,7 @@ import {
   Layers,
   CalendarClock,
   Radio,
+  Download,
 } from "lucide-react";
 
 type EventItem = {
@@ -38,7 +39,7 @@ type PartnerOption = {
   email: string;
 };
 
-import { fetchApi } from "@/lib/api";
+import { fetchApi, API_BASE } from "@/lib/api";
 
 const ALLOWED_ROLES = new Set(["ADMIN", "PARTNER"]);
 
@@ -245,6 +246,33 @@ export default function EventsPage() {
     }
   };
 
+  const handleExportCSV = async (eventId: string, eventTitle: string) => {
+    try {
+      const token = sessionStorage.getItem("admin_dash_token") || localStorage.getItem("admin_dash_token");
+      const url = `${API_BASE}/events/${eventId}/attendees/export`;
+      const response = await fetch(url, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+      if (!response.ok) {
+        throw new Error("Failed to export attendees");
+      }
+      
+      const blob = await response.blob();
+      const objUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = objUrl;
+      a.download = `Attendees_${eventTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(objUrl);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to export attendees");
+    }
+  };
+
   const stats = useMemo(() => {
     const total = events.length;
     const now = Date.now();
@@ -418,6 +446,16 @@ export default function EventsPage() {
                               <Eye size={15} />
                             </Link>
                             <span className="pointer-events-none absolute -top-7 left-1/2 -translate-x-1/2 rounded-md border border-white/10 bg-slate-900/90 px-2 py-0.5 text-[10px] font-bold text-slate-200 opacity-0 transition group-hover/tooltip:opacity-100">View</span>
+                          </div>
+                          <div className="group/tooltip relative">
+                            <button
+                              onClick={() => handleExportCSV(event.id, event.title)}
+                              title="Download Attendees"
+                              className="btn-glass focus-premium rounded-lg p-2.5 hover:shadow-[0_0_20px_rgba(52,211,153,0.25)]"
+                            >
+                              <Download size={15} />
+                            </button>
+                            <span className="pointer-events-none absolute -top-7 left-1/2 -translate-x-1/2 rounded-md border border-emerald-300/25 bg-emerald-950/85 px-2 py-0.5 text-[10px] font-bold text-emerald-200 opacity-0 transition group-hover/tooltip:opacity-100 whitespace-nowrap">Export</span>
                           </div>
                           <div className="group/tooltip relative">
                             <Link

@@ -3,7 +3,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { fetchApi } from "@/lib/api";
 
-type User = { id: string; name: string; email: string; role: string } | null;
+type User = { id: string; name: string; email: string; role: string; phone?: string; avatar?: string; } | null;
 
 interface AuthContextType {
   user: User;
@@ -11,6 +11,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: (token: string, userData: User) => void;
   logout: () => void;
+  updateUser: (userData: Partial<User>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -53,8 +54,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     router.push("/login");
   };
 
+  const updateUser = (userData: Partial<User>) => {
+    if (user) {
+      setUser({ ...user, ...userData });
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, isAuthenticated: !!user, login, logout }}>
+    <AuthContext.Provider value={{ user, token, isAuthenticated: !!user, login, logout, updateUser }}>
       {!loading && children}
     </AuthContext.Provider>
   );

@@ -26,7 +26,7 @@ export default function NotFound() {
         image: "/404-events.png",
         headline: "Show Not Found",
         sub: "This event has left the building. But the party goes on elsewhere!",
-        accent: "#F97316",
+        accent: "#D53F17",
         bg: "from-[#FFF7ED] via-white to-[#FFEDD5]",
         badge: "bg-orange-100 text-orange-700 border-orange-200",
         badgeText: "Events",

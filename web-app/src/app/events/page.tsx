@@ -261,6 +261,23 @@ export default function EventsPage() {
     });
   };
 
+  const filteredEvents = useMemo(() => {
+    let result = events;
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(e => 
+        e.title?.toLowerCase().includes(q) || 
+        e.venue?.toLowerCase().includes(q) ||
+        e.category?.toLowerCase().includes(q)
+      );
+    }
+    // Apply category filter if backend misses it
+    if (activeCategory !== "All") {
+      result = result.filter(e => e.category === activeCategory);
+    }
+    return result;
+  }, [events, searchQuery, activeCategory]);
+
   const activeFilterCount =
     (activeCategory !== "All" ? 1 : 0) +
     (selectedPriceRange !== 0 ? 1 : 0) +
@@ -309,7 +326,7 @@ export default function EventsPage() {
   const prevSlide = () => goToSlide((currentSlide - 1 + (bannerEvents.length || 1)) % (bannerEvents.length || 1));
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-100 via-orange-50 to-white text-[#1c222b] pb-24 font-sans leading-normal">
+    <div className="min-h-screen bg-gradient-to-br from-[#fff7ed] via-white to-white text-[#1c222b] pb-24 font-sans leading-normal">
 
       {/* ═══════════════════════════════════════════════════════
           MASSIVE 16:9 POSTER BANNER CAROUSEL (Desktop)
@@ -340,7 +357,7 @@ export default function EventsPage() {
                 <div className="absolute bottom-0 left-0 right-0 p-8 lg:p-14 z-20">
                   <div className="max-w-[1400px] mx-auto">
                     <div className="flex items-center gap-3 mb-4">
-                      <span className="bg-orange-500 text-white text-[11px] tracking-wider uppercase px-3 py-1.5 rounded-full font-extrabold shadow-lg">
+                      <span className="bg-[#D53F17] text-white text-[11px] tracking-wider uppercase px-3 py-1.5 rounded-full font-extrabold shadow-lg">
                         {event.featured ? "⭐ Featured" : event.category}
                       </span>
                       <span className="bg-white/15 backdrop-blur-md text-white text-[11px] tracking-wider uppercase px-3 py-1.5 rounded-full font-extrabold border border-white/20">
@@ -352,16 +369,16 @@ export default function EventsPage() {
                     </h2>
                     <div className="flex flex-wrap items-center gap-5 text-white/80 text-sm font-semibold mb-6">
                       <span className="flex items-center gap-2">
-                        <Calendar size={16} className="text-orange-400" />
+                        <Calendar size={16} className="text-[#D53F17]" />
                         {formatEventDate(event.date)}, {event.time}
                       </span>
                       <span className="flex items-center gap-2">
-                        <MapPin size={16} className="text-orange-400" />
+                        <MapPin size={16} className="text-[#D53F17]" />
                         {event.venue}
                       </span>
                     </div>
                     <div className="flex items-center gap-4">
-                      <span className="bg-white text-[#1c222b] px-8 py-3.5 rounded-2xl font-extrabold text-[15px] hover:bg-orange-500 hover:text-white transition-colors shadow-xl">
+                      <span className="bg-white text-[#1c222b] px-8 py-3.5 rounded-2xl font-extrabold text-[15px] hover:bg-[#D53F17] hover:text-white transition-colors shadow-xl">
                         ₹{event.price} · Get Tickets
                       </span>
                     </div>
@@ -397,7 +414,7 @@ export default function EventsPage() {
                     onClick={(e) => { e.preventDefault(); goToSlide(idx); }}
                     className={`rounded-full transition-all duration-300 ${
                       idx === currentSlide
-                        ? "w-8 h-2.5 bg-orange-500"
+                        ? "w-8 h-2.5 bg-[#D53F17]"
                         : "w-2.5 h-2.5 bg-white/40 hover:bg-white/60"
                     }`}
                   />
@@ -414,36 +431,85 @@ export default function EventsPage() {
 
       {/* ── Search + Filters Bar ─────────────────────────────── */}
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 mt-6 md:mt-8">
-        <div className="flex items-center bg-white rounded-full border-2 border-orange-500 shadow-lg hover:shadow-xl transition-shadow px-6 py-3 gap-3">
-          <Search size={22} className="text-orange-400 shrink-0" strokeWidth={2.5} />
-          <input
-            type="text"
-            placeholder="Search events, artists, venues..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="flex-1 bg-transparent border-none outline-none text-[15px] font-medium text-[#1c222b] placeholder-gray-400 font-sans"
-          />
-          {searchQuery && (
-            <button onClick={() => setSearchQuery("")} className="text-gray-400 hover:text-gray-600 transition">
-              <X size={18} />
-            </button>
-          )}
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold transition-all font-sans ${
-              showFilters || activeFilterCount > 0
-                ? "bg-orange-500 text-white"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-            }`}
-          >
-            <SlidersHorizontal size={16} />
-            Filters
-            {activeFilterCount > 0 && (
-              <span className="bg-white text-orange-600 text-[11px] font-black w-5 h-5 rounded-full flex items-center justify-center">
-                {activeFilterCount}
-              </span>
+        <div className="relative group">
+          <div className="flex items-center bg-white rounded-full border-2 border-[#D53F17] shadow-lg hover:shadow-xl transition-shadow px-6 py-3 gap-3">
+            <Search size={22} className="text-[#D53F17] shrink-0" strokeWidth={2.5} />
+            <input
+              type="text"
+              placeholder="Search events, artists, venues..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="flex-1 bg-transparent border-none outline-none text-[15px] font-medium text-[#1c222b] placeholder-gray-400 font-sans"
+            />
+            {searchQuery && (
+              <button onClick={() => setSearchQuery("")} className="text-gray-400 hover:text-gray-600 transition">
+                <X size={18} />
+              </button>
             )}
-          </button>
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold transition-all font-sans ${
+                showFilters || activeFilterCount > 0
+                  ? "bg-[#D53F17] text-white"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              }`}
+            >
+              <SlidersHorizontal size={16} />
+              Filters
+              {activeFilterCount > 0 && (
+                <span className="bg-white text-[#D53F17] text-[11px] font-black w-5 h-5 rounded-full flex items-center justify-center">
+                  {activeFilterCount}
+                </span>
+              )}
+            </button>
+          </div>
+
+          {/* SEARCH POPUP OVERLAY */}
+          {searchQuery.trim().length > 0 && (
+            <div className="absolute top-[110%] left-0 right-0 bg-white rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-gray-100 overflow-hidden z-[100] flex flex-col max-h-[400px]">
+              <div className="overflow-y-auto p-4 flex flex-col gap-2">
+                <div className="flex items-center justify-between px-2 pb-2 border-b border-gray-50 mb-1">
+                  <span className="text-[12px] font-black text-gray-400 uppercase tracking-widest">
+                    Quick Results
+                  </span>
+                </div>
+                
+                {filteredEvents.length > 0 ? (
+                  filteredEvents.slice(0, 10).map(e => (
+                    <Link 
+                      href={`/events/${e.id}`} 
+                      key={e.id} 
+                      onClick={() => setSearchQuery("")}
+                      className="flex items-center gap-4 p-3 hover:bg-orange-50 rounded-2xl transition-all group"
+                    >
+                      <div className="w-14 h-14 rounded-xl overflow-hidden shrink-0 shadow-sm">
+                        <img src={getEventImage(e.images)} alt={e.title} className="w-full h-full object-cover" />
+                      </div>
+                      <div className="flex flex-col min-w-0 flex-1">
+                        <h4 className="text-[15px] font-bold text-gray-900 truncate group-hover:text-orange-600 transition-colors">{e.title}</h4>
+                        <div className="flex items-center gap-2 text-[12px] text-gray-500 font-medium truncate">
+                           <Calendar size={12} className="text-orange-400" />
+                           <span>{formatEventDate(e.date)} • {e.venue}</span>
+                        </div>
+                      </div>
+                      <ChevronRight size={18} className="text-gray-300 group-hover:text-orange-400 group-hover:translate-x-1 transition-all" />
+                    </Link>
+                  ))
+                ) : (
+                  <div className="py-10 text-center flex flex-col items-center gap-2">
+                    <Frown size={40} className="text-gray-200" />
+                    <p className="text-gray-500 font-bold">No matches found for "{searchQuery}"</p>
+                  </div>
+                )}
+              </div>
+              
+              {filteredEvents.length > 0 && (
+                <div className="bg-gray-50 p-3 text-center border-t border-gray-100">
+                   <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Showing top {Math.min(10, filteredEvents.length)} matches</p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* ── Filter Panel ───────────────────── */}
@@ -522,7 +588,7 @@ export default function EventsPage() {
               onClick={() => setActiveCategory(cat.label)}
               className={`group relative flex items-center gap-2.5 px-5 py-2.5 min-h-[48px] rounded-2xl text-[15px] font-bold whitespace-nowrap transition-all duration-300 border font-sans focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#fff7ed] ${
                 activeCategory === cat.label
-                  ? "bg-gradient-to-b from-orange-500 to-orange-600 text-white border-orange-500 shadow-[0_8px_20px_rgba(249,115,22,0.30)]"
+                  ? "bg-gradient-to-b from-[#D53F17] to-[#D53F17] text-white border-[#D53F17] shadow-[0_8px_20px_rgba(249,115,22,0.30)]"
                   : "bg-white text-[#334155] border-gray-200 hover:border-orange-300 hover:text-orange-700 hover:bg-gradient-to-b hover:from-white hover:to-orange-50/60 shadow-[0_1px_2px_rgba(15,23,42,0.06)] hover:shadow-[0_8px_18px_rgba(15,23,42,0.08)]"
               }`}
               aria-pressed={activeCategory === cat.label}
@@ -546,8 +612,8 @@ export default function EventsPage() {
 
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20 animate-pulse">
-            <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p className="text-orange-500 font-bold font-sans">Discovering experiences...</p>
+            <div className="w-12 h-12 border-4 border-[#D53F17] border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p className="text-[#D53F17] font-bold font-sans">Discovering experiences...</p>
           </div>
         ) : error ? (
           <div className="bg-white border border-orange-100 rounded-3xl p-12 text-center shadow-sm mb-12">
@@ -556,7 +622,7 @@ export default function EventsPage() {
             <p className="text-gray-500 mb-6 max-w-md mx-auto font-medium font-sans">{error}</p>
             <button 
               onClick={() => window.location.reload()}
-              className="mt-6 bg-orange-500 text-white px-8 py-3 rounded-2xl font-bold shadow-lg hover:bg-orange-600 transition font-sans"
+              className="mt-6 bg-[#D53F17] text-white px-8 py-3 rounded-2xl font-bold shadow-lg hover:bg-orange-600 transition font-sans"
             >
               Try Again
             </button>
@@ -577,7 +643,7 @@ export default function EventsPage() {
                     
                     <div className="absolute inset-y-0 left-0 p-8 md:p-12 flex flex-col justify-center max-w-xl">
                       <div className="flex items-center gap-3 mb-4">
-                        <span className="bg-orange-500 text-white text-[11px] tracking-wider uppercase px-3 py-1.5 rounded-full font-extrabold shadow-lg font-sans">
+                        <span className="bg-[#D53F17] text-white text-[11px] tracking-wider uppercase px-3 py-1.5 rounded-full font-extrabold shadow-lg font-sans">
                           ⭐ Featured
                         </span>
                         <span className="bg-white/15 backdrop-blur-md text-white text-[11px] tracking-wider uppercase px-3 py-1.5 rounded-full font-extrabold border border-white/20 font-sans">
@@ -616,7 +682,7 @@ export default function EventsPage() {
               <div className="mb-12">
                 <div className="flex justify-between items-end border-b border-gray-200 pb-4 mb-8">
                   <div className="flex items-center gap-3">
-                    <div className="bg-gradient-to-br from-orange-500 to-orange-600 text-white p-2.5 rounded-xl shadow-md font-sans">
+                    <div className="bg-gradient-to-br from-[#D53F17] to-[#D53F17] text-white p-2.5 rounded-xl shadow-md font-sans">
                       <Flame size={20} />
                     </div>
                     <div>
@@ -645,7 +711,7 @@ export default function EventsPage() {
                           />
                         </div>
                         <div className="flex-1 p-5 flex flex-col">
-                          <span className="text-[11px] font-extrabold text-orange-500 uppercase tracking-wider mb-1.5 font-sans">
+                          <span className="text-[11px] font-extrabold text-[#D53F17] uppercase tracking-wider mb-1.5 font-sans">
                             {event.category}
                           </span>
                           <h3 className="text-[16px] font-extrabold text-[#1c222b] leading-snug mb-2 line-clamp-2 group-hover:text-orange-600 transition-colors font-sans">
@@ -677,7 +743,7 @@ export default function EventsPage() {
             {/* All Events */}
             <div className="flex justify-between items-end border-b border-gray-200 pb-4 mb-8 font-sans">
               <div className="flex items-center gap-3 font-sans">
-                <div className="bg-gradient-to-br from-orange-500 to-orange-600 text-white p-2.5 rounded-xl shadow-md font-sans">
+                <div className="bg-gradient-to-br from-[#D53F17] to-[#D53F17] text-white p-2.5 rounded-xl shadow-md font-sans">
                   <Ticket size={20} />
                 </div>
                 <div className="font-sans">
@@ -690,9 +756,9 @@ export default function EventsPage() {
               </div>
             </div>
 
-            {events.length > 0 ? (
+            {filteredEvents.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 font-sans">
-                {events.map((event) => (
+                {filteredEvents.map((event) => (
                   <Link href={`/events/${event.id}`} key={event.id} className="block group">
                     <div className="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-md hover:shadow-2xl transition-all duration-300 h-full flex flex-col group-hover:-translate-y-2 relative font-sans">
                       <div className="aspect-[4/5] relative overflow-hidden bg-gray-100 font-sans">
@@ -730,7 +796,7 @@ export default function EventsPage() {
                         </div>
                       </div>
                       <div className="p-5 flex-1 flex flex-col bg-white font-sans">
-                        <p className="text-orange-500 text-[13px] font-bold mb-1.5 flex items-center gap-1.5 font-sans">
+                        <p className="text-[#D53F17] text-[13px] font-bold mb-1.5 flex items-center gap-1.5 font-sans">
                           <Clock size={13} />
                           {formatEventDate(event.date)}, {event.time}
                         </p>

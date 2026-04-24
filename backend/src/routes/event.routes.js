@@ -191,6 +191,11 @@ router.get('/', async (req, res) => {
       where.isPublished = true;
       where.status = 'ACTIVE';
       where.visibility = 'PUBLIC';
+      
+      // Hide past events for public users
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      where.date = { gte: today };
     }
 
     if (search) {
@@ -253,8 +258,15 @@ router.get('/search', async (req, res) => {
     const { q } = req.query;
     if (!q || q.length < 2) return res.json({ data: [] });
 
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     const events = await prisma.event.findMany({
       where: {
+        isPublished: true,
+        status: 'ACTIVE',
+        visibility: 'PUBLIC',
+        date: { gte: today },
         OR: [
           { title: { contains: q, mode: 'insensitive' } },
           { location: { contains: q, mode: 'insensitive' } },
@@ -988,6 +1000,53 @@ router.post('/:id/unpublish', authenticateToken, requireAdminOrPartner, async (r
   }
 });
 
+// GET /api/events/:id/attendees/export - Export event attendees to CSV
+router.get('/:id/attendees/export', authenticateToken, requireAdminOrPartner, async (req, res) => {
+  try {
+    const managedEvent = await loadEventForManagement(req.params.id);
+    if (!managedEvent) return res.status(404).json({ error: 'Event not found' });
+    if (!hasEventManagementAccess(req.user, managedEvent)) {
+      return res.status(403).json({ error: 'You do not have permission to manage this event' });
+    }
+
+    const bookings = await prisma.booking.findMany({
+      where: { eventId: req.params.id, status: 'CONFIRMED' },
+      include: {
+        user: { select: { name: true, email: true, phone: true } },
+        items: { include: { tier: true } },
+        payment: { select: { amount: true, method: true, transactionId: true } }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+
+    const headers = ['Booking ID', 'Date', 'User Name', 'User Email', 'User Phone', 'Quantity', 'Amount', 'Payment Method', 'Transaction ID', 'Ticket Tiers'];
+    const rows = bookings.map(b => {
+      const tiersStr = b.items.map(i => `${i.quantity}x ${i.tier.name}`).join('; ');
+      return [
+        b.id,
+        b.createdAt.toISOString(),
+        `"${b.user?.name || ''}"`,
+        `"${b.user?.email || ''}"`,
+        `"${b.user?.phone || ''}"`,
+        b.quantity,
+        b.payment?.amount || b.totalAmount,
+        b.payment?.method || '',
+        `"${b.payment?.transactionId || ''}"`,
+        `"${tiersStr}"`
+      ].join(',');
+    });
+
+    const csvContent = [headers.join(','), ...rows].join('\n');
+
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', `attachment; filename="attendees.csv"`);
+    res.send(csvContent);
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // DELETE /api/events/:id - Delete event (cascades to tiers)
 router.delete('/:id', authenticateToken, requireAdminOrPartner, async (req, res) => {
   try {
@@ -997,9 +1056,20 @@ router.delete('/:id', authenticateToken, requireAdminOrPartner, async (req, res)
       return res.status(403).json({ error: 'You do not have permission to manage this event' });
     }
 
-    await prisma.event.delete({
-      where: { id: req.params.id }
+    await prisma.$transaction(async (tx) => {
+      // Manually delete related records that do not have onDelete: Cascade
+      await tx.bookingItem.deleteMany({ where: { booking: { eventId: req.params.id } } });
+      await tx.bookingSeat.deleteMany({ where: { booking: { eventId: req.params.id } } });
+      await tx.payment.deleteMany({ where: { booking: { eventId: req.params.id } } });
+      await tx.booking.deleteMany({ where: { eventId: req.params.id } });
+      await tx.review.deleteMany({ where: { eventId: req.params.id } });
+      
+      // Finally, delete the event (this cascades to tiers and shows based on schema)
+      await tx.event.delete({
+        where: { id: req.params.id }
+      });
     });
+
     res.json({ message: 'Event deleted successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });

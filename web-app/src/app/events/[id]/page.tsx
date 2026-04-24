@@ -443,7 +443,7 @@ export default function EventDetailsPage() {
           name: user?.name || "",
           email: user?.email || "",
         },
-        theme: { color: "#e11d48" },
+        theme: { color: "#D53F17" },
         handler: async (response: { razorpay_order_id: string, razorpay_payment_id: string, razorpay_signature: string }) => {
           try {
             // 3. Verify payment & create booking on backend
@@ -488,17 +488,17 @@ export default function EventDetailsPage() {
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center gap-4">
-        <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin" />
-        <p className="text-orange-500 font-bold tracking-widest uppercase text-xs">Preparing Experience</p>
+        <div className="w-12 h-12 border-4 border-[#D53F17] border-t-transparent rounded-full animate-spin" />
+        <p className="text-[#D53F17] font-bold tracking-widest uppercase text-xs">Preparing Experience</p>
       </motion.div>
     </div>
   );
 
   if (!event) return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-gray-50">
-      <AlertCircle size={48} className="text-orange-400 mb-4" />
+      <AlertCircle size={48} className="text-[#D53F17] mb-4" />
       <h2 className="text-2xl font-black text-gray-900 mb-2">Event Not Found</h2>
-      <button onClick={() => router.back()} className="text-orange-500 font-bold flex items-center gap-2">
+      <button onClick={() => router.back()} className="text-[#D53F17] font-bold flex items-center gap-2">
         <ArrowLeft size={20} /> Go Back
       </button>
     </div>
@@ -531,7 +531,7 @@ export default function EventDetailsPage() {
              style={{ backgroundColor: headerIconBg, color: headerIconColor }}
              className="w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md transition-colors"
            >
-             <Heart size={20} className={isFavorite ? "fill-orange-500 text-orange-500" : ""} />
+             <Heart size={20} className={isFavorite ? "fill-[#D53F17] text-[#D53F17]" : ""} />
            </motion.button>
            <motion.button 
              onClick={handleShare}
@@ -573,13 +573,13 @@ export default function EventDetailsPage() {
             {/* Title Area */}
             <div className="mb-6">
               <div className="flex items-center justify-between mb-4">
-                 <span className="text-orange-600 text-[11px] font-black tracking-widest uppercase bg-orange-50 px-2.5 py-1 rounded-md">{event.category}</span>
+                 <span className="text-[#D53F17] text-[11px] font-black tracking-widest uppercase bg-orange-50 px-2.5 py-1 rounded-md">{event.category}</span>
                  <motion.button 
                    onClick={() => setIsFavorite(!isFavorite)}
                    whileTap={{ scale: 0.85 }}
-                   className="text-gray-400 hover:text-orange-500 transition-colors p-1 -mr-1"
+                   className="text-gray-400 hover:text-[#D53F17] transition-colors p-1 -mr-1"
                  >
-                   <Heart size={22} className={isFavorite ? "fill-orange-500 text-orange-500" : ""} />
+                   <Heart size={22} className={isFavorite ? "fill-[#D53F17] text-[#D53F17]" : ""} />
                  </motion.button>
               </div>
               
@@ -589,7 +589,7 @@ export default function EventDetailsPage() {
               <div className="lg:hidden flex flex-wrap gap-4 mt-8 pb-8 border-b border-gray-100">
                 {/* Date & Time (Mobile Only) */}
                 <div className="flex-1 min-w-[240px] flex items-center gap-4 p-4 rounded-2xl border border-gray-200/60 bg-white shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)]">
-                  <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center shrink-0 text-orange-600">
+                  <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center shrink-0 text-[#D53F17]">
                     <CalendarDays size={24} />
                   </div>
                   <div className="flex flex-col">
@@ -602,7 +602,7 @@ export default function EventDetailsPage() {
                 {/* Duration (Mobile Only) */}
                 {event.duration && (
                 <div className="flex-1 min-w-[140px] flex items-center gap-3 p-4 rounded-2xl border border-gray-200/60 bg-white shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)]">
-                  <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center shrink-0 text-orange-600">
+                  <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center shrink-0 text-[#D53F17]">
                     <Clock size={24} />
                   </div>
                   <div className="flex flex-col">
@@ -624,7 +624,7 @@ export default function EventDetailsPage() {
                   {!isExpanded && event.description.length > 150 && (
                     <button 
                       onClick={() => setIsExpanded(true)}
-                      className="text-orange-600 font-bold text-[13px] mt-2 flex items-center gap-1 active:scale-95 transition-transform"
+                      className="text-[#D53F17] font-bold text-[13px] mt-2 flex items-center gap-1 active:scale-95 transition-transform"
                     >
                       Read More <ChevronRight size={14} className="rotate-90" />
                     </button>
@@ -632,7 +632,7 @@ export default function EventDetailsPage() {
                   {isExpanded && (
                     <button 
                       onClick={() => setIsExpanded(false)}
-                      className="text-orange-600 font-bold text-[13px] mt-2 flex items-center gap-1 active:scale-95 transition-transform"
+                      className="text-[#D53F17] font-bold text-[13px] mt-2 flex items-center gap-1 active:scale-95 transition-transform"
                     >
                       Show Less <ChevronRight size={14} className="-rotate-90" />
                     </button>
@@ -654,12 +654,12 @@ export default function EventDetailsPage() {
                   <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-orange-100 to-orange-50 rounded-full blur-3xl opacity-60 -mr-10 -mt-10 pointer-events-none" />
                   
                   <div className="relative flex items-center gap-4">
-                     <div className="w-14 h-14 rounded-full p-0.5 bg-gradient-to-tr from-orange-500 to-orange-400 shrink-0 shadow-md">
+                     <div className="w-14 h-14 rounded-full p-0.5 bg-gradient-to-tr from-[#D53F17] to-[#D53F17] shrink-0 shadow-md">
                         <div className="w-full h-full rounded-full border-2 border-white overflow-hidden bg-white flex items-center justify-center">
                            {event.partner?.avatar ? (
                              <img src={event.partner.avatar} className="w-full h-full object-cover" alt="" />
                            ) : (
-                             <span className="text-orange-600 font-extrabold text-xl tracking-tight">
+                             <span className="text-[#D53F17] font-extrabold text-xl tracking-tight">
                                {getInitials(event.partner?.name || "Organizer")}
                              </span>
                            )}
@@ -670,7 +670,7 @@ export default function EventDetailsPage() {
                            <span className="text-gray-900 font-bold text-[17px] tracking-tight">
                              {event.partner?.name || "Premium Organizer"}
                            </span>
-                           <BadgeCheck className="w-5 h-5 text-orange-500 fill-orange-50" />
+                           <BadgeCheck className="w-5 h-5 text-[#D53F17] fill-orange-50" />
                         </div>
                         <span className="text-gray-500 text-[13px] font-medium mt-0.5">Premium Organizer</span>
                      </div>
@@ -695,7 +695,7 @@ export default function EventDetailsPage() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent" />
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <div className="w-10 h-10 bg-orange-600 rounded-full flex items-center justify-center shadow-xl ring-4 ring-orange-500/20">
+                    <div className="w-10 h-10 bg-[#D53F17] rounded-full flex items-center justify-center shadow-xl ring-4 ring-[#D53F17]/20">
                       <MapPin size={20} className="text-white" />
                     </div>
                   </div>
@@ -708,14 +708,14 @@ export default function EventDetailsPage() {
                        {event.distance && (
                          <>
                            <span className="w-1 h-1 rounded-full bg-gray-300" />
-                           <span className="text-orange-600 text-[13px] font-bold">{event.distance} away</span>
+                           <span className="text-[#D53F17] text-[13px] font-bold">{event.distance} away</span>
                          </>
                        )}
                     </div>
                   </div>
                   <button className="flex flex-col items-center gap-1 group active:scale-95 transition-all">
                     <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center border border-gray-100 group-hover:bg-orange-50 transition-colors">
-                       <NavigationIcon size={18} className="text-gray-400 group-hover:text-orange-600" />
+                       <NavigationIcon size={18} className="text-gray-400 group-hover:text-[#D53F17]" />
                     </div>
                     <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Directions</span>
                   </button>
@@ -732,7 +732,7 @@ export default function EventDetailsPage() {
 
                <div className="relative z-10 flex flex-col items-center text-center md:text-left md:items-start px-6 md:px-0 gap-8">
                   {/* Vertical Signature Anchor */}
-                  <div className="hidden md:block absolute -left-10 top-0 bottom-0 w-[5px] bg-gradient-to-b from-orange-600 via-pink-500 to-transparent rounded-full shadow-[0_0_20px_rgba(249,115,22,0.3)]" />
+                  <div className="hidden md:block absolute -left-10 top-0 bottom-0 w-[5px] bg-gradient-to-b from-[#D53F17] via-pink-500 to-transparent rounded-full shadow-[0_0_20px_rgba(249,115,22,0.3)]" />
                   
                   <div className="flex-1 space-y-4 w-full">
                      <div className="flex items-center justify-center md:justify-start gap-3">
@@ -741,13 +741,13 @@ export default function EventDetailsPage() {
                               [ SEC : PROTOCOL_04 ]
                            </span>
                         </div>
-                        <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse shadow-[0_0_10px_rgba(249,115,22,0.5)]" />
+                        <div className="w-2 h-2 rounded-full bg-[#D53F17] animate-pulse shadow-[0_0_10px_rgba(249,115,22,0.5)]" />
                      </div>
 
                      <h2 className="text-[42px] md:text-[56px] leading-[0.9] font-medium tracking-tight text-gray-900">
                         Know Before <br />
                         <span className="font-black tracking-tighter">
-                           You <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-pink-600 to-rose-600">Go.</span>
+                           You <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D53F17] via-pink-600 to-rose-600">Go.</span>
                         </span>
                      </h2>
                   </div>
@@ -755,7 +755,7 @@ export default function EventDetailsPage() {
                   {/* Subtext with Editorial Line */}
                   <div className="md:w-px md:h-24 md:bg-gray-200 relative w-full flex justify-center md:justify-start">
                      <p className="md:absolute md:top-0 md:left-8 md:w-64 text-gray-400 font-black text-[12px] leading-relaxed uppercase tracking-[0.2em] max-w-[280px]">
-                        Curated guidelines for an <span className="text-gray-900 underline decoration-orange-500/30 decoration-4 underline-offset-4">elite event</span> experience.
+                        Curated guidelines for an <span className="text-gray-900 underline decoration-[#D53F17]/30 decoration-4 underline-offset-4">elite event</span> experience.
                      </p>
                   </div>
                </div>
@@ -763,17 +763,17 @@ export default function EventDetailsPage() {
                 {/* ——— THE SIGNATURE PROTOCOL GRID ——— */}
                 <div className="relative mt-8">
                    {/* Background Glows */}
-                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-orange-500/5 blur-[120px] rounded-full pointer-events-none" />
+                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[#D53F17]/5 blur-[120px] rounded-full pointer-events-none" />
                    
                    <div className="grid grid-cols-2 gap-3 relative z-10">
                       {[
-                         { label: "Language", value: event.language || "English / Multi", icon: <Languages size={22} />, color: "from-orange-500 to-amber-500" },
+                         { label: "Language", value: event.language || "English / Multi", icon: <Languages size={22} />, color: "from-[#D53F17] to-amber-500" },
                          { label: "Duration", value: event.duration || "2+ Hours", icon: <Clock size={22} />, color: "from-rose-500 to-pink-500" },
                          { label: "Passholders", value: event.ticketAgeLimit || "All Ages Welcome", icon: <Ticket size={22} className="-rotate-45" />, color: "from-indigo-500 to-blue-500" },
                          { label: "Entry Policy", value: event.ageLimit || "Standard Entry", icon: <BadgeCheck size={22} />, color: "from-emerald-500 to-teal-500" },
                          { label: "Venue Style", value: event.layout || "Contemporary Indoor", icon: <Accessibility size={22} />, color: "from-violet-500 to-purple-500" },
                          { label: "Seating", value: event.seating || "Open Access", icon: <Users size={22} />, color: "from-cyan-500 to-sky-500" },
-                         { label: "Family Policy", value: event.kidsAllowed ? "Family Friendly" : "Adults Exclusive", icon: <Baby size={22} />, color: "from-orange-600 to-rose-600" },
+                         { label: "Family Policy", value: event.kidsAllowed ? "Family Friendly" : "Adults Exclusive", icon: <Baby size={22} />, color: "from-[#D53F17] to-rose-600" },
                          { label: "Pet Access", value: event.petsAllowed ? "Pets Allowed" : "No Pets Permitted", icon: <Dog size={22} />, color: "from-slate-600 to-slate-800" }
                       ].map((tile, i) => (
                          <motion.div 
@@ -806,7 +806,7 @@ export default function EventDetailsPage() {
                             </div>
 
                             {/* Hover/Active State Indicator */}
-                            <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-500 to-transparent opacity-0 group-active/protocol:opacity-100 transition-opacity" />
+                            <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#D53F17] to-transparent opacity-0 group-active/protocol:opacity-100 transition-opacity" />
                          </motion.div>
                       ))}
                    </div>
@@ -907,7 +907,7 @@ export default function EventDetailsPage() {
                   </div>
                   <div className="flex-1 flex flex-col">
                     <h3 className="font-bold text-[15px] text-gray-900">Starts at {event.time}</h3>
-                    <span className="text-[12px] font-bold text-orange-600 mt-1">View full schedule & timeline</span>
+                    <span className="text-[12px] font-bold text-[#D53F17] mt-1">View full schedule & timeline</span>
                   </div>
                   <ChevronRight size={18} className="text-gray-300" />
                 </div>
@@ -948,7 +948,7 @@ export default function EventDetailsPage() {
             </div>
             <button 
               onClick={() => setShowCheckout(true)}
-              className="bg-orange-600 active:scale-95 transition-transform text-white py-3.5 px-6 rounded-full font-bold text-[14px] flex items-center justify-center gap-2 tracking-wide"
+              className="bg-[#D53F17] active:scale-95 transition-transform text-white py-3.5 px-6 rounded-full font-bold text-[14px] flex items-center justify-center gap-2 tracking-wide"
             >
               Get Tickets
             </button>
@@ -1045,11 +1045,11 @@ export default function EventDetailsPage() {
                                 onClick={() => setShowCouponInput(true)}
                                 className="w-full flex items-center justify-between p-3.5 bg-gray-50 hover:bg-orange-50/50 border border-gray-100 hover:border-orange-100 rounded-xl transition-all group"
                               >
-                                <div className="flex items-center gap-2.5 text-gray-600 group-hover:text-orange-600 font-bold text-[14px]">
+                                <div className="flex items-center gap-2.5 text-gray-600 group-hover:text-[#D53F17] font-bold text-[14px]">
                                   <Ticket size={18} />
                                   <span>Have a promo code?</span>
                                 </div>
-                                <ChevronRight size={16} className="text-gray-400 group-hover:text-orange-500" />
+                                <ChevronRight size={16} className="text-gray-400 group-hover:text-[#D53F17]" />
                               </button>
                             ) : (
                               <div className="flex flex-col gap-2">
@@ -1059,7 +1059,7 @@ export default function EventDetailsPage() {
                                     value={couponInput}
                                     onChange={e => setCouponInput(e.target.value.toUpperCase())}
                                     placeholder="Enter code"
-                                    className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 uppercase transition-all"
+                                    className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#D53F17]/20 focus:border-[#D53F17] uppercase transition-all"
                                   />
                                   <button 
                                     onClick={validateCoupon}
@@ -1084,7 +1084,7 @@ export default function EventDetailsPage() {
 
                      <button 
                        onClick={handleCheckout}
-                       className="w-full bg-orange-600 text-white py-4 rounded-xl font-bold text-[16px] flex items-center justify-center gap-2 active:scale-95 transition-transform mt-6 shadow-md shadow-orange-600/30"
+                       className="w-full bg-[#D53F17] text-white py-4 rounded-xl font-bold text-[16px] flex items-center justify-center gap-2 active:scale-95 transition-transform mt-6 shadow-md shadow-[#D53F17]/30"
                      >
                       {isFreeEvent || finalTotalAmount <= 0 ? "Book Free" : (isMounted ? `Pay ₹${finalTotalAmount}` : "Pay...")}
                      </button>
@@ -1093,7 +1093,7 @@ export default function EventDetailsPage() {
                   <div className="py-12 flex flex-col items-center gap-6 text-center h-[380px] justify-center">
                      {paymentState === "PROCESSING" ? (
                         <>
-                          <Loader2 size={48} className="animate-spin text-orange-500" />
+                          <Loader2 size={48} className="animate-spin text-[#D53F17]" />
                           <div className="space-y-1">
                              <h3 className="text-[18px] font-bold text-gray-900 tracking-tight">Processing Payment</h3>
                              <p className="text-gray-500 text-[14px]">Please don&apos;t close this screen</p>
@@ -1178,7 +1178,7 @@ export default function EventDetailsPage() {
                       <div className="space-y-6">
                         <div className="p-6 bg-orange-50/50 rounded-2xl border border-orange-100/50">
                           <h3 className="font-extrabold text-orange-900 mb-3 flex items-center gap-2 uppercase tracking-wide text-[12px]">
-                            <Shield size={16} className="text-orange-500" /> Event Specific Policy
+                            <Shield size={16} className="text-[#D53F17]" /> Event Specific Policy
                           </h3>
                           <p className="text-gray-700 leading-relaxed font-semibold whitespace-pre-line text-[14px]">
                             {event.terms}

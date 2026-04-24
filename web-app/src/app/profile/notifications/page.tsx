@@ -1,7 +1,7 @@
 "use client";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -14,97 +14,114 @@ import {
   Info,
   Trash2,
 } from "lucide-react";
+import { fetchApi } from "@/lib/api";
 
-const mockNotifications = [
-  {
-    id: "1",
-    type: "booking" as const,
-    title: "Booking Confirmed",
-    message: "Your badminton court booking at SportVista Arena for Apr 10, 6:00 AM is confirmed.",
-    time: "2 hours ago",
-    read: false,
-    icon: "🏸",
-  },
-  {
-    id: "2",
-    type: "event" as const,
-    title: "Event Reminder",
-    message: "Summer Music Festival starts in 5 days! Don't forget to download your e-ticket.",
-    time: "5 hours ago",
-    read: false,
-    icon: "🎵",
-  },
-  {
-    id: "3",
-    type: "promo" as const,
-    title: "Weekend Offer 🔥",
-    message: "Get 30% off on all court bookings this weekend. Use code: WEEKEND30",
-    time: "1 day ago",
-    read: false,
-    icon: "🎉",
-  },
-  {
-    id: "4",
-    type: "system" as const,
-    title: "Profile Updated",
-    message: "Your account details have been successfully updated.",
-    time: "2 days ago",
-    read: true,
-    icon: "✅",
-  },
-  {
-    id: "5",
-    type: "booking" as const,
-    title: "Booking Completed",
-    message: "Your Stand-up Comedy Night booking has been completed. Rate your experience!",
-    time: "5 days ago",
-    read: true,
-    icon: "🎤",
-  },
-  {
-    id: "6",
-    type: "promo" as const,
-    title: "New Venue Near You",
-    message: "Elite Sports Complex just opened in your area. Check out their premium facilities!",
-    time: "1 week ago",
-    read: true,
-    icon: "🏟️",
-  },
-];
+interface Notification {
+  id: string;
+  type: string;
+  title: string;
+  message: string;
+  createdAt: string;
+  isRead: boolean;
+}
+
+function getIconForType(type: string) {
+  switch (type.toUpperCase()) {
+    case "BOOKING": return "🎫";
+    case "EVENT": return "🎸";
+    case "PAYMENT": return "💳";
+    case "PROMO": return "🎁";
+    default: return "🔔";
+  }
+}
+
+function timeAgo(dateStr: string) {
+  const date = new Date(dateStr);
+  const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
+  
+  let interval = seconds / 31536000;
+  if (interval > 1) return Math.floor(interval) + " years ago";
+  interval = seconds / 2592000;
+  if (interval > 1) return Math.floor(interval) + " months ago";
+  interval = seconds / 86400;
+  if (interval > 1) return Math.floor(interval) + " days ago";
+  interval = seconds / 3600;
+  if (interval > 1) return Math.floor(interval) + " hours ago";
+  interval = seconds / 60;
+  if (interval > 1) return Math.floor(interval) + " minutes ago";
+  return Math.floor(seconds) + " seconds ago";
+}
 
 export default function NotificationsPage() {
   const { isAuthenticated } = useAuth();
   const router = useRouter();
-  const [notifications, setNotifications] = useState(mockNotifications);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const loadNotifications = useCallback(async () => {
+    try {
+      const res = await fetchApi("/notifications");
+      setNotifications(res?.data || []);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    if (!isAuthenticated) router.push("/login");
-  }, [isAuthenticated, router]);
+    if (!isAuthenticated) {
+      router.push("/login");
+    } else {
+      loadNotifications();
+    }
+  }, [isAuthenticated, router, loadNotifications]);
 
-  const unreadCount = notifications.filter((n) => !n.read).length;
+  const unreadCount = notifications.filter((n) => !n.isRead).length;
 
-  const markAllRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+  const markAllRead = async () => {
+    try {
+      await fetchApi("/notifications/read-all", { method: "POST" });
+      setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const markRead = (id: string) => {
+  const markRead = async (id: string) => {
+    // Optimistic update
     setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, read: true } : n))
+      prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
     );
+    try {
+      await fetchApi(`/notifications/${id}/read`, { method: "PATCH" });
+    } catch (err) {
+      console.error(err);
+      // Optional: rollback on error
+    }
   };
 
   const clearAll = () => {
+    // Backend doesn't have a clear all endpoint currently, but we can hide them in UI
     setNotifications([]);
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 pt-[max(env(safe-area-inset-top),24px)] md:pt-28 pb-16 flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-rose-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50 pt-28 pb-16">
+    <div className="min-h-screen bg-gray-50 pt-[max(env(safe-area-inset-top),24px)] md:pt-28 pb-16">
       <div className="max-w-[700px] mx-auto px-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
-            <Link href="/profile" className="w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition shadow-sm">
-              <ArrowLeft size={18} className="text-gray-600" />
+            <Link href="/profile" className="shrink-0 w-11 h-11 rounded-full bg-white border border-gray-200 flex items-center justify-center shadow-[0_2px_8px_rgb(0,0,0,0.04)] hover:shadow-[0_4px_12px_rgb(0,0,0,0.08)] hover:bg-gray-50 text-gray-500 hover:text-gray-900 transition-all duration-300 group">
+              <ArrowLeft size={18} className="group-hover:-translate-x-0.5 transition-transform" />
             </Link>
             <div>
               <div className="flex items-center gap-2">
@@ -141,27 +158,27 @@ export default function NotificationsPage() {
           {notifications.map((notif) => (
             <div
               key={notif.id}
-              onClick={() => markRead(notif.id)}
-              className={`bg-white rounded-xl border shadow-sm p-4 flex items-start gap-4 cursor-pointer transition-all hover:shadow-md ${
-                notif.read
+              onClick={() => !notif.isRead && markRead(notif.id)}
+              className={`bg-white rounded-xl border shadow-sm p-4 flex items-start gap-4 transition-all hover:shadow-md ${
+                notif.isRead
                   ? "border-gray-100 opacity-70"
-                  : "border-l-4 border-l-rose-400 border-gray-100"
+                  : "border-l-4 border-l-rose-400 border-gray-100 cursor-pointer"
               }`}
             >
               <div className="w-11 h-11 rounded-xl bg-gray-50 flex items-center justify-center text-xl shrink-0">
-                {notif.icon}
+                {getIconForType(notif.type)}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-2">
-                  <h3 className={`text-[14px] font-bold ${notif.read ? "text-gray-600" : "text-gray-900"}`}>
+                  <h3 className={`text-[14px] font-bold ${notif.isRead ? "text-gray-600" : "text-gray-900"}`}>
                     {notif.title}
                   </h3>
-                  {!notif.read && (
+                  {!notif.isRead && (
                     <div className="w-2.5 h-2.5 rounded-full bg-rose-500 shrink-0 mt-1.5" />
                   )}
                 </div>
                 <p className="text-[12px] font-medium text-gray-500 mt-0.5 leading-relaxed">{notif.message}</p>
-                <p className="text-[11px] font-semibold text-gray-400 mt-2">{notif.time}</p>
+                <p className="text-[11px] font-semibold text-gray-400 mt-2">{timeAgo(notif.createdAt)}</p>
               </div>
             </div>
           ))}

@@ -63,13 +63,13 @@ export default function PaymentsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-28 pb-16">
+    <div className="min-h-screen bg-gray-50 pt-[max(env(safe-area-inset-top),24px)] md:pt-28 pb-16">
       <div className="max-w-[700px] mx-auto px-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
-            <Link href="/profile" className="w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition shadow-sm">
-              <ArrowLeft size={18} className="text-gray-600" />
+            <Link href="/profile" className="shrink-0 w-11 h-11 rounded-full bg-white border border-gray-200 flex items-center justify-center shadow-[0_2px_8px_rgb(0,0,0,0.04)] hover:shadow-[0_4px_12px_rgb(0,0,0,0.08)] hover:bg-gray-50 text-gray-500 hover:text-gray-900 transition-all duration-300 group">
+              <ArrowLeft size={18} className="group-hover:-translate-x-0.5 transition-transform" />
             </Link>
             <div>
               <h1 className="text-2xl font-black text-gray-900">Payment Methods</h1>

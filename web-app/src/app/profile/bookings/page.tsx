@@ -191,7 +191,7 @@ function QrTicketModal({
                   >
                     <defs>
                        <linearGradient id="ticketG" x1="0%" y1="0%" x2="100%" y2="100%">
-                         <stop offset="0%" stopColor="#f97316" />
+                         <stop offset="0%" stopColor="#D53F17" />
                          <stop offset="100%" stopColor="#ea580c" />
                        </linearGradient>
                     </defs>
@@ -389,7 +389,7 @@ export default function BookingsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#fafafa] pt-[130px] pb-16 selection:bg-orange-500/20">
+    <div className="min-h-screen bg-[#fafafa] pt-[max(env(safe-area-inset-top),24px)] md:pt-[130px] pb-16 selection:bg-orange-500/20">
       {/* QR Modal */}
       {selectedBooking && <QrTicketModal booking={selectedBooking} onClose={() => setSelectedBooking(null)} />}
 
@@ -407,9 +407,12 @@ export default function BookingsPage() {
       <div className="max-w-[1100px] mx-auto px-4 lg:px-8">
         
         {/* Back Button */}
-        <button onClick={() => router.push('/profile')} className="flex items-center gap-2 text-gray-500 hover:text-orange-500 font-bold text-[14px] mb-6 transition-colors group">
-          <div className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center shadow-sm group-hover:border-orange-500 transition-colors">
-            <ArrowLeft size={16} className="group-hover:-translate-x-0.5 transition-transform" />
+        <button 
+          onClick={() => router.push('/profile')} 
+          className="inline-flex items-center gap-2.5 px-2.5 py-2 pr-5 bg-white hover:bg-gray-50 rounded-full border border-gray-200 shadow-[0_2px_8px_rgb(0,0,0,0.04)] hover:shadow-[0_4px_12px_rgb(0,0,0,0.08)] text-gray-600 hover:text-gray-900 font-bold text-[13px] transition-all duration-300 group mb-6 md:mb-8"
+        >
+          <div className="w-7 h-7 rounded-full bg-gray-100 group-hover:bg-white group-hover:shadow-sm border border-transparent group-hover:border-gray-200 flex items-center justify-center transition-all duration-300">
+            <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
           </div>
           Back to Profile
         </button>

@@ -146,7 +146,7 @@ export default function Home() {
                 <defs>
                    <linearGradient id="badgeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                      <stop offset="0%" stopColor="#42B460" />
-                     <stop offset="100%" stopColor="#f97316" />
+                     <stop offset="100%" stopColor="#D53F17" />
                    </linearGradient>
                 </defs>
                 {/* Black semi-transparent base */}

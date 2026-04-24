@@ -119,7 +119,7 @@ const ALL_SPORTS = [
   { 
     id: "basketball", 
     title: "Basketball", 
-    color: "#F97316",
+    color: "#D53F17",
     icon: (className: string) => (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
         <circle cx="12" cy="12" r="10" />
@@ -390,7 +390,7 @@ function PosterBannerCarousel({ events }: { events: Event[] }) {
             animate={{
               width: i === activeIndex ? 24 : 6,
               opacity: i === activeIndex ? 1 : 0.3,
-              backgroundColor: i === activeIndex ? "#F97316" : "#D1D5DB"
+              backgroundColor: i === activeIndex ? "#D53F17" : "#D1D5DB"
             }}
             className="h-1.5 rounded-full"
           />
@@ -501,7 +501,7 @@ function FacilityCard({ facility }: { facility: Facility }) {
 function LogoLoader({ isGameHub }: { isGameHub: boolean }) {
   const finalLogo = isGameHub ? "/bv-green.png" : "/bv-orange.png";
   const personImage = isGameHub ? "/game_virat_green.png" : "/vibe_artist_orange.png";
-  const primaryColor = isGameHub ? "#00A63E" : "#F97316"; 
+  const primaryColor = isGameHub ? "#00A63E" : "#D53F17"; 
   const bgColor = isGameHub ? "radial-gradient(circle at center, #F0FDF4 0%, #FFFFFF 100%)" : "radial-gradient(circle at center, #fff7ed 0%, #ffffff 100%)";
 
   return (
@@ -717,17 +717,17 @@ export default function MobileHome() {
     <div className="min-h-screen pb-6 overflow-x-hidden" style={{ background: isGameHub ? "linear-gradient(180deg, #F0FDF4, #FFFFFF, #F8FAFC)" : "linear-gradient(180deg, #fff7ed, #ffffff, #fafafa)" }}>
 
       {/* ═══ HEADER ═══ */}
-      <div className="px-5 pt-[max(env(safe-area-inset-top),16px)] pb-1">
+      <div className="px-5 pt-[max(env(safe-area-inset-top),10px)] pb-1">
         {isGameHub ? (
           /* GameHub Header - Refined Premium */
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 -ml-5">
               <Image 
                 src="/bv-green.png" 
                 alt="Book & Vibe" 
                 width={240} 
                 height={96} 
-                className="h-24 w-auto object-contain"
+                className="h-24 w-auto object-contain scale-[1.4] origin-left -my-4 -ml-6"
                 priority
               />
               <div className="h-8 w-[1.5px] bg-emerald-200/50 rounded-full" />
@@ -746,10 +746,10 @@ export default function MobileHome() {
             </div>
             
             <div className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center border border-emerald-100 relative">
+              <Link href="/profile/notifications" className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center border border-emerald-100 relative">
                 <Bell size={20} className="text-[#00A63E]" strokeWidth={2.5} />
                 <div className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-[#00A63E] border-2 border-white" />
-              </div>
+              </Link>
               <Link href="/profile" className="w-10 h-10 rounded-full bg-[#00A63E] flex items-center justify-center border-2 border-emerald-200 shadow-sm">
                 <span className="text-white text-[16px] font-black uppercase">{user?.name?.charAt(0) || "U"}</span>
               </Link>
@@ -758,13 +758,13 @@ export default function MobileHome() {
         ) : (
           /* Events Header - Refined Premium */
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 -ml-5">
               <Image 
                 src="/bv-orange.png" 
                 alt="Book & Vibe" 
                 width={240} 
                 height={96} 
-                className="h-24 w-auto object-contain"
+                className="h-24 w-auto object-contain scale-[1.4] origin-left -my-4 -ml-6"
                 priority
               />
               <div className="h-8 w-[1.5px] bg-orange-200/50 rounded-full" />
@@ -783,10 +783,10 @@ export default function MobileHome() {
             </div>
             
             <div className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center border border-orange-100 relative">
+              <Link href="/profile/notifications" className="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center border border-orange-100 relative">
                 <Bell size={20} className="text-orange-600" strokeWidth={2.5} />
                 <div className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-orange-500 border-2 border-white" />
-              </div>
+              </Link>
               <Link href="/profile" className="w-10 h-10 rounded-full bg-orange-600 flex items-center justify-center border-2 border-orange-200 shadow-sm">
                 <span className="text-white text-[16px] font-black uppercase">{user?.name?.charAt(0) || "U"}</span>
               </Link>
@@ -796,8 +796,8 @@ export default function MobileHome() {
       </div>
 
       {/* ═══ SEARCH BAR ═══ */}
-      <div className="px-5 mb-3">
-        <div className="rounded-[16px] p-[1px] shadow-sm border border-gray-100" style={{
+      <div className="px-5 mb-3 relative z-50">
+        <div className="rounded-[16px] p-[1px] shadow-sm border border-gray-100 relative" style={{
           background: isGameHub ? "rgba(0,166,62,0.12)" : "rgba(249, 115, 22, 0.12)"
         }}>
           <div className="flex items-center gap-3 rounded-[15px] px-4 h-12" style={{
@@ -806,12 +806,67 @@ export default function MobileHome() {
             <Search size={20} className={isGameHub ? "text-gray-400" : "text-orange-300"} />
             <input
               type="text"
-              placeholder="Search events, artists, venues..."
+              placeholder={isGameHub ? "Search turfs, courts, arenas..." : "Search events, artists, venues..."}
               value={query}
               onChange={e => setQuery(e.target.value)}
               className={`flex-1 bg-transparent border-none outline-none text-[16px] font-medium text-gray-900 placeholder:text-gray-400`}
             />
+            {query.length > 0 && (
+              <button onClick={() => setQuery("")} className="text-gray-400 hover:text-gray-600 p-1">
+                <X size={16} />
+              </button>
+            )}
           </div>
+          
+          {/* SEARCH POPUP OVERLAY */}
+          <AnimatePresence>
+            {query.trim().length > 0 && (
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="absolute top-[110%] left-0 right-0 bg-white rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.15)] border border-gray-100 overflow-hidden z-[100] flex flex-col max-h-[60vh]"
+              >
+                <div className="overflow-y-auto p-3 flex flex-col gap-2">
+                  <div className="flex items-center justify-between px-2 pb-2 border-b border-gray-50 mb-1">
+                    <span className="text-[12px] font-bold text-gray-400 uppercase tracking-wider">
+                      {isGameHub ? "Facility Results" : "Event Results"}
+                    </span>
+                  </div>
+
+                  {isGameHub ? (
+                    facilities.filter(f => f.name.toLowerCase().includes(query.toLowerCase()) || f.type.toLowerCase().includes(query.toLowerCase())).length > 0 ? (
+                      facilities.filter(f => f.name.toLowerCase().includes(query.toLowerCase()) || f.type.toLowerCase().includes(query.toLowerCase())).map(f => (
+                        <Link href={`/gamehub/${f.id}`} key={f.id} onClick={() => setQuery("")} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-xl transition-colors">
+                          <img src={f.image} alt={f.name} className="w-12 h-12 rounded-lg object-cover bg-gray-100 shrink-0" />
+                          <div className="flex flex-col min-w-0">
+                            <h4 className="text-[14px] font-bold text-gray-900 truncate">{f.name}</h4>
+                            <p className="text-[12px] text-gray-500 truncate flex items-center gap-1"><MapPin size={10}/>{f.location}</p>
+                          </div>
+                        </Link>
+                      ))
+                    ) : (
+                      <div className="py-6 text-center text-gray-500 text-sm font-medium">No venues found for "{query}"</div>
+                    )
+                  ) : (
+                    filteredEvents.length > 0 ? (
+                      filteredEvents.map(e => (
+                        <Link href={`/events/${e.id}`} key={e.id} onClick={() => setQuery("")} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-xl transition-colors">
+                          <img src={getEventImage(e.images)} alt={e.title} className="w-12 h-12 rounded-lg object-cover bg-gray-100 shrink-0" />
+                          <div className="flex flex-col min-w-0">
+                            <h4 className="text-[14px] font-bold text-gray-900 truncate">{e.title}</h4>
+                            <p className="text-[12px] text-gray-500 truncate flex items-center gap-1"><CalendarDays size={10}/>{new Date(e.date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })} • {e.venue}</p>
+                          </div>
+                        </Link>
+                      ))
+                    ) : (
+                      <div className="py-6 text-center text-gray-500 text-sm font-medium">No events found for "{query}"</div>
+                    )
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
@@ -828,7 +883,7 @@ export default function MobileHome() {
               width: "calc(50% - 2px)",
               left: activeTab === "events" ? "2px" : "calc(50%)",
               background: activeTab === "events"
-                ? "linear-gradient(90deg, #fb923c, #f97316)"
+                ? "linear-gradient(90deg, #fb923c, #D53F17)"
                 : "linear-gradient(90deg, #00A63E, #059669)",
             }}
           />
@@ -860,13 +915,13 @@ export default function MobileHome() {
           <div className="mb-10">
             <div className="flex items-center justify-between px-5 mb-5 mt-2">
               <div className="flex flex-col">
-                <span className="text-orange-500 text-[11px] font-black tracking-[0.2em] uppercase mb-1">CURATED FOR YOU</span>
+                <span className="text-[#D53F17] text-[11px] font-black tracking-[0.2em] uppercase mb-1">CURATED FOR YOU</span>
                 <h2 className="text-gray-900 text-[26px] font-black tracking-tight leading-none">Top Picks</h2>
               </div>
               <div className="flex items-center gap-3">
                 <div className="bg-orange-50 px-3 py-1.5 rounded-2xl border border-orange-100 flex items-center gap-2 group active:scale-95 transition-transform shadow-sm">
                   <span className="text-orange-600 text-[12px] font-bold">Top</span>
-                  <Zap size={14} className="text-orange-500 fill-orange-500" />
+                  <Zap size={14} className="text-[#D53F17] fill-orange-500" />
                 </div>
               </div>
             </div>
@@ -879,7 +934,7 @@ export default function MobileHome() {
             <div className="mb-8">
               <div className="flex items-center justify-between px-5 mb-4">
                 <h2 className="text-white text-[20px] font-bold tracking-tight">Trending in Events</h2>
-                <Link href="/events" className="text-[#00A63E] text-[14px] font-bold">See all</Link>
+                <Link href="/events" className="text-[#D53F17] text-[14px] font-bold">See all</Link>
               </div>
               <div className="flex gap-4 overflow-x-auto px-5 scroll-px-5 snap-x scrollbar-hide">
                 {events.slice(0, 6).map(ev => (
@@ -1287,14 +1342,14 @@ export default function MobileHome() {
                     key={cat}
                     onClick={() => { setSelectedCategory(cat); setIsFilterOpen(false); }}
                     className={`px-4 py-2 rounded-xl border text-[14px] font-bold transition-all ${
-                      selectedCategory === cat ? 'bg-orange-600 border-orange-600 text-white' : 'bg-gray-50 border-gray-100 text-gray-600'
+                      selectedCategory === cat ? 'bg-[#D53F17] border-orange-600 text-white' : 'bg-gray-50 border-gray-100 text-gray-600'
                     }`}
                   >
                     {cat}
                   </button>
                 ))}
               </div>
-              <button onClick={() => setIsFilterOpen(false)} className="w-full bg-gray-900 text-white py-4 rounded-2xl font-bold text-[16px]">Apply Filters</button>
+                <button onClick={() => setIsFilterOpen(false)} className={`w-full ${isGameHub ? 'bg-emerald-600' : 'bg-[#D53F17]'} text-white py-4 rounded-2xl font-bold text-[16px]`}>Apply Filters</button>
             </motion.div>
           </>
         )}
@@ -1329,7 +1384,7 @@ export default function MobileHome() {
                   );
                 })}
               </div>
-              <button onClick={() => setIsDateFilterOpen(false)} className="w-full bg-gray-900 text-white py-4 rounded-2xl font-bold text-[16px]">Done</button>
+              <button onClick={() => setIsDateFilterOpen(false)} className={`w-full ${isGameHub ? 'bg-emerald-600' : 'bg-[#D53F17]'} text-white py-4 rounded-2xl font-bold text-[16px]`}>Done</button>
             </motion.div>
           </>
         )}

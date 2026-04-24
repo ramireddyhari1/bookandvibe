@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Gamepad2, MapPin, Search, Star, Users, Ticket, Sparkles, ArrowUpRight, RefreshCw, Plus, Pencil, Trash2, X, Clock, HelpCircle } from "lucide-react";
+import { Gamepad2, MapPin, Search, Star, Users, Ticket, Sparkles, ArrowUpRight, RefreshCw, Plus, Pencil, Trash2, X, Clock, HelpCircle, Check } from "lucide-react";
 
 type GameHubFacility = {
   id: string;
@@ -183,6 +183,7 @@ export default function GameHubAdminPage() {
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [isEditorOpen, setIsEditorOpen] = useState(false);
+  const [wizardStep, setWizardStep] = useState(1);
   const [editorMode, setEditorMode] = useState<"create" | "edit">("create");
   const [editingFacilityId, setEditingFacilityId] = useState<string | null>(null);
   const [formState, setFormState] = useState<FacilityFormState>(emptyFormState);
@@ -239,7 +240,7 @@ export default function GameHubAdminPage() {
     setEditorMode("create");
     setEditingFacilityId(null);
     setFormState(emptyFormState);
-    setEditorExperience("easy");
+    setWizardStep(1);
     setShowAdvanced(false);
     setActionError("");
     setActionMessage("");
@@ -250,7 +251,7 @@ export default function GameHubAdminPage() {
     setEditorMode("edit");
     setEditingFacilityId(facility.id);
     setFormState(mapFacilityToForm(facility));
-    setEditorExperience("advanced");
+    setWizardStep(1);
     setShowAdvanced(true);
     setActionError("");
     setActionMessage("");
@@ -263,8 +264,47 @@ export default function GameHubAdminPage() {
     setActionError("");
   }
 
+  function hourToTimeString(hour: number) {
+    const period = hour >= 12 ? "PM" : "AM";
+    const h12 = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+    return `${h12}:00 ${period}`;
+  }
+
   function handleFormChange(field: keyof FacilityFormState, value: string) {
-    setFormState((prev) => ({ ...prev, [field]: value }));
+    setFormState((prev) => {
+      const next = { ...prev, [field]: value };
+      
+      // Sync back to openHours if slot hours change in Step 4
+      if (field === "slotStartHour" || field === "slotEndHour") {
+        const start = hourToTimeString(Number(next.slotStartHour));
+        const end = hourToTimeString(Number(next.slotEndHour));
+        next.openHours = `${start} - ${end}`;
+      }
+      
+      return next;
+    });
+  }
+
+  function timeStringToHour(timeStr: string) {
+    const parts = timeStr.split(' ');
+    if (parts.length < 2) return 0;
+    const [time, period] = parts;
+    let [hourStr] = time.split(':');
+    let hour = parseInt(hourStr);
+    if (period === 'PM' && hour < 12) hour += 12;
+    if (period === 'AM' && hour === 12) hour = 0;
+    return hour;
+  }
+
+  function handleOpenHoursChange(start: string, end: string) {
+    const startHour = timeStringToHour(start);
+    const endHour = timeStringToHour(end);
+    setFormState(prev => ({
+      ...prev,
+      openHours: `${start} - ${end}`,
+      slotStartHour: String(startHour),
+      slotEndHour: String(endHour)
+    }));
   }
 
   async function generateSlotsFromPreset() {
@@ -749,221 +789,439 @@ export default function GameHubAdminPage() {
           </div>
         ) : null}
 
-        {isEditorOpen ? (
-          <div className="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-5">
-            <div className="mb-4 flex items-center justify-between gap-3">
-              <h3 className="text-lg font-extrabold text-slate-900">
-                {editorMode === "create" ? "Add New Facility" : "Edit Facility"}
-              </h3>
-              <button
-                type="button"
-                onClick={closeEditor}
-                className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-bold text-slate-600"
-              >
-                <span className="inline-flex items-center gap-1"><X size={14} /> Close</span>
-              </button>
-            </div>
-
-            <div className="mb-4 flex flex-wrap items-center gap-2 rounded-2xl border border-slate-200 bg-white p-2">
-              <button
-                type="button"
-                onClick={() => setEditorExperience("easy")}
-                className={`rounded-xl px-3 py-2 text-xs font-black uppercase tracking-wide transition ${
-                  editorExperience === "easy" ? "bg-emerald-500 text-white shadow-sm" : "bg-slate-100 text-slate-600"
-                }`}
-              >
-                Easy Form
-              </button>
-              <button
-                type="button"
-                onClick={() => setEditorExperience("advanced")}
-                className={`rounded-xl px-3 py-2 text-xs font-black uppercase tracking-wide transition ${
-                  editorExperience === "advanced" ? "bg-slate-900 text-white shadow-sm" : "bg-slate-100 text-slate-600"
-                }`}
-              >
-                Advanced Form
-              </button>
-              <p className="ml-1 text-[11px] font-semibold text-slate-500">
-                {editorExperience === "easy"
-                  ? "Fill only essentials. Advanced fields are hidden."
-                  : "Full control with metadata, slot presets, and JSON configuration."}
-              </p>
-            </div>
-
-                disabled={!hasAdminAccess}
-            <form onSubmit={handleSubmitFacility} className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <select value={formState.status} onChange={(e) => handleFormChange("status", e.target.value)} className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm">
-                <option value="ACTIVE">ACTIVE</option>
-                <option value="INACTIVE">INACTIVE</option>
-                <option value="MAINTENANCE">MAINTENANCE</option>
-              </select>
-              <input value={formState.name} onChange={(e) => handleFormChange("name", e.target.value)} required placeholder="Name" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
-              <input value={formState.type} onChange={(e) => handleFormChange("type", e.target.value)} required placeholder="Type (e.g. Cricket Nets)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
-              <input value={formState.availableSports} onChange={(e) => handleFormChange("availableSports", e.target.value)} placeholder="Sports Available (e.g. Badminton, Football)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
-              <input value={formState.location} onChange={(e) => handleFormChange("location", e.target.value)} required placeholder="Location" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
-              <input value={formState.venue} onChange={(e) => handleFormChange("venue", e.target.value)} required placeholder="Venue" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
-              <input value={formState.rating} onChange={(e) => handleFormChange("rating", e.target.value)} type="number" min="0" max="5" step="0.1" placeholder="Rating" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
-              <div className="grid grid-cols-2 gap-3">
-                <input value={formState.pricePerHour} onChange={(e) => handleFormChange("pricePerHour", e.target.value)} type="number" min="0" step="1" placeholder="Price" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
-                <input value={formState.unit} onChange={(e) => handleFormChange("unit", e.target.value)} placeholder="Unit" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
-              </div>
-              <input value={formState.image} onChange={(e) => handleFormChange("image", e.target.value)} placeholder="Cover Image URL" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" />
-              <textarea value={formState.description} onChange={(e) => handleFormChange("description", e.target.value)} placeholder="Description" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" rows={3} />
-              <input value={formState.openHours} onChange={(e) => handleFormChange("openHours", e.target.value)} placeholder="Open Hours" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
-              <textarea value={formState.terms} onChange={(e) => handleFormChange("terms", e.target.value)} placeholder="Terms & Conditions (optional)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" rows={3} />
-              {editorExperience === "advanced" ? (
-                <>
-                  <input value={formState.distance} onChange={(e) => handleFormChange("distance", e.target.value)} placeholder="Distance" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
-                  <input value={formState.priceRange} onChange={(e) => handleFormChange("priceRange", e.target.value)} placeholder="Price Range" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
-                  <input value={formState.phone} onChange={(e) => handleFormChange("phone", e.target.value)} placeholder="Phone" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" />
-                  <div className="hidden md:block" />
-                  <input value={formState.gallery} onChange={(e) => handleFormChange("gallery", e.target.value)} placeholder="Gallery URLs (comma separated)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" />
-                  {csvToList(formState.gallery).length > 0 ? (
-                    <div className="grid grid-cols-3 gap-2 md:col-span-2">
-                      {csvToList(formState.gallery).slice(0, 6).map((url) => (
-                        <img key={url} src={url} alt="gallery preview" className="h-20 w-full rounded-lg border border-slate-200 object-cover" />
-                      ))}
-                    </div>
-                  ) : null}
-                  <input value={formState.amenities} onChange={(e) => handleFormChange("amenities", e.target.value)} placeholder="Amenities (comma separated)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" />
-                  <input value={formState.features} onChange={(e) => handleFormChange("features", e.target.value)} placeholder="Features (comma separated)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" />
-                  <input value={formState.tags} onChange={(e) => handleFormChange("tags", e.target.value)} placeholder="Tags (comma separated)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" />
-                </>
-              ) : null}
-
-              {editorExperience === "advanced" ? (
-              <div className="rounded-3xl border border-emerald-100 bg-emerald-50/20 p-6 md:col-span-2 shadow-sm">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h4 className="flex items-center gap-2 text-base font-black text-slate-900 uppercase tracking-tight">
-                      <Clock size={18} className="text-emerald-500" />
-                      Slot Generator
-                    </h4>
-                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">Define bookable hours and pricing logic</p>
-                  </div>
-                  <div className="flex items-center gap-2 rounded-lg bg-emerald-50 px-2 py-1 text-[10px] font-black text-emerald-700 border border-emerald-100 uppercase tracking-wider">
-                    <HelpCircle size={12} /> 24h Format: 18 = 6 PM
-                  </div>
+        {isEditorOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
+            <form onSubmit={handleSubmitFacility} className="bg-white rounded-3xl shadow-2xl w-full max-w-4xl overflow-hidden flex flex-col max-h-[90vh]">
+              {/* Wizard Header */}
+              <div className="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                <div>
+                  <h3 className="text-2xl font-black text-slate-900 tracking-tight">
+                    {editorMode === "create" ? "Add New Facility" : "Edit Facility"}
+                  </h3>
+                  <p className="text-slate-500 text-sm font-semibold mt-1">
+                    Step {wizardStep} of 4: {
+                      wizardStep === 1 ? "Basic Details" :
+                      wizardStep === 2 ? "Media & Description" :
+                      wizardStep === 3 ? "Amenities & Features" :
+                      "Pricing & Slots"
+                    }
+                  </p>
                 </div>
+                <button type="button" onClick={closeEditor} className="p-2 bg-white hover:bg-slate-100 rounded-full border border-slate-200 transition-colors">
+                  <X size={20} className="text-slate-500" />
+                </button>
+              </div>
 
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                  {/* Row 1: Operational Hours */}
-                  <div className="space-y-4 rounded-2xl bg-white p-4 border border-emerald-50 shadow-sm">
-                    <p className="text-[11px] font-black text-emerald-600 uppercase tracking-widest border-b border-emerald-50 pb-2">Operational Hours</p>
-                    <div className="space-y-3">
-                      <div>
-                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 ml-1">Start Hour (0-23)</label>
-                        <input value={formState.slotStartHour} onChange={(e) => handleFormChange("slotStartHour", e.target.value)} type="number" min="0" max="23" className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-bold text-slate-900 focus:bg-white focus:border-emerald-300 transition-all outline-none" />
+              {/* Progress Bar */}
+              <div className="flex h-1.5 w-full bg-slate-100">
+                <div 
+                  className="bg-emerald-500 transition-all duration-300" 
+                  style={{ width: `${(wizardStep / 4) * 100}%` }}
+                />
+              </div>
+
+              {actionError && (
+                <div className="mx-8 mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-700 flex items-center gap-2">
+                  <X size={16} className="text-red-500" /> {actionError}
+                </div>
+              )}
+
+              {/* Form Body */}
+              <div className="flex-1 overflow-y-auto p-8 pt-6">
+                {/* Step 1: Basic Details */}
+                {wizardStep === 1 && (
+                  <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Facility Name</label>
+                        <input value={formState.name} onChange={(e) => handleFormChange("name", e.target.value)} required placeholder="e.g. Neon Turf Arena" className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold text-slate-900 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none" />
                       </div>
-                      <div>
-                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 ml-1">End Hour (1-24)</label>
-                        <input value={formState.slotEndHour} onChange={(e) => handleFormChange("slotEndHour", e.target.value)} type="number" min="1" max="24" className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-bold text-slate-900 focus:bg-white focus:border-emerald-300 transition-all outline-none" />
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Facility Type</label>
+                        <input value={formState.type} onChange={(e) => handleFormChange("type", e.target.value)} required placeholder="e.g. Football" className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold text-slate-900 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none" />
                       </div>
-                      <div>
-                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 ml-1">Slot Duration (Min)</label>
-                        <select value={formState.slotInterval} onChange={(e) => handleFormChange("slotInterval", e.target.value)} className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm font-bold text-slate-900 focus:bg-white focus:border-emerald-300 transition-all outline-none">
-                          <option value="30">30 Minutes</option>
-                          <option value="45">45 Minutes</option>
-                          <option value="60">60 Minutes</option>
-                          <option value="90">90 Minutes</option>
-                          <option value="120">120 Minutes</option>
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Location (City/Area)</label>
+                        <input value={formState.location} onChange={(e) => handleFormChange("location", e.target.value)} required placeholder="e.g. Gachibowli, Hyd" className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold text-slate-900 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none" />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Specific Venue Address</label>
+                        <input value={formState.venue} onChange={(e) => handleFormChange("venue", e.target.value)} required placeholder="Full Address" className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold text-slate-900 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none" />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Open Hours</label>
+                        <div className="grid grid-cols-2 gap-3">
+                          <select 
+                            value={formState.openHours.split(" - ")[0] || "6:00 AM"} 
+                            onChange={(e) => {
+                              const end = formState.openHours.split(" - ")[1] || "10:00 PM";
+                              handleOpenHoursChange(e.target.value, end);
+                            }}
+                            className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold text-slate-900 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none"
+                          >
+                            {[
+                              "12:00 AM", "1:00 AM", "2:00 AM", "3:00 AM", "4:00 AM", "5:00 AM", 
+                              "6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM",
+                              "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", 
+                              "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM", "10:00 PM", "11:00 PM"
+                            ].map(time => (
+                              <option key={`start-${time}`} value={time}>{time}</option>
+                            ))}
+                          </select>
+                          <select 
+                            value={formState.openHours.split(" - ")[1] || "10:00 PM"} 
+                            onChange={(e) => {
+                              const start = formState.openHours.split(" - ")[0] || "6:00 AM";
+                              handleOpenHoursChange(start, e.target.value);
+                            }}
+                            className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold text-slate-900 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none"
+                          >
+                            {[
+                              "12:00 AM", "1:00 AM", "2:00 AM", "3:00 AM", "4:00 AM", "5:00 AM", 
+                              "6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM",
+                              "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", 
+                              "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM", "10:00 PM", "11:00 PM"
+                            ].map(time => (
+                              <option key={`end-${time}`} value={time}>{time}</option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Status</label>
+                        <select value={formState.status} onChange={(e) => handleFormChange("status", e.target.value)} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold text-slate-900 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none">
+                          <option value="ACTIVE">Active (Bookable)</option>
+                          <option value="INACTIVE">Inactive (Hidden)</option>
+                          <option value="MAINTENANCE">Maintenance</option>
                         </select>
                       </div>
                     </div>
                   </div>
+                )}
 
-                  {/* Row 2: Peak Hours */}
-                  <div className="space-y-4 rounded-2xl bg-white p-4 border border-emerald-50 shadow-sm">
-                    <p className="text-[11px] font-black text-rose-500 uppercase tracking-widest border-b border-rose-50 pb-2">Peak Pricing</p>
-                    <div className="space-y-3">
-                      <div>
-                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 ml-1">Peak Start (e.g. 18)</label>
-                        <input value={formState.peakStartHour} onChange={(e) => handleFormChange("peakStartHour", e.target.value)} type="number" min="0" max="23" className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-bold text-slate-900 focus:bg-white focus:border-rose-300 transition-all outline-none" />
-                      </div>
-                      <div>
-                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 ml-1">Peak End (e.g. 22)</label>
-                        <input value={formState.peakEndHour} onChange={(e) => handleFormChange("peakEndHour", e.target.value)} type="number" min="1" max="24" className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-bold text-slate-900 focus:bg-white focus:border-rose-300 transition-all outline-none" />
-                      </div>
-                      <div>
-                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 ml-1">Peak Hourly Rate</label>
-                        <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-black text-slate-400">₹</span>
-                          <input value={formState.peakPrice} onChange={(e) => handleFormChange("peakPrice", e.target.value)} type="number" min="0" className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-7 pr-3 py-2 text-sm font-black text-slate-900 focus:bg-white focus:border-rose-300 transition-all outline-none" />
+                {/* Step 2: Media & Description */}
+                {wizardStep === 2 && (
+                  <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Cover Image URL</label>
+                      <input value={formState.image} onChange={(e) => handleFormChange("image", e.target.value)} placeholder="https://..." className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-900 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none" />
+                      {formState.image && (
+                        <div className="mt-2 h-40 w-full md:w-1/2 rounded-xl overflow-hidden border border-slate-200">
+                           <img src={formState.image} alt="Cover Preview" className="w-full h-full object-cover" />
                         </div>
+                      )}
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Facility Description</label>
+                      <textarea value={formState.description} onChange={(e) => handleFormChange("description", e.target.value)} placeholder="Detailed description of the facility..." rows={4} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-900 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none" />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Phone Number</label>
+                      <input value={formState.phone} onChange={(e) => handleFormChange("phone", e.target.value)} placeholder="+91..." className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-900 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none" />
+                    </div>
+                  </div>
+                )}
+
+                {/* Step 3: Amenities & Sports */}
+                {wizardStep === 3 && (
+                  <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Available Sports</label>
+                      <div className="flex flex-wrap gap-2 p-3 bg-slate-50/50 rounded-xl border border-slate-200">
+                        {["Cricket", "Football", "Tennis", "Badminton", "Basketball", "Volleyball", "Table Tennis", "Swimming", "Squash", "Box Cricket", "Pickleball"].map(sport => {
+                          const isSelected = csvToList(formState.availableSports).includes(sport);
+                          return (
+                            <button
+                              key={sport}
+                              type="button"
+                              onClick={() => {
+                                const list = csvToList(formState.availableSports);
+                                const newList = list.includes(sport) ? list.filter(s => s !== sport) : [...list, sport];
+                                handleFormChange("availableSports", listToCsv(newList));
+                              }}
+                              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${isSelected ? 'bg-emerald-500 text-white border-emerald-600 shadow-sm' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}
+                            >
+                              {sport}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Amenities</label>
+                      <div className="flex flex-wrap gap-2 p-3 bg-slate-50/50 rounded-xl border border-slate-200">
+                        {["Parking", "Washrooms", "Drinking Water", "First Aid", "Changing Rooms", "Lockers", "Seating Area", "Cafe/Snacks", "Wi-Fi", "Equipment Rental"].map(amenity => {
+                          const isSelected = csvToList(formState.amenities).includes(amenity);
+                          return (
+                            <button
+                              key={amenity}
+                              type="button"
+                              onClick={() => {
+                                const list = csvToList(formState.amenities);
+                                const newList = list.includes(amenity) ? list.filter(a => a !== amenity) : [...list, amenity];
+                                handleFormChange("amenities", listToCsv(newList));
+                              }}
+                              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${isSelected ? 'bg-emerald-500 text-white border-emerald-600 shadow-sm' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}
+                            >
+                              {amenity}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Special Features</label>
+                      <div className="flex flex-wrap gap-2 p-3 bg-slate-50/50 rounded-xl border border-slate-200">
+                        {["Floodlights", "Artificial Grass", "Wooden Court", "Synthetic Court", "Indoor", "Outdoor", "CCTV", "Turf", "24/7 Power", "Coach Available"].map(feature => {
+                          const isSelected = csvToList(formState.features).includes(feature);
+                          return (
+                            <button
+                              key={feature}
+                              type="button"
+                              onClick={() => {
+                                const list = csvToList(formState.features);
+                                const newList = list.includes(feature) ? list.filter(f => f !== feature) : [...list, feature];
+                                handleFormChange("features", listToCsv(newList));
+                              }}
+                              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${isSelected ? 'bg-emerald-500 text-white border-emerald-600 shadow-sm' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}
+                            >
+                              {feature}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Tags</label>
+                      <div className="flex flex-wrap gap-2 p-3 bg-slate-50/50 rounded-xl border border-slate-200">
+                        {["featured", "premium", "new", "popular", "discount", "family-friendly", "tournament-ready", "corporate-events", "training"].map(tag => {
+                          const isSelected = csvToList(formState.tags).includes(tag);
+                          return (
+                            <button
+                              key={tag}
+                              type="button"
+                              onClick={() => {
+                                const list = csvToList(formState.tags);
+                                const newList = list.includes(tag) ? list.filter(t => t !== tag) : [...list, tag];
+                                handleFormChange("tags", listToCsv(newList));
+                              }}
+                              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${isSelected ? 'bg-emerald-500 text-white border-emerald-600 shadow-sm' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}
+                            >
+                              {tag}
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
+                )}
 
-                  {/* Row 3: Special Pricing */}
-                  <div className="space-y-4 rounded-2xl bg-white p-4 border border-emerald-50 shadow-sm">
-                    <p className="text-[11px] font-black text-indigo-500 uppercase tracking-widest border-b border-indigo-50 pb-2">Weekend Pricing</p>
-                    <div className="space-y-3">
-                      <div>
-                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 ml-1">Weekend (Sat/Sun) Rate</label>
-                        <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-black text-slate-400">₹</span>
-                          <input value={formState.weekendPrice} onChange={(e) => handleFormChange("weekendPrice", e.target.value)} type="number" min="0" className="w-full rounded-xl border border-slate-200 bg-slate-50 pl-7 pr-3 py-2 text-sm font-black text-slate-900 focus:bg-white focus:border-indigo-300 transition-all outline-none" />
+                {/* Step 4: Pricing & Slots */}
+                {wizardStep === 4 && (
+                  <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+                    <div className="bg-emerald-50/50 rounded-2xl p-6 border border-emerald-100 shadow-sm">
+                      <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-3">
+                          <div className="bg-white p-2 rounded-xl shadow-sm border border-emerald-100 text-emerald-600">
+                             <Sparkles size={20} />
+                          </div>
+                          <div>
+                            <h4 className="text-lg font-black text-slate-900">Slot & Pricing Generator</h4>
+                            <p className="text-xs font-bold text-slate-500 mt-0.5">Define your operational hours to auto-generate bookable slots</p>
+                          </div>
                         </div>
+                        <button 
+                          type="button" 
+                          onClick={() => setShowAdvanced(!showAdvanced)}
+                          className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-emerald-600 transition-colors"
+                        >
+                          {showAdvanced ? "Hide Advanced JSON" : "Show Advanced JSON"}
+                        </button>
                       </div>
-                      <div className="pt-2">
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Operating Hours */}
+                        <div className="space-y-4">
+                          <h5 className="text-[11px] font-black text-slate-800 uppercase tracking-widest border-b border-slate-200 pb-2 flex items-center justify-between">
+                            Operating Hours
+                            <span className="text-[9px] lowercase font-normal text-slate-400">(Synced from Step 1)</span>
+                          </h5>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-1.5">
+                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Start Hour</label>
+                              <select 
+                                value={formState.slotStartHour} 
+                                onChange={(e) => handleFormChange("slotStartHour", e.target.value)} 
+                                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-bold text-slate-900 outline-none focus:border-emerald-400"
+                              >
+                                {Array.from({ length: 24 }).map((_, i) => (
+                                  <option key={`slot-start-${i}`} value={i}>{i === 0 ? "12 AM" : i < 12 ? `${i} AM` : i === 12 ? "12 PM" : `${i-12} PM`}</option>
+                                ))}
+                              </select>
+                            </div>
+                            <div className="space-y-1.5">
+                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">End Hour</label>
+                              <select 
+                                value={formState.slotEndHour} 
+                                onChange={(e) => handleFormChange("slotEndHour", e.target.value)} 
+                                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-bold text-slate-900 outline-none focus:border-emerald-400"
+                              >
+                                {Array.from({ length: 24 }).map((_, i) => (
+                                  <option key={`slot-end-${i+1}`} value={i+1}>{(i+1) === 12 ? "12 PM" : (i+1) < 12 ? `${i+1} AM` : (i+1) === 24 ? "12 AM" : `${(i+1)-12} PM`}</option>
+                                ))}
+                              </select>
+                            </div>
+                          </div>
+                          <div className="space-y-1.5">
+                            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Slot Duration</label>
+                            <select value={formState.slotInterval} onChange={(e) => handleFormChange("slotInterval", e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-bold text-slate-900 outline-none focus:border-emerald-400">
+                              <option value="30">30 Minutes</option>
+                              <option value="60">1 Hour</option>
+                              <option value="90">1.5 Hours</option>
+                              <option value="120">2 Hours</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        {/* Pricing */}
+                        <div className="space-y-4">
+                          <h5 className="text-[11px] font-black text-slate-800 uppercase tracking-widest border-b border-slate-200 pb-2">Base Pricing</h5>
+                          <div className="space-y-1.5">
+                            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Standard Base Price (₹)</label>
+                            <input value={formState.pricePerHour} onChange={(e) => handleFormChange("pricePerHour", e.target.value)} type="number" min="0" className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-black text-emerald-600 bg-white outline-none focus:border-emerald-400" />
+                          </div>
+                          <div className="space-y-1.5">
+                            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Weekend Base Price (₹)</label>
+                            <input value={formState.weekendPrice} onChange={(e) => handleFormChange("weekendPrice", e.target.value)} type="number" min="0" className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-black text-indigo-600 bg-white outline-none focus:border-emerald-400" />
+                          </div>
+                        </div>
+                        
+                        {/* Peak Pricing */}
+                        <div className="space-y-4 md:col-span-2 bg-rose-50/50 p-4 rounded-xl border border-rose-100">
+                          <h5 className="text-[11px] font-black text-rose-800 uppercase tracking-widest border-b border-rose-200/50 pb-2">Peak Hours Pricing (Optional)</h5>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="space-y-1.5">
+                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Peak Start</label>
+                              <select 
+                                value={formState.peakStartHour} 
+                                onChange={(e) => handleFormChange("peakStartHour", e.target.value)} 
+                                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-bold text-slate-900 outline-none focus:border-rose-300"
+                              >
+                                {Array.from({ length: 24 }).map((_, i) => (
+                                  <option key={`peak-start-${i}`} value={i}>{i === 0 ? "12 AM" : i < 12 ? `${i} AM` : i === 12 ? "12 PM" : `${i-12} PM`}</option>
+                                ))}
+                              </select>
+                            </div>
+                            <div className="space-y-1.5">
+                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Peak End</label>
+                              <select 
+                                value={formState.peakEndHour} 
+                                onChange={(e) => handleFormChange("peakEndHour", e.target.value)} 
+                                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-bold text-slate-900 outline-none focus:border-rose-300"
+                              >
+                                {Array.from({ length: 24 }).map((_, i) => (
+                                  <option key={`peak-end-${i+1}`} value={i+1}>{(i+1) === 12 ? "12 PM" : (i+1) < 12 ? `${i+1} AM` : (i+1) === 24 ? "12 AM" : `${(i+1)-12} PM`}</option>
+                                ))}
+                              </select>
+                            </div>
+                            <div className="space-y-1.5">
+                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Peak Price (₹)</label>
+                              <input value={formState.peakPrice} onChange={(e) => handleFormChange("peakPrice", e.target.value)} type="number" min="0" className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-black text-rose-600 bg-white outline-none focus:border-rose-300" />
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Slot Preview */}
+                        {formState.slotTemplate && formState.slotTemplate.length > 5 && (
+                          <div className="md:col-span-2 space-y-3">
+                             <h5 className="text-[11px] font-black text-slate-800 uppercase tracking-widest border-b border-slate-200 pb-2">Generated Slot Preview</h5>
+                             <div className="max-h-32 overflow-y-auto grid grid-cols-2 sm:grid-cols-3 gap-2 p-2 bg-white rounded-lg border border-slate-200">
+                                {JSON.parse(formState.slotTemplate).map((slot: any, idx: number) => (
+                                  <div key={idx} className="px-2 py-1 bg-slate-50 border border-slate-100 rounded text-[10px] font-bold text-slate-600 flex justify-between items-center">
+                                    <span>{slot.label.split(' - ')[0]}</span>
+                                    <span className="text-emerald-600">₹{slot.price}</span>
+                                  </div>
+                                ))}
+                             </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {showAdvanced && (
+                        <div className="mt-8 space-y-4 animate-in fade-in duration-300">
+                          <div className="space-y-2">
+                            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Raw Slot Template (JSON)</label>
+                            <textarea value={formState.slotTemplate} onChange={(e) => handleFormChange("slotTemplate", e.target.value)} rows={5} className="w-full rounded-lg border border-slate-300 bg-slate-900 p-3 font-mono text-[10px] text-emerald-400 outline-none" />
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Raw Pricing Rules (JSON)</label>
+                            <textarea value={formState.pricingRules} onChange={(e) => handleFormChange("pricingRules", e.target.value)} rows={5} className="w-full rounded-lg border border-slate-300 bg-slate-900 p-3 font-mono text-[10px] text-amber-400 outline-none" />
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="mt-6 flex flex-col items-center">
                         <button
                           type="button"
                           onClick={generateSlotsFromPreset}
-                          className="w-full flex items-center justify-center gap-2 rounded-xl bg-emerald-500 py-3 text-xs font-black text-white uppercase tracking-widest shadow-lg shadow-emerald-200 hover:bg-emerald-600 active:scale-95 transition-all"
+                          className="w-full md:w-auto px-8 py-3 bg-slate-900 text-white text-sm font-black uppercase tracking-widest rounded-xl hover:bg-slate-800 transition-colors shadow-lg shadow-slate-900/20 active:scale-95 flex items-center justify-center gap-2"
                         >
-                          <Sparkles size={14} /> Generate Slots
+                          <Sparkles size={16} /> Generate Slots Configuration
                         </button>
+                        {formState.slotTemplate.length > 5 && (
+                          <p className="mt-3 text-xs font-bold text-emerald-600 flex items-center gap-1">
+                            <Check size={14} /> Slots generated successfully
+                          </p>
+                        )}
+                        {(!formState.slotTemplate || formState.slotTemplate.length <= 5) && (
+                          <p className="mt-2 text-[10px] text-amber-600 font-bold italic">You must generate slots before submitting</p>
+                        )}
                       </div>
-                      <p className="text-[9px] text-slate-400 font-bold text-center italic">Must generate after changing times</p>
                     </div>
                   </div>
-                </div>
-
-                <div className="mt-6 flex flex-col gap-4 border-t border-emerald-100/50 pt-4">
-                  <button
-                    type="button"
-                    onClick={() => setShowAdvanced(!showAdvanced)}
-                    className="flex items-center gap-2 self-start text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-emerald-600 transition-all"
-                  >
-                    {showAdvanced ? "Hide Advanced Configuration" : "View Advanced JSON Configuration"}
-                    <ArrowUpRight size={12} className={showAdvanced ? "rotate-180" : ""} />
-                  </button>
-
-                  {showAdvanced && (
-                    <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
-                      <div className="space-y-2">
-                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Pricing Rules Logic (JSON)</label>
-                        <textarea value={formState.pricingRules} onChange={(e) => handleFormChange("pricingRules", e.target.value)} placeholder="Pricing Rules JSON" className="w-full rounded-2xl border border-slate-200 bg-slate-900 p-4 font-mono text-xs text-emerald-400 outline-none h-40" />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Slot Template Data (JSON)</label>
-                        <textarea value={formState.slotTemplate} onChange={(e) => handleFormChange("slotTemplate", e.target.value)} placeholder="Slot Template JSON" className="w-full rounded-2xl border border-slate-200 bg-slate-900 p-4 font-mono text-xs text-emerald-400 outline-none h-60" />
-                      </div>
-                    </div>
-                  )}
-                </div>
+                )}
               </div>
-              ) : null}
 
-              <div className="md:col-span-2 mt-2 flex items-center gap-3">
-                <button
-                  type="submit"
-                  disabled={actionLoading}
-                  className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-extrabold text-white disabled:opacity-60"
-                >
-                  {actionLoading ? "Saving..." : editorMode === "create" ? "Create Facility" : "Save Changes"}
-                </button>
+              {/* Wizard Footer / Actions */}
+              <div className="px-8 py-5 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
                 <button
                   type="button"
-                  onClick={closeEditor}
-                  className="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-bold text-slate-600"
+                  disabled={wizardStep === 1}
+                  onClick={() => setWizardStep(prev => Math.max(1, prev - 1))}
+                  className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-200 transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
                 >
-                  Cancel
+                  Back
                 </button>
+
+                {wizardStep < 4 ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (wizardStep === 1 && (!formState.name || !formState.type || !formState.location || !formState.venue)) {
+                        setActionError("Please fill out all required Basic Details.");
+                        return;
+                      }
+                      setActionError("");
+                      setWizardStep(prev => Math.min(4, prev + 1));
+                    }}
+                    className="px-8 py-2.5 rounded-xl bg-emerald-600 text-white text-sm font-black uppercase tracking-wider shadow-md hover:bg-emerald-700 transition-colors active:scale-95"
+                  >
+                    Continue
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    disabled={actionLoading || formState.slotTemplate.length <= 5}
+                    className="px-8 py-2.5 rounded-xl bg-slate-900 text-white text-sm font-black uppercase tracking-wider shadow-md hover:bg-slate-800 transition-colors active:scale-95 disabled:opacity-50 disabled:active:scale-100 flex items-center gap-2"
+                  >
+                    {actionLoading ? "Saving..." : editorMode === "create" ? "Create Facility" : "Save Changes"}
+                    <Check size={16} />
+                  </button>
+                )}
               </div>
             </form>
           </div>
-        ) : null}
+        )}
 
         {loading ? (
           <div className="py-16 text-center text-sm font-semibold text-slate-500">Loading GameHub facilities...</div>

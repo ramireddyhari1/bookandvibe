@@ -172,7 +172,7 @@ export default function GamezonePage() {
                 </h1>
 
                 <div className="flex flex-col sm:flex-row gap-4 w-full max-w-2xl">
-                  <div className="relative flex-1">
+                  <div className="relative flex-1 group">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                     <input
                       type="text"
@@ -181,6 +181,52 @@ export default function GamezonePage() {
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#42B460] focus:border-transparent outline-none transition-all text-[15px] shadow-sm"
                     />
+                    
+                    {/* SEARCH POPUP OVERLAY */}
+                    {searchQuery.trim().length > 0 && (
+                      <div className="absolute top-[110%] left-0 right-0 bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-gray-100 overflow-hidden z-[100] flex flex-col max-h-[400px]">
+                        <div className="overflow-y-auto p-4 flex flex-col gap-2">
+                          <div className="flex items-center justify-between px-2 pb-2 border-b border-gray-50 mb-1">
+                            <span className="text-[12px] font-black text-gray-400 uppercase tracking-widest">
+                              Venue Suggestions
+                            </span>
+                          </div>
+                          
+                          {filteredFacilities.length > 0 ? (
+                            filteredFacilities.slice(0, 10).map(f => (
+                              <Link 
+                                href={`/gamehub/${f.id}`} 
+                                key={f.id} 
+                                onClick={() => setSearchQuery("")}
+                                className="flex items-center gap-4 p-3 hover:bg-emerald-50 rounded-2xl transition-all group"
+                              >
+                                <div className="w-14 h-14 rounded-xl overflow-hidden shrink-0 shadow-sm">
+                                  <img src={f.image} alt={f.name} className="w-full h-full object-cover" />
+                                </div>
+                                <div className="flex-1 flex flex-col min-w-0">
+                                  <h4 className="text-[15px] font-bold text-gray-900 truncate group-hover:text-emerald-600 transition-colors">{f.name}</h4>
+                                  <div className="flex items-center gap-2 text-[12px] text-gray-500 font-medium truncate">
+                                    <MapPin size={12} className="text-emerald-500" />
+                                    <span>{f.venue || f.location} • {f.type}</span>
+                                  </div>
+                                </div>
+                                <ChevronRight size={18} className="text-gray-300 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all" />
+                              </Link>
+                            ))
+                          ) : (
+                            <div className="py-10 text-center flex flex-col items-center gap-2">
+                              <Frown size={40} className="text-gray-200" />
+                              <p className="text-gray-500 font-bold">No venues found for "{searchQuery}"</p>
+                            </div>
+                          )}
+                        </div>
+                        {filteredFacilities.length > 0 && (
+                          <div className="bg-gray-50 p-3 text-center border-t border-gray-100">
+                             <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Found {filteredFacilities.length} venues in {selectedLocation.city}</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
 
                   <div className="relative min-w-[180px]" ref={sportDropdownRef}>
@@ -219,29 +265,37 @@ export default function GamezonePage() {
             </div>
           </div>
 
-          {/* Book Venues Featured Slider */}
+          {/* Book Venues Featured Slider / Search Results */}
           <div className="bg-white pt-12 pb-16 border-t border-gray-50">
             <div className="max-w-[1200px] mx-auto px-6">
               <div className="flex items-center justify-between mb-8">
                 <div className="space-y-2">
-                  <h2 className="text-xl md:text-2xl font-extrabold text-[#1c222b]">Book Venues</h2>
-                  <p className="text-[14px] text-gray-400 font-medium">Top picked venues for you in {selectedLocation.city}</p>
+                  <h2 className="text-xl md:text-2xl font-extrabold text-[#1c222b]">
+                    {searchQuery || selectedSport !== "All Sports" ? "Search Results" : "Book Venues"}
+                  </h2>
+                  <p className="text-[14px] text-gray-400 font-medium">
+                    {searchQuery || selectedSport !== "All Sports" 
+                      ? `Found ${filteredFacilities.length} venues matching your criteria` 
+                      : `Top picked venues for you in ${selectedLocation.city}`}
+                  </p>
                 </div>
-                <Link
-                  href="#all-venues"
-                  className="text-[#42B460] font-bold text-[14px] flex items-center gap-1 hover:underline tracking-tight"
-                >
-                  SEE ALL VENUES <ChevronRight size={18} strokeWidth={2.5} />
-                </Link>
+                {!(searchQuery || selectedSport !== "All Sports") && (
+                  <Link
+                    href="#all-venues"
+                    className="text-[#42B460] font-bold text-[14px] flex items-center gap-1 hover:underline tracking-tight"
+                  >
+                    SEE ALL VENUES <ChevronRight size={18} strokeWidth={2.5} />
+                  </Link>
+                )}
               </div>
 
               {filteredFacilities.length > 0 ? (
-                <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide snap-x">
-                  {filteredFacilities.slice(0, 6).map((fac) => (
+                <div className={searchQuery || selectedSport !== "All Sports" ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" : "flex gap-6 overflow-x-auto pb-4 scrollbar-hide snap-x"}>
+                  {filteredFacilities.slice(0, searchQuery || selectedSport !== "All Sports" ? undefined : 6).map((fac) => (
                     <Link
                       href={`/gamehub/${fac.id}`}
-                      key={`featured-${fac.id}`}
-                      className="flex-shrink-0 w-[300px] md:w-[340px] group snap-start"
+                      key={`fac-${fac.id}`}
+                      className={`group ${searchQuery || selectedSport !== "All Sports" ? "w-full" : "flex-shrink-0 w-[300px] md:w-[340px] snap-start"}`}
                     >
                       <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm transition-all duration-300">
                         <div className="aspect-[16/10] relative overflow-hidden bg-gray-100">
@@ -293,8 +347,11 @@ export default function GamezonePage() {
             </div>
           </div>
 
-          {/* Categories Section */}
-          <div className="bg-white pb-16 pt-4">
+          {/* Hide these sections if searching */}
+          {!(searchQuery || selectedSport !== "All Sports") && (
+            <>
+              {/* Categories Section */}
+              <div className="bg-white pb-16 pt-4">
             <div className="max-w-[1200px] mx-auto px-6">
               <div className="flex items-center justify-between mb-8">
                 <div className="space-y-2">
@@ -351,6 +408,8 @@ export default function GamezonePage() {
               </div>
             </div>
           </div>
+            </>
+          )}
         </>
       )}
 
