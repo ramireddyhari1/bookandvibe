@@ -52,6 +52,7 @@ interface BookingFacility {
   location: string;
   image: string;
   mapLink?: string;
+  type?: string;
 }
 
 interface BookingItem {
