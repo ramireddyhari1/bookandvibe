@@ -24,8 +24,13 @@ function emitSeatStateUpdate({ scopeType, scopeId, seatNumbers, status, userId, 
   });
 }
 
+function getSocketServer() {
+  return socketServer;
+}
+
 module.exports = {
   emitSeatStateUpdate,
   getSeatRoom,
   setSocketServer,
+  getSocketServer,
 };

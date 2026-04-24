@@ -84,6 +84,11 @@ export type GamehubReview = $Result.DefaultSelection<Prisma.$GamehubReviewPayloa
  */
 export type GamehubBooking = $Result.DefaultSelection<Prisma.$GamehubBookingPayload>
 /**
+ * Model LiveMatch
+ * 
+ */
+export type LiveMatch = $Result.DefaultSelection<Prisma.$LiveMatchPayload>
+/**
  * Model GamehubBlockedSlot
  * 
  */
@@ -374,6 +379,16 @@ export class PrismaClient<
     * ```
     */
   get gamehubBooking(): Prisma.GamehubBookingDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.liveMatch`: Exposes CRUD operations for the **LiveMatch** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more LiveMatches
+    * const liveMatches = await prisma.liveMatch.findMany()
+    * ```
+    */
+  get liveMatch(): Prisma.LiveMatchDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.gamehubBlockedSlot`: Exposes CRUD operations for the **GamehubBlockedSlot** model.
@@ -882,6 +897,7 @@ export namespace Prisma {
     GamehubFacility: 'GamehubFacility',
     GamehubReview: 'GamehubReview',
     GamehubBooking: 'GamehubBooking',
+    LiveMatch: 'LiveMatch',
     GamehubBlockedSlot: 'GamehubBlockedSlot',
     Wallet: 'Wallet',
     WalletTransaction: 'WalletTransaction',
@@ -903,7 +919,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "event" | "tier" | "booking" | "show" | "showSeat" | "bookingSeat" | "bookingItem" | "payment" | "notification" | "review" | "gamehubFacility" | "gamehubReview" | "gamehubBooking" | "gamehubBlockedSlot" | "wallet" | "walletTransaction" | "payout" | "websiteConfig" | "coupon"
+      modelProps: "user" | "event" | "tier" | "booking" | "show" | "showSeat" | "bookingSeat" | "bookingItem" | "payment" | "notification" | "review" | "gamehubFacility" | "gamehubReview" | "gamehubBooking" | "liveMatch" | "gamehubBlockedSlot" | "wallet" | "walletTransaction" | "payout" | "websiteConfig" | "coupon"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1943,6 +1959,80 @@ export namespace Prisma {
           }
         }
       }
+      LiveMatch: {
+        payload: Prisma.$LiveMatchPayload<ExtArgs>
+        fields: Prisma.LiveMatchFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.LiveMatchFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LiveMatchPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.LiveMatchFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LiveMatchPayload>
+          }
+          findFirst: {
+            args: Prisma.LiveMatchFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LiveMatchPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.LiveMatchFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LiveMatchPayload>
+          }
+          findMany: {
+            args: Prisma.LiveMatchFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LiveMatchPayload>[]
+          }
+          create: {
+            args: Prisma.LiveMatchCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LiveMatchPayload>
+          }
+          createMany: {
+            args: Prisma.LiveMatchCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.LiveMatchCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LiveMatchPayload>[]
+          }
+          delete: {
+            args: Prisma.LiveMatchDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LiveMatchPayload>
+          }
+          update: {
+            args: Prisma.LiveMatchUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LiveMatchPayload>
+          }
+          deleteMany: {
+            args: Prisma.LiveMatchDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.LiveMatchUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.LiveMatchUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LiveMatchPayload>[]
+          }
+          upsert: {
+            args: Prisma.LiveMatchUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LiveMatchPayload>
+          }
+          aggregate: {
+            args: Prisma.LiveMatchAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateLiveMatch>
+          }
+          groupBy: {
+            args: Prisma.LiveMatchGroupByArgs<ExtArgs>
+            result: $Utils.Optional<LiveMatchGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.LiveMatchCountArgs<ExtArgs>
+            result: $Utils.Optional<LiveMatchCountAggregateOutputType> | number
+          }
+        }
+      }
       GamehubBlockedSlot: {
         payload: Prisma.$GamehubBlockedSlotPayload<ExtArgs>
         fields: Prisma.GamehubBlockedSlotFieldRefs
@@ -2509,6 +2599,7 @@ export namespace Prisma {
     gamehubFacility?: GamehubFacilityOmit
     gamehubReview?: GamehubReviewOmit
     gamehubBooking?: GamehubBookingOmit
+    liveMatch?: LiveMatchOmit
     gamehubBlockedSlot?: GamehubBlockedSlotOmit
     wallet?: WalletOmit
     walletTransaction?: WalletTransactionOmit
@@ -2852,12 +2943,14 @@ export namespace Prisma {
     reviews: number
     bookings: number
     blockedSlots: number
+    liveMatches: number
   }
 
   export type GamehubFacilityCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     reviews?: boolean | GamehubFacilityCountOutputTypeCountReviewsArgs
     bookings?: boolean | GamehubFacilityCountOutputTypeCountBookingsArgs
     blockedSlots?: boolean | GamehubFacilityCountOutputTypeCountBlockedSlotsArgs
+    liveMatches?: boolean | GamehubFacilityCountOutputTypeCountLiveMatchesArgs
   }
 
   // Custom InputTypes
@@ -2890,6 +2983,13 @@ export namespace Prisma {
    */
   export type GamehubFacilityCountOutputTypeCountBlockedSlotsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: GamehubBlockedSlotWhereInput
+  }
+
+  /**
+   * GamehubFacilityCountOutputType without action
+   */
+  export type GamehubFacilityCountOutputTypeCountLiveMatchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LiveMatchWhereInput
   }
 
 
@@ -16775,6 +16875,7 @@ export namespace Prisma {
     reviews?: boolean | GamehubFacility$reviewsArgs<ExtArgs>
     bookings?: boolean | GamehubFacility$bookingsArgs<ExtArgs>
     blockedSlots?: boolean | GamehubFacility$blockedSlotsArgs<ExtArgs>
+    liveMatches?: boolean | GamehubFacility$liveMatchesArgs<ExtArgs>
     _count?: boolean | GamehubFacilityCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["gamehubFacility"]>
 
@@ -16879,6 +16980,7 @@ export namespace Prisma {
     reviews?: boolean | GamehubFacility$reviewsArgs<ExtArgs>
     bookings?: boolean | GamehubFacility$bookingsArgs<ExtArgs>
     blockedSlots?: boolean | GamehubFacility$blockedSlotsArgs<ExtArgs>
+    liveMatches?: boolean | GamehubFacility$liveMatchesArgs<ExtArgs>
     _count?: boolean | GamehubFacilityCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type GamehubFacilityIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -16895,6 +16997,7 @@ export namespace Prisma {
       reviews: Prisma.$GamehubReviewPayload<ExtArgs>[]
       bookings: Prisma.$GamehubBookingPayload<ExtArgs>[]
       blockedSlots: Prisma.$GamehubBlockedSlotPayload<ExtArgs>[]
+      liveMatches: Prisma.$LiveMatchPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -17323,6 +17426,7 @@ export namespace Prisma {
     reviews<T extends GamehubFacility$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, GamehubFacility$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamehubReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     bookings<T extends GamehubFacility$bookingsArgs<ExtArgs> = {}>(args?: Subset<T, GamehubFacility$bookingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamehubBookingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     blockedSlots<T extends GamehubFacility$blockedSlotsArgs<ExtArgs> = {}>(args?: Subset<T, GamehubFacility$blockedSlotsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GamehubBlockedSlotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    liveMatches<T extends GamehubFacility$liveMatchesArgs<ExtArgs> = {}>(args?: Subset<T, GamehubFacility$liveMatchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LiveMatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -17869,6 +17973,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: GamehubBlockedSlotScalarFieldEnum | GamehubBlockedSlotScalarFieldEnum[]
+  }
+
+  /**
+   * GamehubFacility.liveMatches
+   */
+  export type GamehubFacility$liveMatchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveMatch
+     */
+    select?: LiveMatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveMatch
+     */
+    omit?: LiveMatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveMatchInclude<ExtArgs> | null
+    where?: LiveMatchWhereInput
+    orderBy?: LiveMatchOrderByWithRelationInput | LiveMatchOrderByWithRelationInput[]
+    cursor?: LiveMatchWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LiveMatchScalarFieldEnum | LiveMatchScalarFieldEnum[]
   }
 
   /**
@@ -19314,6 +19442,7 @@ export namespace Prisma {
     facilityId?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
+    liveMatch?: boolean | GamehubBooking$liveMatchArgs<ExtArgs>
   }, ExtArgs["result"]["gamehubBooking"]>
 
   export type GamehubBookingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -19378,6 +19507,7 @@ export namespace Prisma {
   export type GamehubBookingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
+    liveMatch?: boolean | GamehubBooking$liveMatchArgs<ExtArgs>
   }
   export type GamehubBookingIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -19393,6 +19523,7 @@ export namespace Prisma {
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
       facility: Prisma.$GamehubFacilityPayload<ExtArgs>
+      liveMatch: Prisma.$LiveMatchPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -19806,6 +19937,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     facility<T extends GamehubFacilityDefaultArgs<ExtArgs> = {}>(args?: Subset<T, GamehubFacilityDefaultArgs<ExtArgs>>): Prisma__GamehubFacilityClient<$Result.GetResult<Prisma.$GamehubFacilityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    liveMatch<T extends GamehubBooking$liveMatchArgs<ExtArgs> = {}>(args?: Subset<T, GamehubBooking$liveMatchArgs<ExtArgs>>): Prisma__LiveMatchClient<$Result.GetResult<Prisma.$LiveMatchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -20251,6 +20383,25 @@ export namespace Prisma {
   }
 
   /**
+   * GamehubBooking.liveMatch
+   */
+  export type GamehubBooking$liveMatchArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveMatch
+     */
+    select?: LiveMatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveMatch
+     */
+    omit?: LiveMatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveMatchInclude<ExtArgs> | null
+    where?: LiveMatchWhereInput
+  }
+
+  /**
    * GamehubBooking without action
    */
   export type GamehubBookingDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -20266,6 +20417,1116 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: GamehubBookingInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model LiveMatch
+   */
+
+  export type AggregateLiveMatch = {
+    _count: LiveMatchCountAggregateOutputType | null
+    _min: LiveMatchMinAggregateOutputType | null
+    _max: LiveMatchMaxAggregateOutputType | null
+  }
+
+  export type LiveMatchMinAggregateOutputType = {
+    id: string | null
+    bookingId: string | null
+    facilityId: string | null
+    sportType: string | null
+    scoreData: string | null
+    status: string | null
+    updatedAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type LiveMatchMaxAggregateOutputType = {
+    id: string | null
+    bookingId: string | null
+    facilityId: string | null
+    sportType: string | null
+    scoreData: string | null
+    status: string | null
+    updatedAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type LiveMatchCountAggregateOutputType = {
+    id: number
+    bookingId: number
+    facilityId: number
+    sportType: number
+    scoreData: number
+    status: number
+    updatedAt: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type LiveMatchMinAggregateInputType = {
+    id?: true
+    bookingId?: true
+    facilityId?: true
+    sportType?: true
+    scoreData?: true
+    status?: true
+    updatedAt?: true
+    createdAt?: true
+  }
+
+  export type LiveMatchMaxAggregateInputType = {
+    id?: true
+    bookingId?: true
+    facilityId?: true
+    sportType?: true
+    scoreData?: true
+    status?: true
+    updatedAt?: true
+    createdAt?: true
+  }
+
+  export type LiveMatchCountAggregateInputType = {
+    id?: true
+    bookingId?: true
+    facilityId?: true
+    sportType?: true
+    scoreData?: true
+    status?: true
+    updatedAt?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type LiveMatchAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LiveMatch to aggregate.
+     */
+    where?: LiveMatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LiveMatches to fetch.
+     */
+    orderBy?: LiveMatchOrderByWithRelationInput | LiveMatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: LiveMatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LiveMatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LiveMatches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned LiveMatches
+    **/
+    _count?: true | LiveMatchCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: LiveMatchMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: LiveMatchMaxAggregateInputType
+  }
+
+  export type GetLiveMatchAggregateType<T extends LiveMatchAggregateArgs> = {
+        [P in keyof T & keyof AggregateLiveMatch]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateLiveMatch[P]>
+      : GetScalarType<T[P], AggregateLiveMatch[P]>
+  }
+
+
+
+
+  export type LiveMatchGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LiveMatchWhereInput
+    orderBy?: LiveMatchOrderByWithAggregationInput | LiveMatchOrderByWithAggregationInput[]
+    by: LiveMatchScalarFieldEnum[] | LiveMatchScalarFieldEnum
+    having?: LiveMatchScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: LiveMatchCountAggregateInputType | true
+    _min?: LiveMatchMinAggregateInputType
+    _max?: LiveMatchMaxAggregateInputType
+  }
+
+  export type LiveMatchGroupByOutputType = {
+    id: string
+    bookingId: string
+    facilityId: string
+    sportType: string
+    scoreData: string
+    status: string
+    updatedAt: Date
+    createdAt: Date
+    _count: LiveMatchCountAggregateOutputType | null
+    _min: LiveMatchMinAggregateOutputType | null
+    _max: LiveMatchMaxAggregateOutputType | null
+  }
+
+  type GetLiveMatchGroupByPayload<T extends LiveMatchGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<LiveMatchGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof LiveMatchGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], LiveMatchGroupByOutputType[P]>
+            : GetScalarType<T[P], LiveMatchGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type LiveMatchSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    bookingId?: boolean
+    facilityId?: boolean
+    sportType?: boolean
+    scoreData?: boolean
+    status?: boolean
+    updatedAt?: boolean
+    createdAt?: boolean
+    booking?: boolean | GamehubBookingDefaultArgs<ExtArgs>
+    facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["liveMatch"]>
+
+  export type LiveMatchSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    bookingId?: boolean
+    facilityId?: boolean
+    sportType?: boolean
+    scoreData?: boolean
+    status?: boolean
+    updatedAt?: boolean
+    createdAt?: boolean
+    booking?: boolean | GamehubBookingDefaultArgs<ExtArgs>
+    facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["liveMatch"]>
+
+  export type LiveMatchSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    bookingId?: boolean
+    facilityId?: boolean
+    sportType?: boolean
+    scoreData?: boolean
+    status?: boolean
+    updatedAt?: boolean
+    createdAt?: boolean
+    booking?: boolean | GamehubBookingDefaultArgs<ExtArgs>
+    facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["liveMatch"]>
+
+  export type LiveMatchSelectScalar = {
+    id?: boolean
+    bookingId?: boolean
+    facilityId?: boolean
+    sportType?: boolean
+    scoreData?: boolean
+    status?: boolean
+    updatedAt?: boolean
+    createdAt?: boolean
+  }
+
+  export type LiveMatchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "bookingId" | "facilityId" | "sportType" | "scoreData" | "status" | "updatedAt" | "createdAt", ExtArgs["result"]["liveMatch"]>
+  export type LiveMatchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    booking?: boolean | GamehubBookingDefaultArgs<ExtArgs>
+    facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
+  }
+  export type LiveMatchIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    booking?: boolean | GamehubBookingDefaultArgs<ExtArgs>
+    facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
+  }
+  export type LiveMatchIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    booking?: boolean | GamehubBookingDefaultArgs<ExtArgs>
+    facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
+  }
+
+  export type $LiveMatchPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "LiveMatch"
+    objects: {
+      booking: Prisma.$GamehubBookingPayload<ExtArgs>
+      facility: Prisma.$GamehubFacilityPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      bookingId: string
+      facilityId: string
+      sportType: string
+      scoreData: string
+      status: string
+      updatedAt: Date
+      createdAt: Date
+    }, ExtArgs["result"]["liveMatch"]>
+    composites: {}
+  }
+
+  type LiveMatchGetPayload<S extends boolean | null | undefined | LiveMatchDefaultArgs> = $Result.GetResult<Prisma.$LiveMatchPayload, S>
+
+  type LiveMatchCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<LiveMatchFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: LiveMatchCountAggregateInputType | true
+    }
+
+  export interface LiveMatchDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['LiveMatch'], meta: { name: 'LiveMatch' } }
+    /**
+     * Find zero or one LiveMatch that matches the filter.
+     * @param {LiveMatchFindUniqueArgs} args - Arguments to find a LiveMatch
+     * @example
+     * // Get one LiveMatch
+     * const liveMatch = await prisma.liveMatch.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends LiveMatchFindUniqueArgs>(args: SelectSubset<T, LiveMatchFindUniqueArgs<ExtArgs>>): Prisma__LiveMatchClient<$Result.GetResult<Prisma.$LiveMatchPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one LiveMatch that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {LiveMatchFindUniqueOrThrowArgs} args - Arguments to find a LiveMatch
+     * @example
+     * // Get one LiveMatch
+     * const liveMatch = await prisma.liveMatch.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends LiveMatchFindUniqueOrThrowArgs>(args: SelectSubset<T, LiveMatchFindUniqueOrThrowArgs<ExtArgs>>): Prisma__LiveMatchClient<$Result.GetResult<Prisma.$LiveMatchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LiveMatch that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LiveMatchFindFirstArgs} args - Arguments to find a LiveMatch
+     * @example
+     * // Get one LiveMatch
+     * const liveMatch = await prisma.liveMatch.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends LiveMatchFindFirstArgs>(args?: SelectSubset<T, LiveMatchFindFirstArgs<ExtArgs>>): Prisma__LiveMatchClient<$Result.GetResult<Prisma.$LiveMatchPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LiveMatch that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LiveMatchFindFirstOrThrowArgs} args - Arguments to find a LiveMatch
+     * @example
+     * // Get one LiveMatch
+     * const liveMatch = await prisma.liveMatch.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends LiveMatchFindFirstOrThrowArgs>(args?: SelectSubset<T, LiveMatchFindFirstOrThrowArgs<ExtArgs>>): Prisma__LiveMatchClient<$Result.GetResult<Prisma.$LiveMatchPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more LiveMatches that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LiveMatchFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all LiveMatches
+     * const liveMatches = await prisma.liveMatch.findMany()
+     * 
+     * // Get first 10 LiveMatches
+     * const liveMatches = await prisma.liveMatch.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const liveMatchWithIdOnly = await prisma.liveMatch.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends LiveMatchFindManyArgs>(args?: SelectSubset<T, LiveMatchFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LiveMatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a LiveMatch.
+     * @param {LiveMatchCreateArgs} args - Arguments to create a LiveMatch.
+     * @example
+     * // Create one LiveMatch
+     * const LiveMatch = await prisma.liveMatch.create({
+     *   data: {
+     *     // ... data to create a LiveMatch
+     *   }
+     * })
+     * 
+     */
+    create<T extends LiveMatchCreateArgs>(args: SelectSubset<T, LiveMatchCreateArgs<ExtArgs>>): Prisma__LiveMatchClient<$Result.GetResult<Prisma.$LiveMatchPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many LiveMatches.
+     * @param {LiveMatchCreateManyArgs} args - Arguments to create many LiveMatches.
+     * @example
+     * // Create many LiveMatches
+     * const liveMatch = await prisma.liveMatch.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends LiveMatchCreateManyArgs>(args?: SelectSubset<T, LiveMatchCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many LiveMatches and returns the data saved in the database.
+     * @param {LiveMatchCreateManyAndReturnArgs} args - Arguments to create many LiveMatches.
+     * @example
+     * // Create many LiveMatches
+     * const liveMatch = await prisma.liveMatch.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many LiveMatches and only return the `id`
+     * const liveMatchWithIdOnly = await prisma.liveMatch.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends LiveMatchCreateManyAndReturnArgs>(args?: SelectSubset<T, LiveMatchCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LiveMatchPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a LiveMatch.
+     * @param {LiveMatchDeleteArgs} args - Arguments to delete one LiveMatch.
+     * @example
+     * // Delete one LiveMatch
+     * const LiveMatch = await prisma.liveMatch.delete({
+     *   where: {
+     *     // ... filter to delete one LiveMatch
+     *   }
+     * })
+     * 
+     */
+    delete<T extends LiveMatchDeleteArgs>(args: SelectSubset<T, LiveMatchDeleteArgs<ExtArgs>>): Prisma__LiveMatchClient<$Result.GetResult<Prisma.$LiveMatchPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one LiveMatch.
+     * @param {LiveMatchUpdateArgs} args - Arguments to update one LiveMatch.
+     * @example
+     * // Update one LiveMatch
+     * const liveMatch = await prisma.liveMatch.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends LiveMatchUpdateArgs>(args: SelectSubset<T, LiveMatchUpdateArgs<ExtArgs>>): Prisma__LiveMatchClient<$Result.GetResult<Prisma.$LiveMatchPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more LiveMatches.
+     * @param {LiveMatchDeleteManyArgs} args - Arguments to filter LiveMatches to delete.
+     * @example
+     * // Delete a few LiveMatches
+     * const { count } = await prisma.liveMatch.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends LiveMatchDeleteManyArgs>(args?: SelectSubset<T, LiveMatchDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LiveMatches.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LiveMatchUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many LiveMatches
+     * const liveMatch = await prisma.liveMatch.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends LiveMatchUpdateManyArgs>(args: SelectSubset<T, LiveMatchUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LiveMatches and returns the data updated in the database.
+     * @param {LiveMatchUpdateManyAndReturnArgs} args - Arguments to update many LiveMatches.
+     * @example
+     * // Update many LiveMatches
+     * const liveMatch = await prisma.liveMatch.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more LiveMatches and only return the `id`
+     * const liveMatchWithIdOnly = await prisma.liveMatch.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends LiveMatchUpdateManyAndReturnArgs>(args: SelectSubset<T, LiveMatchUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LiveMatchPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one LiveMatch.
+     * @param {LiveMatchUpsertArgs} args - Arguments to update or create a LiveMatch.
+     * @example
+     * // Update or create a LiveMatch
+     * const liveMatch = await prisma.liveMatch.upsert({
+     *   create: {
+     *     // ... data to create a LiveMatch
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the LiveMatch we want to update
+     *   }
+     * })
+     */
+    upsert<T extends LiveMatchUpsertArgs>(args: SelectSubset<T, LiveMatchUpsertArgs<ExtArgs>>): Prisma__LiveMatchClient<$Result.GetResult<Prisma.$LiveMatchPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of LiveMatches.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LiveMatchCountArgs} args - Arguments to filter LiveMatches to count.
+     * @example
+     * // Count the number of LiveMatches
+     * const count = await prisma.liveMatch.count({
+     *   where: {
+     *     // ... the filter for the LiveMatches we want to count
+     *   }
+     * })
+    **/
+    count<T extends LiveMatchCountArgs>(
+      args?: Subset<T, LiveMatchCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], LiveMatchCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a LiveMatch.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LiveMatchAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends LiveMatchAggregateArgs>(args: Subset<T, LiveMatchAggregateArgs>): Prisma.PrismaPromise<GetLiveMatchAggregateType<T>>
+
+    /**
+     * Group by LiveMatch.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LiveMatchGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends LiveMatchGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: LiveMatchGroupByArgs['orderBy'] }
+        : { orderBy?: LiveMatchGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, LiveMatchGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLiveMatchGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the LiveMatch model
+   */
+  readonly fields: LiveMatchFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for LiveMatch.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__LiveMatchClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    booking<T extends GamehubBookingDefaultArgs<ExtArgs> = {}>(args?: Subset<T, GamehubBookingDefaultArgs<ExtArgs>>): Prisma__GamehubBookingClient<$Result.GetResult<Prisma.$GamehubBookingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    facility<T extends GamehubFacilityDefaultArgs<ExtArgs> = {}>(args?: Subset<T, GamehubFacilityDefaultArgs<ExtArgs>>): Prisma__GamehubFacilityClient<$Result.GetResult<Prisma.$GamehubFacilityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the LiveMatch model
+   */
+  interface LiveMatchFieldRefs {
+    readonly id: FieldRef<"LiveMatch", 'String'>
+    readonly bookingId: FieldRef<"LiveMatch", 'String'>
+    readonly facilityId: FieldRef<"LiveMatch", 'String'>
+    readonly sportType: FieldRef<"LiveMatch", 'String'>
+    readonly scoreData: FieldRef<"LiveMatch", 'String'>
+    readonly status: FieldRef<"LiveMatch", 'String'>
+    readonly updatedAt: FieldRef<"LiveMatch", 'DateTime'>
+    readonly createdAt: FieldRef<"LiveMatch", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * LiveMatch findUnique
+   */
+  export type LiveMatchFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveMatch
+     */
+    select?: LiveMatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveMatch
+     */
+    omit?: LiveMatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveMatchInclude<ExtArgs> | null
+    /**
+     * Filter, which LiveMatch to fetch.
+     */
+    where: LiveMatchWhereUniqueInput
+  }
+
+  /**
+   * LiveMatch findUniqueOrThrow
+   */
+  export type LiveMatchFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveMatch
+     */
+    select?: LiveMatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveMatch
+     */
+    omit?: LiveMatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveMatchInclude<ExtArgs> | null
+    /**
+     * Filter, which LiveMatch to fetch.
+     */
+    where: LiveMatchWhereUniqueInput
+  }
+
+  /**
+   * LiveMatch findFirst
+   */
+  export type LiveMatchFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveMatch
+     */
+    select?: LiveMatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveMatch
+     */
+    omit?: LiveMatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveMatchInclude<ExtArgs> | null
+    /**
+     * Filter, which LiveMatch to fetch.
+     */
+    where?: LiveMatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LiveMatches to fetch.
+     */
+    orderBy?: LiveMatchOrderByWithRelationInput | LiveMatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LiveMatches.
+     */
+    cursor?: LiveMatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LiveMatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LiveMatches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LiveMatches.
+     */
+    distinct?: LiveMatchScalarFieldEnum | LiveMatchScalarFieldEnum[]
+  }
+
+  /**
+   * LiveMatch findFirstOrThrow
+   */
+  export type LiveMatchFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveMatch
+     */
+    select?: LiveMatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveMatch
+     */
+    omit?: LiveMatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveMatchInclude<ExtArgs> | null
+    /**
+     * Filter, which LiveMatch to fetch.
+     */
+    where?: LiveMatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LiveMatches to fetch.
+     */
+    orderBy?: LiveMatchOrderByWithRelationInput | LiveMatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LiveMatches.
+     */
+    cursor?: LiveMatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LiveMatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LiveMatches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LiveMatches.
+     */
+    distinct?: LiveMatchScalarFieldEnum | LiveMatchScalarFieldEnum[]
+  }
+
+  /**
+   * LiveMatch findMany
+   */
+  export type LiveMatchFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveMatch
+     */
+    select?: LiveMatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveMatch
+     */
+    omit?: LiveMatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveMatchInclude<ExtArgs> | null
+    /**
+     * Filter, which LiveMatches to fetch.
+     */
+    where?: LiveMatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LiveMatches to fetch.
+     */
+    orderBy?: LiveMatchOrderByWithRelationInput | LiveMatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing LiveMatches.
+     */
+    cursor?: LiveMatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LiveMatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LiveMatches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LiveMatches.
+     */
+    distinct?: LiveMatchScalarFieldEnum | LiveMatchScalarFieldEnum[]
+  }
+
+  /**
+   * LiveMatch create
+   */
+  export type LiveMatchCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveMatch
+     */
+    select?: LiveMatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveMatch
+     */
+    omit?: LiveMatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveMatchInclude<ExtArgs> | null
+    /**
+     * The data needed to create a LiveMatch.
+     */
+    data: XOR<LiveMatchCreateInput, LiveMatchUncheckedCreateInput>
+  }
+
+  /**
+   * LiveMatch createMany
+   */
+  export type LiveMatchCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many LiveMatches.
+     */
+    data: LiveMatchCreateManyInput | LiveMatchCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * LiveMatch createManyAndReturn
+   */
+  export type LiveMatchCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveMatch
+     */
+    select?: LiveMatchSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveMatch
+     */
+    omit?: LiveMatchOmit<ExtArgs> | null
+    /**
+     * The data used to create many LiveMatches.
+     */
+    data: LiveMatchCreateManyInput | LiveMatchCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveMatchIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * LiveMatch update
+   */
+  export type LiveMatchUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveMatch
+     */
+    select?: LiveMatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveMatch
+     */
+    omit?: LiveMatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveMatchInclude<ExtArgs> | null
+    /**
+     * The data needed to update a LiveMatch.
+     */
+    data: XOR<LiveMatchUpdateInput, LiveMatchUncheckedUpdateInput>
+    /**
+     * Choose, which LiveMatch to update.
+     */
+    where: LiveMatchWhereUniqueInput
+  }
+
+  /**
+   * LiveMatch updateMany
+   */
+  export type LiveMatchUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update LiveMatches.
+     */
+    data: XOR<LiveMatchUpdateManyMutationInput, LiveMatchUncheckedUpdateManyInput>
+    /**
+     * Filter which LiveMatches to update
+     */
+    where?: LiveMatchWhereInput
+    /**
+     * Limit how many LiveMatches to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * LiveMatch updateManyAndReturn
+   */
+  export type LiveMatchUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveMatch
+     */
+    select?: LiveMatchSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveMatch
+     */
+    omit?: LiveMatchOmit<ExtArgs> | null
+    /**
+     * The data used to update LiveMatches.
+     */
+    data: XOR<LiveMatchUpdateManyMutationInput, LiveMatchUncheckedUpdateManyInput>
+    /**
+     * Filter which LiveMatches to update
+     */
+    where?: LiveMatchWhereInput
+    /**
+     * Limit how many LiveMatches to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveMatchIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * LiveMatch upsert
+   */
+  export type LiveMatchUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveMatch
+     */
+    select?: LiveMatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveMatch
+     */
+    omit?: LiveMatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveMatchInclude<ExtArgs> | null
+    /**
+     * The filter to search for the LiveMatch to update in case it exists.
+     */
+    where: LiveMatchWhereUniqueInput
+    /**
+     * In case the LiveMatch found by the `where` argument doesn't exist, create a new LiveMatch with this data.
+     */
+    create: XOR<LiveMatchCreateInput, LiveMatchUncheckedCreateInput>
+    /**
+     * In case the LiveMatch was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<LiveMatchUpdateInput, LiveMatchUncheckedUpdateInput>
+  }
+
+  /**
+   * LiveMatch delete
+   */
+  export type LiveMatchDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveMatch
+     */
+    select?: LiveMatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveMatch
+     */
+    omit?: LiveMatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveMatchInclude<ExtArgs> | null
+    /**
+     * Filter which LiveMatch to delete.
+     */
+    where: LiveMatchWhereUniqueInput
+  }
+
+  /**
+   * LiveMatch deleteMany
+   */
+  export type LiveMatchDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LiveMatches to delete
+     */
+    where?: LiveMatchWhereInput
+    /**
+     * Limit how many LiveMatches to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * LiveMatch without action
+   */
+  export type LiveMatchDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LiveMatch
+     */
+    select?: LiveMatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LiveMatch
+     */
+    omit?: LiveMatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LiveMatchInclude<ExtArgs> | null
   }
 
 
@@ -27219,6 +28480,20 @@ export namespace Prisma {
   export type GamehubBookingScalarFieldEnum = (typeof GamehubBookingScalarFieldEnum)[keyof typeof GamehubBookingScalarFieldEnum]
 
 
+  export const LiveMatchScalarFieldEnum: {
+    id: 'id',
+    bookingId: 'bookingId',
+    facilityId: 'facilityId',
+    sportType: 'sportType',
+    scoreData: 'scoreData',
+    status: 'status',
+    updatedAt: 'updatedAt',
+    createdAt: 'createdAt'
+  };
+
+  export type LiveMatchScalarFieldEnum = (typeof LiveMatchScalarFieldEnum)[keyof typeof LiveMatchScalarFieldEnum]
+
+
   export const GamehubBlockedSlotScalarFieldEnum: {
     id: 'id',
     blockDate: 'blockDate',
@@ -28474,6 +29749,7 @@ export namespace Prisma {
     reviews?: GamehubReviewListRelationFilter
     bookings?: GamehubBookingListRelationFilter
     blockedSlots?: GamehubBlockedSlotListRelationFilter
+    liveMatches?: LiveMatchListRelationFilter
   }
 
   export type GamehubFacilityOrderByWithRelationInput = {
@@ -28509,6 +29785,7 @@ export namespace Prisma {
     reviews?: GamehubReviewOrderByRelationAggregateInput
     bookings?: GamehubBookingOrderByRelationAggregateInput
     blockedSlots?: GamehubBlockedSlotOrderByRelationAggregateInput
+    liveMatches?: LiveMatchOrderByRelationAggregateInput
   }
 
   export type GamehubFacilityWhereUniqueInput = Prisma.AtLeast<{
@@ -28547,6 +29824,7 @@ export namespace Prisma {
     reviews?: GamehubReviewListRelationFilter
     bookings?: GamehubBookingListRelationFilter
     blockedSlots?: GamehubBlockedSlotListRelationFilter
+    liveMatches?: LiveMatchListRelationFilter
   }, "id">
 
   export type GamehubFacilityOrderByWithAggregationInput = {
@@ -28712,6 +29990,7 @@ export namespace Prisma {
     facilityId?: StringFilter<"GamehubBooking"> | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     facility?: XOR<GamehubFacilityScalarRelationFilter, GamehubFacilityWhereInput>
+    liveMatch?: XOR<LiveMatchNullableScalarRelationFilter, LiveMatchWhereInput> | null
   }
 
   export type GamehubBookingOrderByWithRelationInput = {
@@ -28732,6 +30011,7 @@ export namespace Prisma {
     facilityId?: SortOrder
     user?: UserOrderByWithRelationInput
     facility?: GamehubFacilityOrderByWithRelationInput
+    liveMatch?: LiveMatchOrderByWithRelationInput
   }
 
   export type GamehubBookingWhereUniqueInput = Prisma.AtLeast<{
@@ -28755,6 +30035,7 @@ export namespace Prisma {
     facilityId?: StringFilter<"GamehubBooking"> | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     facility?: XOR<GamehubFacilityScalarRelationFilter, GamehubFacilityWhereInput>
+    liveMatch?: XOR<LiveMatchNullableScalarRelationFilter, LiveMatchWhereInput> | null
   }, "id" | "transactionId">
 
   export type GamehubBookingOrderByWithAggregationInput = {
@@ -28799,6 +30080,79 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"GamehubBooking"> | Date | string
     userId?: StringWithAggregatesFilter<"GamehubBooking"> | string
     facilityId?: StringWithAggregatesFilter<"GamehubBooking"> | string
+  }
+
+  export type LiveMatchWhereInput = {
+    AND?: LiveMatchWhereInput | LiveMatchWhereInput[]
+    OR?: LiveMatchWhereInput[]
+    NOT?: LiveMatchWhereInput | LiveMatchWhereInput[]
+    id?: StringFilter<"LiveMatch"> | string
+    bookingId?: StringFilter<"LiveMatch"> | string
+    facilityId?: StringFilter<"LiveMatch"> | string
+    sportType?: StringFilter<"LiveMatch"> | string
+    scoreData?: StringFilter<"LiveMatch"> | string
+    status?: StringFilter<"LiveMatch"> | string
+    updatedAt?: DateTimeFilter<"LiveMatch"> | Date | string
+    createdAt?: DateTimeFilter<"LiveMatch"> | Date | string
+    booking?: XOR<GamehubBookingScalarRelationFilter, GamehubBookingWhereInput>
+    facility?: XOR<GamehubFacilityScalarRelationFilter, GamehubFacilityWhereInput>
+  }
+
+  export type LiveMatchOrderByWithRelationInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    facilityId?: SortOrder
+    sportType?: SortOrder
+    scoreData?: SortOrder
+    status?: SortOrder
+    updatedAt?: SortOrder
+    createdAt?: SortOrder
+    booking?: GamehubBookingOrderByWithRelationInput
+    facility?: GamehubFacilityOrderByWithRelationInput
+  }
+
+  export type LiveMatchWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    bookingId?: string
+    AND?: LiveMatchWhereInput | LiveMatchWhereInput[]
+    OR?: LiveMatchWhereInput[]
+    NOT?: LiveMatchWhereInput | LiveMatchWhereInput[]
+    facilityId?: StringFilter<"LiveMatch"> | string
+    sportType?: StringFilter<"LiveMatch"> | string
+    scoreData?: StringFilter<"LiveMatch"> | string
+    status?: StringFilter<"LiveMatch"> | string
+    updatedAt?: DateTimeFilter<"LiveMatch"> | Date | string
+    createdAt?: DateTimeFilter<"LiveMatch"> | Date | string
+    booking?: XOR<GamehubBookingScalarRelationFilter, GamehubBookingWhereInput>
+    facility?: XOR<GamehubFacilityScalarRelationFilter, GamehubFacilityWhereInput>
+  }, "id" | "bookingId">
+
+  export type LiveMatchOrderByWithAggregationInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    facilityId?: SortOrder
+    sportType?: SortOrder
+    scoreData?: SortOrder
+    status?: SortOrder
+    updatedAt?: SortOrder
+    createdAt?: SortOrder
+    _count?: LiveMatchCountOrderByAggregateInput
+    _max?: LiveMatchMaxOrderByAggregateInput
+    _min?: LiveMatchMinOrderByAggregateInput
+  }
+
+  export type LiveMatchScalarWhereWithAggregatesInput = {
+    AND?: LiveMatchScalarWhereWithAggregatesInput | LiveMatchScalarWhereWithAggregatesInput[]
+    OR?: LiveMatchScalarWhereWithAggregatesInput[]
+    NOT?: LiveMatchScalarWhereWithAggregatesInput | LiveMatchScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"LiveMatch"> | string
+    bookingId?: StringWithAggregatesFilter<"LiveMatch"> | string
+    facilityId?: StringWithAggregatesFilter<"LiveMatch"> | string
+    sportType?: StringWithAggregatesFilter<"LiveMatch"> | string
+    scoreData?: StringWithAggregatesFilter<"LiveMatch"> | string
+    status?: StringWithAggregatesFilter<"LiveMatch"> | string
+    updatedAt?: DateTimeWithAggregatesFilter<"LiveMatch"> | Date | string
+    createdAt?: DateTimeWithAggregatesFilter<"LiveMatch"> | Date | string
   }
 
   export type GamehubBlockedSlotWhereInput = {
@@ -30425,6 +31779,7 @@ export namespace Prisma {
     reviews?: GamehubReviewCreateNestedManyWithoutFacilityInput
     bookings?: GamehubBookingCreateNestedManyWithoutFacilityInput
     blockedSlots?: GamehubBlockedSlotCreateNestedManyWithoutFacilityInput
+    liveMatches?: LiveMatchCreateNestedManyWithoutFacilityInput
   }
 
   export type GamehubFacilityUncheckedCreateInput = {
@@ -30459,6 +31814,7 @@ export namespace Prisma {
     reviews?: GamehubReviewUncheckedCreateNestedManyWithoutFacilityInput
     bookings?: GamehubBookingUncheckedCreateNestedManyWithoutFacilityInput
     blockedSlots?: GamehubBlockedSlotUncheckedCreateNestedManyWithoutFacilityInput
+    liveMatches?: LiveMatchUncheckedCreateNestedManyWithoutFacilityInput
   }
 
   export type GamehubFacilityUpdateInput = {
@@ -30493,6 +31849,7 @@ export namespace Prisma {
     reviews?: GamehubReviewUpdateManyWithoutFacilityNestedInput
     bookings?: GamehubBookingUpdateManyWithoutFacilityNestedInput
     blockedSlots?: GamehubBlockedSlotUpdateManyWithoutFacilityNestedInput
+    liveMatches?: LiveMatchUpdateManyWithoutFacilityNestedInput
   }
 
   export type GamehubFacilityUncheckedUpdateInput = {
@@ -30527,6 +31884,7 @@ export namespace Prisma {
     reviews?: GamehubReviewUncheckedUpdateManyWithoutFacilityNestedInput
     bookings?: GamehubBookingUncheckedUpdateManyWithoutFacilityNestedInput
     blockedSlots?: GamehubBlockedSlotUncheckedUpdateManyWithoutFacilityNestedInput
+    liveMatches?: LiveMatchUncheckedUpdateManyWithoutFacilityNestedInput
   }
 
   export type GamehubFacilityCreateManyInput = {
@@ -30713,6 +32071,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutGamehubBookingsInput
     facility: GamehubFacilityCreateNestedOneWithoutBookingsInput
+    liveMatch?: LiveMatchCreateNestedOneWithoutBookingInput
   }
 
   export type GamehubBookingUncheckedCreateInput = {
@@ -30731,6 +32090,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     userId: string
     facilityId: string
+    liveMatch?: LiveMatchUncheckedCreateNestedOneWithoutBookingInput
   }
 
   export type GamehubBookingUpdateInput = {
@@ -30749,6 +32109,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutGamehubBookingsNestedInput
     facility?: GamehubFacilityUpdateOneRequiredWithoutBookingsNestedInput
+    liveMatch?: LiveMatchUpdateOneWithoutBookingNestedInput
   }
 
   export type GamehubBookingUncheckedUpdateInput = {
@@ -30767,6 +32128,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
     facilityId?: StringFieldUpdateOperationsInput | string
+    liveMatch?: LiveMatchUncheckedUpdateOneWithoutBookingNestedInput
   }
 
   export type GamehubBookingCreateManyInput = {
@@ -30819,6 +32181,81 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
     facilityId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type LiveMatchCreateInput = {
+    id?: string
+    sportType: string
+    scoreData?: string
+    status?: string
+    updatedAt?: Date | string
+    createdAt?: Date | string
+    booking: GamehubBookingCreateNestedOneWithoutLiveMatchInput
+    facility: GamehubFacilityCreateNestedOneWithoutLiveMatchesInput
+  }
+
+  export type LiveMatchUncheckedCreateInput = {
+    id?: string
+    bookingId: string
+    facilityId: string
+    sportType: string
+    scoreData?: string
+    status?: string
+    updatedAt?: Date | string
+    createdAt?: Date | string
+  }
+
+  export type LiveMatchUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sportType?: StringFieldUpdateOperationsInput | string
+    scoreData?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    booking?: GamehubBookingUpdateOneRequiredWithoutLiveMatchNestedInput
+    facility?: GamehubFacilityUpdateOneRequiredWithoutLiveMatchesNestedInput
+  }
+
+  export type LiveMatchUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    bookingId?: StringFieldUpdateOperationsInput | string
+    facilityId?: StringFieldUpdateOperationsInput | string
+    sportType?: StringFieldUpdateOperationsInput | string
+    scoreData?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LiveMatchCreateManyInput = {
+    id?: string
+    bookingId: string
+    facilityId: string
+    sportType: string
+    scoreData?: string
+    status?: string
+    updatedAt?: Date | string
+    createdAt?: Date | string
+  }
+
+  export type LiveMatchUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sportType?: StringFieldUpdateOperationsInput | string
+    scoreData?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LiveMatchUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    bookingId?: StringFieldUpdateOperationsInput | string
+    facilityId?: StringFieldUpdateOperationsInput | string
+    sportType?: StringFieldUpdateOperationsInput | string
+    scoreData?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type GamehubBlockedSlotCreateInput = {
@@ -32274,11 +33711,21 @@ export namespace Prisma {
     none?: GamehubBlockedSlotWhereInput
   }
 
+  export type LiveMatchListRelationFilter = {
+    every?: LiveMatchWhereInput
+    some?: LiveMatchWhereInput
+    none?: LiveMatchWhereInput
+  }
+
   export type GamehubReviewOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type GamehubBlockedSlotOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type LiveMatchOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -32435,6 +33882,11 @@ export namespace Prisma {
     helpful?: SortOrder
   }
 
+  export type LiveMatchNullableScalarRelationFilter = {
+    is?: LiveMatchWhereInput | null
+    isNot?: LiveMatchWhereInput | null
+  }
+
   export type GamehubBookingCountOrderByAggregateInput = {
     id?: SortOrder
     bookingDate?: SortOrder
@@ -32497,6 +33949,44 @@ export namespace Prisma {
   export type GamehubBookingSumOrderByAggregateInput = {
     totalAmount?: SortOrder
     discount?: SortOrder
+  }
+
+  export type GamehubBookingScalarRelationFilter = {
+    is?: GamehubBookingWhereInput
+    isNot?: GamehubBookingWhereInput
+  }
+
+  export type LiveMatchCountOrderByAggregateInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    facilityId?: SortOrder
+    sportType?: SortOrder
+    scoreData?: SortOrder
+    status?: SortOrder
+    updatedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type LiveMatchMaxOrderByAggregateInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    facilityId?: SortOrder
+    sportType?: SortOrder
+    scoreData?: SortOrder
+    status?: SortOrder
+    updatedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type LiveMatchMinOrderByAggregateInput = {
+    id?: SortOrder
+    bookingId?: SortOrder
+    facilityId?: SortOrder
+    sportType?: SortOrder
+    scoreData?: SortOrder
+    status?: SortOrder
+    updatedAt?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type GamehubBlockedSlotCountOrderByAggregateInput = {
@@ -33815,6 +35305,13 @@ export namespace Prisma {
     connect?: GamehubBlockedSlotWhereUniqueInput | GamehubBlockedSlotWhereUniqueInput[]
   }
 
+  export type LiveMatchCreateNestedManyWithoutFacilityInput = {
+    create?: XOR<LiveMatchCreateWithoutFacilityInput, LiveMatchUncheckedCreateWithoutFacilityInput> | LiveMatchCreateWithoutFacilityInput[] | LiveMatchUncheckedCreateWithoutFacilityInput[]
+    connectOrCreate?: LiveMatchCreateOrConnectWithoutFacilityInput | LiveMatchCreateOrConnectWithoutFacilityInput[]
+    createMany?: LiveMatchCreateManyFacilityInputEnvelope
+    connect?: LiveMatchWhereUniqueInput | LiveMatchWhereUniqueInput[]
+  }
+
   export type GamehubReviewUncheckedCreateNestedManyWithoutFacilityInput = {
     create?: XOR<GamehubReviewCreateWithoutFacilityInput, GamehubReviewUncheckedCreateWithoutFacilityInput> | GamehubReviewCreateWithoutFacilityInput[] | GamehubReviewUncheckedCreateWithoutFacilityInput[]
     connectOrCreate?: GamehubReviewCreateOrConnectWithoutFacilityInput | GamehubReviewCreateOrConnectWithoutFacilityInput[]
@@ -33834,6 +35331,13 @@ export namespace Prisma {
     connectOrCreate?: GamehubBlockedSlotCreateOrConnectWithoutFacilityInput | GamehubBlockedSlotCreateOrConnectWithoutFacilityInput[]
     createMany?: GamehubBlockedSlotCreateManyFacilityInputEnvelope
     connect?: GamehubBlockedSlotWhereUniqueInput | GamehubBlockedSlotWhereUniqueInput[]
+  }
+
+  export type LiveMatchUncheckedCreateNestedManyWithoutFacilityInput = {
+    create?: XOR<LiveMatchCreateWithoutFacilityInput, LiveMatchUncheckedCreateWithoutFacilityInput> | LiveMatchCreateWithoutFacilityInput[] | LiveMatchUncheckedCreateWithoutFacilityInput[]
+    connectOrCreate?: LiveMatchCreateOrConnectWithoutFacilityInput | LiveMatchCreateOrConnectWithoutFacilityInput[]
+    createMany?: LiveMatchCreateManyFacilityInputEnvelope
+    connect?: LiveMatchWhereUniqueInput | LiveMatchWhereUniqueInput[]
   }
 
   export type UserUpdateOneWithoutGamehubFacilitiesNestedInput = {
@@ -33888,6 +35392,20 @@ export namespace Prisma {
     deleteMany?: GamehubBlockedSlotScalarWhereInput | GamehubBlockedSlotScalarWhereInput[]
   }
 
+  export type LiveMatchUpdateManyWithoutFacilityNestedInput = {
+    create?: XOR<LiveMatchCreateWithoutFacilityInput, LiveMatchUncheckedCreateWithoutFacilityInput> | LiveMatchCreateWithoutFacilityInput[] | LiveMatchUncheckedCreateWithoutFacilityInput[]
+    connectOrCreate?: LiveMatchCreateOrConnectWithoutFacilityInput | LiveMatchCreateOrConnectWithoutFacilityInput[]
+    upsert?: LiveMatchUpsertWithWhereUniqueWithoutFacilityInput | LiveMatchUpsertWithWhereUniqueWithoutFacilityInput[]
+    createMany?: LiveMatchCreateManyFacilityInputEnvelope
+    set?: LiveMatchWhereUniqueInput | LiveMatchWhereUniqueInput[]
+    disconnect?: LiveMatchWhereUniqueInput | LiveMatchWhereUniqueInput[]
+    delete?: LiveMatchWhereUniqueInput | LiveMatchWhereUniqueInput[]
+    connect?: LiveMatchWhereUniqueInput | LiveMatchWhereUniqueInput[]
+    update?: LiveMatchUpdateWithWhereUniqueWithoutFacilityInput | LiveMatchUpdateWithWhereUniqueWithoutFacilityInput[]
+    updateMany?: LiveMatchUpdateManyWithWhereWithoutFacilityInput | LiveMatchUpdateManyWithWhereWithoutFacilityInput[]
+    deleteMany?: LiveMatchScalarWhereInput | LiveMatchScalarWhereInput[]
+  }
+
   export type GamehubReviewUncheckedUpdateManyWithoutFacilityNestedInput = {
     create?: XOR<GamehubReviewCreateWithoutFacilityInput, GamehubReviewUncheckedCreateWithoutFacilityInput> | GamehubReviewCreateWithoutFacilityInput[] | GamehubReviewUncheckedCreateWithoutFacilityInput[]
     connectOrCreate?: GamehubReviewCreateOrConnectWithoutFacilityInput | GamehubReviewCreateOrConnectWithoutFacilityInput[]
@@ -33930,6 +35448,20 @@ export namespace Prisma {
     deleteMany?: GamehubBlockedSlotScalarWhereInput | GamehubBlockedSlotScalarWhereInput[]
   }
 
+  export type LiveMatchUncheckedUpdateManyWithoutFacilityNestedInput = {
+    create?: XOR<LiveMatchCreateWithoutFacilityInput, LiveMatchUncheckedCreateWithoutFacilityInput> | LiveMatchCreateWithoutFacilityInput[] | LiveMatchUncheckedCreateWithoutFacilityInput[]
+    connectOrCreate?: LiveMatchCreateOrConnectWithoutFacilityInput | LiveMatchCreateOrConnectWithoutFacilityInput[]
+    upsert?: LiveMatchUpsertWithWhereUniqueWithoutFacilityInput | LiveMatchUpsertWithWhereUniqueWithoutFacilityInput[]
+    createMany?: LiveMatchCreateManyFacilityInputEnvelope
+    set?: LiveMatchWhereUniqueInput | LiveMatchWhereUniqueInput[]
+    disconnect?: LiveMatchWhereUniqueInput | LiveMatchWhereUniqueInput[]
+    delete?: LiveMatchWhereUniqueInput | LiveMatchWhereUniqueInput[]
+    connect?: LiveMatchWhereUniqueInput | LiveMatchWhereUniqueInput[]
+    update?: LiveMatchUpdateWithWhereUniqueWithoutFacilityInput | LiveMatchUpdateWithWhereUniqueWithoutFacilityInput[]
+    updateMany?: LiveMatchUpdateManyWithWhereWithoutFacilityInput | LiveMatchUpdateManyWithWhereWithoutFacilityInput[]
+    deleteMany?: LiveMatchScalarWhereInput | LiveMatchScalarWhereInput[]
+  }
+
   export type GamehubFacilityCreateNestedOneWithoutReviewsInput = {
     create?: XOR<GamehubFacilityCreateWithoutReviewsInput, GamehubFacilityUncheckedCreateWithoutReviewsInput>
     connectOrCreate?: GamehubFacilityCreateOrConnectWithoutReviewsInput
@@ -33956,6 +35488,18 @@ export namespace Prisma {
     connect?: GamehubFacilityWhereUniqueInput
   }
 
+  export type LiveMatchCreateNestedOneWithoutBookingInput = {
+    create?: XOR<LiveMatchCreateWithoutBookingInput, LiveMatchUncheckedCreateWithoutBookingInput>
+    connectOrCreate?: LiveMatchCreateOrConnectWithoutBookingInput
+    connect?: LiveMatchWhereUniqueInput
+  }
+
+  export type LiveMatchUncheckedCreateNestedOneWithoutBookingInput = {
+    create?: XOR<LiveMatchCreateWithoutBookingInput, LiveMatchUncheckedCreateWithoutBookingInput>
+    connectOrCreate?: LiveMatchCreateOrConnectWithoutBookingInput
+    connect?: LiveMatchWhereUniqueInput
+  }
+
   export type UserUpdateOneRequiredWithoutGamehubBookingsNestedInput = {
     create?: XOR<UserCreateWithoutGamehubBookingsInput, UserUncheckedCreateWithoutGamehubBookingsInput>
     connectOrCreate?: UserCreateOrConnectWithoutGamehubBookingsInput
@@ -33970,6 +35514,54 @@ export namespace Prisma {
     upsert?: GamehubFacilityUpsertWithoutBookingsInput
     connect?: GamehubFacilityWhereUniqueInput
     update?: XOR<XOR<GamehubFacilityUpdateToOneWithWhereWithoutBookingsInput, GamehubFacilityUpdateWithoutBookingsInput>, GamehubFacilityUncheckedUpdateWithoutBookingsInput>
+  }
+
+  export type LiveMatchUpdateOneWithoutBookingNestedInput = {
+    create?: XOR<LiveMatchCreateWithoutBookingInput, LiveMatchUncheckedCreateWithoutBookingInput>
+    connectOrCreate?: LiveMatchCreateOrConnectWithoutBookingInput
+    upsert?: LiveMatchUpsertWithoutBookingInput
+    disconnect?: LiveMatchWhereInput | boolean
+    delete?: LiveMatchWhereInput | boolean
+    connect?: LiveMatchWhereUniqueInput
+    update?: XOR<XOR<LiveMatchUpdateToOneWithWhereWithoutBookingInput, LiveMatchUpdateWithoutBookingInput>, LiveMatchUncheckedUpdateWithoutBookingInput>
+  }
+
+  export type LiveMatchUncheckedUpdateOneWithoutBookingNestedInput = {
+    create?: XOR<LiveMatchCreateWithoutBookingInput, LiveMatchUncheckedCreateWithoutBookingInput>
+    connectOrCreate?: LiveMatchCreateOrConnectWithoutBookingInput
+    upsert?: LiveMatchUpsertWithoutBookingInput
+    disconnect?: LiveMatchWhereInput | boolean
+    delete?: LiveMatchWhereInput | boolean
+    connect?: LiveMatchWhereUniqueInput
+    update?: XOR<XOR<LiveMatchUpdateToOneWithWhereWithoutBookingInput, LiveMatchUpdateWithoutBookingInput>, LiveMatchUncheckedUpdateWithoutBookingInput>
+  }
+
+  export type GamehubBookingCreateNestedOneWithoutLiveMatchInput = {
+    create?: XOR<GamehubBookingCreateWithoutLiveMatchInput, GamehubBookingUncheckedCreateWithoutLiveMatchInput>
+    connectOrCreate?: GamehubBookingCreateOrConnectWithoutLiveMatchInput
+    connect?: GamehubBookingWhereUniqueInput
+  }
+
+  export type GamehubFacilityCreateNestedOneWithoutLiveMatchesInput = {
+    create?: XOR<GamehubFacilityCreateWithoutLiveMatchesInput, GamehubFacilityUncheckedCreateWithoutLiveMatchesInput>
+    connectOrCreate?: GamehubFacilityCreateOrConnectWithoutLiveMatchesInput
+    connect?: GamehubFacilityWhereUniqueInput
+  }
+
+  export type GamehubBookingUpdateOneRequiredWithoutLiveMatchNestedInput = {
+    create?: XOR<GamehubBookingCreateWithoutLiveMatchInput, GamehubBookingUncheckedCreateWithoutLiveMatchInput>
+    connectOrCreate?: GamehubBookingCreateOrConnectWithoutLiveMatchInput
+    upsert?: GamehubBookingUpsertWithoutLiveMatchInput
+    connect?: GamehubBookingWhereUniqueInput
+    update?: XOR<XOR<GamehubBookingUpdateToOneWithWhereWithoutLiveMatchInput, GamehubBookingUpdateWithoutLiveMatchInput>, GamehubBookingUncheckedUpdateWithoutLiveMatchInput>
+  }
+
+  export type GamehubFacilityUpdateOneRequiredWithoutLiveMatchesNestedInput = {
+    create?: XOR<GamehubFacilityCreateWithoutLiveMatchesInput, GamehubFacilityUncheckedCreateWithoutLiveMatchesInput>
+    connectOrCreate?: GamehubFacilityCreateOrConnectWithoutLiveMatchesInput
+    upsert?: GamehubFacilityUpsertWithoutLiveMatchesInput
+    connect?: GamehubFacilityWhereUniqueInput
+    update?: XOR<XOR<GamehubFacilityUpdateToOneWithWhereWithoutLiveMatchesInput, GamehubFacilityUpdateWithoutLiveMatchesInput>, GamehubFacilityUncheckedUpdateWithoutLiveMatchesInput>
   }
 
   export type GamehubFacilityCreateNestedOneWithoutBlockedSlotsInput = {
@@ -34474,6 +36066,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     facility: GamehubFacilityCreateNestedOneWithoutBookingsInput
+    liveMatch?: LiveMatchCreateNestedOneWithoutBookingInput
   }
 
   export type GamehubBookingUncheckedCreateWithoutUserInput = {
@@ -34491,6 +36084,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     facilityId: string
+    liveMatch?: LiveMatchUncheckedCreateNestedOneWithoutBookingInput
   }
 
   export type GamehubBookingCreateOrConnectWithoutUserInput = {
@@ -34588,6 +36182,7 @@ export namespace Prisma {
     reviews?: GamehubReviewCreateNestedManyWithoutFacilityInput
     bookings?: GamehubBookingCreateNestedManyWithoutFacilityInput
     blockedSlots?: GamehubBlockedSlotCreateNestedManyWithoutFacilityInput
+    liveMatches?: LiveMatchCreateNestedManyWithoutFacilityInput
   }
 
   export type GamehubFacilityUncheckedCreateWithoutPartnerInput = {
@@ -34621,6 +36216,7 @@ export namespace Prisma {
     reviews?: GamehubReviewUncheckedCreateNestedManyWithoutFacilityInput
     bookings?: GamehubBookingUncheckedCreateNestedManyWithoutFacilityInput
     blockedSlots?: GamehubBlockedSlotUncheckedCreateNestedManyWithoutFacilityInput
+    liveMatches?: LiveMatchUncheckedCreateNestedManyWithoutFacilityInput
   }
 
   export type GamehubFacilityCreateOrConnectWithoutPartnerInput = {
@@ -37494,6 +39090,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutGamehubBookingsInput
+    liveMatch?: LiveMatchCreateNestedOneWithoutBookingInput
   }
 
   export type GamehubBookingUncheckedCreateWithoutFacilityInput = {
@@ -37511,6 +39108,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     userId: string
+    liveMatch?: LiveMatchUncheckedCreateNestedOneWithoutBookingInput
   }
 
   export type GamehubBookingCreateOrConnectWithoutFacilityInput = {
@@ -37548,6 +39146,36 @@ export namespace Prisma {
 
   export type GamehubBlockedSlotCreateManyFacilityInputEnvelope = {
     data: GamehubBlockedSlotCreateManyFacilityInput | GamehubBlockedSlotCreateManyFacilityInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type LiveMatchCreateWithoutFacilityInput = {
+    id?: string
+    sportType: string
+    scoreData?: string
+    status?: string
+    updatedAt?: Date | string
+    createdAt?: Date | string
+    booking: GamehubBookingCreateNestedOneWithoutLiveMatchInput
+  }
+
+  export type LiveMatchUncheckedCreateWithoutFacilityInput = {
+    id?: string
+    bookingId: string
+    sportType: string
+    scoreData?: string
+    status?: string
+    updatedAt?: Date | string
+    createdAt?: Date | string
+  }
+
+  export type LiveMatchCreateOrConnectWithoutFacilityInput = {
+    where: LiveMatchWhereUniqueInput
+    create: XOR<LiveMatchCreateWithoutFacilityInput, LiveMatchUncheckedCreateWithoutFacilityInput>
+  }
+
+  export type LiveMatchCreateManyFacilityInputEnvelope = {
+    data: LiveMatchCreateManyFacilityInput | LiveMatchCreateManyFacilityInput[]
     skipDuplicates?: boolean
   }
 
@@ -37681,6 +39309,36 @@ export namespace Prisma {
     facilityId?: StringFilter<"GamehubBlockedSlot"> | string
   }
 
+  export type LiveMatchUpsertWithWhereUniqueWithoutFacilityInput = {
+    where: LiveMatchWhereUniqueInput
+    update: XOR<LiveMatchUpdateWithoutFacilityInput, LiveMatchUncheckedUpdateWithoutFacilityInput>
+    create: XOR<LiveMatchCreateWithoutFacilityInput, LiveMatchUncheckedCreateWithoutFacilityInput>
+  }
+
+  export type LiveMatchUpdateWithWhereUniqueWithoutFacilityInput = {
+    where: LiveMatchWhereUniqueInput
+    data: XOR<LiveMatchUpdateWithoutFacilityInput, LiveMatchUncheckedUpdateWithoutFacilityInput>
+  }
+
+  export type LiveMatchUpdateManyWithWhereWithoutFacilityInput = {
+    where: LiveMatchScalarWhereInput
+    data: XOR<LiveMatchUpdateManyMutationInput, LiveMatchUncheckedUpdateManyWithoutFacilityInput>
+  }
+
+  export type LiveMatchScalarWhereInput = {
+    AND?: LiveMatchScalarWhereInput | LiveMatchScalarWhereInput[]
+    OR?: LiveMatchScalarWhereInput[]
+    NOT?: LiveMatchScalarWhereInput | LiveMatchScalarWhereInput[]
+    id?: StringFilter<"LiveMatch"> | string
+    bookingId?: StringFilter<"LiveMatch"> | string
+    facilityId?: StringFilter<"LiveMatch"> | string
+    sportType?: StringFilter<"LiveMatch"> | string
+    scoreData?: StringFilter<"LiveMatch"> | string
+    status?: StringFilter<"LiveMatch"> | string
+    updatedAt?: DateTimeFilter<"LiveMatch"> | Date | string
+    createdAt?: DateTimeFilter<"LiveMatch"> | Date | string
+  }
+
   export type GamehubFacilityCreateWithoutReviewsInput = {
     id?: string
     name: string
@@ -37712,6 +39370,7 @@ export namespace Prisma {
     partner?: UserCreateNestedOneWithoutGamehubFacilitiesInput
     bookings?: GamehubBookingCreateNestedManyWithoutFacilityInput
     blockedSlots?: GamehubBlockedSlotCreateNestedManyWithoutFacilityInput
+    liveMatches?: LiveMatchCreateNestedManyWithoutFacilityInput
   }
 
   export type GamehubFacilityUncheckedCreateWithoutReviewsInput = {
@@ -37745,6 +39404,7 @@ export namespace Prisma {
     partnerId?: string | null
     bookings?: GamehubBookingUncheckedCreateNestedManyWithoutFacilityInput
     blockedSlots?: GamehubBlockedSlotUncheckedCreateNestedManyWithoutFacilityInput
+    liveMatches?: LiveMatchUncheckedCreateNestedManyWithoutFacilityInput
   }
 
   export type GamehubFacilityCreateOrConnectWithoutReviewsInput = {
@@ -37794,6 +39454,7 @@ export namespace Prisma {
     partner?: UserUpdateOneWithoutGamehubFacilitiesNestedInput
     bookings?: GamehubBookingUpdateManyWithoutFacilityNestedInput
     blockedSlots?: GamehubBlockedSlotUpdateManyWithoutFacilityNestedInput
+    liveMatches?: LiveMatchUpdateManyWithoutFacilityNestedInput
   }
 
   export type GamehubFacilityUncheckedUpdateWithoutReviewsInput = {
@@ -37827,6 +39488,7 @@ export namespace Prisma {
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
     bookings?: GamehubBookingUncheckedUpdateManyWithoutFacilityNestedInput
     blockedSlots?: GamehubBlockedSlotUncheckedUpdateManyWithoutFacilityNestedInput
+    liveMatches?: LiveMatchUncheckedUpdateManyWithoutFacilityNestedInput
   }
 
   export type UserCreateWithoutGamehubBookingsInput = {
@@ -37909,6 +39571,7 @@ export namespace Prisma {
     partner?: UserCreateNestedOneWithoutGamehubFacilitiesInput
     reviews?: GamehubReviewCreateNestedManyWithoutFacilityInput
     blockedSlots?: GamehubBlockedSlotCreateNestedManyWithoutFacilityInput
+    liveMatches?: LiveMatchCreateNestedManyWithoutFacilityInput
   }
 
   export type GamehubFacilityUncheckedCreateWithoutBookingsInput = {
@@ -37942,11 +39605,37 @@ export namespace Prisma {
     partnerId?: string | null
     reviews?: GamehubReviewUncheckedCreateNestedManyWithoutFacilityInput
     blockedSlots?: GamehubBlockedSlotUncheckedCreateNestedManyWithoutFacilityInput
+    liveMatches?: LiveMatchUncheckedCreateNestedManyWithoutFacilityInput
   }
 
   export type GamehubFacilityCreateOrConnectWithoutBookingsInput = {
     where: GamehubFacilityWhereUniqueInput
     create: XOR<GamehubFacilityCreateWithoutBookingsInput, GamehubFacilityUncheckedCreateWithoutBookingsInput>
+  }
+
+  export type LiveMatchCreateWithoutBookingInput = {
+    id?: string
+    sportType: string
+    scoreData?: string
+    status?: string
+    updatedAt?: Date | string
+    createdAt?: Date | string
+    facility: GamehubFacilityCreateNestedOneWithoutLiveMatchesInput
+  }
+
+  export type LiveMatchUncheckedCreateWithoutBookingInput = {
+    id?: string
+    facilityId: string
+    sportType: string
+    scoreData?: string
+    status?: string
+    updatedAt?: Date | string
+    createdAt?: Date | string
+  }
+
+  export type LiveMatchCreateOrConnectWithoutBookingInput = {
+    where: LiveMatchWhereUniqueInput
+    create: XOR<LiveMatchCreateWithoutBookingInput, LiveMatchUncheckedCreateWithoutBookingInput>
   }
 
   export type UserUpsertWithoutGamehubBookingsInput = {
@@ -38046,6 +39735,7 @@ export namespace Prisma {
     partner?: UserUpdateOneWithoutGamehubFacilitiesNestedInput
     reviews?: GamehubReviewUpdateManyWithoutFacilityNestedInput
     blockedSlots?: GamehubBlockedSlotUpdateManyWithoutFacilityNestedInput
+    liveMatches?: LiveMatchUpdateManyWithoutFacilityNestedInput
   }
 
   export type GamehubFacilityUncheckedUpdateWithoutBookingsInput = {
@@ -38078,6 +39768,278 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
     reviews?: GamehubReviewUncheckedUpdateManyWithoutFacilityNestedInput
+    blockedSlots?: GamehubBlockedSlotUncheckedUpdateManyWithoutFacilityNestedInput
+    liveMatches?: LiveMatchUncheckedUpdateManyWithoutFacilityNestedInput
+  }
+
+  export type LiveMatchUpsertWithoutBookingInput = {
+    update: XOR<LiveMatchUpdateWithoutBookingInput, LiveMatchUncheckedUpdateWithoutBookingInput>
+    create: XOR<LiveMatchCreateWithoutBookingInput, LiveMatchUncheckedCreateWithoutBookingInput>
+    where?: LiveMatchWhereInput
+  }
+
+  export type LiveMatchUpdateToOneWithWhereWithoutBookingInput = {
+    where?: LiveMatchWhereInput
+    data: XOR<LiveMatchUpdateWithoutBookingInput, LiveMatchUncheckedUpdateWithoutBookingInput>
+  }
+
+  export type LiveMatchUpdateWithoutBookingInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sportType?: StringFieldUpdateOperationsInput | string
+    scoreData?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    facility?: GamehubFacilityUpdateOneRequiredWithoutLiveMatchesNestedInput
+  }
+
+  export type LiveMatchUncheckedUpdateWithoutBookingInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    facilityId?: StringFieldUpdateOperationsInput | string
+    sportType?: StringFieldUpdateOperationsInput | string
+    scoreData?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GamehubBookingCreateWithoutLiveMatchInput = {
+    id?: string
+    bookingDate: Date | string
+    slotLabel: string
+    totalAmount: number
+    currency?: string
+    status?: string
+    paymentMethod?: string
+    paymentStatus?: string
+    transactionId: string
+    couponCode?: string | null
+    discount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutGamehubBookingsInput
+    facility: GamehubFacilityCreateNestedOneWithoutBookingsInput
+  }
+
+  export type GamehubBookingUncheckedCreateWithoutLiveMatchInput = {
+    id?: string
+    bookingDate: Date | string
+    slotLabel: string
+    totalAmount: number
+    currency?: string
+    status?: string
+    paymentMethod?: string
+    paymentStatus?: string
+    transactionId: string
+    couponCode?: string | null
+    discount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    userId: string
+    facilityId: string
+  }
+
+  export type GamehubBookingCreateOrConnectWithoutLiveMatchInput = {
+    where: GamehubBookingWhereUniqueInput
+    create: XOR<GamehubBookingCreateWithoutLiveMatchInput, GamehubBookingUncheckedCreateWithoutLiveMatchInput>
+  }
+
+  export type GamehubFacilityCreateWithoutLiveMatchesInput = {
+    id?: string
+    name: string
+    type: string
+    location: string
+    venue: string
+    distance?: string
+    rating?: number
+    reviewsCount?: number
+    pricePerHour?: number
+    unit?: string
+    priceRange?: string
+    image: string
+    description?: string
+    phone?: string
+    openHours?: string
+    status?: string
+    pricingRules?: string
+    amenities?: string
+    features?: string
+    tags?: string
+    gallery?: string
+    battleModes?: string
+    slotTemplate?: string
+    availableSports?: string
+    terms?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    partner?: UserCreateNestedOneWithoutGamehubFacilitiesInput
+    reviews?: GamehubReviewCreateNestedManyWithoutFacilityInput
+    bookings?: GamehubBookingCreateNestedManyWithoutFacilityInput
+    blockedSlots?: GamehubBlockedSlotCreateNestedManyWithoutFacilityInput
+  }
+
+  export type GamehubFacilityUncheckedCreateWithoutLiveMatchesInput = {
+    id?: string
+    name: string
+    type: string
+    location: string
+    venue: string
+    distance?: string
+    rating?: number
+    reviewsCount?: number
+    pricePerHour?: number
+    unit?: string
+    priceRange?: string
+    image: string
+    description?: string
+    phone?: string
+    openHours?: string
+    status?: string
+    pricingRules?: string
+    amenities?: string
+    features?: string
+    tags?: string
+    gallery?: string
+    battleModes?: string
+    slotTemplate?: string
+    availableSports?: string
+    terms?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    partnerId?: string | null
+    reviews?: GamehubReviewUncheckedCreateNestedManyWithoutFacilityInput
+    bookings?: GamehubBookingUncheckedCreateNestedManyWithoutFacilityInput
+    blockedSlots?: GamehubBlockedSlotUncheckedCreateNestedManyWithoutFacilityInput
+  }
+
+  export type GamehubFacilityCreateOrConnectWithoutLiveMatchesInput = {
+    where: GamehubFacilityWhereUniqueInput
+    create: XOR<GamehubFacilityCreateWithoutLiveMatchesInput, GamehubFacilityUncheckedCreateWithoutLiveMatchesInput>
+  }
+
+  export type GamehubBookingUpsertWithoutLiveMatchInput = {
+    update: XOR<GamehubBookingUpdateWithoutLiveMatchInput, GamehubBookingUncheckedUpdateWithoutLiveMatchInput>
+    create: XOR<GamehubBookingCreateWithoutLiveMatchInput, GamehubBookingUncheckedCreateWithoutLiveMatchInput>
+    where?: GamehubBookingWhereInput
+  }
+
+  export type GamehubBookingUpdateToOneWithWhereWithoutLiveMatchInput = {
+    where?: GamehubBookingWhereInput
+    data: XOR<GamehubBookingUpdateWithoutLiveMatchInput, GamehubBookingUncheckedUpdateWithoutLiveMatchInput>
+  }
+
+  export type GamehubBookingUpdateWithoutLiveMatchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    slotLabel?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    transactionId?: StringFieldUpdateOperationsInput | string
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutGamehubBookingsNestedInput
+    facility?: GamehubFacilityUpdateOneRequiredWithoutBookingsNestedInput
+  }
+
+  export type GamehubBookingUncheckedUpdateWithoutLiveMatchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    slotLabel?: StringFieldUpdateOperationsInput | string
+    totalAmount?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    transactionId?: StringFieldUpdateOperationsInput | string
+    couponCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discount?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+    facilityId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GamehubFacilityUpsertWithoutLiveMatchesInput = {
+    update: XOR<GamehubFacilityUpdateWithoutLiveMatchesInput, GamehubFacilityUncheckedUpdateWithoutLiveMatchesInput>
+    create: XOR<GamehubFacilityCreateWithoutLiveMatchesInput, GamehubFacilityUncheckedCreateWithoutLiveMatchesInput>
+    where?: GamehubFacilityWhereInput
+  }
+
+  export type GamehubFacilityUpdateToOneWithWhereWithoutLiveMatchesInput = {
+    where?: GamehubFacilityWhereInput
+    data: XOR<GamehubFacilityUpdateWithoutLiveMatchesInput, GamehubFacilityUncheckedUpdateWithoutLiveMatchesInput>
+  }
+
+  export type GamehubFacilityUpdateWithoutLiveMatchesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    venue?: StringFieldUpdateOperationsInput | string
+    distance?: StringFieldUpdateOperationsInput | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewsCount?: IntFieldUpdateOperationsInput | number
+    pricePerHour?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    priceRange?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    openHours?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    pricingRules?: StringFieldUpdateOperationsInput | string
+    amenities?: StringFieldUpdateOperationsInput | string
+    features?: StringFieldUpdateOperationsInput | string
+    tags?: StringFieldUpdateOperationsInput | string
+    gallery?: StringFieldUpdateOperationsInput | string
+    battleModes?: StringFieldUpdateOperationsInput | string
+    slotTemplate?: StringFieldUpdateOperationsInput | string
+    availableSports?: StringFieldUpdateOperationsInput | string
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partner?: UserUpdateOneWithoutGamehubFacilitiesNestedInput
+    reviews?: GamehubReviewUpdateManyWithoutFacilityNestedInput
+    bookings?: GamehubBookingUpdateManyWithoutFacilityNestedInput
+    blockedSlots?: GamehubBlockedSlotUpdateManyWithoutFacilityNestedInput
+  }
+
+  export type GamehubFacilityUncheckedUpdateWithoutLiveMatchesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    venue?: StringFieldUpdateOperationsInput | string
+    distance?: StringFieldUpdateOperationsInput | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    reviewsCount?: IntFieldUpdateOperationsInput | number
+    pricePerHour?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    priceRange?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    openHours?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    pricingRules?: StringFieldUpdateOperationsInput | string
+    amenities?: StringFieldUpdateOperationsInput | string
+    features?: StringFieldUpdateOperationsInput | string
+    tags?: StringFieldUpdateOperationsInput | string
+    gallery?: StringFieldUpdateOperationsInput | string
+    battleModes?: StringFieldUpdateOperationsInput | string
+    slotTemplate?: StringFieldUpdateOperationsInput | string
+    availableSports?: StringFieldUpdateOperationsInput | string
+    terms?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partnerId?: NullableStringFieldUpdateOperationsInput | string | null
+    reviews?: GamehubReviewUncheckedUpdateManyWithoutFacilityNestedInput
+    bookings?: GamehubBookingUncheckedUpdateManyWithoutFacilityNestedInput
     blockedSlots?: GamehubBlockedSlotUncheckedUpdateManyWithoutFacilityNestedInput
   }
 
@@ -38112,6 +40074,7 @@ export namespace Prisma {
     partner?: UserCreateNestedOneWithoutGamehubFacilitiesInput
     reviews?: GamehubReviewCreateNestedManyWithoutFacilityInput
     bookings?: GamehubBookingCreateNestedManyWithoutFacilityInput
+    liveMatches?: LiveMatchCreateNestedManyWithoutFacilityInput
   }
 
   export type GamehubFacilityUncheckedCreateWithoutBlockedSlotsInput = {
@@ -38145,6 +40108,7 @@ export namespace Prisma {
     partnerId?: string | null
     reviews?: GamehubReviewUncheckedCreateNestedManyWithoutFacilityInput
     bookings?: GamehubBookingUncheckedCreateNestedManyWithoutFacilityInput
+    liveMatches?: LiveMatchUncheckedCreateNestedManyWithoutFacilityInput
   }
 
   export type GamehubFacilityCreateOrConnectWithoutBlockedSlotsInput = {
@@ -38194,6 +40158,7 @@ export namespace Prisma {
     partner?: UserUpdateOneWithoutGamehubFacilitiesNestedInput
     reviews?: GamehubReviewUpdateManyWithoutFacilityNestedInput
     bookings?: GamehubBookingUpdateManyWithoutFacilityNestedInput
+    liveMatches?: LiveMatchUpdateManyWithoutFacilityNestedInput
   }
 
   export type GamehubFacilityUncheckedUpdateWithoutBlockedSlotsInput = {
@@ -38227,6 +40192,7 @@ export namespace Prisma {
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
     reviews?: GamehubReviewUncheckedUpdateManyWithoutFacilityNestedInput
     bookings?: GamehubBookingUncheckedUpdateManyWithoutFacilityNestedInput
+    liveMatches?: LiveMatchUncheckedUpdateManyWithoutFacilityNestedInput
   }
 
   export type UserCreateWithoutWalletInput = {
@@ -38893,6 +40859,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     facility?: GamehubFacilityUpdateOneRequiredWithoutBookingsNestedInput
+    liveMatch?: LiveMatchUpdateOneWithoutBookingNestedInput
   }
 
   export type GamehubBookingUncheckedUpdateWithoutUserInput = {
@@ -38910,6 +40877,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     facilityId?: StringFieldUpdateOperationsInput | string
+    liveMatch?: LiveMatchUncheckedUpdateOneWithoutBookingNestedInput
   }
 
   export type GamehubBookingUncheckedUpdateManyWithoutUserInput = {
@@ -39011,6 +40979,7 @@ export namespace Prisma {
     reviews?: GamehubReviewUpdateManyWithoutFacilityNestedInput
     bookings?: GamehubBookingUpdateManyWithoutFacilityNestedInput
     blockedSlots?: GamehubBlockedSlotUpdateManyWithoutFacilityNestedInput
+    liveMatches?: LiveMatchUpdateManyWithoutFacilityNestedInput
   }
 
   export type GamehubFacilityUncheckedUpdateWithoutPartnerInput = {
@@ -39044,6 +41013,7 @@ export namespace Prisma {
     reviews?: GamehubReviewUncheckedUpdateManyWithoutFacilityNestedInput
     bookings?: GamehubBookingUncheckedUpdateManyWithoutFacilityNestedInput
     blockedSlots?: GamehubBlockedSlotUncheckedUpdateManyWithoutFacilityNestedInput
+    liveMatches?: LiveMatchUncheckedUpdateManyWithoutFacilityNestedInput
   }
 
   export type GamehubFacilityUncheckedUpdateManyWithoutPartnerInput = {
@@ -39526,6 +41496,16 @@ export namespace Prisma {
     createdByUserId?: string | null
   }
 
+  export type LiveMatchCreateManyFacilityInput = {
+    id?: string
+    bookingId: string
+    sportType: string
+    scoreData?: string
+    status?: string
+    updatedAt?: Date | string
+    createdAt?: Date | string
+  }
+
   export type GamehubReviewUpdateWithoutFacilityInput = {
     id?: StringFieldUpdateOperationsInput | string
     rating?: IntFieldUpdateOperationsInput | number
@@ -39571,6 +41551,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutGamehubBookingsNestedInput
+    liveMatch?: LiveMatchUpdateOneWithoutBookingNestedInput
   }
 
   export type GamehubBookingUncheckedUpdateWithoutFacilityInput = {
@@ -39588,6 +41569,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
+    liveMatch?: LiveMatchUncheckedUpdateOneWithoutBookingNestedInput
   }
 
   export type GamehubBookingUncheckedUpdateManyWithoutFacilityInput = {
@@ -39632,6 +41614,36 @@ export namespace Prisma {
     reason?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type LiveMatchUpdateWithoutFacilityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sportType?: StringFieldUpdateOperationsInput | string
+    scoreData?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    booking?: GamehubBookingUpdateOneRequiredWithoutLiveMatchNestedInput
+  }
+
+  export type LiveMatchUncheckedUpdateWithoutFacilityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    bookingId?: StringFieldUpdateOperationsInput | string
+    sportType?: StringFieldUpdateOperationsInput | string
+    scoreData?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LiveMatchUncheckedUpdateManyWithoutFacilityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    bookingId?: StringFieldUpdateOperationsInput | string
+    sportType?: StringFieldUpdateOperationsInput | string
+    scoreData?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type WalletTransactionCreateManyWalletInput = {

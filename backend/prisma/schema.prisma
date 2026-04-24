@@ -273,6 +273,7 @@ model GamehubFacility {
   reviews  GamehubReview[]
   bookings GamehubBooking[]
   blockedSlots GamehubBlockedSlot[]
+  liveMatches  LiveMatch[]
 
   @@index([location])
   @@index([type])
@@ -318,9 +319,29 @@ model GamehubBooking {
   facilityId String
   facility   GamehubFacility @relation(fields: [facilityId], references: [id], onDelete: Cascade)
 
+  liveMatch  LiveMatch?
+
   @@index([userId, createdAt])
   @@index([facilityId, bookingDate])
   @@index([status])
+}
+
+// ─── Live Match Model (Real-time Scoring) ────────────────────────────────────
+model LiveMatch {
+  id          String   @id @default(uuid())
+  bookingId   String   @unique
+  booking     GamehubBooking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  facilityId  String
+  facility    GamehubFacility @relation(fields: [facilityId], references: [id], onDelete: Cascade)
+  
+  sportType   String   // CRICKET, FOOTBALL, etc.
+  scoreData   String   @default("{}") // JSON for runs, wickets, overs, or goals
+  status      String   @default("LIVE") // LIVE, FINISHED
+  
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+
+  @@index([facilityId, status])
 }
 
 // ─── GameHub Blocked Slot Model ─────────────────────────────────────────────

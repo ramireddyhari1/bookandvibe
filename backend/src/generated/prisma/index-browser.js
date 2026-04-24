@@ -338,6 +338,17 @@ exports.Prisma.GamehubBookingScalarFieldEnum = {
   facilityId: 'facilityId'
 };
 
+exports.Prisma.LiveMatchScalarFieldEnum = {
+  id: 'id',
+  bookingId: 'bookingId',
+  facilityId: 'facilityId',
+  sportType: 'sportType',
+  scoreData: 'scoreData',
+  status: 'status',
+  updatedAt: 'updatedAt',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.GamehubBlockedSlotScalarFieldEnum = {
   id: 'id',
   blockDate: 'blockDate',
@@ -435,6 +446,7 @@ exports.Prisma.ModelName = {
   GamehubFacility: 'GamehubFacility',
   GamehubReview: 'GamehubReview',
   GamehubBooking: 'GamehubBooking',
+  LiveMatch: 'LiveMatch',
   GamehubBlockedSlot: 'GamehubBlockedSlot',
   Wallet: 'Wallet',
   WalletTransaction: 'WalletTransaction',

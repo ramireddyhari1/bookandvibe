@@ -5,6 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { LocationProvider } from "@/context/LocationContext";
 import { AuthProvider } from "@/context/AuthContext";
+import { SocketProvider } from "@/context/SocketContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,9 +27,11 @@ export default function RootLayout({
       <body className={`${inter.className} bg-rose-50 text-slate-900 antialiased`.trim()}>
         <LocationProvider>
           <AuthProvider>
-            <Navbar />
-            <main>{children}</main>
-            <Footer />
+            <SocketProvider>
+              <Navbar />
+              <main>{children}</main>
+              <Footer />
+            </SocketProvider>
           </AuthProvider>
         </LocationProvider>
       </body>

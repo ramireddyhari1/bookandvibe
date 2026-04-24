@@ -2,6 +2,7 @@
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
+import { AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -28,6 +29,8 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { fetchApi } from "@/lib/api";
+import LiveMatchScorer from "@/components/mobile/LiveMatchScorer";
+import { Trophy } from "lucide-react";
 
 type BookingTab = "all" | "events" | "courts";
 
@@ -329,6 +332,7 @@ export default function BookingsPage() {
   const [eventBookings, setEventBookings] = useState<Booking[]>([]);
   const [courtBookings, setCourtBookings] = useState<Booking[]>([]);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [scorerBooking, setScorerBooking] = useState<{ id: string; type: string } | null>(null);
 
   useEffect(() => {
     if (!isAuthenticated) { router.push("/login"); return; }
@@ -387,6 +391,17 @@ export default function BookingsPage() {
     <div className="min-h-screen bg-[#fafafa] pt-[130px] pb-16 selection:bg-orange-500/20">
       {/* QR Modal */}
       {selectedBooking && <QrTicketModal booking={selectedBooking} onClose={() => setSelectedBooking(null)} />}
+
+      {/* Scorer Modal */}
+      <AnimatePresence>
+        {scorerBooking && (
+          <LiveMatchScorer 
+            bookingId={scorerBooking.id} 
+            sportType={scorerBooking.type} 
+            onClose={() => setScorerBooking(null)} 
+          />
+        )}
+      </AnimatePresence>
 
       <div className="max-w-[1100px] mx-auto px-4 lg:px-8">
         
@@ -617,14 +632,25 @@ export default function BookingsPage() {
                           )}
                         </div>
 
-                        <button
-                          onClick={() => setSelectedBooking(booking)}
-                          className="flex items-center gap-2 bg-gray-900 hover:bg-orange-500 text-white px-5 py-2.5 rounded-xl text-[13px] font-bold transition-all shadow-md shadow-gray-900/10 hover:shadow-orange-500/25 active:scale-95 group/btn"
-                        >
-                          <QrCode size={16} />
-                          View Ticket
-                          <ChevronRight size={16} className="opacity-0 -ml-2 group-hover/btn:opacity-100 group-hover/btn:ml-0 transition-all font-bold text-white/50 group-hover/btn:text-white" />
-                        </button>
+                        <div className="flex items-center gap-2">
+                          {isCourt && status.toUpperCase() === 'CONFIRMED' && (
+                            <button
+                              onClick={() => setScorerBooking({ id: booking.id, type: booking.facility?.type || 'Cricket' })}
+                              className="flex items-center gap-2 bg-[#00A63E] hover:bg-[#008c34] text-white px-5 py-2.5 rounded-xl text-[13px] font-bold transition-all shadow-md shadow-emerald-900/10 hover:shadow-emerald-500/25 active:scale-95 group/btn"
+                            >
+                              <Trophy size={16} />
+                              Score Live
+                            </button>
+                          )}
+                          <button
+                            onClick={() => setSelectedBooking(booking)}
+                            className="flex items-center gap-2 bg-gray-900 hover:bg-orange-500 text-white px-5 py-2.5 rounded-xl text-[13px] font-bold transition-all shadow-md shadow-gray-900/10 hover:shadow-orange-500/25 active:scale-95 group/btn"
+                          >
+                            <QrCode size={16} />
+                            View Ticket
+                            <ChevronRight size={16} className="opacity-0 -ml-2 group-hover/btn:opacity-100 group-hover/btn:ml-0 transition-all font-bold text-white/50 group-hover/btn:text-white" />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>

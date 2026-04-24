@@ -37,6 +37,16 @@ io.on('connection', (socket) => {
     if (!scopeType || !scopeId) return;
     socket.leave(getSeatRoom(scopeType, scopeId));
   });
+
+  socket.on('live-match:join', (facilityId) => {
+    if (!facilityId) return;
+    socket.join(`live-match:${facilityId}`);
+  });
+
+  socket.on('live-match:leave', (facilityId) => {
+    if (!facilityId) return;
+    socket.leave(`live-match:${facilityId}`);
+  });
 });
 
 // ─── Security Middleware ──────────────────────────────────────────────────────
@@ -101,6 +111,7 @@ const gamehubRoutes = require('./routes/gamehub.routes');
 const partnerRoutes = require('./routes/partner.routes');
 const configRoutes = require('./routes/config.routes');
 const couponRoutes = require('./routes/coupon.routes');
+const liveMatchRoutes = require('./routes/live-match.routes');
 
 // ─── API Routes ───────────────────────────────────────────────────────────────
 app.use('/api/auth', authLimiter, authRoutes);
@@ -113,6 +124,7 @@ app.use('/api/gamehub', gamehubRoutes);
 app.use('/api/partners', partnerRoutes);
 app.use('/api/config', configRoutes);
 app.use('/api/coupons', couponRoutes);
+app.use('/api/live-match', liveMatchRoutes);
 
 // ─── Health Check ─────────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {
