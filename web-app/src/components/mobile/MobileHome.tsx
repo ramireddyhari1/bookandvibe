@@ -3,14 +3,16 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
-import {
+import { useLocation, LOCATIONS } from "@/context/LocationContext";
+import { 
   Bell, MapPin, Search, ChevronDown, Zap, Play, Bookmark, Tag,
   SlidersHorizontal, Music, ArrowRight, Star, Sparkles, Heart,
   Wallet, Clock, MessageSquare, CalendarDays, Trophy, User,
+  Navigation, Check, X
 } from "lucide-react";
-import { useLocation } from "@/context/LocationContext";
 import { useAuth } from "@/context/AuthContext";
 import { fetchApi } from "@/lib/api";
+import Image from "next/image";
 
 interface Event {
   id: string;
@@ -37,10 +39,63 @@ interface Facility {
 
 // ─── Constants ─────────────────────────────────────────────
 const FACILITY_CATEGORIES = [
-  { id: "cricket", title: "Cricket", imgSrc: "/icons/gamehub/cricket.png", color: "#FF7A00" },
-  { id: "badminton", title: "Badminton", imgSrc: "/icons/gamehub/badminton.png", color: "#FF007F" },
-  { id: "football", title: "Football", imgSrc: "/icons/gamehub/football.png", color: "#4ADE80" },
-  { id: "more", title: "See All", imgSrc: "/icons/gamehub/see-all.png", color: "#00A8FF" },
+  { 
+    id: "cricket", 
+    title: "Cricket", 
+    color: "#FF7A00",
+    icon: (className: string) => (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <path d="M6 14l6.5-6.5a2.12 2.12 0 113 3L9 17l-3 3-3-3 3-3z" />
+        <path d="M14.5 4.5L16 6l1.5-1.5L16 3l-1.5 1.5z" />
+        <path d="M15.5 7.5L19 11" />
+        <circle cx="18" cy="18" r="2" />
+      </svg>
+    )
+  },
+  { 
+    id: "badminton", 
+    title: "Badminton", 
+    color: "#FF007F",
+    icon: (className: string) => (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <path d="M12 21a3 3 0 003-3c0-1.66-3-6-3-6s-3 4.34-3 6a3 3 0 003 3z" />
+        <path d="M12 12l4-9" />
+        <path d="M12 12l-4-9" />
+        <path d="M12 12V3" />
+        <path d="M10 5h4" />
+        <path d="M10.5 8h3" />
+      </svg>
+    )
+  },
+  { 
+    id: "football", 
+    title: "Football", 
+    color: "#00A63E",
+    icon: (className: string) => (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <circle cx="12" cy="12" r="10" />
+        <path d="M12 7l-3.5 2.5 1.5 4h4l1.5-4L12 7z" />
+        <path d="M12 7V2" />
+        <path d="M8.5 9.5L4 8" />
+        <path d="M10.5 13.5L8 18" />
+        <path d="M13.5 13.5L16 18" />
+        <path d="M15.5 9.5L20 8" />
+      </svg>
+    )
+  },
+  { 
+    id: "more", 
+    title: "See All", 
+    color: "#6366F1",
+    icon: (className: string) => (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <rect x="3" y="3" width="7" height="7" rx="1" />
+        <rect x="14" y="3" width="7" height="7" rx="1" />
+        <rect x="14" y="14" width="7" height="7" rx="1" />
+        <rect x="3" y="14" width="7" height="7" rx="1" />
+      </svg>
+    )
+  },
 ];
 
 const PROMO_BANNERS = [
@@ -323,24 +378,31 @@ function GridEventCard({ event }: { event: Event }) {
 
 function FacilityCard({ facility }: { facility: Facility }) {
   return (
-    <Link href={`/gamehub/${facility.id}`} className="block shrink-0 w-[60vw] max-w-[220px] snap-start">
+    <Link href={`/gamehub/${facility.id}`} className="block shrink-0 w-[60vw] max-w-[220px] snap-start group">
       <div className="w-full">
-        <div className="relative w-full aspect-[4/5] max-h-[280px] rounded-[24px] overflow-hidden bg-white/90 border border-pink-500/20 shadow-lg">
-          <img src={facility.image} alt={facility.name} className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0F0A1F]/85 to-transparent" />
-          <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.15)] border border-white/50 flex items-baseline gap-[2px]">
-            <span className="text-[#10B981] text-[11px] font-extrabold tracking-tight">₹</span>
-            <span className="text-gray-900 text-[14px] font-black tracking-tight">{facility.pricePerHour}</span>
-            <span className="text-gray-500 text-[10px] font-bold">/hr</span>
+        <div className="relative w-full aspect-[4/5] max-h-[280px] rounded-[24px] overflow-hidden bg-gray-100 shadow-[0_8px_24px_rgba(0,0,0,0.06)] group-hover:shadow-[0_12px_32px_rgba(0,0,0,0.1)] transition-all duration-300">
+          <img src={facility.image} alt={facility.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-60" />
+          <div className="absolute top-3 right-3 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/30 flex items-baseline gap-[2px] shadow-sm">
+            <span className="text-white text-[11px] font-extrabold tracking-tight">₹</span>
+            <span className="text-white text-[14px] font-black tracking-tight">{facility.pricePerHour}</span>
+            <span className="text-white/80 text-[10px] font-bold">/hr</span>
+          </div>
+          
+          <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
+             <div className="bg-white/20 backdrop-blur-md px-2 py-1 rounded-lg border border-white/20 flex items-center gap-1">
+               <Star size={10} className="text-yellow-400 fill-yellow-400" />
+               <span className="text-white text-[11px] font-bold">{facility.rating}</span>
+             </div>
+             <span className="bg-[#00A63E] px-2 py-1 rounded-lg text-white text-[10px] font-black uppercase tracking-wider">{facility.type}</span>
           </div>
         </div>
-        <div className="mt-3">
-          <h4 className="text-[#065F46] text-[18px] font-bold truncate">{facility.name}</h4>
-          <div className="flex items-center gap-1 mt-0.5">
-            <span className="bg-emerald-600/10 px-1.5 py-0.5 rounded text-emerald-600 text-[10px] font-bold">{facility.type.toUpperCase()}</span>
-            <span className="text-black/50 text-[10px]">★ {facility.rating}</span>
+        <div className="mt-3 px-1">
+          <h4 className="text-gray-900 text-[17px] font-black tracking-tight truncate">{facility.name}</h4>
+          <div className="flex items-center gap-1.5 mt-1 text-gray-500">
+            <MapPin size={12} />
+            <p className="text-[13px] font-medium truncate">{facility.location}</p>
           </div>
-          <p className="text-[#065F46]/60 text-[14px] mt-1 truncate">{facility.location}</p>
         </div>
       </div>
     </Link>
@@ -382,8 +444,50 @@ export default function MobileHome() {
   const [facilities, setFacilities] = useState<Facility[]>(FALLBACK_FACILITIES);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
-  const { selectedLocation } = useLocation();
+  const { selectedLocation, setSelectedLocation, detectLocation, isDetecting } = useLocation();
   const { isAuthenticated, user } = useAuth();
+  const [isLocationOpen, setIsLocationOpen] = useState(false);
+  const [locationSearch, setLocationSearch] = useState("");
+  const [activeFilter, setActiveFilter] = useState("All");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isDateFilterOpen, setIsDateFilterOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+
+  const filteredEvents = useMemo(() => {
+    let list = events;
+    
+    // Filter by Search Query
+    if (query.trim()) {
+      const q = query.toLowerCase();
+      list = list.filter(e => 
+        e.title.toLowerCase().includes(q) || 
+        e.venue.toLowerCase().includes(q) ||
+        e.category.toLowerCase().includes(q)
+      );
+    }
+
+    // Filter by Chip (Today/Tomorrow)
+    if (activeFilter === "Today") {
+      const today = new Date().toISOString().split('T')[0];
+      list = list.filter(e => e.date.startsWith(today));
+    } else if (activeFilter === "Tomorrow") {
+      const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+      list = list.filter(e => e.date.startsWith(tomorrow));
+    }
+
+    // Filter by Category
+    if (selectedCategory !== "All") {
+      list = list.filter(e => e.category.toLowerCase().includes(selectedCategory.toLowerCase()));
+    }
+
+    // Filter by Specific Date
+    if (selectedDate) {
+      list = list.filter(e => e.date.startsWith(selectedDate));
+    }
+    
+    return list;
+  }, [events, activeFilter, query, selectedCategory, selectedDate]);
 
   const isGameHub = activeTab === "gamehub";
 
@@ -417,46 +521,78 @@ export default function MobileHome() {
     <div className="min-h-screen pb-6 overflow-x-hidden" style={{ background: isGameHub ? "linear-gradient(180deg, #F0FDF4, #FFFFFF, #F8FAFC)" : "linear-gradient(180deg, #fff7ed, #ffffff, #fafafa)" }}>
 
       {/* ═══ HEADER ═══ */}
-      <div className="px-5 pt-[max(env(safe-area-inset-top),12px)] pb-5">
+      <div className="px-5 pt-[max(env(safe-area-inset-top),16px)] pb-4">
         {isGameHub ? (
-          /* GameHub Header - Light */
+          /* GameHub Header - Refined Premium */
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Link href="/profile" className="w-11 h-11 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-                <span className="text-[20px] font-bold text-gray-500">{user?.name?.charAt(0).toUpperCase() || "U"}</span>
-              </Link>
-              <div>
-                <p className="text-[16px] text-gray-900 font-bold tracking-tight">Hey {user?.name?.split(" ")[0] || "there"}!</p>
-                <div className="flex items-center gap-0.5 mt-0.5">
-                  <span className="text-[13px] text-gray-500">{selectedLocation.city}</span>
-                  <ChevronDown size={14} className="text-gray-900/50" />
+            <div className="flex items-center gap-4">
+              <Image 
+                src="/bv-green.png" 
+                alt="Book & Vibe" 
+                width={180} 
+                height={72} 
+                className="h-18 w-auto object-contain"
+                priority
+              />
+              <div className="h-12 w-[1.5px] bg-emerald-200/50 rounded-full" />
+              <div 
+                className="flex items-center gap-1.5 active:opacity-70 transition-opacity"
+                onClick={() => setIsLocationOpen(true)}
+              >
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-black text-[#00A63E]/60 uppercase tracking-widest leading-none mb-1">CITY</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-gray-900 text-[15px] font-black tracking-tight">{selectedLocation.city}</span>
+                    <ChevronDown size={14} className="text-[#00A63E]" />
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-4">
-              <MessageSquare size={24} className="text-gray-900" strokeWidth={1.8} />
-              <Bell size={24} className="text-gray-900" strokeWidth={1.8} />
-              <CalendarDays size={24} className="text-gray-900" strokeWidth={1.8} />
+            
+            <div className="flex items-center gap-2.5">
+              <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center border border-emerald-100 relative">
+                <Bell size={20} className="text-[#00A63E]" strokeWidth={2.5} />
+                <div className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-[#00A63E] border-2 border-white" />
+              </div>
+              <Link href="/profile" className="w-10 h-10 rounded-full bg-[#00A63E] flex items-center justify-center border-2 border-emerald-200 shadow-sm">
+                <span className="text-white text-[16px] font-black uppercase">{user?.name?.charAt(0) || "U"}</span>
+              </Link>
             </div>
           </div>
         ) : (
-          /* Events Header - Light */
+          /* Events Header - Refined Premium */
           <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <p className="text-gray-500 text-[10px] font-bold tracking-widest uppercase">CURRENT LOCATION</p>
-              <div className="flex items-center gap-1.5">
-                <MapPin size={16} className="text-orange-500" />
-                <span className="text-gray-900 text-[18px] font-bold">{selectedLocation.city}</span>
-                <ChevronDown size={14} className="text-gray-500 -ml-0.5" />
+            <div className="flex items-center gap-4">
+              <Image 
+                src="/bv-orange.png" 
+                alt="Book & Vibe" 
+                width={180} 
+                height={72} 
+                className="h-18 w-auto object-contain"
+                priority
+              />
+              <div className="h-12 w-[1.5px] bg-orange-200/50 rounded-full" />
+              <div 
+                className="flex items-center gap-1.5 active:opacity-70 transition-opacity"
+                onClick={() => setIsLocationOpen(true)}
+              >
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-black text-orange-500/60 uppercase tracking-widest leading-none mb-1">CITY</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-gray-900 text-[15px] font-black tracking-tight">{selectedLocation.city}</span>
+                    <ChevronDown size={14} className="text-orange-300" />
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="relative w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center border border-orange-100">
-                <Bell size={20} className="text-orange-600" />
-                <div className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-orange-500 border-[1.5px] border-white" />
+            
+            <div className="flex items-center gap-2.5">
+              <div className="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center border border-orange-100 relative">
+                <Bell size={20} className="text-orange-600" strokeWidth={2.5} />
+                <div className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-orange-500 border-2 border-white" />
               </div>
-              <Link href="/profile" className="w-10 h-10 rounded-full bg-orange-600 flex items-center justify-center border-2 border-orange-200">
-                <span className="text-white text-[18px] font-bold">{user?.name?.charAt(0).toUpperCase() || "U"}</span>
+              <Link href="/profile" className="w-10 h-10 rounded-full bg-orange-600 flex items-center justify-center border-2 border-orange-200 shadow-sm">
+                <span className="text-white text-[16px] font-black uppercase">{user?.name?.charAt(0) || "U"}</span>
               </Link>
             </div>
           </div>
@@ -466,7 +602,7 @@ export default function MobileHome() {
       {/* ═══ SEARCH BAR ═══ */}
       <div className="px-5 mb-6">
         <div className="rounded-[16px] p-[1px] shadow-sm border border-gray-100" style={{
-          background: isGameHub ? "rgba(16,185,129,0.12)" : "rgba(249, 115, 22, 0.12)"
+          background: isGameHub ? "rgba(0,166,62,0.12)" : "rgba(249, 115, 22, 0.12)"
         }}>
           <div className="flex items-center gap-3 rounded-[15px] px-4 h-12" style={{
             background: isGameHub ? "linear-gradient(90deg, #FFFFFF, #F0FDF4)" : "linear-gradient(90deg, #FFFFFF, #fff7ed)"
@@ -497,7 +633,7 @@ export default function MobileHome() {
               left: activeTab === "events" ? "2px" : "calc(50%)",
               background: activeTab === "events"
                 ? "linear-gradient(90deg, #fb923c, #f97316)"
-                : "linear-gradient(90deg, #34D399, #10B981)",
+                : "linear-gradient(90deg, #00A63E, #059669)",
             }}
           />
 
@@ -547,7 +683,7 @@ export default function MobileHome() {
             <div className="mb-8">
               <div className="flex items-center justify-between px-5 mb-4">
                 <h2 className="text-white text-[20px] font-bold tracking-tight">Trending in Events</h2>
-                <Link href="/events" className="text-[#10B981] text-[14px] font-bold">See all</Link>
+                <Link href="/events" className="text-[#00A63E] text-[14px] font-bold">See all</Link>
               </div>
               <div className="flex gap-4 overflow-x-auto px-5 scroll-px-5 snap-x scrollbar-hide">
                 {events.slice(0, 6).map(ev => (
@@ -580,19 +716,48 @@ export default function MobileHome() {
             {/* Filter Pills */}
             <div className="flex gap-2 overflow-x-auto px-5 scroll-px-5 mb-4 scrollbar-hide">
               {["Filters", "Date", "Today", "Tomorrow"].map((label, i) => (
-                <button key={label} className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-gray-200 bg-white shrink-0 shadow-sm">
-                  {i === 0 && <SlidersHorizontal size={14} className="text-gray-500" />}
-                  <span className="text-gray-700 text-[13px] font-bold">{label}</span>
-                  {i <= 1 && <ChevronDown size={14} className="text-gray-400" />}
+                <button 
+                  key={label} 
+                  onClick={() => {
+                    if (label === "Filters") setIsFilterOpen(true);
+                    else if (label === "Date") setIsDateFilterOpen(true);
+                    else if (label === "Today" || label === "Tomorrow") {
+                      setActiveFilter(activeFilter === label ? "All" : label);
+                      setSelectedDate(null); // Reset specific date if Today/Tomorrow is clicked
+                    }
+                  }}
+                  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl border transition-all shrink-0 shadow-sm ${
+                    activeFilter === label || (label === "Filters" && selectedCategory !== "All") || (label === "Date" && selectedDate)
+                      ? 'bg-orange-600 border-orange-600 text-white' 
+                      : 'bg-white border-gray-200 text-gray-700'
+                  }`}
+                >
+                  {i === 0 && <SlidersHorizontal size={14} className={activeFilter === label || selectedCategory !== "All" ? "text-white" : "text-gray-500"} />}
+                  <span className={`text-[13px] font-bold ${activeFilter === label || (label === "Filters" && selectedCategory !== "All") || (label === "Date" && selectedDate) ? "text-white" : "text-gray-700"}`}>
+                    {label === "Filters" && selectedCategory !== "All" ? selectedCategory : label === "Date" && selectedDate ? selectedDate : label}
+                  </span>
+                  {i <= 1 && <ChevronDown size={14} className={activeFilter === label || (label === "Filters" && selectedCategory !== "All") || (label === "Date" && selectedDate) ? "text-white/70" : "text-gray-400"} />}
                 </button>
               ))}
             </div>
             {/* Grid */}
             <div className="grid grid-cols-2 gap-x-3 gap-y-5 px-3.5">
-              {events.map(ev => (
+              {filteredEvents.map(ev => (
                 <GridEventCard key={ev.id} event={ev} />
               ))}
             </div>
+            {filteredEvents.length === 0 && (
+              <div className="py-20 text-center">
+                <Search size={48} className="mx-auto text-gray-200 mb-4" />
+                <p className="text-gray-500 font-bold">No events found</p>
+                <button 
+                  onClick={() => { setActiveFilter("All"); setQuery(""); }}
+                  className="mt-2 text-orange-600 font-bold text-sm"
+                >
+                  Clear all filters
+                </button>
+              </div>
+            )}
           </div>
         </>
       ) : (
@@ -607,14 +772,14 @@ export default function MobileHome() {
                   className="relative shrink-0 w-[85vw] h-[170px] rounded-[20px] overflow-hidden shadow-lg snap-center"
                   style={{ background: banner.gradient }}
                 >
-                  <img src={banner.bgImg} alt="" className="absolute inset-0 w-full h-full object-cover opacity-20 blur-[3px]" />
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-black/20" />
-                  <div className="relative z-10 flex flex-col justify-center items-start h-full p-5">
-                    <h3 className="text-white text-[22px] font-bold leading-[26px] drop-shadow-md">{banner.title}</h3>
-                    <h4 className="text-white text-[26px] font-bold italic leading-[30px] tracking-wide drop-shadow-lg">{banner.subTitle}</h4>
-                    <p className="text-white/95 text-[10px] tracking-wide mt-1.5 mb-4">{banner.meta}</p>
-                    <div className="bg-[#0F172A] px-4 py-2 rounded-xl shadow-md">
-                      <span className="text-white text-[11px] font-bold">{banner.ctaText}</span>
+                  <img src={banner.bgImg} alt="" className="absolute inset-0 w-full h-full object-cover opacity-60" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
+                  <div className="relative z-10 flex flex-col justify-center items-start h-full p-5 w-[85%]">
+                    <h3 className="text-white text-[14px] font-black uppercase tracking-widest leading-none mb-1 opacity-90">{banner.title}</h3>
+                    <h4 className="text-white text-[28px] font-black italic leading-[1.1] tracking-tight mb-2">{banner.subTitle}</h4>
+                    <p className="text-gray-300 text-[11px] font-medium tracking-wide mb-4">{banner.meta}</p>
+                    <div className="bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full active:scale-95 transition-transform">
+                      <span className="text-white text-[11px] font-black uppercase tracking-wider">{banner.ctaText}</span>
                     </div>
                   </div>
                 </div>
@@ -623,18 +788,38 @@ export default function MobileHome() {
           </div>
 
           {/* Sport Categories */}
-          <div className="mb-8">
-            <div className="mx-4 sm:mx-5 bg-[#10B981] rounded-[24px] p-3 sm:p-4 shadow-lg flex justify-between items-start gap-1">
+          <div className="mb-8 px-5">
+            <div className="grid grid-cols-4 gap-3">
               {FACILITY_CATEGORIES.map(cat => (
                 <Link
                   key={cat.id}
                   href="/gamehub"
-                  className="flex flex-col items-center flex-1 gap-1.5 min-w-0"
+                  className="group flex flex-col items-center gap-2"
                 >
-                  <div className="w-[85%] max-w-[72px] aspect-square rounded-[22px] bg-white flex items-center justify-center shadow-md p-2">
-                    <img src={cat.imgSrc} alt={cat.title} className="w-full h-full object-contain" />
-                  </div>
-                  <span className="text-white text-[9px] sm:text-[10px] font-bold tracking-wide text-center truncate w-[95%]">{cat.title.toUpperCase()}</span>
+                  <motion.div 
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="relative w-full aspect-square rounded-[22px] overflow-hidden flex items-center justify-center p-2.5 transition-all duration-300"
+                    style={{
+                      background: "linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.65))",
+                      backdropFilter: "blur(12px)",
+                      WebkitBackdropFilter: "blur(12px)",
+                      border: "1px solid rgba(255,255,255,0.8)",
+                      boxShadow: `0 8px 24px -6px ${cat.color}25, inset 0 2px 4px rgba(255,255,255,0.7)`
+                    }}
+                  >
+                    {/* Subtle glow behind the icon */}
+                    <div 
+                      className="absolute inset-0 opacity-20 blur-xl transition-opacity duration-300 group-hover:opacity-40"
+                      style={{ background: cat.color }}
+                    />
+                    
+                    {/* Render the inline SVG icon */}
+                    <div className="relative z-10 w-full h-full flex items-center justify-center transition-transform duration-300 group-hover:scale-110 drop-shadow-sm text-gray-800">
+                      {cat.icon("w-7 h-7")}
+                    </div>
+                  </motion.div>
+                  <span className="text-gray-900 text-[11px] font-black tracking-tight text-center">{cat.title}</span>
                 </Link>
               ))}
             </div>
@@ -643,10 +828,10 @@ export default function MobileHome() {
           {/* Popular Facilities */}
           <div className="mb-8">
             <div className="flex items-center justify-between px-5 mb-4">
-              <h2 className="text-[#065F46] text-[20px] font-bold tracking-tight">
+              <h2 className="text-[#00A63E] text-[20px] font-bold tracking-tight">
                 Popular Facilities
               </h2>
-              <Link href="/gamehub" className="text-[#10B981] text-[14px] font-bold">See all</Link>
+              <Link href="/gamehub" className="text-[#00A63E] text-[14px] font-bold">See all</Link>
             </div>
             <div className="flex gap-4 overflow-x-auto px-5 scroll-px-5 snap-x scrollbar-hide">
               {(filteredFacilities.length ? filteredFacilities : facilities).map(f => (
@@ -656,33 +841,254 @@ export default function MobileHome() {
           </div>
 
           {/* Host a Match Banner */}
-          <div className="mx-5 mb-8 rounded-[28px] overflow-hidden">
-            <div className="bg-gradient-to-br from-[#10B981] to-[#059669] p-6 relative">
-              <h3 className="text-white text-[18px] font-bold">Can&apos;t find a game?</h3>
-              <p className="text-white/70 text-[13px] mt-1 mb-4">Host a match and invite players nearby!</p>
-              <button className="bg-white px-4 py-2.5 rounded-xl">
-                <span className="text-[#059669] text-[12px] font-bold">HOST A MATCH</span>
-              </button>
-              <Trophy size={60} className="absolute right-[-10px] bottom-[-10px] text-white/15" strokeWidth={1} />
+          <div className="mx-5 mb-8 rounded-[28px] overflow-hidden shadow-xl">
+            <div className="bg-gray-900 p-6 relative overflow-hidden flex items-center">
+              {/* Decorative Mesh Background */}
+              <div className="absolute top-[-50%] right-[-20%] w-[150%] h-[200%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#00A63E]/30 via-gray-900/0 to-transparent blur-2xl" />
+              <div className="absolute bottom-[-50%] left-[-20%] w-[100%] h-[150%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-500/20 via-gray-900/0 to-transparent blur-2xl" />
+              
+              <div className="relative z-10 flex-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="flex h-2 w-2 relative">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00A63E] opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00A63E]"></span>
+                  </span>
+                  <span className="text-[#00A63E] text-[10px] font-black tracking-widest uppercase">Community</span>
+                </div>
+                <h3 className="text-white text-[22px] font-black leading-tight tracking-tight mb-1">Can&apos;t find a game?</h3>
+                <p className="text-gray-400 text-[13px] font-medium mb-5 max-w-[80%]">Host a match and invite players nearby to join the action.</p>
+                <button className="bg-[#00A63E] text-white px-5 py-3 rounded-2xl flex items-center gap-2 active:scale-95 transition-transform shadow-[0_4px_20px_rgba(0,166,62,0.4)]">
+                  <span className="text-[13px] font-black tracking-wide">HOST A MATCH</span>
+                  <ArrowRight size={14} strokeWidth={3} />
+                </button>
+              </div>
+              <Trophy size={80} className="absolute right-[-10px] bottom-[-10px] text-white/5 rotate-12" strokeWidth={1.5} />
             </div>
           </div>
 
-          {/* Facility Banner */}
+          {/* Featured Facility Banner */}
           {filteredFacilities.length > 0 && (
-            <Link href="/gamehub" className="block mx-5 mb-8">
-              <div className="relative h-[160px] rounded-[18px] overflow-hidden">
-                <img src={filteredFacilities[0].image} alt={filteredFacilities[0].name} className="absolute inset-0 w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0F0A1F]/80 to-transparent" />
-                <div className="absolute left-4 right-4 bottom-3.5">
-                  <span className="inline-block px-2 py-1 rounded-full bg-[#FF7A00] text-white text-[10px] font-bold tracking-wide mb-1.5">BOOK NOW</span>
-                  <h3 className="text-white text-[19px] font-bold">{filteredFacilities[0].name}</h3>
-                  <p className="text-white/80 text-[13px] mt-1">{filteredFacilities[0].location}</p>
+            <Link href="/gamehub" className="block mx-5 mb-8 group">
+              <div className="relative h-[200px] rounded-[28px] overflow-hidden shadow-lg">
+                <img src={filteredFacilities[0].image} alt={filteredFacilities[0].name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                
+                <div className="absolute top-4 left-4">
+                  <div className="bg-white/20 backdrop-blur-md border border-white/30 px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">
+                    <Sparkles size={12} className="text-yellow-400" />
+                    <span className="text-white text-[10px] font-black tracking-widest uppercase">Featured Venue</span>
+                  </div>
+                </div>
+
+                <div className="absolute left-4 right-4 bottom-4">
+                  <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-4 rounded-[20px]">
+                    <div className="flex justify-between items-end">
+                      <div>
+                        <h3 className="text-white text-[20px] font-black tracking-tight leading-tight">{filteredFacilities[0].name}</h3>
+                        <div className="flex items-center gap-1.5 mt-1">
+                          <MapPin size={12} className="text-gray-300" />
+                          <p className="text-gray-300 text-[13px] font-medium">{filteredFacilities[0].location}</p>
+                        </div>
+                      </div>
+                      <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md">
+                        <ArrowRight size={18} className="text-[#00A63E]" strokeWidth={2.5} />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </Link>
           )}
         </>
       )}
+      {/* ═══ LOCATION DRAWER ═══ */}
+      <AnimatePresence>
+        {isLocationOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsLocationOpen(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[1000]"
+            />
+            {/* Drawer */}
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed bottom-0 left-0 right-0 bg-white rounded-t-[32px] z-[1001] max-h-[85vh] flex flex-col shadow-2xl overflow-hidden"
+            >
+              {/* Header */}
+              <div className="p-6 border-b border-gray-100 flex items-center justify-between">
+                <div>
+                  <h3 className="text-[20px] font-black text-gray-900 tracking-tight">Change Location</h3>
+                  <p className="text-[13px] text-gray-500 font-medium mt-0.5">Select a city to see events near you</p>
+                </div>
+                <button 
+                  onClick={() => setIsLocationOpen(false)}
+                  className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 active:scale-90 transition-transform"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              {/* Search */}
+              <div className="px-6 py-4">
+                <div className="relative">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                  <input
+                    type="text"
+                    placeholder="Search for a city..."
+                    value={locationSearch}
+                    onChange={(e) => setLocationSearch(e.target.value)}
+                    className="w-full bg-gray-50 border border-gray-100 focus:border-orange-500 rounded-2xl pl-12 pr-4 py-3.5 text-[15px] font-medium outline-none transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Options */}
+              <div className="flex-1 overflow-y-auto px-4 pb-10">
+                {/* Detect My Location */}
+                <button
+                  onClick={async () => {
+                    await detectLocation();
+                    setIsLocationOpen(false);
+                  }}
+                  disabled={isDetecting}
+                  className="w-full flex items-center gap-4 p-4 rounded-2xl hover:bg-orange-50 active:bg-orange-100 transition-colors group mb-2 disabled:opacity-70"
+                >
+                  <div className="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600 shrink-0 group-hover:scale-110 transition-transform">
+                    {isDetecting ? (
+                      <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <Navigation size={22} fill="currentColor" />
+                    )}
+                  </div>
+                  <div className="text-left">
+                    <p className="text-[15px] font-black text-orange-600 uppercase tracking-wide">
+                      {isDetecting ? "Detecting..." : "Detect my location"}
+                    </p>
+                    <p className="text-[12px] text-gray-500 font-medium">Using GPS Device</p>
+                  </div>
+                </button>
+
+                <div className="h-px bg-gray-100 my-4 mx-2" />
+
+                {/* City List */}
+                <div className="space-y-1">
+                  {LOCATIONS.filter(loc => loc.city.toLowerCase().includes(locationSearch.toLowerCase())).map((loc) => (
+                    <button
+                      key={loc.id}
+                      onClick={() => {
+                        setSelectedLocation(loc);
+                        setIsLocationOpen(false);
+                        setLocationSearch("");
+                      }}
+                      className={`w-full flex items-center justify-between p-4 rounded-2xl transition-all ${
+                        selectedLocation.id === loc.id ? 'bg-orange-50' : 'active:bg-gray-50'
+                      }`}
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                          selectedLocation.id === loc.id ? 'bg-orange-100 text-orange-600' : 'bg-gray-100 text-gray-400'
+                        }`}>
+                          <MapPin size={20} />
+                        </div>
+                        <div className="text-left">
+                          <p className={`text-[15px] font-bold ${
+                            selectedLocation.id === loc.id ? 'text-orange-900' : 'text-gray-900'
+                          }`}>{loc.city}</p>
+                          <p className="text-[12px] text-gray-500 font-medium">{loc.detail}</p>
+                        </div>
+                      </div>
+                      {selectedLocation.id === loc.id && (
+                        <div className="w-6 h-6 rounded-full bg-orange-500 flex items-center justify-center text-white">
+                          <Check size={14} strokeWidth={3} />
+                        </div>
+                      )}
+                    </button>
+                  ))}
+                  
+                  {LOCATIONS.filter(loc => loc.city.toLowerCase().includes(locationSearch.toLowerCase())).length === 0 && (
+                    <div className="py-10 text-center">
+                      <Search size={40} className="mx-auto text-gray-200 mb-4" />
+                      <p className="text-gray-500 font-bold">No cities found matching &quot;{locationSearch}&quot;</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* ═══ FILTERS DRAWER ═══ */}
+      <AnimatePresence>
+        {isFilterOpen && (
+          <>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsFilterOpen(false)} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[1000]" />
+            <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} transition={{ type: "spring", damping: 25, stiffness: 200 }} className="fixed bottom-0 left-0 right-0 bg-white rounded-t-[32px] z-[1001] p-6 pb-10 shadow-2xl">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-[20px] font-black text-gray-900 tracking-tight">Filters</h3>
+                <button onClick={() => { setSelectedCategory("All"); setIsFilterOpen(false); }} className="text-orange-600 text-[14px] font-bold">Reset</button>
+              </div>
+              <p className="text-[14px] font-bold text-gray-400 uppercase tracking-widest mb-4">Categories</p>
+              <div className="flex flex-wrap gap-2 mb-8">
+                {["All", "Music", "Comedy", "Workshops", "Arts", "Sports", "Festivals"].map(cat => (
+                  <button
+                    key={cat}
+                    onClick={() => { setSelectedCategory(cat); setIsFilterOpen(false); }}
+                    className={`px-4 py-2 rounded-xl border text-[14px] font-bold transition-all ${
+                      selectedCategory === cat ? 'bg-orange-600 border-orange-600 text-white' : 'bg-gray-50 border-gray-100 text-gray-600'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+              <button onClick={() => setIsFilterOpen(false)} className="w-full bg-gray-900 text-white py-4 rounded-2xl font-bold text-[16px]">Apply Filters</button>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* ═══ DATE DRAWER ═══ */}
+      <AnimatePresence>
+        {isDateFilterOpen && (
+          <>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsDateFilterOpen(false)} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[1000]" />
+            <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} transition={{ type: "spring", damping: 25, stiffness: 200 }} className="fixed bottom-0 left-0 right-0 bg-white rounded-t-[32px] z-[1001] p-6 pb-10 shadow-2xl">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-[20px] font-black text-gray-900 tracking-tight">Select Date</h3>
+                <button onClick={() => { setSelectedDate(null); setIsDateFilterOpen(false); }} className="text-orange-600 text-[14px] font-bold">Reset</button>
+              </div>
+              <div className="space-y-2 mb-8">
+                {[0, 1, 2, 3, 4, 5, 6].map(offset => {
+                  const d = new Date(Date.now() + offset * 86400000);
+                  const dateStr = d.toISOString().split('T')[0];
+                  const label = d.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' });
+                  return (
+                    <button
+                      key={dateStr}
+                      onClick={() => { setSelectedDate(dateStr); setActiveFilter("All"); setIsDateFilterOpen(false); }}
+                      className={`w-full flex items-center justify-between p-4 rounded-2xl border font-bold text-[15px] transition-all ${
+                        selectedDate === dateStr ? 'bg-orange-50 border-orange-200 text-orange-900' : 'bg-gray-50 border-gray-50 text-gray-900'
+                      }`}
+                    >
+                      <span>{label}</span>
+                      {selectedDate === dateStr && <Check size={18} className="text-orange-600" />}
+                    </button>
+                  );
+                })}
+              </div>
+              <button onClick={() => setIsDateFilterOpen(false)} className="w-full bg-gray-900 text-white py-4 rounded-2xl font-bold text-[16px]">Done</button>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

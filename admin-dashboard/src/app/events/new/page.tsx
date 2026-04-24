@@ -100,7 +100,7 @@ function CreateEventPageContent() {
     ageLimit: "Entry allowed for all ages",
     ticketAgeLimit: "Ticket needed for all ages",
     layout: "Indoor",
-    seating: "Seated",
+    seatingPreference: "Seated",
     kidsAllowed: true,
     petsAllowed: false,
   });
@@ -320,7 +320,7 @@ function CreateEventPageContent() {
       visibility: pricing.visibility,
       accessCode: pricing.visibility === "PUBLIC" ? null : pricing.accessCode.trim(),
       featured: pricing.featured,
-      seating: {
+      seatingConfig: {
         totalCapacity: seatConfig.totalCapacity,
         seatLayout: seatConfig.seatLayout,
         rows: seatConfig.rows,
@@ -554,7 +554,7 @@ function CreateEventPageContent() {
           ageLimit: event.ageLimit || "Entry allowed for all ages",
           ticketAgeLimit: event.ticketAgeLimit || "Ticket needed for all ages",
           layout: event.layout || "Indoor",
-          seating: event.seating || "Seated",
+          seatingPreference: event.seating || "Seated",
           kidsAllowed: event.kidsAllowed !== false,
           petsAllowed: !!event.petsAllowed,
         });
@@ -914,8 +914,8 @@ function CreateEventPageContent() {
                    <label className="space-y-2">
                       <span className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500"><Users size={13} /> Seating Arrangement</span>
                       <select
-                        value={eventDetails.seating}
-                        onChange={(e) => setEventDetails((v) => ({ ...v, seating: e.target.value }))}
+                        value={eventDetails.seatingPreference}
+                        onChange={(e) => setEventDetails((v) => ({ ...v, seatingPreference: e.target.value }))}
                         className={inputClass}
                       >
                         <option value="Seated">Seated</option>

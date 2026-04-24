@@ -31,7 +31,8 @@ import {
   Languages,
   Baby,
   Dog,
-  Accessibility
+  Accessibility,
+  Navigation as NavigationIcon
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { fetchApi } from "@/lib/api";
@@ -193,6 +194,7 @@ export default function EventDetailsPage() {
   const [quantity, setQuantity] = useState(1);
   const [paymentState, setPaymentState] = useState<PaymentState>("IDLE");
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const [couponInput, setCouponInput] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<{code: string, discountAmount: number} | null>(null);
@@ -519,7 +521,7 @@ export default function EventDetailsPage() {
             <ArrowLeft size={20} />
           </motion.button>
           <motion.div style={{ opacity: headerTitleOpacity }} className="flex flex-col">
-             <span className="font-bold text-[14px] leading-tight text-gray-900 truncate max-w-[140px]">{event.title}</span>
+             <span className="font-bold text-[14px] leading-tight text-gray-900 truncate max-w-[180px] pr-2">{event.title}</span>
           </motion.div>
         </div>
         <div className="flex items-center gap-3">
@@ -545,7 +547,7 @@ export default function EventDetailsPage() {
 
 
       {/* â•â•â• APP-NATIVE HERO IMAGE (Mobile) â•â•â• */}
-      <div className="md:hidden relative h-[45vh] w-full overflow-hidden bg-gray-100">
+      <div className="md:hidden relative h-[38vh] w-full overflow-hidden bg-gray-100">
         <motion.div 
           style={{ y: heroY, scale: heroScale }}
           className="absolute inset-0"
@@ -564,7 +566,7 @@ export default function EventDetailsPage() {
       </div>
 
       {/* â•â•â• CRISP CONTENT LAYOUT â•â•â• */}
-      <div className="relative z-20 bg-white -mt-10 md:mt-0 rounded-t-[32px] md:rounded-none md:pt-4 px-6 pt-8 pb-32 max-w-[1240px] mx-auto min-h-screen">
+      <div className="relative z-20 bg-white -mt-10 md:mt-0 rounded-t-[32px] md:rounded-none md:pt-4 px-6 pt-8 pb-40 max-w-[1240px] mx-auto min-h-screen">
         <div className="lg:grid lg:grid-cols-12 lg:gap-12">
           {/* Main Column */}
           <div className="lg:col-span-7">
@@ -613,11 +615,29 @@ export default function EventDetailsPage() {
             </div>
 
             {/* About (Formerly The Vibe) */}
-            <section className="mb-10">
-               <h2 className="text-[22px] font-black text-gray-900 mb-4 tracking-tight">About</h2>
-               <p className="text-gray-600 leading-relaxed text-[15px] font-medium whitespace-pre-line">
-                 {event.description}
-               </p>
+             <section className="mb-10">
+                <h2 className="text-[20px] font-black text-gray-900 mb-3 tracking-tight">About</h2>
+                <div className="relative">
+                  <p className={`text-gray-600 leading-relaxed text-[14px] font-medium whitespace-pre-line ${!isExpanded ? 'line-clamp-3' : ''}`}>
+                    {event.description}
+                  </p>
+                  {!isExpanded && event.description.length > 150 && (
+                    <button 
+                      onClick={() => setIsExpanded(true)}
+                      className="text-orange-600 font-bold text-[13px] mt-2 flex items-center gap-1 active:scale-95 transition-transform"
+                    >
+                      Read More <ChevronRight size={14} className="rotate-90" />
+                    </button>
+                  )}
+                  {isExpanded && (
+                    <button 
+                      onClick={() => setIsExpanded(false)}
+                      className="text-orange-600 font-bold text-[13px] mt-2 flex items-center gap-1 active:scale-95 transition-transform"
+                    >
+                      Show Less <ChevronRight size={14} className="-rotate-90" />
+                    </button>
+                  )}
+                </div>
 
                <div className="mt-5 flex flex-wrap gap-2 pb-8 border-b border-gray-100">
                   {event.vibeTags?.map(tag => (
@@ -627,9 +647,7 @@ export default function EventDetailsPage() {
                   ))}
                </div>
             </section>
-
-            {/* Host (Premium Redesign) */}
-            <section className="mb-10">
+            <section className="mb-14">
                <h2 className="text-[18px] font-bold text-gray-900 mb-4 tracking-tight">Hosted By</h2>
                <div className="relative overflow-hidden bg-white rounded-3xl p-5 border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex items-center justify-between group">
                   {/* Decorative gradient blur */}
@@ -664,19 +682,60 @@ export default function EventDetailsPage() {
                </div>
             </section>
 
+            {/* Location & Venue (Mobile Only) */}
+            <section className="mb-14 lg:hidden">
+              <h2 className="text-[18px] font-bold text-gray-900 mb-4 tracking-tight">Venue & Location</h2>
+              <div className="bg-white rounded-3xl border border-gray-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)] overflow-hidden">
+                <div className="h-32 bg-gray-100 relative group">
+                  {/* Static Map Mockup with high-end style */}
+                  <img 
+                    src={`https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=1200&auto=format&fit=crop`} 
+                    className="w-full h-full object-cover opacity-80" 
+                    alt="Map" 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent" />
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                    <div className="w-10 h-10 bg-orange-600 rounded-full flex items-center justify-center shadow-xl ring-4 ring-orange-500/20">
+                      <MapPin size={20} className="text-white" />
+                    </div>
+                  </div>
+                </div>
+                <div className="p-5 flex items-center justify-between">
+                  <div className="space-y-1">
+                    <h3 className="font-bold text-[17px] text-gray-900 leading-tight">{event.venue}</h3>
+                    <div className="flex items-center gap-2">
+                       <span className="text-gray-500 text-[13px] font-medium">{event.location}</span>
+                       {event.distance && (
+                         <>
+                           <span className="w-1 h-1 rounded-full bg-gray-300" />
+                           <span className="text-orange-600 text-[13px] font-bold">{event.distance} away</span>
+                         </>
+                       )}
+                    </div>
+                  </div>
+                  <button className="flex flex-col items-center gap-1 group active:scale-95 transition-all">
+                    <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center border border-gray-100 group-hover:bg-orange-50 transition-colors">
+                       <NavigationIcon size={18} className="text-gray-400 group-hover:text-orange-600" />
+                    </div>
+                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Directions</span>
+                  </button>
+                </div>
+              </div>
+            </section>
+
             {/* ——— SIGNATURE PROTOCOL HEADER ——— */}
-            <section className="mb-20 relative px-6 md:px-0">
-               {/* Aesthetic Watermark */}
-               <div className="absolute -top-12 left-0 text-[100px] md:text-[140px] font-black text-gray-900/5 select-none pointer-events-none tracking-tighter z-0">
+            <section className="mb-20 relative">
+               {/* Aesthetic Watermark - Centered for Mobile */}
+               <div className="absolute -top-10 left-1/2 -translate-x-1/2 text-[72px] md:left-0 md:translate-x-0 md:text-[140px] font-black text-gray-900/5 select-none pointer-events-none tracking-tighter z-0 whitespace-nowrap">
                   ESSENTIAL
                </div>
 
-               <div className="relative z-10 flex flex-col md:flex-row md:items-center gap-8">
+               <div className="relative z-10 flex flex-col items-center text-center md:text-left md:items-start px-6 md:px-0 gap-8">
                   {/* Vertical Signature Anchor */}
                   <div className="hidden md:block absolute -left-10 top-0 bottom-0 w-[5px] bg-gradient-to-b from-orange-600 via-pink-500 to-transparent rounded-full shadow-[0_0_20px_rgba(249,115,22,0.3)]" />
                   
-                  <div className="flex-1 space-y-4">
-                     <div className="flex items-center gap-3">
+                  <div className="flex-1 space-y-4 w-full">
+                     <div className="flex items-center justify-center md:justify-start gap-3">
                         <div className="px-2 py-1 border border-gray-900/10 rounded-md bg-white/50 backdrop-blur-sm">
                            <span className="text-[10px] font-mono font-bold text-gray-400 tracking-tighter uppercase tracking-widest leading-none">
                               [ SEC : PROTOCOL_04 ]
@@ -685,7 +744,7 @@ export default function EventDetailsPage() {
                         <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse shadow-[0_0_10px_rgba(249,115,22,0.5)]" />
                      </div>
 
-                     <h2 className="text-[38px] md:text-[56px] leading-[0.9] font-medium tracking-tight text-gray-900">
+                     <h2 className="text-[42px] md:text-[56px] leading-[0.9] font-medium tracking-tight text-gray-900">
                         Know Before <br />
                         <span className="font-black tracking-tighter">
                            You <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-pink-600 to-rose-600">Go.</span>
@@ -694,85 +753,69 @@ export default function EventDetailsPage() {
                   </div>
 
                   {/* Subtext with Editorial Line */}
-                  <div className="md:w-px md:h-24 md:bg-gray-200 relative">
-                     <p className="md:absolute md:top-0 md:left-8 md:w-64 text-gray-500 font-bold text-[14px] leading-relaxed uppercase tracking-[0.1em]">
+                  <div className="md:w-px md:h-24 md:bg-gray-200 relative w-full flex justify-center md:justify-start">
+                     <p className="md:absolute md:top-0 md:left-8 md:w-64 text-gray-400 font-black text-[12px] leading-relaxed uppercase tracking-[0.2em] max-w-[280px]">
                         Curated guidelines for an <span className="text-gray-900 underline decoration-orange-500/30 decoration-4 underline-offset-4">elite event</span> experience.
                      </p>
                   </div>
                </div>
 
-               {/* The Bento Glass Container */}
-               <div className="relative overflow-hidden bg-gray-50/30 border border-gray-100 rounded-[40px] p-4 md:p-8">
-                  {/* Mesh Blobs */}
-                  <div className="absolute top-0 right-0 w-64 h-64 bg-orange-200/20 rounded-full blur-[100px] -mr-32 -mt-32 animate-pulse" />
-                  <div className="absolute bottom-0 left-0 w-64 h-64 bg-pink-200/20 rounded-full blur-[100px] -ml-32 -mb-32 animate-pulse" style={{ animationDelay: '1s' }} />
-                  
-                  <motion.div 
-                    initial="hidden"
-                    whileInView="show"
-                    viewport={{ once: true, margin: "-100px" }}
-                    variants={{
-                      hidden: { opacity: 0 },
-                      show: {
-                        opacity: 1,
-                        transition: {
-                          staggerChildren: 0.08
-                        }
-                      }
-                    }}
-                    className="grid grid-cols-2 lg:grid-cols-4 gap-4 relative z-10"
-                  >
-                     {/* Tiles */}
-                     {[
-                        { label: "Language", value: event.language || "English / Multi", icon: <Languages size={20} /> },
-                        { label: "Duration", value: event.duration || "2+ Hours", icon: <Clock size={20} /> },
-                        { label: "Passholders", value: event.ticketAgeLimit || "All Ages Welcome", icon: <Ticket size={20} className="-rotate-45" /> },
-                        { label: "Entry Policy", value: event.ageLimit || "Standard Entry", icon: <BadgeCheck size={20} /> },
-                        { label: "Venue Style", value: event.layout || "Contemporary Indoor", icon: <Accessibility size={20} /> },
-                        { label: "Seating", value: event.seating || "Open Access", icon: <Users size={20} /> },
-                        { label: "Family Policy", value: event.kidsAllowed ? "Family Friendly" : "Adults Exclusive", icon: <Baby size={20} /> },
-                        { label: "Pet Access", value: event.petsAllowed ? "Pets Allowed" : "No Pets Permitted", icon: <Dog size={20} /> }
-                     ].map((tile, i) => (
-                        <motion.div 
-                          key={i}
-                          variants={{
-                            hidden: { opacity: 0, y: 30, scale: 0.95 },
-                            show: { 
-                              opacity: 1, 
-                              y: 0, 
-                              scale: 1,
-                              transition: { type: "spring", stiffness: 100, damping: 20 }
-                            }
-                          }}
-                          whileHover={{ y: -8, scale: 1.02 }}
-                          className="group/tile relative bg-white/60 backdrop-blur-xl border border-white/50 rounded-[28px] p-5 shadow-sm hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-300 overflow-hidden"
-                        >
-                           {/* Inner Glow hover */}
-                           <div className="absolute inset-0 bg-gradient-to-br from-orange-500/0 to-orange-500/0 group-hover/tile:from-orange-50/40 group-hover/tile:to-transparent transition-colors duration-500" />
-                           
-                           <div className="relative flex flex-col h-full">
-                              <div className="w-12 h-12 rounded-2xl bg-white shadow-xl shadow-gray-200/50 flex items-center justify-center text-gray-900 mb-6 group-hover/tile:scale-110 group-hover/tile:rotate-3 transition-transform">
-                                 <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-pink-600 opacity-0 group-hover/tile:opacity-10 rounded-2xl transition-opacity" />
-                                 {tile.icon}
-                              </div>
-                              <div className="space-y-1">
-                                 <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">{tile.label}</p>
-                                 <h3 className="text-[15px] font-bold text-gray-900 leading-tight group-hover/tile:text-orange-600 transition-colors">
-                                    {tile.value}
-                                 </h3>
-                              </div>
-                           </div>
+                {/* ——— THE SIGNATURE PROTOCOL GRID ——— */}
+                <div className="relative mt-8">
+                   {/* Background Glows */}
+                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-orange-500/5 blur-[120px] rounded-full pointer-events-none" />
+                   
+                   <div className="grid grid-cols-2 gap-3 relative z-10">
+                      {[
+                         { label: "Language", value: event.language || "English / Multi", icon: <Languages size={22} />, color: "from-orange-500 to-amber-500" },
+                         { label: "Duration", value: event.duration || "2+ Hours", icon: <Clock size={22} />, color: "from-rose-500 to-pink-500" },
+                         { label: "Passholders", value: event.ticketAgeLimit || "All Ages Welcome", icon: <Ticket size={22} className="-rotate-45" />, color: "from-indigo-500 to-blue-500" },
+                         { label: "Entry Policy", value: event.ageLimit || "Standard Entry", icon: <BadgeCheck size={22} />, color: "from-emerald-500 to-teal-500" },
+                         { label: "Venue Style", value: event.layout || "Contemporary Indoor", icon: <Accessibility size={22} />, color: "from-violet-500 to-purple-500" },
+                         { label: "Seating", value: event.seating || "Open Access", icon: <Users size={22} />, color: "from-cyan-500 to-sky-500" },
+                         { label: "Family Policy", value: event.kidsAllowed ? "Family Friendly" : "Adults Exclusive", icon: <Baby size={22} />, color: "from-orange-600 to-rose-600" },
+                         { label: "Pet Access", value: event.petsAllowed ? "Pets Allowed" : "No Pets Permitted", icon: <Dog size={22} />, color: "from-slate-600 to-slate-800" }
+                      ].map((tile, i) => (
+                         <motion.div 
+                           key={i}
+                           initial={{ opacity: 0, y: 20 }}
+                           whileInView={{ opacity: 1, y: 0 }}
+                           viewport={{ once: true }}
+                           transition={{ delay: i * 0.05 }}
+                           className="group/protocol relative bg-white border border-gray-100 rounded-[24px] p-4 shadow-[0_4px_20px_rgba(0,0,0,0.03)] active:scale-95 transition-all overflow-hidden"
+                         >
+                            {/* Decorative Protocol Number */}
+                            <div className="absolute top-3 right-3 opacity-[0.03] font-mono font-black text-[32px] leading-none select-none">
+                               0{i + 1}
+                            </div>
 
-                           {/* Bottom accent bar */}
-                           <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-500 to-pink-600 scale-x-0 group-hover/tile:scale-x-100 transition-transform origin-left duration-500" />
-                        </motion.div>
-                     ))}
-                  </motion.div>
-               </div>
+                            <div className="relative flex flex-col gap-4">
+                               {/* Icon with gradient background */}
+                               <div className={`w-11 h-11 rounded-2xl bg-gradient-to-br ${tile.color} p-[1px] shadow-lg shadow-gray-200/50`}>
+                                  <div className="w-full h-full rounded-[15px] bg-white flex items-center justify-center text-gray-900">
+                                     {tile.icon}
+                                  </div>
+                               </div>
+
+                               <div className="space-y-0.5">
+                                  <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.1em]">{tile.label}</p>
+                                  <h3 className="text-[14px] font-bold text-gray-900 leading-tight">
+                                     {tile.value}
+                                  </h3>
+                               </div>
+                            </div>
+
+                            {/* Hover/Active State Indicator */}
+                            <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-500 to-transparent opacity-0 group-active/protocol:opacity-100 transition-opacity" />
+                         </motion.div>
+                      ))}
+                   </div>
+                </div>
+
             </section>
 
             {/* More Section */}
-            <section className="mb-12">
+            <section className="mb-14">
                 <h2 className="text-[22px] font-bold text-gray-900 mb-6 tracking-tight">More</h2>
                 <button 
                   onClick={() => setShowTermsModal(true)}

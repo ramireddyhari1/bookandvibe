@@ -12,6 +12,7 @@ const { getSeatRoom, setSocketServer } = require('./lib/realtime');
 dotenv.config({ override: true });
 
 const app = express();
+app.set('trust proxy', 1);
 const httpServer = http.createServer(app);
 const PORT = process.env.PORT || 5000;
 

@@ -607,7 +607,7 @@ router.post('/', authenticateToken, requireAdminOrPartner, async (req, res) => {
         ageLimit: req.body.ageLimit || "Entry allowed for all ages",
         ticketAgeLimit: req.body.ticketAgeLimit || "Ticket needed for all ages",
         layout: req.body.layout || "Indoor",
-        seating: req.body.seatingPreference || req.body.seating || "Seated",
+        seating: req.body.seatingPreference || (typeof req.body.seating === 'string' ? req.body.seating : "Seated"),
         kidsAllowed: req.body.kidsAllowed ?? true,
         petsAllowed: req.body.petsAllowed ?? false,
         category: req.body.category || 'MUSIC',
@@ -626,14 +626,14 @@ router.post('/', authenticateToken, requireAdminOrPartner, async (req, res) => {
         taxPercent,
         platformFeeType,
         platformFeeValue,
-        totalSlots: totalSlots,
-        availableSlots: totalSlots,
+        totalSlots: parseInt(req.body.totalSlots) || parseInt(req.body.seatingConfig?.totalCapacity) || parseInt(req.body.seating?.totalCapacity) || totalSlots,
+        availableSlots: parseInt(req.body.totalSlots) || parseInt(req.body.seatingConfig?.totalCapacity) || parseInt(req.body.seating?.totalCapacity) || totalSlots,
         images: JSON.stringify(images),
-        seatLayout: req.body.seating?.seatLayout || req.body.seatLayout || 'standard',
-        seatRows: parseInt(req.body.seating?.rows) || null,
-        seatsPerRow: parseInt(req.body.seating?.seatsPerRow) || null,
-        numberedSeats: req.body.seating?.hasNumberedSeats ?? true,
-        seatSelection: req.body.seating?.allowSeatSelection ?? true,
+        seatLayout: req.body.seatingConfig?.seatLayout || req.body.seating?.seatLayout || req.body.seatLayout || 'standard',
+        seatRows: parseInt(req.body.seatingConfig?.rows) || parseInt(req.body.seating?.rows) || null,
+        seatsPerRow: parseInt(req.body.seatingConfig?.seatsPerRow) || parseInt(req.body.seating?.seatsPerRow) || null,
+        numberedSeats: req.body.seatingConfig?.hasNumberedSeats ?? req.body.seating?.hasNumberedSeats ?? true,
+        seatSelection: req.body.seatingConfig?.allowSeatSelection ?? req.body.seating?.allowSeatSelection ?? true,
         featured: req.body.featured || false,
         tags: JSON.stringify(req.body.tags || []),
         mapLink: req.body.mapLink || null,
@@ -745,12 +745,30 @@ router.put('/:id', authenticateToken, requireAdminOrPartner, async (req, res) =>
       updateData.tags = JSON.stringify(req.body.tags || []);
     }
 
-    if (req.body.seating) {
-      updateData.seatLayout = req.body.seating.seatLayout || 'standard';
-      updateData.seatRows = parseInt(req.body.seating.rows) || null;
-      updateData.seatsPerRow = parseInt(req.body.seating.seatsPerRow) || null;
-      updateData.numberedSeats = req.body.seating.hasNumberedSeats ?? true;
-      updateData.seatSelection = req.body.seating.allowSeatSelection ?? true;
+    const sCfg = (req.body.seatingConfig && typeof req.body.seatingConfig === 'object') 
+      ? req.body.seatingConfig 
+      : (req.body.seating && typeof req.body.seating === 'object' ? req.body.seating : null);
+
+    if (sCfg) {
+      updateData.seatLayout = sCfg.seatLayout || 'standard';
+      updateData.seatRows = parseInt(sCfg.rows) || null;
+      updateData.seatsPerRow = parseInt(sCfg.seatsPerRow) || null;
+      updateData.numberedSeats = sCfg.hasNumberedSeats ?? true;
+      updateData.seatSelection = sCfg.allowSeatSelection ?? true;
+
+      // Map totalCapacity to totalSlots if we are in the seating config
+      if (sCfg.totalCapacity && !req.body.totalSlots) {
+        updateData.totalSlots = parseInt(sCfg.totalCapacity);
+      }
+    }
+
+    if (req.body.seatingPreference) {
+      updateData.seating = String(req.body.seatingPreference);
+    } else if (req.body.seating && typeof req.body.seating === 'string') {
+      updateData.seating = req.body.seating;
+    } else if (sCfg) {
+      // If it was an object, we must overwrite it with a default string to satisfy Prisma
+      updateData.seating = "Seated";
     }
 
     if (isAdminUser(req.user) && req.body.partnerId !== undefined) {

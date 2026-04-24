@@ -1,23 +1,29 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { ArrowLeft, Search, MapPin, Filter } from "lucide-react";
+import { ArrowLeft, Search, MapPin, Filter, ChevronRight, Activity, Calendar, Trophy, Target } from "lucide-react";
 import { fetchApi } from "@/lib/api";
 import { useLocation } from "@/context/LocationContext";
+import { motion } from "framer-motion";
 
 interface Facility {
   id: string;
   name: string;
   location: string;
+  venue: string;
   pricePerHour: number | string;
   image: string;
   type: string;
+  rating?: number;
+  openHours?: string;
+  slotTemplate?: any;
 }
 
 export default function MobileFacilityList() {
   const [facilities, setFacilities] = useState<Facility[]>([]);
   const [loading, setLoading] = useState(true);
   const { selectedLocation } = useLocation();
+  const [selectedDateIndex, setSelectedDateIndex] = useState(0);
 
   useEffect(() => {
     fetchApi("/gamehub/facilities")
@@ -33,62 +39,120 @@ export default function MobileFacilityList() {
     !selectedLocation?.city || f.location?.toLowerCase().includes(selectedLocation.city.toLowerCase())
   );
 
+  // Generate next 7 days for the date picker
+  const days = useMemo(() => {
+    const arr = [];
+    const now = new Date();
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(now);
+      d.setDate(now.getDate() + i);
+      arr.push({
+        day: d.toLocaleDateString('en-US', { weekday: 'short' }),
+        date: d.getDate(),
+        full: d.toISOString().split('T')[0],
+        fullDay: d.toLocaleDateString('en-US', { weekday: 'long' })
+      });
+    }
+    return arr;
+  }, []);
+
   return (
-    <div className="min-h-screen bg-white pb-6 overflow-x-hidden font-sans">
-      {/* Header */}
-      <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-5 pt-[max(env(safe-area-inset-top),16px)] pb-4 flex items-center justify-between">
-        <Link href="/" className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center">
-          <ArrowLeft size={20} className="text-gray-900" strokeWidth={2.5} />
-        </Link>
-        <h1 className="text-gray-900 text-[18px] font-bold">All Facilities</h1>
-        <div className="w-10 h-10 flex items-center justify-end">
-          <Filter size={20} className="text-gray-900" />
+    <div className="min-h-screen bg-[#FDFDFD] pb-10 overflow-x-hidden font-sans">
+      {/* ——— PREMIUM DARK GREEN HEADER ——— */}
+      <div className="bg-[#00A63E] pt-[max(env(safe-area-inset-top),16px)] pb-10 px-6 rounded-b-[40px] shadow-lg shadow-emerald-950/20">
+        <div className="flex items-center justify-between mb-8">
+           <Link href="/" className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white active:scale-95 transition-transform">
+             <ArrowLeft size={20} strokeWidth={2.5} />
+           </Link>
+           <h1 className="text-white text-[28px] font-black tracking-tight">
+             {selectedDateIndex === 0 ? "Today" : days[selectedDateIndex].fullDay}
+           </h1>
+           <div className="w-10 h-10 flex items-center justify-end">
+             <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white">
+                <Search size={20} strokeWidth={2.5} />
+             </div>
+           </div>
+        </div>
+
+        {/* Horizontal Date Picker */}
+        <div className="flex justify-between gap-2 overflow-x-auto pb-2 scrollbar-hide">
+           {days.map((d, i) => (
+             <motion.button
+               key={i}
+               whileTap={{ scale: 0.95 }}
+               onClick={() => setSelectedDateIndex(i)}
+               className={`flex flex-col items-center justify-center min-w-[44px] h-[64px] rounded-2xl transition-all ${
+                 selectedDateIndex === i 
+                 ? "bg-white text-[#00A63E] shadow-xl shadow-black/20 scale-105" 
+                 : "bg-white/10 text-white/50"
+               }`}
+             >
+               <span className="text-[10px] font-bold uppercase mb-1">{d.day}</span>
+               <span className="text-[16px] font-black">{d.date}</span>
+             </motion.button>
+           ))}
         </div>
       </div>
 
-      <div className="px-5 pt-4 pb-6">
-        <div className="flex items-center gap-2 bg-gray-50 rounded-[14px] px-4 py-3 mb-6 border border-gray-100">
-          <Search size={18} className="text-gray-400" />
-          <input 
-            type="text" 
-            placeholder="Search venue or sport..." 
-            className="bg-transparent border-none outline-none flex-1 text-[15px] font-medium text-gray-900 placeholder:text-gray-400"
-          />
-        </div>
+      {/* ——— TIMELINE CONTENT ——— */}
+      <div className="px-6 -mt-4 relative z-10">
+         <div className="bg-white rounded-[32px] p-6 shadow-2xl shadow-black/[0.03] min-h-[500px]">
+            
+            {loading ? (
+               <div className="py-20 flex justify-center">
+                  <div className="w-8 h-8 border-4 border-[#00A63E] border-t-transparent rounded-full animate-spin" />
+               </div>
+            ) : (
+               <div className="space-y-10 relative">
+                  {/* Vertical Line */}
+                  <div className="absolute left-[3px] top-6 bottom-0 w-[1px] bg-gray-100" />
 
-        <div className="flex flex-col gap-5">
-          {loading ? (
-            <div className="py-20 flex justify-center"><div className="w-8 h-8 border-4 border-[#10B981] border-t-transparent rounded-full animate-spin" /></div>
-          ) : (
-            filteredFacilities.length > 0 ? filteredFacilities.map((f) => (
-              <Link href={`/gamehub/${f.id}`} key={f.id} className="block">
-                <div className="w-full relative h-[200px] rounded-[24px] overflow-hidden bg-gray-100 shadow-sm border border-gray-100 mb-3">
-                  <img src={f.image} alt={f.name} className="w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/10 to-transparent" />
-                  <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.15)] border border-white/50 flex items-baseline gap-[2px]">
-                    <span className="text-[#10B981] text-[11px] font-extrabold tracking-tight">₹</span>
-                    <span className="text-gray-900 text-[14px] font-black tracking-tight">{f.pricePerHour}</span>
-                    <span className="text-gray-500 text-[10px] font-bold">/hr</span>
-                  </div>
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <h3 className="text-white text-[20px] font-bold leading-tight mb-1">{f.name}</h3>
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-1">
-                        <MapPin size={12} className="text-[#34D399]" />
-                        <span className="text-gray-200 text-[12px] font-medium">{f.location}</span>
-                      </div>
-                      <div className="flex items-center gap-1 bg-white/20 px-1.5 py-0.5 rounded backdrop-blur-sm">
-                        <span className="text-white text-[10px] font-bold uppercase tracking-wider">{f.type}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            )) : (
-               <div className="py-20 text-center text-gray-500 font-medium">No venues found nearby.</div>
-            )
-          )}
-        </div>
+                  {filteredFacilities.length > 0 ? filteredFacilities.map((f, i) => {
+                     // Get real time from operational hours or slot template
+                     const operationalTime = f.openHours?.split("-")[0]?.trim() || "09:00 AM";
+                     const dotColor = ["#F59E0B", "#00A63E", "#8B5CF6", "#EF4444", "#3B82F6"][i % 5];
+
+                     return (
+                        <div key={f.id} className="relative flex gap-6 group">
+                           {/* Time Indicator */}
+                           <div className="relative pt-1 flex flex-col items-center">
+                              <div 
+                                className="w-[7px] h-[7px] rounded-full border-2 border-white shadow-md z-10" 
+                                style={{ backgroundColor: dotColor }}
+                              />
+                           </div>
+
+                           {/* Content Card */}
+                           <Link href={`/gamehub/${f.id}`} className="flex-1">
+                              <div className="flex flex-col gap-1">
+                                 <span className="text-[11px] font-black text-gray-400 uppercase tracking-widest">{operationalTime}</span>
+                                 <div className="flex items-start justify-between gap-4">
+                                    <div className="flex-1 space-y-1">
+                                       <h3 className="text-gray-900 text-[17px] font-bold leading-tight group-active:text-[#00A63E] transition-colors">{f.name}</h3>
+                                       <p className="text-gray-500 text-[13px] font-medium line-clamp-1">{f.venue || f.location}</p>
+                                       <div className="flex items-center gap-1.5 mt-2">
+                                          <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                                          <span className="text-[#00A63E] text-[12px] font-bold">₹{f.pricePerHour}/hr</span>
+                                       </div>
+                                    </div>
+                                    <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-md shrink-0 border border-gray-100">
+                                       <img src={f.image} className="w-full h-full object-cover" alt="" />
+                                    </div>
+                                 </div>
+                              </div>
+                           </Link>
+                        </div>
+                     );
+                  }) : (
+                     <div className="py-20 text-center">
+                        <Calendar size={48} className="mx-auto text-gray-200 mb-4" />
+                        <h3 className="text-gray-900 font-bold mb-1">No Venues Nearby</h3>
+                        <p className="text-gray-400 text-[13px]">Try switching your city or clearing filters.</p>
+                     </div>
+                  )}
+               </div>
+            )}
+         </div>
       </div>
     </div>
   );

@@ -17,7 +17,6 @@ import {
   Star,
   Zap,
   ArrowLeft,
-  Briefcase,
 } from "lucide-react";
 
 export default function LoginPage() {
@@ -234,21 +233,7 @@ export default function LoginPage() {
             </Link>
           </p>
 
-          {/* Partner / Admin Login */}
-          <div className="mt-4 pt-4 border-t border-gray-100">
-            <a
-              href="http://localhost:3001"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full flex items-center justify-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-bold text-[12px] uppercase tracking-wider py-3 rounded-xl transition-all hover:-translate-y-0.5 hover:shadow-lg"
-            >
-              <Briefcase size={15} />
-              Partner Login
-            </a>
-            <p className="text-center text-[10px] text-gray-400 mt-2 font-medium">
-              Manage your events & venues
-            </p>
-          </div>
+
         </div>
         
         {/* Subtle Bottom Links */}

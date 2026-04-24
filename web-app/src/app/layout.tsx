@@ -11,6 +11,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Book & Vibe | Premium Event Booking",
   description: "Discover and book premium events, concerts, and workshops.",
+  verification: {
+    google: "KGMElbLglr8ClZPvoFIGTlKK7I0RLuJCUhHJbUrjCUk",
+  },
 };
 
 export default function RootLayout({

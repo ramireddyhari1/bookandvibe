@@ -18,6 +18,11 @@ services:
       retries: 5
     networks:
       - bv-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   redis:
     image: redis:7-alpine
@@ -30,6 +35,11 @@ services:
       retries: 5
     networks:
       - bv-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   backend:
     build:
@@ -50,6 +60,11 @@ services:
         condition: service_healthy
     networks:
       - bv-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   web-app:
     build:
@@ -65,6 +80,11 @@ services:
       - backend
     networks:
       - bv-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   admin-dashboard:
     build:
@@ -80,6 +100,11 @@ services:
       - backend
     networks:
       - bv-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   npm:
     image: 'jc21/nginx-proxy-manager:latest'
@@ -98,6 +123,11 @@ services:
       - backend
     networks:
       - bv-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 networks:
   bv-net:

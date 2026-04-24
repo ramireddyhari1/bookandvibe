@@ -22,7 +22,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
+            value: 'camera=(), microphone=(), geolocation=(self), interest-cohort=()',
           },
           {
             key: 'Strict-Transport-Security',
@@ -30,7 +30,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://checkout.razorpay.com https://cdn.razorpay.com; style-src 'self' 'unsafe-inline' https://checkout.razorpay.com; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' http://localhost:5000 http://127.0.0.1:5000 http://10.142.9.67:5000 http://192.168.0.13:5000 http://192.168.0.4:5000 ws://localhost:5000 ws://127.0.0.1:5000 ws://10.142.9.67:5000 ws://192.168.0.13:5000 ws://192.168.0.4:5000 https://api.razorpay.com https://lumberjack.razorpay.com https://cdn.razorpay.com; frame-src https://api.razorpay.com https://checkout.razorpay.com;",
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://checkout.razorpay.com https://cdn.razorpay.com; style-src 'self' 'unsafe-inline' https://checkout.razorpay.com; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https://api.bookandvibe.in wss://api.bookandvibe.in http://localhost:5000 http://127.0.0.1:5000 http://10.142.9.67:5000 http://192.168.0.13:5000 http://192.168.0.4:5000 ws://localhost:5000 ws://127.0.0.1:5000 ws://10.142.9.67:5000 ws://192.168.0.13:5000 ws://192.168.0.4:5000 https://api.razorpay.com https://lumberjack.razorpay.com https://cdn.razorpay.com; frame-src https://api.razorpay.com https://checkout.razorpay.com;",
           },
         ],
       },

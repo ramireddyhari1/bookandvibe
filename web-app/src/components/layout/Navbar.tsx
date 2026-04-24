@@ -9,7 +9,7 @@ import { useAuth } from "@/context/AuthContext";
 export default function Navbar() {
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const { selectedLocation, setSelectedLocation } = useLocation();
+  const { selectedLocation, setSelectedLocation, detectLocation, isDetecting } = useLocation();
   const { isAuthenticated, user, logout } = useAuth();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
@@ -184,18 +184,23 @@ export default function Navbar() {
 
                     {/* GPS Location Option */}
                     <button
-                      onClick={() => {
-                        // Normally this would trigger navigator.geolocation.getCurrentPosition()
+                      onClick={async () => {
+                        await detectLocation();
                         setIsLocationOpen(false);
                       }}
-                      className="w-full text-left flex items-start px-3 py-2.5 rounded-xl transition-all hover:bg-gray-50 group"
+                      disabled={isDetecting}
+                      className="w-full text-left flex items-start px-3 py-2.5 rounded-xl transition-all hover:bg-gray-50 group disabled:opacity-70"
                     >
                       <div className={`mt-0.5 mr-3 shrink-0 ${theme.primaryIcon} ${theme.primaryLightBgHover} p-1 -m-1 rounded-full group-hover:scale-110 transition-all`}>
-                        <Navigation size={16} className={theme.primaryFill} />
+                        {isDetecting ? (
+                          <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                          <Navigation size={16} className={theme.primaryFill} />
+                        )}
                       </div>
                       <div className="flex flex-col">
                         <span className={`text-[14px] font-bold ${theme.primary}`}>
-                          Detect my location
+                          {isDetecting ? "Detecting..." : "Detect my location"}
                         </span>
                         <span className="text-[12px] text-gray-500 font-medium truncate max-w-[160px]">
                           Using GPS Device

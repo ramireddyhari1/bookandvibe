@@ -34,9 +34,9 @@ const registerSchema = Joi.object({
   name: Joi.string().min(2).max(50).required(),
   email: Joi.string().email().required().lowercase().trim(),
   password: Joi.string().min(8).max(32).required()
-    .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')) // Example: at least letters and numbers
+    .pattern(new RegExp('^[a-zA-Z0-9@#$%^&!*]{3,30}$'))
     .messages({
-      'string.pattern.base': 'Password must contain only alphanumeric characters for this demo.',
+      'string.pattern.base': 'Password can contain alphanumeric characters and common special characters (@#$%^&!*).',
       'string.min': 'Password must be at least 8 characters long.'
     })
 });
