@@ -633,7 +633,7 @@ export default function BookingsPage() {
                         </div>
 
                         <div className="flex items-center gap-2">
-                          {isCourt && status.toUpperCase() === 'CONFIRMED' && (
+                          {!isEvent && status.toUpperCase() === 'CONFIRMED' && (
                             <button
                               onClick={() => setScorerBooking({ id: booking.id, type: booking.facility?.type || 'Cricket' })}
                               className="flex items-center gap-2 bg-[#00A63E] hover:bg-[#008c34] text-white px-5 py-2.5 rounded-xl text-[13px] font-bold transition-all shadow-md shadow-emerald-900/10 hover:shadow-emerald-500/25 active:scale-95 group/btn"
