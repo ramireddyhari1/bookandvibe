@@ -326,91 +326,6 @@ export default function AdminDashboard() {
         })}
       </div>
 
-      {/* Chart + Activity */}
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
-        <div className="dash-card xl:col-span-2 p-6 flex flex-col">
-          <div className="mb-5 flex items-center justify-between">
-            <div>
-              <h3 className="dash-title text-base font-bold text-gray-900">Revenue Performance</h3>
-              <p className="text-sm text-gray-500 mt-0.5">Monthly trend for FY 2026</p>
-            </div>
-            <span className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700">
-              <TrendingUp size={14} /> +24.3%
-            </span>
-          </div>
-
-          <div className="rounded-xl border border-gray-100 bg-gray-50/50 p-3 flex-1 flex flex-col justify-between">
-            <div className="relative h-[200px]">
-              <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="h-full w-full" preserveAspectRatio="none" aria-label="Revenue trend chart">
-                <defs>
-                  <linearGradient id="lineGlow" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#10b981" />
-                    <stop offset="100%" stopColor="#059669" />
-                  </linearGradient>
-                  <linearGradient id="areaGlow" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="rgba(16,185,129,0.1)" />
-                    <stop offset="100%" stopColor="rgba(16,185,129,0)" />
-                  </linearGradient>
-                </defs>
-
-                <path d={areaPath} fill="url(#areaGlow)" />
-                <path d={linePath} fill="none" stroke="url(#lineGlow)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-
-                {points.map((point, index) => (
-                  <g key={chartLabels[index]}>
-                    <circle cx={point.x} cy={point.y} r="3" fill="#ffffff" stroke="#10b981" strokeWidth="2" />
-                  </g>
-                ))}
-              </svg>
-              <div className="absolute inset-x-2 bottom-0 flex justify-between">
-                {chartLabels.map((label, idx) => (
-                  <span key={label} className={`text-center text-[10px] font-semibold text-gray-400 ${(idx % 2 !== 0 && chartLabels.length > 6) ? 'hidden sm:block' : ''}`}>
-                    {label}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className="mt-4 grid grid-cols-3 gap-2 text-[11px] text-gray-500 font-semibold">
-              <p className="rounded-lg border border-gray-100 bg-white px-2 py-2 text-center">Peak: ₹45,600</p>
-              <p className="rounded-lg border border-gray-100 bg-white px-2 py-2 text-center">Avg: ₹31,240</p>
-              <p className="rounded-lg border border-gray-100 bg-white px-2 py-2 text-center">YoY: +24.3%</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Activity Feed */}
-        <div className="dash-card p-6">
-          <div className="mb-4 flex items-center justify-between">
-            <h3 className="dash-title inline-flex items-center gap-2 text-base font-bold text-gray-900">
-              <Activity size={16} className="text-gray-400" />
-              Activity
-            </h3>
-            <span className="rounded-md bg-gray-100 px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-gray-500">Live</span>
-          </div>
-
-          <div className="space-y-1 max-h-[380px] overflow-y-auto pr-1 custom-scrollbar">
-            {renderedActivity.length > 0 ? renderedActivity.map((item, i) => {
-              const Icon = item.icon;
-              return (
-                <div key={i} className="flex items-start gap-3 rounded-lg p-2.5 transition-colors hover:bg-gray-50">
-                  <div className="shrink-0 mt-0.5">
-                    <Icon size={15} className={item.iconColor} />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[13px] font-semibold text-gray-800 leading-snug">{item.text}</p>
-                    <p className="mt-1 flex items-center gap-1 text-[11px] text-gray-400">
-                      <Clock size={10} /> {item.time}
-                    </p>
-                  </div>
-                </div>
-              );
-            }) : (
-              <p className="text-center text-sm text-gray-400 py-6">{loading ? "Loading..." : "No recent activity"}</p>
-            )}
-          </div>
-        </div>
-      </div>
-
       {/* Bookings Table + Quick Actions */}
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
         <div className="dash-card overflow-hidden xl:col-span-2">
@@ -502,6 +417,92 @@ export default function AdminDashboard() {
           </div>
         </div>
       </div>
+
+      {/* Chart + Activity */}
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+        <div className="dash-card xl:col-span-2 p-6 flex flex-col">
+          <div className="mb-5 flex items-center justify-between">
+            <div>
+              <h3 className="dash-title text-base font-bold text-gray-900">Revenue Performance</h3>
+              <p className="text-sm text-gray-500 mt-0.5">Monthly trend for FY 2026</p>
+            </div>
+            <span className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700">
+              <TrendingUp size={14} /> +24.3%
+            </span>
+          </div>
+
+          <div className="rounded-xl border border-gray-100 bg-gray-50/50 p-3 flex-1 flex flex-col justify-between">
+            <div className="relative h-[200px]">
+              <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="h-full w-full" preserveAspectRatio="none" aria-label="Revenue trend chart">
+                <defs>
+                  <linearGradient id="lineGlow" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#10b981" />
+                    <stop offset="100%" stopColor="#059669" />
+                  </linearGradient>
+                  <linearGradient id="areaGlow" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="rgba(16,185,129,0.1)" />
+                    <stop offset="100%" stopColor="rgba(16,185,129,0)" />
+                  </linearGradient>
+                </defs>
+
+                <path d={areaPath} fill="url(#areaGlow)" />
+                <path d={linePath} fill="none" stroke="url(#lineGlow)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+
+                {points.map((point, index) => (
+                  <g key={chartLabels[index]}>
+                    <circle cx={point.x} cy={point.y} r="3" fill="#ffffff" stroke="#10b981" strokeWidth="2" />
+                  </g>
+                ))}
+              </svg>
+              <div className="absolute inset-x-2 bottom-0 flex justify-between">
+                {chartLabels.map((label, idx) => (
+                  <span key={label} className={`text-center text-[10px] font-semibold text-gray-400 ${(idx % 2 !== 0 && chartLabels.length > 6) ? 'hidden sm:block' : ''}`}>
+                    {label}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="mt-4 grid grid-cols-3 gap-2 text-[11px] text-gray-500 font-semibold">
+              <p className="rounded-lg border border-gray-100 bg-white px-2 py-2 text-center">Peak: ₹45,600</p>
+              <p className="rounded-lg border border-gray-100 bg-white px-2 py-2 text-center">Avg: ₹31,240</p>
+              <p className="rounded-lg border border-gray-100 bg-white px-2 py-2 text-center">YoY: +24.3%</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Activity Feed */}
+        <div className="dash-card p-6">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="dash-title inline-flex items-center gap-2 text-base font-bold text-gray-900">
+              <Activity size={16} className="text-gray-400" />
+              Activity
+            </h3>
+            <span className="rounded-md bg-gray-100 px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-gray-500">Live</span>
+          </div>
+
+          <div className="space-y-1 max-h-[380px] overflow-y-auto pr-1 custom-scrollbar">
+            {renderedActivity.length > 0 ? renderedActivity.map((item, i) => {
+              const Icon = item.icon;
+              return (
+                <div key={i} className="flex items-start gap-3 rounded-lg p-2.5 transition-colors hover:bg-gray-50">
+                  <div className="shrink-0 mt-0.5">
+                    <Icon size={15} className={item.iconColor} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[13px] font-semibold text-gray-800 leading-snug">{item.text}</p>
+                    <p className="mt-1 flex items-center gap-1 text-[11px] text-gray-400">
+                      <Clock size={10} /> {item.time}
+                    </p>
+                  </div>
+                </div>
+              );
+            }) : (
+              <p className="text-center text-sm text-gray-400 py-6">{loading ? "Loading..." : "No recent activity"}</p>
+            )}
+          </div>
+        </div>
+      </div>
+
     </div>
   );
 }
