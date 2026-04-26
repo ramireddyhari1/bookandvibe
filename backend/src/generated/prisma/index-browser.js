@@ -303,7 +303,9 @@ exports.Prisma.GamehubFacilityScalarFieldEnum = {
   battleModes: 'battleModes',
   slotTemplate: 'slotTemplate',
   availableSports: 'availableSports',
+  advancePercentage: 'advancePercentage',
   terms: 'terms',
+  mapLink: 'mapLink',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   partnerId: 'partnerId'
@@ -325,6 +327,8 @@ exports.Prisma.GamehubBookingScalarFieldEnum = {
   bookingDate: 'bookingDate',
   slotLabel: 'slotLabel',
   totalAmount: 'totalAmount',
+  advanceAmount: 'advanceAmount',
+  balanceAmount: 'balanceAmount',
   currency: 'currency',
   status: 'status',
   paymentMethod: 'paymentMethod',

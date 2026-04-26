@@ -51,8 +51,8 @@ export default function PriceChartModal({
             <div className="p-8 pb-4 flex items-center justify-between relative">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#42B460] to-transparent opacity-50" />
               <div>
-                <span className="text-[#42B460] text-[10px] font-black uppercase tracking-[0.2em] mb-1 block">Pricing Analysis</span>
-                <h3 className="text-2xl font-black text-white uppercase tracking-tight">{sport} Chart</h3>
+                <span className="text-[#42B460] text-[10px] font-bold uppercase tracking-wider mb-1 block">Pricing Analysis</span>
+                <h3 className="text-2xl font-bold text-white uppercase tracking-tight">{sport} Chart</h3>
               </div>
               <button 
                 onClick={onClose}
@@ -71,19 +71,19 @@ export default function PriceChartModal({
                       <Zap size={24} />
                     </div>
                     <div>
-                      <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest">Base Rate</p>
-                      <p className="text-white font-black">Normal Hours</p>
+                      <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Base Rate</p>
+                      <p className="text-white font-bold">Normal Hours</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-2xl font-black text-white">₹{basePrice}</p>
+                    <p className="text-2xl font-bold text-white">₹{basePrice}</p>
                     <p className="text-[10px] text-gray-500 font-bold uppercase tracking-tighter">PER {unit.toUpperCase()}</p>
                   </div>
                 </div>
 
                 {/* Pricing Tiers Section */}
                 <div className="pt-4">
-                  <p className="text-gray-500 text-[11px] font-black uppercase tracking-widest mb-4 px-1">Dynamic Rates & Tiers</p>
+                  <p className="text-gray-500 text-[11px] font-bold uppercase tracking-wider mb-4 px-1">Dynamic Rates & Tiers</p>
                   <div className="space-y-3">
                     {pricingRules.length > 0 ? (
                       pricingRules.map((rule, idx) => (
@@ -101,19 +101,19 @@ export default function PriceChartModal({
                               {rule.type === 'PEAK' ? <Clock size={16} /> : <Calendar size={16} />}
                             </div>
                             <div>
-                              <p className="text-white text-xs font-black uppercase tracking-wide">{rule.type} RATE</p>
+                              <p className="text-white text-xs font-bold uppercase tracking-wide">{rule.type} RATE</p>
                               <p className="text-gray-500 text-[10px] font-bold">{rule.time || rule.day || 'Special Schedule'}</p>
                             </div>
                           </div>
                           <div className="text-right">
-                            <p className="text-lg font-black text-[#42B460]">₹{rule.price}</p>
+                            <p className="text-lg font-bold text-[#42B460]">₹{rule.price}</p>
                           </div>
                         </motion.div>
                       ))
                     ) : (
                       <div className="bg-white/5 border border-white/5 p-6 rounded-3xl text-center">
                         <AlertCircle className="mx-auto text-gray-600 mb-2" size={24} />
-                        <p className="text-[11px] font-bold text-gray-500 uppercase tracking-widest leading-relaxed">
+                        <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider leading-relaxed">
                           No special pricing rules active for this venue. <br/>Fixed base rate applies at all times.
                         </p>
                       </div>
@@ -136,7 +136,7 @@ export default function PriceChartModal({
 
               <button 
                 onClick={onClose}
-                className="w-full mt-6 bg-[#42B460] hover:bg-[#38A354] text-white py-4 rounded-2xl font-black text-[13px] uppercase tracking-wider transition-all transform hover:-translate-y-1 active:translate-y-0"
+                className="w-full mt-6 bg-[#42B460] hover:bg-[#38A354] text-white py-4 rounded-2xl font-bold text-[13px] uppercase tracking-wider transition-all transform hover:-translate-y-1 active:translate-y-0"
               >
                 Understood, Got it
               </button>

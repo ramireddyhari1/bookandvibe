@@ -21,6 +21,7 @@ import {
   ArrowUpToLine,
   Tag,
 } from "lucide-react";
+import PremiumLoader from "@/components/ui/PremiumLoader";
 import { usePathname, useRouter } from "next/navigation";
 import { fetchApi } from "@/lib/api";
 
@@ -189,8 +190,8 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
       )}
 
       <aside
-        className={`fixed left-0 top-0 z-[70] flex h-screen flex-col border-r border-emerald-100 bg-white shadow-[0_0_40px_rgba(16,185,129,0.06)] transition-all duration-300 
-          ${collapsed ? "w-[88px]" : "w-[280px]"}
+        className={`fixed left-0 top-0 z-[70] flex h-screen flex-col border-r border-gray-200 bg-white transition-all duration-200 
+          ${collapsed ? "w-[88px]" : "w-[260px]"}
           ${mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
       >
@@ -201,7 +202,7 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
                 <img 
                   src="/logo.png" 
                   alt="Book & Vibe" 
-                  className={`h-full w-full object-contain transition-transform duration-500 hover:scale-[2.8] ${collapsed ? "scale-[2]" : "scale-[2.5]"}`}
+                  className={`h-full w-full object-contain transition-transform duration-500 ${collapsed ? "scale-[2]" : "scale-[2.5]"}`}
                 />
               </div>
             </div>
@@ -225,12 +226,12 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
         </div>
 
         <div className="px-3 pb-5">
-          <div className="group flex cursor-pointer items-center gap-2.5 rounded-xl border border-emerald-50/50 bg-emerald-50/30 px-3 py-2.5 transition-all hover:bg-emerald-50/60 hover:border-emerald-100">
-            <Search size={16} className="text-emerald-600/50 transition group-hover:text-emerald-600" />
+          <div className="group flex cursor-pointer items-center gap-2.5 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 transition-all hover:bg-gray-100">
+            <Search size={14} className="text-gray-400" />
             {!collapsed ? (
               <>
-                <span className="text-xs font-bold text-emerald-900/40 transition group-hover:text-emerald-900/60 uppercase tracking-wider">Search modules</span>
-                <span className="ml-auto rounded border border-emerald-100 bg-white px-1.5 py-0.5 text-[10px] font-bold text-emerald-600/40">⌘K</span>
+                <span className="text-xs text-gray-400">Search...</span>
+                <span className="ml-auto rounded border border-gray-200 bg-white px-1.5 py-0.5 text-[10px] font-medium text-gray-400">⌘K</span>
               </>
             ) : null}
           </div>
@@ -241,7 +242,7 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
             <div key={section.title} className="space-y-1">
               {!collapsed && (
                 <div className="px-3 py-2">
-                  <p className="text-[10px] font-black uppercase tracking-[0.25em] text-emerald-900/30">
+                  <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">
                     {section.title}
                   </p>
                 </div>
@@ -255,34 +256,20 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
                       key={item.name}
                       href={item.href}
                       onClick={onMobileClose}
-                      className={`group relative flex items-center gap-3 overflow-hidden rounded-xl px-3 py-2.5 transition-all duration-300 ${
+                      className={`group flex items-center gap-3 rounded-lg px-3 py-2 transition-colors ${
                         isActive
-                          ? "text-white shadow-lg shadow-emerald-200/40"
-                          : "text-slate-500 hover:bg-emerald-50/50 hover:text-emerald-700 hover:scale-[1.01]"
+                          ? "bg-emerald-600 text-white"
+                          : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                       }`}
                       title={collapsed ? item.name : undefined}
                     >
-                      {isActive ? (
-                        <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-500" />
-                      ) : null}
-                      {isActive && (
-                        <div className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full bg-white animate-pulse" />
-                      )}
-                      <div
-                        className={`relative z-10 rounded-lg p-1.5 transition ${
-                          isActive
-                            ? "bg-white/20 text-white"
-                            : "text-slate-400 group-hover:text-emerald-600"
-                        }`}
-                      >
-                        <Icon size={19} strokeWidth={isActive ? 2.5 : 2} />
-                      </div>
+                      <Icon size={18} strokeWidth={isActive ? 2.5 : 2} className={isActive ? "text-white" : "text-gray-400 group-hover:text-gray-600"} />
                       {!collapsed ? (
-                        <span className={`relative z-10 text-[14px] font-bold tracking-tight ${isActive ? "text-white" : ""}`}>
+                        <span className={`text-[14px] font-medium ${isActive ? "text-white" : ""}`}>
                           {item.name}
                         </span>
                       ) : null}
-                      {!collapsed && isActive ? <ChevronRight size={14} className="relative z-10 ml-auto text-white/70" /> : null}
+                      {!collapsed && isActive ? <ChevronRight size={14} className="ml-auto text-white/70" /> : null}
                     </Link>
                   );
                 })}
@@ -292,32 +279,32 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
           ))}
         </nav>
 
-        <div className="mt-auto space-y-2 border-t border-emerald-50 px-3 pb-6 pt-4">
-          <button className="group flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-left text-slate-500 transition-all hover:bg-emerald-50/50 hover:text-emerald-700">
+        <div className="mt-auto space-y-2 border-t border-gray-100 px-3 pb-6 pt-4">
+          <button className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700">
             <div className="relative">
-              <Bell size={18} className="text-slate-400 transition group-hover:text-emerald-600" />
+              <Bell size={18} className="text-gray-400" />
               {unreadCount > 0 && (
-                <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-white" />
+                <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white" />
               )}
             </div>
             {!collapsed ? (
               <>
-                <span className="text-[14px] font-bold">Notifications</span>
+                <span className="text-[14px] font-medium">Notifications</span>
                 {unreadCount > 0 && (
-                  <span className="ml-auto rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-bold text-emerald-700">{unreadCount}</span>
+                  <span className="ml-auto rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-semibold text-gray-600">{unreadCount}</span>
                 )}
               </>
             ) : null}
           </button>
 
-          <div className={`flex items-center gap-3 rounded-2xl border border-emerald-50 bg-emerald-50/40 px-3 py-3 ${collapsed ? "justify-center" : "px-4"}`}>
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 text-sm font-bold text-white shadow-md">
+          <div className={`flex items-center gap-3 rounded-xl border border-gray-100 bg-gray-50 px-3 py-3 ${collapsed ? "justify-center" : "px-4"}`}>
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-xs font-semibold text-gray-600">
               {initials}
             </div>
             {!collapsed ? (
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-bold leading-none text-slate-900">{sessionUser?.name || "Admin"}</p>
-                <p className="mt-1 flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-emerald-600/60">
+                <p className="truncate text-sm font-semibold leading-none text-gray-900">{sessionUser?.name || "Admin"}</p>
+                <p className="mt-1 flex items-center gap-1 text-[10px] font-medium uppercase tracking-wider text-gray-400">
                   <Shield size={10} /> {roleLabel === "PARTNER" ? "Partner" : "Admin"}
                 </p>
               </div>
@@ -325,7 +312,7 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
             {!collapsed && (
               <button
                 onClick={handleLogout}
-                className="focus-premium rounded-lg p-1.5 text-slate-400 transition hover:bg-red-50 hover:text-red-500"
+                className="rounded-lg p-1.5 text-gray-400 transition hover:bg-red-50 hover:text-red-500"
                 title="Logout"
               >
                 <LogOut size={16} />

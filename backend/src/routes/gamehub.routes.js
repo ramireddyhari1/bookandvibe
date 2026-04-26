@@ -69,6 +69,7 @@ function hydrateFacilityFromRecord(record) {
     image: record.image || '',
     description: record.description || '',
     terms: record.terms || '',
+    mapLink: record.mapLink || '',
     phone: record.phone || '',
     openHours: record.openHours || '',
     status: FACILITY_STATUSES.has(record.status) ? record.status : 'ACTIVE',
@@ -464,6 +465,7 @@ function buildFacilityPayload(source = [], existing = {}) {
     image: toText(source.image, existing.image),
     description: toText(source.description, existing.description),
     terms: toText(source.terms, existing.terms || ''),
+    mapLink: toText(source.mapLink, existing.mapLink || ''),
     phone: toText(source.phone, existing.phone),
     openHours: toText(source.openHours, existing.openHours),
     status: toStatus(source.status, existing.status || 'ACTIVE'),
@@ -482,7 +484,7 @@ function buildFacilityPayload(source = [], existing = {}) {
   }
 
   if (!facility.image) {
-    facility.image = 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1200';
+    facility.image = 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=1200';
   }
 
   return facility;
@@ -1342,6 +1344,9 @@ router.post('/facilities', authenticateToken, requireAdminOrPartner, async (req,
           gallery: stringifyJsonArray(facility.gallery),
           battleModes: stringifyJsonArray(facility.battleModes),
           slotTemplate: stringifyJsonArray(facility.slotTemplate),
+          availableSports: stringifyJsonArray(facility.availableSports),
+          terms: facility.terms || "",
+          mapLink: facility.mapLink || "",
           partnerId: facility.partnerId || null,
         },
       });
@@ -1397,6 +1402,9 @@ router.patch('/facilities/:id', authenticateToken, requireAdminOrPartner, async 
           gallery: stringifyJsonArray(updatedFacility.gallery),
           battleModes: stringifyJsonArray(updatedFacility.battleModes),
           slotTemplate: stringifyJsonArray(updatedFacility.slotTemplate),
+          availableSports: stringifyJsonArray(updatedFacility.availableSports),
+          terms: updatedFacility.terms || "",
+          mapLink: updatedFacility.mapLink || "",
           partnerId: updatedFacility.partnerId || null,
         },
       });
@@ -1446,6 +1454,47 @@ router.patch('/facilities/:id/assign-partner', authenticateToken, requireAdmin, 
     });
   } catch (error) {
     return res.status(400).json({ error: error.message });
+  }
+});
+
+router.patch('/bookings/:id/cancel', authenticateToken, requireAdminOrPartner, async (req, res) => {
+  try {
+    const bookingId = req.params.id;
+    let booking = null;
+
+    if (supportsGamehubPersistence()) {
+      const record = await prisma.gamehubBooking.findUnique({
+        where: { id: bookingId },
+        include: { facility: { select: { partnerId: true } } },
+      });
+
+      if (!record) return res.status(404).json({ error: 'Booking not found' });
+      if (!hasFacilityManagementAccess(req.user, record.facility)) {
+        return res.status(403).json({ error: 'Permission denied' });
+      }
+
+      const updated = await prisma.gamehubBooking.update({
+        where: { id: bookingId },
+        data: { status: 'CANCELLED' },
+      });
+
+      booking = { id: updated.id, status: updated.status };
+    } else {
+      const bIdx = GAMEHUB_BOOKINGS.findIndex((b) => b.id === bookingId);
+      if (bIdx === -1) return res.status(404).json({ error: 'Booking not found' });
+      
+      const facility = await findFacilityById(GAMEHUB_BOOKINGS[bIdx].facilityId);
+      if (!hasFacilityManagementAccess(req.user, facility)) {
+        return res.status(403).json({ error: 'Permission denied' });
+      }
+
+      GAMEHUB_BOOKINGS[bIdx].status = 'CANCELLED';
+      booking = GAMEHUB_BOOKINGS[bIdx];
+    }
+
+    return res.json({ message: 'Booking cancelled successfully', data: booking });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
   }
 });
 

@@ -10,6 +10,7 @@ const { getSeatRoom, setSocketServer } = require('./lib/realtime');
 
 // Load environment variables
 dotenv.config({ override: true });
+// Restart trigger: 2026-04-26T13:47:25Z
 
 const app = express();
 app.set('trust proxy', 1);

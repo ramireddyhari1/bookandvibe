@@ -17,6 +17,7 @@ import {
   CreditCard
 } from "lucide-react";
 import { fetchApi } from "@/lib/api";
+import PremiumLoader from "@/components/ui/PremiumLoader";
 
 type Payout = {
   id: string;
@@ -88,7 +89,7 @@ export default function AdminPayoutsPage() {
     switch (status) {
       case "PENDING": return "bg-amber-50 text-amber-700 border-amber-100";
       case "PROCESSING": return "bg-blue-50 text-blue-700 border-blue-100";
-      case "COMPLETED": return "bg-emerald-50 text-emerald-700 border-emerald-100";
+      case "COMPLETED": return "bg-emerald-50 text-emerald-700 border-gray-200";
       case "FAILED": return "bg-red-50 text-red-700 border-red-100";
       default: return "bg-slate-50 text-slate-700 border-slate-100";
     }
@@ -98,17 +99,17 @@ export default function AdminPayoutsPage() {
     <div className="mx-auto max-w-7xl space-y-8 pb-12">
       <header className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-teal-600 shadow-lg shadow-indigo-200/50">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gray-700 shadow-lg shadow-indigo-200/50">
             <HandCoins className="text-white" size={24} />
           </div>
           <div>
-            <h1 className="dash-title text-2xl font-black text-slate-900">Payout Requests</h1>
+            <h1 className="dash-title text-2xl font-semibold text-slate-900">Payout Requests</h1>
             <p className="text-sm font-bold text-slate-400">Review and process partner withdrawal requests</p>
           </div>
         </div>
         <button 
           onClick={fetchPayouts}
-          className="flex items-center gap-2 rounded-xl border border-slate-100 bg-white px-4 py-2.5 text-xs font-black uppercase tracking-wider text-slate-600 transition hover:bg-slate-50"
+          className="flex items-center gap-2 rounded-xl border border-slate-100 bg-white px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-slate-600 transition hover:bg-slate-50"
         >
           <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
           Refresh Data
@@ -135,7 +136,7 @@ export default function AdminPayoutsPage() {
         <div className="overflow-x-auto">
           <table className="w-full border-collapse text-left">
             <thead>
-              <tr className="bg-slate-50/50 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+              <tr className="bg-slate-50/50 text-[10px] font-semibold uppercase tracking-wider text-slate-400">
                 <th className="p-4 pl-6">Partner</th>
                 <th className="p-4">Amount</th>
                 <th className="p-4">Bank Details</th>
@@ -145,9 +146,13 @@ export default function AdminPayoutsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50 text-sm">
-              {loading && payouts.length === 0 ? (
+              {loading ? (
                 <tr>
-                  <td colSpan={6} className="p-20 text-center text-slate-400 font-bold">Loading requests...</td>
+                  <td colSpan={6} className="p-24">
+                    <div className="flex flex-col items-center justify-center">
+                      <PremiumLoader size="lg" color="#10b981" text="Auditing Payouts" />
+                    </div>
+                  </td>
                 </tr>
               ) : payouts.length > 0 ? (
                 payouts.map((p) => {
@@ -157,17 +162,17 @@ export default function AdminPayoutsPage() {
                     <tr key={p.id} className="group transition hover:bg-slate-50/30">
                       <td className="p-4 pl-6">
                         <div className="flex items-center gap-3">
-                          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-100 to-slate-50 text-indigo-700 font-black shadow-inner">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-indigo-700 font-semibold ">
                             {p.user.name.charAt(0)}
                           </div>
                           <div>
-                            <p className="font-black text-slate-800">{p.user.name}</p>
+                            <p className="font-semibold text-slate-800">{p.user.name}</p>
                             <p className="text-[10px] font-bold text-slate-400">{p.user.email}</p>
                           </div>
                         </div>
                       </td>
                       <td className="p-4">
-                        <div className="flex items-center gap-1.5 font-black text-slate-900">
+                        <div className="flex items-center gap-1.5 font-semibold text-slate-900">
                           <Banknote size={14} className="text-emerald-500" />
                           {formatCurrency(p.amount)}
                         </div>
@@ -194,7 +199,7 @@ export default function AdminPayoutsPage() {
                         </div>
                       </td>
                       <td className="p-4">
-                        <span className={`inline-flex rounded-lg border px-2.5 py-1 text-[10px] font-black uppercase tracking-wider shadow-sm ${getStatusColor(p.status)}`}>
+                        <span className={`inline-flex rounded-lg border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider shadow-sm ${getStatusColor(p.status)}`}>
                           {p.status}
                         </span>
                       </td>
@@ -205,7 +210,7 @@ export default function AdminPayoutsPage() {
                               <button 
                                 onClick={() => updateStatus(p.id, "PROCESSING")}
                                 disabled={updatingId === p.id}
-                                className="rounded-lg bg-blue-500 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-white transition hover:bg-blue-600 disabled:opacity-50"
+                                className="rounded-lg bg-blue-500 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-white transition hover:bg-blue-600 disabled:opacity-50"
                               >
                                 {updatingId === p.id ? "..." : "Process"}
                               </button>
@@ -213,20 +218,20 @@ export default function AdminPayoutsPage() {
                             <button 
                               onClick={() => updateStatus(p.id, "COMPLETED")}
                               disabled={updatingId === p.id}
-                              className="rounded-lg bg-emerald-500 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-white transition hover:bg-emerald-600 disabled:opacity-50"
+                              className="rounded-lg bg-emerald-500 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-white transition hover:bg-emerald-600 disabled:opacity-50"
                             >
                               Complete
                             </button>
                             <button 
                               onClick={() => updateStatus(p.id, "FAILED")}
                               disabled={updatingId === p.id}
-                              className="rounded-lg bg-red-500 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-white transition hover:bg-red-600 disabled:opacity-50"
+                              className="rounded-lg bg-red-500 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-white transition hover:bg-red-600 disabled:opacity-50"
                             >
                               Fail
                             </button>
                           </div>
                         ) : (
-                          <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">No Actions</span>
+                          <span className="text-[10px] font-semibold uppercase tracking-wide text-slate-300">No Actions</span>
                         )}
                       </td>
                     </tr>
@@ -240,7 +245,7 @@ export default function AdminPayoutsPage() {
                         <HandCoins className="text-slate-200" size={40} />
                       </div>
                       <div>
-                        <h4 className="text-lg font-black text-slate-400">All Clear!</h4>
+                        <h4 className="text-lg font-semibold text-slate-400">All Clear!</h4>
                         <p className="mt-1 text-sm font-medium text-slate-300">No pending payout requests currently.</p>
                       </div>
                     </div>

@@ -240,35 +240,37 @@ model Review {
 
 // ─── GameHub Facility Model ─────────────────────────────────────────────────
 model GamehubFacility {
-  id              String   @id @default(uuid())
-  name            String
-  type            String
-  location        String
-  venue           String
-  distance        String   @default("0 km away")
-  rating          Float    @default(0)
-  reviewsCount    Int      @default(0)
-  pricePerHour    Float    @default(0)
-  unit            String   @default("hr")
-  priceRange      String   @default("")
-  image           String
-  description     String   @default("")
-  phone           String   @default("")
-  openHours       String   @default("")
-  status          String   @default("ACTIVE")
-  pricingRules    String   @default("[]")
-  amenities       String   @default("[]")
-  features        String   @default("[]")
-  tags            String   @default("[]")
-  gallery         String   @default("[]")
-  battleModes     String   @default("[]")
-  slotTemplate    String   @default("[]")
-  availableSports String   @default("[]")
-  terms           String?  @default("") // Custom Terms & Conditions for the facility
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  partnerId       String?
-  partner         User?    @relation(fields: [partnerId], references: [id], onDelete: SetNull)
+  id                String   @id @default(uuid())
+  name              String
+  type              String
+  location          String
+  venue             String
+  distance          String   @default("0 km away")
+  rating            Float    @default(0)
+  reviewsCount      Int      @default(0)
+  pricePerHour      Float    @default(0)
+  unit              String   @default("hr")
+  priceRange        String   @default("")
+  image             String
+  description       String   @default("")
+  phone             String   @default("")
+  openHours         String   @default("")
+  status            String   @default("ACTIVE")
+  pricingRules      String   @default("[]")
+  amenities         String   @default("[]")
+  features          String   @default("[]")
+  tags              String   @default("[]")
+  gallery           String   @default("[]")
+  battleModes       String   @default("[]")
+  slotTemplate      String   @default("[]")
+  availableSports   String   @default("[]")
+  advancePercentage Int      @default(20)
+  terms             String?  @default("") // Custom Terms & Conditions for the facility
+  mapLink           String?  @default("") // Google Maps URL for venue directions
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  partnerId         String?
+  partner           User?    @relation(fields: [partnerId], references: [id], onDelete: SetNull)
 
   reviews      GamehubReview[]
   bookings     GamehubBooking[]
@@ -304,6 +306,8 @@ model GamehubBooking {
   bookingDate   DateTime
   slotLabel     String
   totalAmount   Float
+  advanceAmount Float    @default(0)
+  balanceAmount Float    @default(0)
   currency      String   @default("INR")
   status        String   @default("CONFIRMED")
   paymentMethod String   @default("MOCK")

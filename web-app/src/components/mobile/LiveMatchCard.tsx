@@ -24,7 +24,7 @@ const LiveMatchCard: React.FC<LiveMatchCardProps> = ({ match }) => {
           <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
             <Trophy size={16} />
           </div>
-          <span className="text-[12px] font-black uppercase tracking-widest text-emerald-600">Live {sportType}</span>
+          <span className="text-[12px] font-black uppercase tracking-wider text-emerald-600">Live {sportType}</span>
         </div>
         <div className="flex items-center gap-1.5 bg-red-50 px-2 py-1 rounded-full">
           <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />

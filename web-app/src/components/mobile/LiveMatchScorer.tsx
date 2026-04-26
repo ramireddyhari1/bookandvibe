@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { X, Trophy, Plus, Minus, Check, Save, Loader2 } from 'lucide-react';
+import { X, Trophy, Plus, Minus, Check, Save } from 'lucide-react';
+import PremiumLoader from "@/components/ui/PremiumLoader";
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchApi } from '@/lib/api';
 
@@ -63,7 +64,7 @@ const LiveMatchScorer: React.FC<LiveMatchScorerProps> = ({ bookingId, sportType,
 
   if (loading) return (
     <div className="fixed inset-0 z-[2000] bg-white flex items-center justify-center">
-      <Loader2 className="animate-spin text-emerald-500" size={32} />
+      <PremiumLoader size="md" color="#10b981" text="Syncing Match" />
     </div>
   );
 
@@ -104,8 +105,8 @@ const LiveMatchScorer: React.FC<LiveMatchScorerProps> = ({ bookingId, sportType,
           
           {saving && (
             <div className="absolute bottom-4 right-4 flex items-center gap-2">
-              <Loader2 className="animate-spin text-emerald-400" size={12} />
-              <span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest">Syncing</span>
+              <PremiumLoader size="sm" color="#ffffff" />
+              <span className="text-[10px] font-bold text-emerald-400/70 uppercase tracking-wider">Syncing</span>
             </div>
           )}
         </div>
@@ -120,7 +121,7 @@ const LiveMatchScorer: React.FC<LiveMatchScorerProps> = ({ bookingId, sportType,
               className="aspect-square rounded-3xl bg-gray-50 border-2 border-gray-100 flex flex-col items-center justify-center active:scale-95 transition-all hover:border-emerald-500 hover:bg-emerald-50 group"
             >
               <span className="text-[24px] font-black text-gray-900 group-hover:text-emerald-600">{runs}</span>
-              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest group-hover:text-emerald-500">Runs</span>
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider group-hover:text-emerald-500">Runs</span>
             </button>
           ))}
           <button 
@@ -129,13 +130,13 @@ const LiveMatchScorer: React.FC<LiveMatchScorerProps> = ({ bookingId, sportType,
             className="aspect-square rounded-3xl bg-red-50 border-2 border-red-100 flex flex-col items-center justify-center active:scale-95 transition-all hover:bg-red-500 hover:border-red-500 group"
           >
             <span className="text-[24px] font-black text-red-600 group-hover:text-white">W</span>
-            <span className="text-[10px] font-bold text-red-400 uppercase tracking-widest group-hover:text-red-100">Wicket</span>
+            <span className="text-[10px] font-bold text-red-400 uppercase tracking-wider group-hover:text-red-100">Wicket</span>
           </button>
         </div>
 
         {/* Manual Adjustments */}
         <div className="bg-gray-50 rounded-3xl p-6">
-          <h4 className="text-[13px] font-black text-gray-400 uppercase tracking-widest mb-4">Manual Adjustments</h4>
+          <h4 className="text-[13px] font-black text-gray-400 uppercase tracking-wider mb-4">Manual Adjustments</h4>
           <div className="flex gap-4">
             <button onClick={() => updateScore({ ...scoreData, runs: (scoreData.runs || 0) - 1 })} className="flex-1 py-3 bg-white border border-gray-200 rounded-xl font-bold text-gray-600 active:bg-gray-100 transition-colors">-1 Run</button>
             <button onClick={() => updateScore({ ...scoreData, wickets: (scoreData.wickets || 0) - 1 })} className="flex-1 py-3 bg-white border border-gray-200 rounded-xl font-bold text-gray-600 active:bg-gray-100 transition-colors">-1 Wicket</button>

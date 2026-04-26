@@ -62,7 +62,7 @@ export default function SettingsPage() {
             <ArrowLeft size={18} className="group-hover:-translate-x-0.5 transition-transform" />
           </Link>
           <div>
-            <h1 className="text-2xl font-black text-gray-900">Settings</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
             <p className="text-sm text-gray-500 font-medium">Account preferences & privacy</p>
           </div>
         </div>
@@ -71,7 +71,7 @@ export default function SettingsPage() {
           {/* Appearance */}
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-100">
-              <h3 className="text-[13px] font-black text-gray-500 uppercase tracking-wider">Appearance</h3>
+              <h3 className="text-[13px] font-bold text-gray-500 uppercase tracking-wider">Appearance</h3>
             </div>
             <div className="divide-y divide-gray-50">
               <div className="flex items-center justify-between px-6 py-4">
@@ -100,7 +100,7 @@ export default function SettingsPage() {
           {/* Notifications */}
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-100">
-              <h3 className="text-[13px] font-black text-gray-500 uppercase tracking-wider">Notifications</h3>
+              <h3 className="text-[13px] font-bold text-gray-500 uppercase tracking-wider">Notifications</h3>
             </div>
             <div className="divide-y divide-gray-50">
               <div className="flex items-center justify-between px-6 py-4">
@@ -139,7 +139,7 @@ export default function SettingsPage() {
           {/* Security */}
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-100">
-              <h3 className="text-[13px] font-black text-gray-500 uppercase tracking-wider">Security</h3>
+              <h3 className="text-[13px] font-bold text-gray-500 uppercase tracking-wider">Security</h3>
             </div>
             <div className="divide-y divide-gray-50">
               <div className="flex items-center justify-between px-6 py-4 cursor-pointer hover:bg-gray-50 transition">
@@ -178,7 +178,7 @@ export default function SettingsPage() {
           {/* Support & Legal */}
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-100">
-              <h3 className="text-[13px] font-black text-gray-500 uppercase tracking-wider">Support</h3>
+              <h3 className="text-[13px] font-bold text-gray-500 uppercase tracking-wider">Support</h3>
             </div>
             <div className="divide-y divide-gray-50">
               <div className="flex items-center justify-between px-6 py-4 cursor-pointer hover:bg-gray-50 transition">
@@ -201,7 +201,7 @@ export default function SettingsPage() {
           {/* Danger Zone */}
           <div className="bg-white rounded-2xl border border-red-100 shadow-sm overflow-hidden">
             <div className="px-6 py-4 border-b border-red-50">
-              <h3 className="text-[13px] font-black text-red-400 uppercase tracking-wider">Danger Zone</h3>
+              <h3 className="text-[13px] font-bold text-red-400 uppercase tracking-wider">Danger Zone</h3>
             </div>
             <div className="p-6 space-y-3">
               <button

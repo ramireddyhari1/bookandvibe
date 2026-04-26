@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Calendar, Search, Ticket } from "lucide-react";
+import PremiumLoader from "@/components/ui/PremiumLoader";
 
 import { fetchApi } from "@/lib/api";
 
@@ -85,56 +86,58 @@ export default function BookingsPage() {
   return (
     <div className="max-w-7xl mx-auto space-y-8">
       <header>
-        <h1 className="text-3xl font-black text-slate-900 tracking-tight uppercase">Bookings</h1>
-        <p className="text-emerald-600/70 mt-1 font-bold uppercase text-[10px] tracking-wider">Live tracking & operations</p>
+        <h1 className="text-2xl font-bold text-gray-900">Bookings</h1>
+        <p className="text-gray-500 mt-1 text-sm">Track and manage all bookings.</p>
       </header>
 
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-emerald-50 shadow-sm transition-all hover:bg-emerald-50/30">
-          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400/80">Total Bookings</p>
-          <p className="text-3xl font-black mt-1 text-slate-900 tracking-tight">{stats.totalBookings}</p>
+        <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm transition-all hover:bg-gray-50">
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">Total Bookings</p>
+          <p className="text-3xl font-semibold mt-1 text-slate-900 tracking-tight">{stats.totalBookings}</p>
         </div>
-        <div className="bg-white p-5 rounded-2xl border border-emerald-50 shadow-sm transition-all hover:bg-emerald-50/30">
-          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400/80">Confirmed Revenue</p>
-          <p className="text-3xl font-black mt-1 text-emerald-600 tracking-tight">₹{Math.round(stats.totalRevenue).toLocaleString()}</p>
+        <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm transition-all hover:bg-gray-50">
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">Confirmed Revenue</p>
+          <p className="text-3xl font-semibold mt-1 text-emerald-600 tracking-tight">₹{Math.round(stats.totalRevenue).toLocaleString()}</p>
         </div>
-        <div className="bg-white p-5 rounded-2xl border border-emerald-50 shadow-sm transition-all hover:bg-emerald-50/30">
-          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400/80">Avg Ticket</p>
-          <p className="text-3xl font-black mt-1 text-slate-900 tracking-tight">₹{Math.round(stats.averageValue).toLocaleString()}</p>
+        <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm transition-all hover:bg-gray-50">
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">Avg Ticket</p>
+          <p className="text-3xl font-semibold mt-1 text-slate-900 tracking-tight">₹{Math.round(stats.averageValue).toLocaleString()}</p>
         </div>
-        <div className="bg-white p-5 rounded-2xl border border-emerald-50 shadow-sm transition-all hover:bg-emerald-50/30">
-          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400/80">Refunded</p>
-          <p className="text-3xl font-black mt-1 text-red-500 tracking-tight">₹{Math.round(stats.refunded).toLocaleString()}</p>
+        <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm transition-all hover:bg-gray-50">
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">Refunded</p>
+          <p className="text-3xl font-semibold mt-1 text-red-500 tracking-tight">₹{Math.round(stats.refunded).toLocaleString()}</p>
         </div>
       </section>
 
-      <section className="bg-white rounded-3xl border border-emerald-50 p-5 space-y-5 shadow-sm">
+      <section className="bg-white rounded-xl border border-gray-100 p-5 space-y-5 shadow-sm">
         <div className="flex flex-wrap gap-2">
           {statusTabs.map((tab) => (
             <button
               key={tab}
               onClick={() => setStatusFilter(tab)}
-              className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all ${statusFilter === tab ? "bg-emerald-500 text-white shadow-lg shadow-emerald-200" : "bg-emerald-50/50 text-emerald-800/60 hover:bg-emerald-50"}`}
+              className={`px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all ${statusFilter === tab ? "bg-emerald-500 text-white shadow-sm" : "bg-gray-50 text-emerald-800/60 hover:bg-gray-50"}`}
             >
               {tab}
             </button>
           ))}
         </div>
 
-        <div className="flex items-center gap-3 bg-emerald-50/30 rounded-2xl px-4 py-3 border border-emerald-50/50 focus-within:border-emerald-200 focus-within:bg-white transition-all">
-          <Search size={18} className="text-emerald-600/40" />
+        <div className="flex items-center gap-3 bg-gray-50 rounded-lg px-4 py-2.5 border border-gray-200 focus-within:border-gray-300 focus-within:bg-white transition-colors">
+          <Search size={16} className="text-gray-400" />
           <input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search booking id, user, event..."
-            className="bg-transparent w-full outline-none text-sm font-bold text-slate-900 placeholder:text-emerald-900/30"
+            className="bg-transparent w-full outline-none text-sm text-gray-900 placeholder:text-gray-400"
           />
         </div>
       </section>
 
       <section className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
         {loading ? (
-          <div className="p-8 text-center text-slate-500">Loading bookings...</div>
+          <div className="py-24 flex flex-col items-center justify-center">
+            <PremiumLoader size="lg" color="#10b981" text="Syncing Records" />
+          </div>
         ) : error ? (
           <div className="p-8 text-center text-red-500">{error}</div>
         ) : filteredBookings.length === 0 ? (
@@ -158,18 +161,18 @@ export default function BookingsPage() {
                 {filteredBookings.map((booking) => (
                   <tr key={booking.id} className="border-t border-slate-100">
                     <td className="p-4 font-mono text-emerald-700/60 font-bold">{booking.id}</td>
-                    <td className="p-4 font-black text-slate-800">{booking.user?.name || "-"}</td>
+                    <td className="p-4 font-semibold text-slate-800">{booking.user?.name || "-"}</td>
                     <td className="p-4">
                       <span className="inline-flex items-center gap-2 font-bold text-slate-600">
                         <Ticket size={14} className="text-emerald-500" />
                         {booking.event?.title || "-"}
                       </span>
                     </td>
-                    <td className="p-4 font-black text-slate-900">{booking.quantity}</td>
-                    <td className="p-4 font-black text-slate-900">₹{Math.round(booking.totalAmount || 0).toLocaleString()}</td>
+                    <td className="p-4 font-semibold text-slate-900">{booking.quantity}</td>
+                    <td className="p-4 font-semibold text-slate-900">₹{Math.round(booking.totalAmount || 0).toLocaleString()}</td>
                     <td className="p-4 font-bold text-slate-500">{booking.payment?.method || "-"}</td>
                     <td className="p-4">
-                      <span className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${statusFilter === "Confirmed" || formatStatus(booking.status) === "Confirmed" ? "bg-emerald-50 text-emerald-700 border border-emerald-100" : "bg-slate-50 text-slate-500 border border-slate-100"}`}>
+                      <span className={`px-3 py-1 rounded-lg text-[10px] font-semibold uppercase tracking-wider ${statusFilter === "Confirmed" || formatStatus(booking.status) === "Confirmed" ? "bg-emerald-50 text-emerald-700 border border-gray-200" : "bg-slate-50 text-slate-500 border border-slate-100"}`}>
                         {formatStatus(booking.status)}
                       </span>
                     </td>

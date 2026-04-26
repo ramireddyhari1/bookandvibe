@@ -1,21 +1,25 @@
 "use client";
 
-import { useEffect, useMemo, useState, useRef } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import Link from "next/link";
 import {
   Activity,
+  ArrowRight,
   Calendar,
+  Check,
   ChevronDown,
   ChevronRight,
   Frown,
   MapPin,
   Search,
+  Sparkles,
   Star,
   Target,
   Trophy,
   Users,
   Zap,
 } from "lucide-react";
+import PremiumLoader from "@/components/ui/PremiumLoader";
 import { useLocation } from "@/context/LocationContext";
 import SubNav from "@/components/gamehub/SubNav";
 import PlayNowSection from "@/components/gamehub/PlayNowSection";
@@ -102,8 +106,7 @@ export default function GamezonePage() {
         setTotal(0);
         setError(err instanceof Error ? err.message : "Failed to load facilities");
       } finally {
-        // Add a slight delay to show off the cool skeletons
-        setTimeout(() => setLoading(false), 800);
+        setLoading(false);
       }
     }
 
@@ -152,95 +155,84 @@ export default function GamezonePage() {
       </div>
 
       {/* Desktop View */}
-      <div className="hidden md:block min-h-screen bg-[#F8F9FA] text-[#1c222b] pb-24 font-sans pt-20">
+      <div className="hidden md:block min-h-screen text-[#1c222b] pb-24 font-sans pt-[112px]">
         <SubNav activeTab={activeSubTab} setActiveTab={setActiveSubTab} />
 
-      {/* ===== TAB: PLAY NOW ===== */}
-      {activeSubTab === "play" && (
-        <PlayNowSection city={selectedLocation.city} />
-      )}
+      {/* Tab Content */}
+      <div className="max-w-[1200px] mx-auto px-6">
+        {activeSubTab === "play" && (
+          <PlayNowSection city={selectedLocation.city} />
+        )}
 
-      {/* ===== TAB: RESERVE SLOT (Default) ===== */}
-      {activeSubTab === "reserve" && (
-        <>
-          {/* Header / Search Section */}
-          <div className="bg-white border-b border-gray-200">
-            <div className="max-w-[1200px] mx-auto px-6 py-8">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
-                <h1 className="text-2xl md:text-3xl font-extrabold text-[#1c222b] whitespace-nowrap">
-                  Sports Venues in <span className="text-[#42B460]">{selectedLocation.city}</span>
-                </h1>
+        {activeSubTab === "reserve" && (
+          <div className="space-y-24 pb-24">
+            {/* Header & Search */}
+            <div className="bg-white rounded-[40px] border border-gray-100 shadow-sm overflow-hidden">
+              <div className="py-16 px-12 flex flex-col md:flex-row md:items-end justify-between gap-12">
+                <div className="space-y-3">
+                  <h1 className="text-5xl font-bold tracking-tight text-[#1c222b]">
+                    Venues in <span className="text-[#42B460]">{selectedLocation.city}</span>
+                  </h1>
+                  <p className="text-lg text-gray-500 font-medium max-w-lg">
+                    Discover and book premium sports facilities curated for champions.
+                  </p>
+                </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 w-full max-w-2xl">
                   <div className="relative flex-1 group">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                    <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#42B460] transition-colors" size={20} />
                     <input
                       type="text"
-                      placeholder="Search by venue name"
+                      placeholder="Search by name or sport..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#42B460] focus:border-transparent outline-none transition-all text-[15px] shadow-sm"
+                      className="w-full pl-14 pr-6 py-4 bg-gray-50 border border-transparent rounded-2xl focus:bg-white focus:border-[#42B460]/30 focus:ring-4 focus:ring-[#42B460]/5 outline-none transition-all text-[16px] font-medium"
                     />
                     
-                    {/* SEARCH POPUP OVERLAY */}
                     {searchQuery.trim().length > 0 && (
-                      <div className="absolute top-[110%] left-0 right-0 bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-gray-100 overflow-hidden z-[100] flex flex-col max-h-[400px]">
-                        <div className="overflow-y-auto p-4 flex flex-col gap-2">
-                          <div className="flex items-center justify-between px-2 pb-2 border-b border-gray-50 mb-1">
-                            <span className="text-[12px] font-black text-gray-400 uppercase tracking-widest">
-                              Venue Suggestions
-                            </span>
-                          </div>
-                          
-                          {filteredFacilities.length > 0 ? (
-                            filteredFacilities.slice(0, 10).map(f => (
-                              <Link 
-                                href={`/gamehub/${f.id}`} 
-                                key={f.id} 
-                                onClick={() => setSearchQuery("")}
-                                className="flex items-center gap-4 p-3 hover:bg-emerald-50 rounded-2xl transition-all group"
-                              >
-                                <div className="w-14 h-14 rounded-xl overflow-hidden shrink-0 shadow-sm">
-                                  <img src={f.image} alt={f.name} className="w-full h-full object-cover" />
-                                </div>
-                                <div className="flex-1 flex flex-col min-w-0">
-                                  <h4 className="text-[15px] font-bold text-gray-900 truncate group-hover:text-emerald-600 transition-colors">{f.name}</h4>
-                                  <div className="flex items-center gap-2 text-[12px] text-gray-500 font-medium truncate">
-                                    <MapPin size={12} className="text-emerald-500" />
-                                    <span>{f.venue || f.location} • {f.type}</span>
-                                  </div>
-                                </div>
-                                <ChevronRight size={18} className="text-gray-300 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all" />
-                              </Link>
-                            ))
-                          ) : (
-                            <div className="py-10 text-center flex flex-col items-center gap-2">
-                              <Frown size={40} className="text-gray-200" />
-                              <p className="text-gray-500 font-bold">No venues found for "{searchQuery}"</p>
-                            </div>
-                          )}
-                        </div>
-                        {filteredFacilities.length > 0 && (
-                          <div className="bg-gray-50 p-3 text-center border-t border-gray-100">
-                             <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Found {filteredFacilities.length} venues in {selectedLocation.city}</p>
+                      <div className="absolute top-[calc(100%+12px)] left-0 right-0 bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden z-[100] p-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                        {filteredFacilities.length > 0 ? (
+                          filteredFacilities.slice(0, 5).map(f => (
+                            <Link 
+                              href={`/gamehub/${f.id}`} 
+                              key={f.id} 
+                              onClick={() => setSearchQuery("")}
+                              className="flex items-center gap-5 p-4 hover:bg-gray-50 rounded-2xl transition-all group/item"
+                            >
+                              <div className="w-14 h-14 rounded-xl overflow-hidden shrink-0 shadow-sm">
+                                <img src={f.image} alt={f.name} className="w-full h-full object-cover" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <h4 className="text-[15px] font-bold text-gray-900 truncate group-hover/item:text-[#42B460] transition-colors">{f.name}</h4>
+                                <p className="text-[13px] text-gray-500 truncate font-medium">{f.venue || f.location}</p>
+                              </div>
+                              <div className="bg-gray-100 p-2 rounded-lg group-hover/item:bg-[#42B460]/10 group-hover/item:text-[#42B460] transition-all">
+                                <ChevronRight size={18} />
+                              </div>
+                            </Link>
+                          ))
+                        ) : (
+                          <div className="py-12 text-center">
+                            <Search size={40} className="mx-auto text-gray-200 mb-4" />
+                            <p className="text-gray-400 font-bold">No facilities match your search</p>
                           </div>
                         )}
                       </div>
                     )}
                   </div>
 
-                  <div className="relative min-w-[180px]" ref={sportDropdownRef}>
+                  <div className="relative min-w-[200px]" ref={sportDropdownRef}>
                     <div 
                       onClick={() => setIsSportDropdownOpen(!isSportDropdownOpen)}
-                      className="w-full pl-4 pr-10 py-3 bg-gray-50 border border-gray-200 rounded-lg flex items-center gap-2 cursor-pointer hover:bg-gray-100 transition-colors"
+                      className="w-full pl-5 pr-12 py-4 bg-gray-50 border border-transparent rounded-2xl flex items-center gap-3 cursor-pointer hover:bg-gray-100 transition-all font-medium text-gray-700"
                     >
-                      <Activity size={18} className="text-[#42B460]" />
-                      <span className="text-[15px] font-medium text-gray-700 whitespace-nowrap">{selectedSport}</span>
-                      <ChevronDown size={16} className={`absolute right-4 text-gray-400 transition-transform ${isSportDropdownOpen ? 'rotate-180' : ''}`} />
+                      <Activity size={20} className="text-[#42B460]" />
+                      <span className="text-[16px] whitespace-nowrap">{selectedSport}</span>
+                      <ChevronDown size={18} className={`absolute right-5 text-gray-400 transition-transform duration-300 ${isSportDropdownOpen ? 'rotate-180' : ''}`} />
                     </div>
                     
                     {isSportDropdownOpen && (
-                      <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-100 rounded-xl shadow-xl z-50 overflow-hidden py-1">
+                      <div className="absolute top-[calc(100%+8px)] left-0 right-0 bg-white border border-gray-100 rounded-2xl shadow-2xl z-50 overflow-hidden py-2 animate-in fade-in zoom-in-95 duration-200">
                         {["All Sports", "Cricket", "Football", "Badminton", "Swimming", "Multi-sport"].map((sport) => (
                           <div
                             key={sport}
@@ -248,13 +240,14 @@ export default function GamezonePage() {
                               setSelectedSport(sport);
                               setIsSportDropdownOpen(false);
                             }}
-                            className={`px-4 py-2.5 text-sm cursor-pointer transition-colors ${
+                            className={`px-5 py-3 text-[15px] cursor-pointer transition-all flex items-center justify-between ${
                               selectedSport === sport
-                                ? "bg-[#42B460]/10 text-[#42B460] font-bold border-l-2 border-[#42B460]"
-                                : "text-gray-700 hover:bg-gray-50 font-medium border-l-2 border-transparent"
+                                ? "bg-[#42B460] text-white font-bold"
+                                : "text-gray-700 hover:bg-gray-50 font-medium"
                             }`}
                           >
                             {sport}
+                            {selectedSport === sport && <Check size={16} />}
                           </div>
                         ))}
                       </div>
@@ -263,74 +256,81 @@ export default function GamezonePage() {
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Book Venues Featured Slider / Search Results */}
-          <div className="bg-white pt-12 pb-16 border-t border-gray-50">
-            <div className="max-w-[1200px] mx-auto px-6">
-              <div className="flex items-center justify-between mb-8">
+            {/* Featured Section */}
+            <div>
+              <div className="flex items-center justify-between mb-10">
                 <div className="space-y-2">
-                  <h2 className="text-xl md:text-2xl font-extrabold text-[#1c222b]">
-                    {searchQuery || selectedSport !== "All Sports" ? "Search Results" : "Book Venues"}
-                  </h2>
-                  <p className="text-[14px] text-gray-400 font-medium">
-                    {searchQuery || selectedSport !== "All Sports" 
-                      ? `Found ${filteredFacilities.length} venues matching your criteria` 
-                      : `Top picked venues for you in ${selectedLocation.city}`}
-                  </p>
+                  <h2 className="text-3xl font-bold text-[#1c222b] tracking-tight">Featured Venues</h2>
+                  <p className="text-lg text-gray-500 font-medium">Top-rated facilities for your perfect game.</p>
                 </div>
-                {!(searchQuery || selectedSport !== "All Sports") && (
-                  <Link
-                    href="#all-venues"
-                    className="text-[#42B460] font-bold text-[14px] flex items-center gap-1 hover:underline tracking-tight"
-                  >
-                    SEE ALL VENUES <ChevronRight size={18} strokeWidth={2.5} />
-                  </Link>
-                )}
+                <Link
+                  href="#all-venues"
+                  className="group bg-white border border-gray-200 text-[#1c222b] font-bold px-6 py-3 rounded-2xl flex items-center gap-2 hover:border-[#42B460] hover:text-[#42B460] transition-all shadow-sm"
+                >
+                  View All <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                </Link>
               </div>
 
-              {filteredFacilities.length > 0 ? (
-                <div className={searchQuery || selectedSport !== "All Sports" ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" : "flex gap-6 overflow-x-auto pb-4 scrollbar-hide snap-x"}>
+              {loading ? (
+                <div className="py-32 flex flex-col items-center justify-center bg-white rounded-[40px] border border-gray-100 shadow-sm">
+                  <PremiumLoader size="lg" color="#42B460" text="Refreshing Facilities" />
+                </div>
+              ) : filteredFacilities.length > 0 ? (
+                <div className={searchQuery || selectedSport !== "All Sports" ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" : "flex gap-8 overflow-x-auto pb-8 scrollbar-hide snap-x"}>
                   {filteredFacilities.slice(0, searchQuery || selectedSport !== "All Sports" ? undefined : 6).map((fac) => (
                     <Link
                       href={`/gamehub/${fac.id}`}
                       key={`fac-${fac.id}`}
-                      className={`group ${searchQuery || selectedSport !== "All Sports" ? "w-full" : "flex-shrink-0 w-[300px] md:w-[340px] snap-start"}`}
+                      className={`group ${searchQuery || selectedSport !== "All Sports" ? "w-full" : "flex-shrink-0 w-[320px] md:w-[380px] snap-start"}`}
                     >
-                      <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm transition-all duration-300">
+                      <div className="bg-white rounded-[32px] overflow-hidden border border-gray-100 shadow-sm hover:shadow-2xl hover:shadow-[#42B460]/10 transition-all duration-500">
                         <div className="aspect-[16/10] relative overflow-hidden bg-gray-100">
                           <img
                             src={fac.image}
                             alt={fac.name}
-                            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                           />
-                          <div className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-md text-white text-[10px] font-black px-2.5 py-1.5 rounded-md tracking-widest uppercase">
-                            FEATURED
+                          <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md text-[#42B460] text-[10px] font-bold px-3 py-1.5 rounded-full shadow-sm flex items-center gap-1.5 tracking-wider uppercase">
+                            <Sparkles size={12} /> Featured
+                          </div>
+                          <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+                             <div className="flex items-center gap-1.5 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/20">
+                                <Star size={14} fill="#FFB800" className="text-[#FFB800]" />
+                                <span className="text-white text-[14px] font-bold">{fac.rating}</span>
+                             </div>
+                             <div className="bg-white px-3 py-1.5 rounded-xl shadow-lg">
+                                <span className="text-[#1c222b] text-[16px] font-bold">₹{fac.pricePerHour || "499"}</span>
+                                <span className="text-gray-400 text-[11px] font-bold ml-1">/hr</span>
+                             </div>
                           </div>
                         </div>
 
-                        <div className="p-4">
-                          <div className="flex justify-between items-start mb-1.5">
-                            <h3 className="text-[16px] font-bold text-[#1c222b] group-hover:text-[#42B460] transition-colors line-clamp-1">
-                              {fac.name}
-                            </h3>
-                            <div className="flex items-center gap-1 bg-[#42B460]/10 px-2 py-0.5 rounded-md shrink-0">
-                              <span className="text-[13px] font-bold text-[#42B460]">{fac.rating}</span>
-                              <span className="text-[11px] text-[#42B460]/70 font-bold">({fac.reviewsCount})</span>
-                            </div>
+                        <div className="p-6">
+                          <h3 className="text-[20px] font-bold text-[#1c222b] group-hover:text-[#42B460] transition-colors line-clamp-1 mb-2">
+                            {fac.name}
+                          </h3>
+                          
+                          <div className="flex items-center gap-2 text-gray-400 font-medium text-[14px] mb-6">
+                            <MapPin size={16} className="shrink-0" />
+                            <span className="truncate">{fac.venue}</span>
+                            <span className="shrink-0 text-gray-300">•</span>
+                            <span className="shrink-0">{fac.distance}</span>
                           </div>
-                          <div className="flex items-center justify-between">
-                            <div className="space-y-0.5">
-                              <p className="text-[13px] text-gray-500 font-medium line-clamp-1">{fac.venue}</p>
-                              <p className="text-[12px] text-gray-400 font-bold">~{fac.distance}</p>
-                            </div>
-                            <div className="flex items-center gap-2 bg-gray-50 px-2 py-1 rounded-lg border border-gray-100">
-                              <div className="flex -space-x-1">
-                                {getSportIcons(fac.type).slice(0, 2)}
+
+                          <div className="flex items-center justify-between pt-4 border-t border-gray-50">
+                            <div className="flex items-center gap-3">
+                              <div className="flex -space-x-2">
+                                {getSportIcons(fac.type).slice(0, 3).map((icon, i) => (
+                                  <div key={i} className="w-8 h-8 rounded-full bg-gray-50 border-2 border-white flex items-center justify-center text-gray-600 shadow-sm">
+                                    {icon}
+                                  </div>
+                                ))}
                               </div>
-                              {fac.type.includes("&") && (
-                                <span className="text-[10px] text-gray-400 font-bold">+1 more</span>
-                              )}
+                              <span className="text-[12px] text-gray-500 font-bold uppercase tracking-tight">{fac.type.split(" & ")[0]}</span>
+                            </div>
+                            <div className="bg-[#42B460]/5 text-[#42B460] px-4 py-2 rounded-xl text-[12px] font-bold uppercase tracking-wider group-hover:bg-[#42B460] group-hover:text-white transition-all">
+                              Book Now
                             </div>
                           </div>
                         </div>
@@ -339,79 +339,74 @@ export default function GamezonePage() {
                   ))}
                 </div>
               ) : (
-                <div className="py-12 text-center bg-gray-50 rounded-2xl border border-gray-100 border-dashed">
-                  <Activity size={32} className="mx-auto text-gray-300 mb-2" />
-                  <p className="text-gray-500 font-medium">No venues found matching your criteria.</p>
+                <div className="py-32 flex flex-col items-center justify-center bg-gray-50 rounded-[40px] border border-gray-100 border-dashed">
+                  <Frown size={48} className="text-gray-300 mb-4" />
+                  <p className="text-xl font-bold text-gray-400">No facilities found in this area</p>
+                  <button onClick={() => {setSelectedSport("All Sports"); setSearchQuery("");}} className="mt-6 text-[#42B460] font-bold hover:underline">Clear all filters</button>
                 </div>
               )}
             </div>
-          </div>
 
-          {/* Hide these sections if searching */}
-          {!(searchQuery || selectedSport !== "All Sports") && (
-            <>
-              {/* Categories Section */}
-              <div className="bg-white pb-16 pt-4">
-            <div className="max-w-[1200px] mx-auto px-6">
-              <div className="flex items-center justify-between mb-8">
-                <div className="space-y-2">
-                  <h2 className="text-xl md:text-2xl font-extrabold text-[#1c222b]">Explore by Sport</h2>
-                  <p className="text-[14px] text-gray-400 font-medium">Find facilities for your favorite games</p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                {[
-                  { name: "Cricket", count: "12 venues", image: "/sports/cricket.png", border: "hover:border-green-400 hover:shadow-green-100" },
-                  { name: "Football", count: "8 venues", image: "/sports/football.png", border: "hover:border-blue-400 hover:shadow-blue-100" },
-                  { name: "Badminton", count: "15 venues", image: "/sports/badminton.png", border: "hover:border-orange-400 hover:shadow-orange-100" },
-                  { name: "Swimming", count: "5 venues", image: "/sports/swimming.png", border: "hover:border-cyan-400 hover:shadow-cyan-100" },
-                  { name: "Tennis", count: "4 venues", image: "/sports/tennis.png", border: "hover:border-purple-400 hover:shadow-purple-100" },
-                  { name: "Basketball", count: "6 venues", image: "/sports/basketball.png", border: "hover:border-amber-400 hover:shadow-amber-100" },
-                ].map((cat) => (
-                  <div key={cat.name} className={`flex flex-col items-center justify-center p-6 rounded-2xl border border-gray-100 transition-all duration-300 hover:shadow-lg cursor-pointer bg-white group ${cat.border}`}>
-                    <div className="w-16 h-16 mb-3 group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-500">
-                      <img src={cat.image} className="w-full h-full object-cover mix-blend-multiply rounded-full shadow-sm" alt={cat.name} />
-                    </div>
-                    <span className="text-[14px] font-bold text-[#1c222b] group-hover:text-[#42B460] transition-colors">{cat.name}</span>
-                    <span className="text-[11px] font-bold text-gray-400 mt-1">{cat.count}</span>
+            {/* Explore by Sport */}
+            {!(searchQuery || selectedSport !== "All Sports") && (
+              <React.Fragment>
+                <div className="space-y-12">
+                  <div className="space-y-2 text-center md:text-left">
+                    <h2 className="text-3xl font-bold text-[#1c222b] tracking-tight">Explore by Sport</h2>
+                    <p className="text-lg text-gray-500 font-medium">Find specialized facilities curated for your discipline.</p>
                   </div>
-                ))}
-              </div>
-            </div>
-          </div>
 
-          {/* Promo Banner Section */}
-          <div className="max-w-[1200px] mx-auto px-6 mb-16">
-            <div className="relative group cursor-pointer overflow-hidden rounded-3xl shadow-lg border border-gray-100 h-[180px] md:h-[240px]">
-              <img
-                src="/gamehub_promo_banner.png"
-                alt="Promo Banner"
-                className="w-full h-full object-cover object-center group-hover:scale-[1.02] transition-transform duration-700 ease-out"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent opacity-70 md:opacity-60 transition-opacity duration-500" />
-              <div className="absolute inset-y-0 left-0 p-6 md:p-10 flex flex-col justify-center max-w-2xl bg-gradient-to-r from-black/50 via-transparent to-transparent md:bg-none">
-                <div className="inline-flex items-center gap-2 bg-[#42B460] text-white text-[9px] font-black px-2 py-0.5 rounded-md tracking-widest uppercase mb-3 w-fit shadow-lg shadow-[#42B460]/20">
-                  Limited Offer
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+                    {[
+                      { name: "Cricket", count: "12 venues", image: "/sports/cricket.png", color: "from-emerald-50 to-white" },
+                      { name: "Football", count: "8 venues", image: "/sports/football.png", color: "from-blue-50 to-white" },
+                      { name: "Badminton", count: "15 venues", image: "/sports/badminton.png", color: "from-orange-50 to-white" },
+                      { name: "Swimming", count: "5 venues", image: "/sports/swimming.png", color: "from-cyan-50 to-white" },
+                      { name: "Tennis", count: "4 venues", image: "/sports/tennis.png", color: "from-lime-50 to-white" },
+                      { name: "Basketball", count: "6 venues", image: "/sports/basketball.png", color: "from-purple-50 to-white" },
+                    ].map((cat) => (
+                      <div key={cat.name} className={`flex flex-col items-center justify-center p-10 rounded-[32px] border border-gray-100 bg-gradient-to-b ${cat.color} transition-all duration-500 hover:border-[#42B460] hover:shadow-2xl hover:shadow-[#42B460]/10 hover:-translate-y-2 cursor-pointer group`}>
+                        <div className="w-16 h-16 mb-6 group-hover:rotate-12 transition-transform duration-500 drop-shadow-xl">
+                          <img src={cat.image} className="w-full h-full object-cover mix-blend-multiply" alt={cat.name} />
+                        </div>
+                        <span className="text-[16px] font-bold text-[#1c222b] mb-1">{cat.name}</span>
+                        <span className="text-[12px] font-bold text-gray-400 uppercase tracking-widest">{cat.count}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <h2 className="text-2xl md:text-3xl font-black text-white mb-2 drop-shadow-xl tracking-tighter leading-tight">
-                  UNLEASH THE CHAMPION WITHIN
-                </h2>
-                <p className="text-white/80 text-[12px] md:text-[15px] font-medium mb-5 drop-shadow-md max-w-md leading-relaxed hidden sm:block">
-                  Book the finest arenas and venues in your city. Elevate your game today.
-                </p>
-                <div className="flex flex-wrap gap-4">
-                  <button className="bg-white text-[#1c222b] hover:bg-[#42B460] hover:text-white px-5 py-2 rounded-xl text-sm font-black transition-all shadow-xl flex items-center gap-2 transform hover:-translate-y-0.5 group/btn">
-                    Book Venues <ChevronRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
-                  </button>
+
+                {/* Promo Banner */}
+                <div className="relative group cursor-pointer overflow-hidden rounded-[50px] h-[320px] shadow-2xl">
+                  <img
+                    src="/gamehub_promo_banner.png"
+                    alt="Promo Banner"
+                    className="w-full h-full object-cover group-hover:scale-[1.05] transition-transform duration-1000"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+                  <div className="absolute inset-y-0 left-0 p-16 flex flex-col justify-center max-w-2xl">
+                    <div className="flex items-center gap-2 mb-6">
+                       <span className="bg-[#42B460] text-white text-[11px] font-bold px-4 py-1.5 rounded-full uppercase tracking-[0.2em] shadow-lg shadow-[#42B460]/20">
+                        Limited Access
+                       </span>
+                    </div>
+                    <h2 className="text-5xl font-bold text-white mb-4 tracking-tight leading-[1.1]">
+                      Unlock the Best <span className="text-[#42B460]">Arenas</span> in the City
+                    </h2>
+                    <p className="text-white/80 text-lg font-medium mb-10 leading-relaxed">
+                      Book elite facilities with professional equipment and instant digital scheduling.
+                    </p>
+                    <button className="group/btn bg-[#42B460] text-white px-10 py-4 rounded-2xl font-bold hover:bg-[#38A354] transition-all w-fit shadow-2xl flex items-center gap-3">
+                      Start Booking
+                      <ArrowRight size={20} className="group-hover/btn:translate-x-2 transition-transform" />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </div>
+              </React.Fragment>
+            )}
           </div>
-            </>
-          )}
-        </>
-      )}
+        )}
+      </div>
 
       {/* ===== TAB: FIND GROUNDS ===== */}
       {activeSubTab === "find" && (

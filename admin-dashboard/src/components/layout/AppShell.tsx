@@ -136,60 +136,57 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         onMobileClose={() => setIsMobileMenuOpen(false)} 
       />
       <main className="app-main relative min-h-screen px-4 pb-10 pt-4 md:px-8 md:pt-6">
-        <header className="dash-card sticky top-2 lg:top-4 z-20 mb-6 flex items-center justify-between gap-3 border-emerald-100/50 bg-white/80 px-3 py-2.5 transition-all md:px-5 md:py-3 lg:top-4">
+        <header className="dash-card sticky top-2 lg:top-4 z-20 mb-6 flex items-center justify-between gap-3 bg-white px-3 py-2.5 transition-all md:px-5 md:py-3">
           <div className="flex items-center gap-3 min-w-0">
             {/* Hamburger Button */}
             <button 
               onClick={() => setIsMobileMenuOpen(true)}
-              className="flex lg:hidden btn-glass focus-premium rounded-xl p-2 text-slate-600 hover:text-emerald-600"
+              className="flex lg:hidden rounded-lg border border-gray-200 p-2 text-gray-600 hover:bg-gray-50"
             >
               <Menu size={20} />
             </button>
 
             <div className="min-w-0">
-              <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.25em] text-emerald-600/60">Control Suite</p>
-              <h1 className="dash-title truncate text-lg md:text-xl font-extrabold text-slate-900">{titleFromPath(pathname)}</h1>
+              <h1 className="dash-title truncate text-lg md:text-xl font-bold text-gray-900">{titleFromPath(pathname)}</h1>
             </div>
           </div>
 
           <div className="hidden flex-1 items-center justify-center lg:flex">
-            <label className="group flex w-full max-w-md items-center gap-2 rounded-2xl border border-emerald-50 bg-emerald-50/30 px-3 py-2 text-left transition-all duration-300 focus-within:border-emerald-200 focus-within:bg-white focus-within:shadow-[0_12px_24px_rgba(16,185,129,0.06)]">
-              <Search size={14} className="text-emerald-600/40 transition group-hover:text-emerald-600/60" />
+            <label className="group flex w-full max-w-md items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 transition-all focus-within:border-gray-300 focus-within:shadow-sm">
+              <Search size={14} className="text-gray-400" />
               <input
                 type="text"
-                placeholder="Search resources..."
-                className="w-full bg-transparent text-sm font-bold text-slate-900 placeholder:text-emerald-900/30 outline-none"
+                placeholder="Search..."
+                className="w-full bg-transparent text-sm text-gray-900 placeholder:text-gray-400 outline-none"
               />
-              <span className="ml-auto rounded-md border border-emerald-100 bg-white px-1.5 py-0.5 text-[10px] font-bold text-emerald-600/40">⌘K</span>
+              <span className="ml-auto rounded border border-gray-200 bg-gray-50 px-1.5 py-0.5 text-[10px] font-medium text-gray-400">⌘K</span>
             </label>
           </div>
 
           <div className="flex items-center gap-2">
-            <button className="btn-glass focus-premium inline-flex items-center gap-2 rounded-xl px-3 py-2 text-[11px] font-black uppercase tracking-wider text-slate-700">
-              <CalendarDays size={14} className="text-emerald-500" />
+            <button className="inline-flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-[11px] font-semibold text-gray-600">
+              <CalendarDays size={14} className="text-gray-400" />
               <span className="hidden sm:inline">{today}</span>
             </button>
 
             <NotificationDropdown />
 
             <details className="group relative">
-              <summary className="focus-premium flex cursor-pointer list-none items-center gap-2 rounded-xl border border-emerald-50 bg-emerald-50/20 px-2 py-1.5 transition-all hover:bg-emerald-50/50">
-                <div className="rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 p-[2px] shadow-lg shadow-emerald-200/40">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-xs font-black text-emerald-600">
-                    {initials}
-                  </div>
+              <summary className="flex cursor-pointer list-none items-center gap-2 rounded-lg border border-gray-200 px-2 py-1.5 transition-all hover:bg-gray-50">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-xs font-semibold text-gray-600">
+                  {initials}
                 </div>
                 <div className="hidden min-w-0 sm:block">
-                  <p className="truncate text-xs font-black text-slate-900">{userName}</p>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-600/60">{roleLabel}</p>
+                  <p className="truncate text-xs font-semibold text-gray-900">{userName}</p>
+                  <p className="text-[10px] text-gray-400">{roleLabel}</p>
                 </div>
               </summary>
-              <div className="dash-card absolute right-0 mt-2 w-48 origin-top-right border-emerald-100 bg-white p-2 text-xs text-slate-700 shadow-2xl group-open:animate-in group-open:fade-in group-open:zoom-in-95">
-                <button className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left font-bold transition hover:bg-emerald-50 hover:text-emerald-700">
-                  <User size={14} className="text-emerald-500" /> Profile Settings
+              <div className="dash-card absolute right-0 mt-2 w-48 origin-top-right bg-white p-2 text-xs text-gray-700 shadow-lg">
+                <button className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left font-medium transition hover:bg-gray-50">
+                  <User size={14} className="text-gray-400" /> Profile Settings
                 </button>
-                <button className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left font-bold transition hover:bg-emerald-50 hover:text-emerald-700">
-                  <Bell size={14} className="text-emerald-500" /> System Alerts
+                <button className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left font-medium transition hover:bg-gray-50">
+                  <Bell size={14} className="text-gray-400" /> System Alerts
                 </button>
               </div>
             </details>

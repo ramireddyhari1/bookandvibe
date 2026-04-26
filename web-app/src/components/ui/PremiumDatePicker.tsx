@@ -146,7 +146,7 @@ export default function PremiumDatePicker({
 
   return (
     <div className={`relative ${className}`} ref={containerRef}>
-      <label className="text-[10px] font-black uppercase text-gray-500 tracking-widest block mb-2 px-1">
+      <label className="text-[10px] font-bold uppercase text-gray-500 tracking-wider block mb-2 px-1">
         {label}
       </label>
       
@@ -178,8 +178,8 @@ export default function PremiumDatePicker({
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
               <div className="flex flex-col">
-                <span className="text-gray-500 text-[10px] font-black uppercase tracking-widest">{viewDate.getFullYear()}</span>
-                <span className="text-white text-[17px] font-black">{MONTHS[viewDate.getMonth()]}</span>
+                <span className="text-gray-500 text-[10px] font-bold uppercase tracking-wider">{viewDate.getFullYear()}</span>
+                <span className="text-white text-[17px] font-bold">{MONTHS[viewDate.getMonth()]}</span>
               </div>
               <div className="flex gap-2">
                 <button 
@@ -200,7 +200,7 @@ export default function PremiumDatePicker({
             {/* Grid */}
             <div className="grid grid-cols-7 gap-1 mb-2">
               {WEEKDAYS.map(day => (
-                <div key={day} className="h-9 w-9 flex items-center justify-center text-[10px] font-black text-gray-600 uppercase">
+                <div key={day} className="h-9 w-9 flex items-center justify-center text-[10px] font-bold text-gray-600 uppercase">
                   {day}
                 </div>
               ))}
@@ -215,13 +215,13 @@ export default function PremiumDatePicker({
                    onChange(today);
                    setIsOpen(false);
                  }}
-                 className="text-[11px] font-black text-[#42B460] hover:text-[#42B460]/80 uppercase tracking-widest px-2 transition-colors"
+                 className="text-[11px] font-bold text-[#42B460] hover:text-[#42B460]/80 uppercase tracking-wider px-2 transition-colors"
                >
                  Today
                </button>
                <button 
                  onClick={() => setIsOpen(false)}
-                 className="text-[11px] font-black text-gray-500 hover:text-white uppercase tracking-widest px-2 transition-colors"
+                 className="text-[11px] font-bold text-gray-500 hover:text-white uppercase tracking-wider px-2 transition-colors"
                >
                  Close
                </button>

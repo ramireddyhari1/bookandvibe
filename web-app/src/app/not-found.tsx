@@ -41,7 +41,7 @@ export default function NotFound() {
       <div className="max-w-lg w-full text-center">
 
         {/* Badge */}
-        <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border text-[11px] font-black uppercase tracking-widest mb-8 ${theme.badge}`}>
+        <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border text-[11px] font-bold uppercase tracking-wider mb-8 ${theme.badge}`}>
           <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
           {theme.badgeText} · 404
         </div>
@@ -63,7 +63,7 @@ export default function NotFound() {
         </div>
 
         {/* Text */}
-        <h1 className="text-[40px] sm:text-[52px] font-black text-gray-900 tracking-tight leading-none mb-4">
+        <h1 className="text-[40px] sm:text-[52px] font-bold text-gray-900 tracking-tight leading-none mb-4">
           {theme.headline}
         </h1>
         <p className="text-gray-500 text-[16px] font-medium leading-relaxed max-w-sm mx-auto mb-10">

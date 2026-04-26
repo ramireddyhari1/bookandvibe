@@ -125,7 +125,7 @@ export default function NotificationsPage() {
             </Link>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-black text-gray-900">Notifications</h1>
+                <h1 className="text-2xl font-bold text-gray-900">Notifications</h1>
                 {unreadCount > 0 && (
                   <span className="w-6 h-6 rounded-full bg-rose-500 text-white text-[11px] font-bold flex items-center justify-center">
                     {unreadCount}

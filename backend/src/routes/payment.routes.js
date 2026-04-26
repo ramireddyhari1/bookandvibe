@@ -128,7 +128,7 @@ async function calculateCouponDiscount(couponCode, orderAmount, userId, applicab
 // Creates a real Razorpay order and returns order details to frontend
 router.post('/initiate', authenticateToken, async (req, res) => {
   try {
-    const { currency = 'INR', eventId, facilityId, quantity = 1, items = [], couponCode, notes = {} } = req.body;
+    const { currency = 'INR', eventId, facilityId, quantity = 1, items = [], couponCode, notes = {}, totalAmount: frontendAmount, payAdvanceOnly } = req.body;
 
     if (!eventId && !facilityId) {
       return res.status(400).json({ error: 'eventId or facilityId is required' });
@@ -157,17 +157,27 @@ router.post('/initiate', authenticateToken, async (req, res) => {
     } else {
       const facility = await prisma.gamehubFacility.findUnique({
         where: { id: facilityId },
-        select: { id: true, name: true, pricePerHour: true },
+        select: { id: true, name: true, pricePerHour: true, advancePercentage: true },
       });
 
       if (!facility) {
         return res.status(404).json({ error: 'Facility not found' });
       }
 
-      resolvedAmount = computeGamehubBookingAmount(facility);
+      let baseGamehubAmount = frontendAmount > 0 ? Number(frontendAmount) : roundCurrency(Number(facility.pricePerHour) || 0);
+
+      if (payAdvanceOnly) {
+          const advancePercent = facility.advancePercentage || 20;
+          resolvedAmount = roundCurrency((baseGamehubAmount * advancePercent) / 100);
+      } else {
+          resolvedAmount = baseGamehubAmount;
+      }
+
       resolvedNotes = {
         ...resolvedNotes,
         facilityId,
+        isAdvancePayment: payAdvanceOnly ? 'true' : 'false',
+        totalBookingAmount: baseGamehubAmount,
       };
     }
 
@@ -415,29 +425,43 @@ router.post('/confirm-gamehub', authenticateToken, async (req, res) => {
       date,
       couponCode,
       meta = {},
+      totalAmount: frontendAmount,
+      payAdvanceOnly
     } = req.body;
 
     const userId = req.user.id;
     const facility = await prisma.gamehubFacility.findUnique({
       where: { id: facilityId },
-      select: { id: true, name: true, partnerId: true, pricePerHour: true },
+      select: { id: true, name: true, partnerId: true, pricePerHour: true, advancePercentage: true },
     });
 
     if (!facility) {
       return res.status(404).json({ error: 'Facility not found' });
     }
 
-    const resolvedAmount = computeGamehubBookingAmount(facility);
+    let baseGamehubAmount = frontendAmount > 0 ? Number(frontendAmount) : roundCurrency(Number(facility.pricePerHour) || 0);
     
     let discountAmount = 0;
     if (couponCode) {
-      const couponCheck = await calculateCouponDiscount(couponCode, resolvedAmount, userId, 'GAMEHUB');
+      const couponCheck = await calculateCouponDiscount(couponCode, baseGamehubAmount, userId, 'GAMEHUB');
       if (couponCheck.error) return res.status(400).json({ error: couponCheck.error });
       discountAmount = couponCheck.discountAmount;
     }
 
-    const finalAmount = Math.max(0, resolvedAmount - discountAmount);
-    const isFreeBooking = finalAmount <= 0;
+    const totalFinalAmount = Math.max(0, baseGamehubAmount - discountAmount);
+
+    let advanceAmount = totalFinalAmount;
+    let balanceAmount = 0;
+    let paymentStatus = 'SUCCESS';
+
+    if (payAdvanceOnly) {
+       const advancePercent = facility.advancePercentage || 20;
+       advanceAmount = roundCurrency((baseGamehubAmount * advancePercent) / 100);
+       balanceAmount = Math.max(0, totalFinalAmount - advanceAmount);
+       paymentStatus = 'PARTIAL';
+    }
+
+    const isFreeBooking = advanceAmount <= 0;
 
     if (!isFreeBooking) {
       // 1. Verify Razorpay signature
@@ -465,13 +489,15 @@ router.post('/confirm-gamehub', authenticateToken, async (req, res) => {
         data: {
           bookingDate: new Date(date),
           slotLabel,
-          totalAmount: finalAmount,
+          totalAmount: totalFinalAmount,
+          advanceAmount,
+          balanceAmount,
           currency: 'INR',
           status: 'CONFIRMED',
           couponCode: couponCode ? couponCode.toUpperCase() : null,
           discount: discountAmount,
           paymentMethod: isFreeBooking ? 'FREE' : 'RAZORPAY',
-          paymentStatus: 'SUCCESS',
+          paymentStatus: paymentStatus,
           transactionId: isFreeBooking ? `FREE-${Date.now()}` : razorpay_payment_id,
           userId,
           facilityId,
@@ -494,7 +520,7 @@ router.post('/confirm-gamehub', authenticateToken, async (req, res) => {
         await creditPartnerWallet(
           tx,
           liveFacility.partnerId,
-          finalAmount,
+          advanceAmount,
           `Venue Earning: ${liveFacility.name} (Slot: ${slotLabel})`,
           createdBooking.id
         );
@@ -508,7 +534,7 @@ router.post('/confirm-gamehub', authenticateToken, async (req, res) => {
       partnerId: facility.partnerId,
       eventTitle: `Venue: ${facility.name || 'Facility'}`,
       buyerName: req.user.name || 'A customer',
-      amount: resolvedAmount,
+      amount: advanceAmount,
       bookingId: booking.id,
     });
 

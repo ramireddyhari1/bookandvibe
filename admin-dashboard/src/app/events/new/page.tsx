@@ -630,7 +630,7 @@ function CreateEventPageContent() {
             <ArrowLeft size={18} />
           </button>
           <div>
-            <h1 className="text-2xl font-extrabold text-slate-900">
+            <h1 className="text-2xl font-bold text-slate-900">
               {eventIdFromQuery ? "District-Style Event Editor" : "District-Style Event Creation"}
             </h1>
             <p className="text-sm font-medium text-slate-500">Mandatory guided flow with publish gate and compliance checks</p>
@@ -676,7 +676,7 @@ function CreateEventPageContent() {
       <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
         {activeStep === 1 && (
           <section className={`${cardClass} p-6`}>
-            <h2 className="text-lg font-extrabold text-slate-900">1. Booking Format</h2>
+            <h2 className="text-lg font-bold text-slate-900">1. Booking Format</h2>
             <p className="mt-1 text-sm font-medium text-slate-500">Choose how inventory will be sold. This is mandatory.</p>
 
             <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -710,7 +710,7 @@ function CreateEventPageContent() {
                       : "border-slate-200 bg-white hover:bg-slate-50"
                   }`}
                 >
-                  <div className="flex items-center gap-2 text-sm font-extrabold text-slate-800">
+                  <div className="flex items-center gap-2 text-sm font-bold text-slate-800">
                     {option.icon}
                     {option.title}
                   </div>
@@ -723,7 +723,7 @@ function CreateEventPageContent() {
 
         {activeStep === 2 && (
           <section className={`${cardClass} p-6`}>
-            <h2 className="text-lg font-extrabold text-slate-900">2. Event Details</h2>
+            <h2 className="text-lg font-bold text-slate-900">2. Event Details</h2>
             <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
               <label className="space-y-2">
                 <span className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500"><Type size={13} /> Title</span>
@@ -977,7 +977,7 @@ function CreateEventPageContent() {
 
         {activeStep === 3 && (
           <section className={`${cardClass} p-6`}>
-            <h2 className="text-lg font-extrabold text-slate-900">3. Date, Time and Booking Window</h2>
+            <h2 className="text-lg font-bold text-slate-900">3. Date, Time and Booking Window</h2>
             <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
               <label className="space-y-2">
                 <span className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500"><Calendar size={13} /> Event Date</span>
@@ -1030,7 +1030,7 @@ function CreateEventPageContent() {
 
         {activeStep === 4 && (
           <section className={`${cardClass} p-6`}>
-            <h2 className="text-lg font-extrabold text-slate-900">4. Seat Configuration</h2>
+            <h2 className="text-lg font-bold text-slate-900">4. Seat Configuration</h2>
             {!requiresSeat && (
               <div className="mt-4 rounded-xl border border-blue-200 bg-blue-50 p-3 text-sm font-semibold text-blue-700">
                 Not required for tier-only events. You can keep defaults.
@@ -1111,7 +1111,7 @@ function CreateEventPageContent() {
 
         {activeStep === 5 && (
           <section className={`${cardClass} p-6 space-y-5`}>
-            <h2 className="text-lg font-extrabold text-slate-900">5. Tiers, Fees and Visibility</h2>
+            <h2 className="text-lg font-bold text-slate-900">5. Tiers, Fees and Visibility</h2>
 
             {!requiresTier && (
               <div className="space-y-4">
@@ -1135,7 +1135,7 @@ function CreateEventPageContent() {
             {requiresTier && (
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-extrabold text-slate-800">Ticket Tiers</h3>
+                  <h3 className="text-sm font-bold text-slate-800">Ticket Tiers</h3>
                   <button
                     type="button"
                     onClick={addTier}
@@ -1332,7 +1332,7 @@ function CreateEventPageContent() {
 
         {activeStep === 6 && (
           <section className={`${cardClass} p-6 space-y-4`}>
-            <h2 className="text-lg font-extrabold text-slate-900">6. Review and Publish</h2>
+            <h2 className="text-lg font-bold text-slate-900">6. Review and Publish</h2>
             <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm font-medium text-amber-800">
               Publish is blocked until all required validations pass.
             </div>
@@ -1348,7 +1348,7 @@ function CreateEventPageContent() {
 
             {reviewIssues.length > 0 && (
               <div className="rounded-xl border border-red-200 bg-red-50 p-3">
-                <h3 className="text-sm font-extrabold text-red-700">Publish blockers</h3>
+                <h3 className="text-sm font-bold text-red-700">Publish blockers</h3>
                 <ul className="mt-2 list-disc pl-5 text-sm font-semibold text-red-700">
                   {reviewIssues.map((issue, idx) => (
                     <li key={`${issue}-${idx}`}>{issue}</li>

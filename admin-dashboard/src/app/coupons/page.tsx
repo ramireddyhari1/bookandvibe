@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Plus, Search, Tag, Check, X, Shield, Calendar, Users, AlertTriangle, AlertCircle, Percent, DollarSign, LayoutDashboard, Clock, Loader2 } from "lucide-react";
+import PremiumLoader from "@/components/ui/PremiumLoader";
 import { fetchApi } from "@/lib/api";
 import Portal from "@/components/layout/Portal";
 
@@ -166,9 +167,9 @@ export default function CouponsPage() {
 
   return (
     <div className="mx-auto max-w-7xl flex flex-col gap-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-emerald-100/50 pb-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-200 pb-6">
         <div>
-          <h1 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+          <h1 className="text-2xl font-semibold text-slate-900 tracking-tight flex items-center gap-2">
             <Tag size={24} className="text-emerald-500" />
             Promo Codes & Coupons
           </h1>
@@ -178,14 +179,14 @@ export default function CouponsPage() {
         </div>
         <button 
           onClick={openNewModal}
-          className="bg-emerald-600 hover:bg-emerald-500 active:scale-95 transition-all text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 shadow-[0_4px_15px_rgba(16,185,129,0.3)]"
+          className="bg-emerald-600 hover:bg-gray-500 active:scale-95 transition-all text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 shadow-[0_4px_15px_rgba(16,185,129,0.3)]"
         >
           <Plus size={18} /> Create Promo Code
         </button>
       </div>
 
-      <div className="dash-card border-emerald-50 bg-white p-2">
-        <div className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-emerald-50">
+      <div className="dash-card border-gray-100 bg-white p-2">
+        <div className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-100">
           <div className="relative max-w-sm w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
             <input 
@@ -193,7 +194,7 @@ export default function CouponsPage() {
               placeholder="Search by code or description..." 
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-10 pr-4 py-2 w-full rounded-xl border border-emerald-100 bg-emerald-50/20 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all placeholder:font-medium placeholder:text-slate-400"
+              className="pl-10 pr-4 py-2 w-full rounded-xl border border-gray-200 bg-gray-50 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all placeholder:font-medium placeholder:text-slate-400"
             />
           </div>
         </div>
@@ -201,7 +202,7 @@ export default function CouponsPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="bg-emerald-50/20 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-900/40">
+              <tr className="bg-gray-50 text-[10px] font-semibold uppercase tracking-wider text-gray-400">
                 <th className="p-4 whitespace-nowrap">Code</th>
                 <th className="p-4 whitespace-nowrap">Discount</th>
                 <th className="p-4 whitespace-nowrap">Limits</th>
@@ -213,17 +214,23 @@ export default function CouponsPage() {
             </thead>
             <tbody className="divide-y divide-emerald-50">
               {loading ? (
-                <tr><td colSpan={7} className="p-8 text-center text-sm font-bold text-slate-400 animate-pulse">Loading promos...</td></tr>
+                <tr>
+                  <td colSpan={7} className="p-24">
+                    <div className="flex flex-col items-center justify-center">
+                      <PremiumLoader size="lg" color="#10b981" text="Updating Promos" />
+                    </div>
+                  </td>
+                </tr>
               ) : filteredCoupons.length === 0 ? (
                 <tr><td colSpan={7} className="p-8 text-center text-sm font-bold text-slate-400">No promo codes found</td></tr>
               ) : (
                 filteredCoupons.map((coupon) => (
-                  <tr key={coupon.id} className="group hover:bg-emerald-50/20 transition-colors">
+                  <tr key={coupon.id} className="group hover:bg-gray-50 transition-colors">
                     <td className="p-4">
                       <div className="flex flex-col">
-                        <span className="font-black text-[15px] text-slate-900 tracking-tight">{coupon.code}</span>
+                        <span className="font-semibold text-[15px] text-slate-900 tracking-tight">{coupon.code}</span>
                         <span className="text-[11px] font-bold text-slate-500 mt-0.5 max-w-[150px] truncate">{coupon.description || "No description"}</span>
-                        <div className="mt-1 flex items-center gap-1 text-[9px] font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 w-max px-2 py-0.5 rounded-full border border-emerald-100/50">
+                        <div className="mt-1 flex items-center gap-1 text-[9px] font-semibold uppercase tracking-wide text-emerald-600 bg-emerald-50 w-max px-2 py-0.5 rounded-full border border-gray-200">
                            {coupon.applicableTo}
                         </div>
                       </div>
@@ -286,7 +293,7 @@ export default function CouponsPage() {
                        </button>
                     </td>
                     <td className="p-4 text-right">
-                      <button onClick={() => openEditModal(coupon)} className="text-[12px] font-bold text-emerald-600 hover:bg-emerald-50 px-3 py-1.5 rounded-lg transition-colors mr-2">Edit</button>
+                      <button onClick={() => openEditModal(coupon)} className="text-[12px] font-bold text-emerald-600 hover:bg-gray-50 px-3 py-1.5 rounded-lg transition-colors mr-2">Edit</button>
                       <button onClick={() => handleDelete(coupon.id, coupon.code)} className="text-[12px] font-bold text-red-500 hover:bg-red-50 px-3 py-1.5 rounded-lg transition-colors">Delete</button>
                     </td>
                   </tr>
@@ -299,10 +306,10 @@ export default function CouponsPage() {
 
       {showModal && (
         <Portal>
-          <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md transition-all duration-300">
-          <div className="bg-white rounded-[28px] w-full max-w-2xl max-h-[85vh] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.2)] flex flex-col border border-emerald-100/50">
-            <div className="flex items-center justify-between p-6 border-b border-emerald-50 bg-[#fbfdfc] shrink-0">
-              <h2 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
+          <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-slate-900/60  transition-all duration-300">
+          <div className="bg-white rounded-xl w-full max-w-2xl max-h-[85vh] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.2)] flex flex-col border border-gray-200">
+            <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-[#fbfdfc] shrink-0">
+              <h2 className="text-xl font-semibold text-slate-900 tracking-tight flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
                   <Tag size={18} />
                 </div>
@@ -326,48 +333,48 @@ export default function CouponsPage() {
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-400 ml-1">Promo Code *</label>
+                    <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 ml-1">Promo Code *</label>
                     <input 
                       type="text" 
                       value={code} 
                       onChange={e => setCode(e.target.value.toUpperCase())}
-                      className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 uppercase transition-all placeholder:text-slate-300"
+                      className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-gray-1000 uppercase transition-all placeholder:text-slate-300"
                       placeholder="e.g. SUMMER20"
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-400 ml-1">Description</label>
+                    <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 ml-1">Description</label>
                     <input 
                       type="text" 
                       value={description} 
                       onChange={e => setDescription(e.target.value)}
-                      className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 font-medium text-slate-800 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all placeholder:text-slate-300"
+                      className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 font-medium text-slate-800 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-gray-1000 transition-all placeholder:text-slate-300"
                       placeholder="Brief description (internal)"
                     />
                   </div>
                 </div>
 
-                <div className="p-6 bg-emerald-50/20 border border-emerald-100/30 rounded-[24px] space-y-6">
+                <div className="p-6 bg-gray-50 border border-gray-200/30 rounded-[24px] space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="space-y-2">
-                      <label className="text-[11px] font-black uppercase tracking-wider text-emerald-700/60 ml-1">Discount Type *</label>
+                      <label className="text-[11px] font-semibold uppercase tracking-wider text-emerald-700/60 ml-1">Discount Type *</label>
                       <select 
                         value={discountType} 
                         onChange={e => setDiscountType(e.target.value)}
-                        className="w-full bg-white border border-emerald-100 rounded-xl px-4 py-3 font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all"
+                        className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-gray-1000 transition-all"
                       >
                         <option value="PERCENT">Percentage (%)</option>
                         <option value="FIXED">Fixed Amount (₹)</option>
                       </select>
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[11px] font-black uppercase tracking-wider text-emerald-700/60 ml-1">Discount Value *</label>
+                      <label className="text-[11px] font-semibold uppercase tracking-wider text-emerald-700/60 ml-1">Discount Value *</label>
                       <div className="relative">
                         <input 
                           type="number" 
                           value={discountValue} 
                           onChange={e => setDiscountValue(e.target.value)}
-                          className="w-full bg-white border border-emerald-100 rounded-xl px-4 py-3 font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all"
+                          className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-gray-1000 transition-all"
                           placeholder={discountType === "PERCENT" ? "20" : "150"}
                         />
                         <div className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">
@@ -376,13 +383,13 @@ export default function CouponsPage() {
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[11px] font-black uppercase tracking-wider text-emerald-700/60 ml-1">Max Discount (₹)</label>
+                      <label className="text-[11px] font-semibold uppercase tracking-wider text-emerald-700/60 ml-1">Max Discount (₹)</label>
                       <input 
                         type="number" 
                         value={maxDiscount} 
                         onChange={e => setMaxDiscount(e.target.value)}
                         disabled={discountType === "FIXED"}
-                        className="w-full bg-white border border-emerald-100 rounded-xl px-4 py-3 font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all disabled:opacity-40 disabled:bg-slate-50"
+                        className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-gray-1000 transition-all disabled:opacity-40 disabled:bg-slate-50"
                         placeholder="Optional cap"
                       />
                     </div>
@@ -391,20 +398,20 @@ export default function CouponsPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-400 ml-1">Min Order Amount (₹)</label>
+                    <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 ml-1">Min Order Amount (₹)</label>
                     <input 
                       type="number" 
                       value={minOrderAmount} 
                       onChange={e => setMinOrderAmount(e.target.value)}
-                      className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all"
+                      className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-gray-1000 transition-all"
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-400 ml-1">Applicable To</label>
+                    <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 ml-1">Applicable To</label>
                     <select 
                       value={applicableTo} 
                       onChange={e => setApplicableTo(e.target.value)}
-                      className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all"
+                      className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-gray-1000 transition-all"
                     >
                       <option value="ALL">All Services</option>
                       <option value="EVENTS">Events Only</option>
@@ -415,21 +422,21 @@ export default function CouponsPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-400 ml-1 flex items-center gap-1.5"><Users size={12}/> Max Uses Per User</label>
+                    <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 ml-1 flex items-center gap-1.5"><Users size={12}/> Max Uses Per User</label>
                     <input 
                       type="number" 
                       value={perUserLimit} 
                       onChange={e => setPerUserLimit(e.target.value)}
-                      className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all"
+                      className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-gray-1000 transition-all"
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-400 ml-1 flex items-center gap-1.5"><LayoutDashboard size={12}/> Total Usage Limit</label>
+                    <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 ml-1 flex items-center gap-1.5"><LayoutDashboard size={12}/> Total Usage Limit</label>
                     <input 
                       type="number" 
                       value={usageLimit} 
                       onChange={e => setUsageLimit(e.target.value)}
-                      className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all"
+                      className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-gray-1000 transition-all"
                       placeholder="Unlimited"
                     />
                   </div>
@@ -437,12 +444,12 @@ export default function CouponsPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-[11px] font-black uppercase tracking-wider text-slate-400 ml-1 flex items-center gap-1.5"><Calendar size={12}/> Expiration Date</label>
+                    <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-400 ml-1 flex items-center gap-1.5"><Calendar size={12}/> Expiration Date</label>
                     <input 
                       type="datetime-local" 
                       value={expiresAt} 
                       onChange={e => setExpiresAt(e.target.value)}
-                      className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all"
+                      className="w-full bg-slate-50/50 border border-slate-200 rounded-xl px-4 py-3 font-bold text-slate-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-gray-1000 transition-all"
                     />
                   </div>
                   <div className="flex items-center gap-4 pt-6 ml-2">
@@ -470,7 +477,7 @@ export default function CouponsPage() {
               <button 
                 onClick={handleSave}
                 disabled={saving}
-                className="bg-emerald-600 hover:bg-emerald-500 text-white px-10 py-3 rounded-xl font-bold transition-all shadow-[0_10px_20px_rgba(16,185,129,0.2)] hover:shadow-[0_15px_25px_rgba(16,185,129,0.3)] disabled:opacity-50 flex items-center gap-2 active:scale-95"
+                className="bg-emerald-600 hover:bg-gray-500 text-white px-10 py-3 rounded-xl font-bold transition-all shadow-[0_10px_20px_rgba(16,185,129,0.2)] hover:shadow-[0_15px_25px_rgba(16,185,129,0.3)] disabled:opacity-50 flex items-center gap-2 active:scale-95"
               >
                 {saving && <Loader2 size={18} className="animate-spin" />}
                 {editingCoupon ? "Save Changes" : "Create Coupon"}

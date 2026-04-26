@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Calendar, Edit2, Search, Shield, Users as UsersIcon } from "lucide-react";
+import PremiumLoader from "@/components/ui/PremiumLoader";
 import EditUserModal from "@/components/users/EditUserModal";
 import { fetchApi } from "@/lib/api";
 
@@ -120,44 +121,44 @@ export default function UsersPage() {
   return (
     <div className="max-w-7xl mx-auto space-y-8">
       <header>
-        <h1 className="text-3xl font-black text-slate-900 tracking-tight uppercase">User Directory</h1>
-        <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600/60 mt-1">Platform-wide account management and insights</p>
+        <h1 className="text-2xl font-bold text-gray-900">User Directory</h1>
+        <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mt-1">Platform-wide account management and insights</p>
       </header>
 
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="dash-card bg-white p-5 rounded-2xl border border-emerald-50 shadow-sm transition-all hover:bg-emerald-50/30">
-          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400/80">Total Users</p>
-          <p className="text-3xl font-black mt-1 text-slate-900 tracking-tight">{stats.total}</p>
+        <div className="dash-card bg-white p-5 rounded-2xl border border-gray-100 shadow-sm transition-all hover:bg-gray-50">
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">Total Users</p>
+          <p className="text-3xl font-semibold mt-1 text-slate-900 tracking-tight">{stats.total}</p>
         </div>
-        <div className="dash-card bg-white p-5 rounded-2xl border border-emerald-50 shadow-sm transition-all hover:bg-emerald-50/30">
-          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400/80">Active</p>
-          <p className="text-3xl font-black mt-1 text-emerald-600 tracking-tight">{stats.active}</p>
+        <div className="dash-card bg-white p-5 rounded-2xl border border-gray-100 shadow-sm transition-all hover:bg-gray-50">
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">Active</p>
+          <p className="text-3xl font-semibold mt-1 text-emerald-600 tracking-tight">{stats.active}</p>
         </div>
-        <div className="dash-card bg-white p-5 rounded-2xl border border-emerald-50 shadow-sm transition-all hover:bg-emerald-50/30">
-          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400/80">Suspended</p>
-          <p className="text-3xl font-black mt-1 text-red-500 tracking-tight">{stats.suspended}</p>
+        <div className="dash-card bg-white p-5 rounded-2xl border border-gray-100 shadow-sm transition-all hover:bg-gray-50">
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">Suspended</p>
+          <p className="text-3xl font-semibold mt-1 text-red-500 tracking-tight">{stats.suspended}</p>
         </div>
-        <div className="dash-card bg-white p-5 rounded-2xl border border-emerald-50 shadow-sm transition-all hover:bg-emerald-50/30">
-          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400/80">Growth (MTD)</p>
-          <p className="text-3xl font-black mt-1 text-teal-600 tracking-tight">+{stats.newThisMonth}</p>
+        <div className="dash-card bg-white p-5 rounded-2xl border border-gray-100 shadow-sm transition-all hover:bg-gray-50">
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">Growth (MTD)</p>
+          <p className="text-3xl font-semibold mt-1 text-teal-600 tracking-tight">+{stats.newThisMonth}</p>
         </div>
       </section>
 
-      <section className="dash-card bg-white rounded-3xl border border-emerald-50 p-5 grid grid-cols-1 md:grid-cols-4 gap-4 shadow-sm">
-        <div className="md:col-span-2 flex items-center gap-3 bg-emerald-50/30 rounded-2xl px-4 py-3 border border-emerald-50/50 focus-within:border-emerald-200 focus-within:bg-white transition-all">
+      <section className="dash-card bg-white rounded-xl border border-gray-100 p-5 grid grid-cols-1 md:grid-cols-4 gap-4 shadow-sm">
+        <div className="md:col-span-2 flex items-center gap-3 bg-gray-50 rounded-2xl px-4 py-3 border border-gray-100 focus-within:border-gray-200 focus-within:bg-white transition-all">
           <Search size={18} className="text-emerald-600/40" />
           <input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search users by name or email..."
-            className="bg-transparent w-full outline-none text-sm font-bold text-slate-900 placeholder:text-emerald-900/30"
+            className="bg-transparent w-full outline-none text-sm font-bold text-slate-900 placeholder:text-gray-400"
           />
         </div>
 
         <select
           value={roleFilter}
           onChange={(e) => setRoleFilter(e.target.value)}
-          className="rounded-2xl border border-emerald-50/50 bg-emerald-50/20 px-4 py-3 text-sm font-black uppercase tracking-wider text-emerald-800 outline-none focus:bg-white focus:border-emerald-200 transition-all cursor-pointer"
+          className="rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 text-sm font-semibold uppercase tracking-wider text-emerald-800 outline-none focus:bg-white focus:border-gray-200 transition-all cursor-pointer"
         >
           {roleOptions.map((option) => (
             <option key={option} value={option}>{option === "All" ? "Every Role" : option}</option>
@@ -167,7 +168,7 @@ export default function UsersPage() {
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="rounded-2xl border border-emerald-50/50 bg-emerald-50/20 px-4 py-3 text-sm font-black uppercase tracking-wider text-emerald-800 outline-none focus:bg-white focus:border-emerald-200 transition-all cursor-pointer"
+          className="rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 text-sm font-semibold uppercase tracking-wider text-emerald-800 outline-none focus:bg-white focus:border-gray-200 transition-all cursor-pointer"
         >
           {statusOptions.map((option) => (
             <option key={option} value={option}>{option === "All" ? "Any Status" : option}</option>
@@ -177,7 +178,9 @@ export default function UsersPage() {
 
       <section className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
         {loading ? (
-          <div className="p-8 text-center text-slate-500">Loading users...</div>
+          <div className="py-24 flex flex-col items-center justify-center">
+            <PremiumLoader size="lg" color="#10b981" text="Accessing Directory" />
+          </div>
         ) : error ? (
           <div className="p-8 text-center text-red-500">{error}</div>
         ) : filteredUsers.length === 0 ? (
@@ -198,24 +201,24 @@ export default function UsersPage() {
               </thead>
               <tbody>
                 {filteredUsers.map((user) => (
-                  <tr key={user.id} className="border-t border-emerald-50 transition-all hover:bg-emerald-50/30">
+                  <tr key={user.id} className="border-t border-gray-100 transition-all hover:bg-gray-50">
                     <td className="p-4">
-                      <div className="font-black text-slate-800">{user.name}</div>
-                      <div className="text-[11px] font-bold text-emerald-600/60">{user.email}</div>
+                      <div className="font-semibold text-slate-800">{user.name}</div>
+                      <div className="text-[11px] font-bold text-gray-400">{user.email}</div>
                     </td>
                     <td className="p-4">
-                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-wider ${user.role === "ADMIN" ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-600"}`}>
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-[10px] font-semibold uppercase tracking-wider ${user.role === "ADMIN" ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-600"}`}>
                         {toTitle(user.role) === "Admin" ? <Shield size={12} /> : <UsersIcon size={12} />}
                         {toTitle(user.role)}
                       </span>
                     </td>
                     <td className="p-4">
-                      <span className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${user.status === "ACTIVE" ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-700"}`}>
+                      <span className={`px-3 py-1 rounded-lg text-[10px] font-semibold uppercase tracking-wider ${user.status === "ACTIVE" ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-700"}`}>
                         {toTitle(user.status)}
                       </span>
                     </td>
-                    <td className="p-4 font-black text-slate-900">{user._count?.bookings || 0}</td>
-                    <td className="p-4 font-black text-emerald-600">₹{Math.round(user.totalSpent || 0).toLocaleString()}</td>
+                    <td className="p-4 font-semibold text-slate-900">{user._count?.bookings || 0}</td>
+                    <td className="p-4 font-semibold text-emerald-600">₹{Math.round(user.totalSpent || 0).toLocaleString()}</td>
                      <td className="p-4 text-slate-400 font-bold">
                       <span className="inline-flex items-center gap-1.5">
                         <Calendar size={13} className="text-emerald-400/60" />
@@ -225,7 +228,7 @@ export default function UsersPage() {
                     <td className="p-4 text-right">
                       <button 
                         onClick={() => setEditingUser(user)}
-                        className="p-2 rounded-xl bg-slate-50 text-slate-400 hover:bg-emerald-50 hover:text-emerald-600 transition-all active:scale-95"
+                        className="p-2 rounded-xl bg-slate-50 text-slate-400 hover:bg-gray-50 hover:text-gray-700 transition-all active:scale-95"
                         title="Edit Profile"
                       >
                         <Edit2 size={16} />

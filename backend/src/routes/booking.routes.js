@@ -248,6 +248,16 @@ router.post('/seat-locks', authenticateToken, validate(seatLockSchema), async (r
       return res.status(404).json({ error: 'Event not found' });
     }
 
+    // Prevent locking seats for past events
+    const now = new Date();
+    const istOffset = 5.5 * 60 * 60 * 1000;
+    const istNow = new Date(now.getTime() + istOffset);
+    istNow.setUTCHours(0, 0, 0, 0);
+    const istTodayMidnightUTC = new Date(istNow.getTime() - istOffset);
+    if (new Date(event.date) < istTodayMidnightUTC) {
+      return res.status(400).json({ error: 'This event is already over.' });
+    }
+
     if (!event.seatSelection) {
       return res.status(400).json({ error: 'Seat selection is disabled for this event' });
     }
@@ -396,6 +406,16 @@ router.post('/seat-bookings/confirm', authenticateToken, validate(bookingConfirm
 
       if (!event) {
         throw new Error('Event not found');
+      }
+
+      // Prevent booking past events
+      const now = new Date();
+      const istOffset = 5.5 * 60 * 60 * 1000;
+      const istNow = new Date(now.getTime() + istOffset);
+      istNow.setUTCHours(0, 0, 0, 0);
+      const istTodayMidnightUTC = new Date(istNow.getTime() - istOffset);
+      if (new Date(event.date) < istTodayMidnightUTC) {
+        throw new Error('This event is already over.');
       }
 
       if (!event.seatSelection) {
@@ -848,6 +868,16 @@ router.post('/', authenticateToken, async (req, res) => {
       // 1. Check event
       const event = await tx.event.findUnique({ where: { id: eventId }, include: { tiers: true } });
       if (!event) throw new Error('Event not found');
+
+      // Prevent booking past events
+      const now = new Date();
+      const istOffset = 5.5 * 60 * 60 * 1000;
+      const istNow = new Date(now.getTime() + istOffset);
+      istNow.setUTCHours(0, 0, 0, 0);
+      const istTodayMidnightUTC = new Date(istNow.getTime() - istOffset);
+      if (new Date(event.date) < istTodayMidnightUTC) {
+        throw new Error('This event is already over.');
+      }
 
       // 2. Validate tier availability
       for (const item of items) {

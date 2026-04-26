@@ -109,76 +109,58 @@ interface PlayNowSectionProps {
 
 export default function PlayNowSection({ city }: PlayNowSectionProps) {
   return (
-    <div className="bg-[#F8F9FA]">
+    <div className="bg-white">
       {/* Hero Banner */}
-      <div className="relative overflow-hidden text-white min-h-[360px] flex items-center">
-        {/* Background Image with Overlay */}
-        <div className="absolute inset-0 z-0">
+      <div className="py-16">
+        <div className="relative overflow-hidden rounded-[40px] h-[400px]">
           <img
             src="/gamehub_promo_banner.png"
             alt="Hero Background"
-            className="w-full h-full object-cover object-center"
+            className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#1c222b] via-[#1c222b]/80 to-transparent" />
-          <div className="absolute inset-0 bg-black/20" />
-        </div>
-
-        <div className="max-w-[1200px] w-full mx-auto px-6 py-16 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="max-w-2xl"
-          >
-            <div className="inline-flex items-center gap-2 bg-amber-500/80 backdrop-blur-md text-white text-[10px] font-black px-3 py-1.5 rounded-full tracking-widest uppercase mb-6 shadow-lg shadow-amber-500/20">
-              <Zap size={12} className="text-white" />
-              LIVE MATCHES
-            </div>
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4 leading-[1.1] drop-shadow-lg">
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent" />
+          <div className="absolute inset-y-0 left-0 p-12 flex flex-col justify-center max-w-xl">
+            <span className="inline-flex items-center gap-2 bg-[#42B460] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-6">
+              Live Matches
+            </span>
+            <h1 className="text-5xl font-bold text-white mb-4 tracking-tight">
               Join matches <span className="text-[#42B460]">instantly</span>
             </h1>
-            <p className="text-lg text-white/80 font-medium leading-relaxed mb-8 drop-shadow-md">
+            <p className="text-white/70 font-medium mb-8 leading-relaxed">
               Find players near you and jump into live games. No pre-booking required — just show up and play.
             </p>
-            <div className="flex flex-wrap gap-6">
-              <div className="flex items-center gap-2 text-white/70 text-sm drop-shadow-md">
-                <div className="w-2 h-2 rounded-full bg-[#42B460] animate-pulse shadow-[0_0_8px_#42B460]" />
-                <span className="font-bold">{LIVE_MATCHES.length} active matches near {city}</span>
-              </div>
+            <div className="flex items-center gap-2 text-white/90 text-sm font-bold">
+              <div className="w-2 h-2 rounded-full bg-[#42B460]" />
+              <span>{LIVE_MATCHES.length} active matches near {city}</span>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
 
       {/* Quick Stats */}
-      <div className="max-w-[1200px] mx-auto px-6 -mt-8 relative z-20">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-4"
-        >
+      <div className="mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
-            { icon: <Users size={20} />, label: "Players Online", value: "42", color: "text-[#42B460]" },
-            { icon: <Flame size={20} />, label: "Hot Matches", value: String(LIVE_MATCHES.filter(m => m.isHot).length), color: "text-amber-500" },
-            { icon: <Clock size={20} />, label: "Starting Soon", value: "3", color: "text-blue-500" },
+            { icon: <Users size={18} />, label: "Players Online", value: "42", color: "text-[#42B460]" },
+            { icon: <Flame size={18} />, label: "Hot Matches", value: String(LIVE_MATCHES.filter(m => m.isHot).length), color: "text-[#D53F17]" },
+            { icon: <Clock size={18} />, label: "Starting Soon", value: "3", color: "text-blue-600" },
           ].map((stat, i) => (
-            <div key={i} className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm flex items-center gap-4">
-              <div className={`${stat.color} bg-gray-50 p-3 rounded-xl`}>{stat.icon}</div>
+            <div key={i} className="bg-gray-50 rounded-3xl p-6 border border-gray-100 flex items-center gap-5">
+              <div className={`${stat.color} bg-white p-3.5 rounded-2xl shadow-sm`}>{stat.icon}</div>
               <div>
-                <div className={`text-2xl font-black ${stat.color}`}>{stat.value}</div>
-                <div className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">{stat.label}</div>
+                <div className={`text-2xl font-bold ${stat.color}`}>{stat.value}</div>
+                <div className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">{stat.label}</div>
               </div>
             </div>
           ))}
-        </motion.div>
+        </div>
       </div>
 
       {/* Live Matches Grid */}
-      <div className="max-w-[1200px] mx-auto px-6 py-12">
+      <div className="py-12">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h2 className="text-2xl font-black text-[#1c222b] tracking-tight">Live Matches</h2>
+            <h2 className="text-2xl font-bold text-[#1c222b] tracking-tight">Live Matches</h2>
             <p className="text-sm text-gray-400 font-medium mt-1">Join a game happening right now</p>
           </div>
           <div className="flex gap-2">
@@ -218,11 +200,11 @@ export default function PlayNowSection({ city }: PlayNowSectionProps) {
                   {/* Badges */}
                   <div className="absolute top-3 left-3 flex gap-2">
                     {match.isHot && (
-                      <div className="bg-amber-500 text-white text-[9px] font-black px-2 py-1 rounded-md flex items-center gap-1 tracking-wider uppercase">
+                      <div className="bg-amber-500 text-white text-[9px] font-bold px-2 py-1 rounded-md flex items-center gap-1 tracking-wider uppercase">
                         <Flame size={10} /> HOT
                       </div>
                     )}
-                    <div className="bg-white/90 backdrop-blur-md text-[#1c222b] text-[9px] font-black px-2 py-1 rounded-md tracking-wider uppercase">
+                    <div className="bg-white/90 backdrop-blur-md text-[#1c222b] text-[9px] font-bold px-2 py-1 rounded-md tracking-wider uppercase">
                       {match.sport}
                     </div>
                   </div>
@@ -238,7 +220,7 @@ export default function PlayNowSection({ city }: PlayNowSectionProps) {
                     <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-3 border border-white/20">
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-white text-[11px] font-bold">{match.playersJoined}/{match.playersJoined + match.playersNeeded} Players</span>
-                        <span className="text-[#42B460] text-[11px] font-black">{match.playersNeeded} spots left</span>
+                        <span className="text-[#42B460] text-[11px] font-bold">{match.playersNeeded} spots left</span>
                       </div>
                       <div className="w-full bg-white/20 rounded-full h-1.5">
                         <div
@@ -252,7 +234,7 @@ export default function PlayNowSection({ city }: PlayNowSectionProps) {
 
                 {/* Content */}
                 <div className="p-5">
-                  <h3 className="text-[16px] font-black text-[#1c222b] mb-1 group-hover:text-[#42B460] transition-colors">
+                  <h3 className="text-[16px] font-bold text-[#1c222b] mb-1 group-hover:text-[#42B460] transition-colors">
                     {match.title}
                   </h3>
                   <div className="flex items-center gap-1.5 text-gray-400 text-[12px] font-medium mb-3">
@@ -262,7 +244,7 @@ export default function PlayNowSection({ city }: PlayNowSectionProps) {
 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg ${
+                      <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg ${
                         match.level === "Beginner" ? "bg-green-50 text-green-600" :
                         match.level === "Intermediate" ? "bg-blue-50 text-blue-600" :
                         match.level === "Advanced" ? "bg-purple-50 text-purple-600" :
@@ -272,7 +254,7 @@ export default function PlayNowSection({ city }: PlayNowSectionProps) {
                       </span>
                     </div>
 
-                    <button className="bg-[#42B460] hover:bg-[#38A354] text-white px-5 py-2.5 rounded-xl text-[12px] font-black transition-all hover:shadow-lg hover:shadow-[#42B460]/20 flex items-center gap-1.5 group/btn">
+                    <button className="bg-[#42B460] hover:bg-[#38A354] text-white px-5 py-2.5 rounded-xl text-[12px] font-bold transition-all hover:shadow-lg hover:shadow-[#42B460]/20 flex items-center gap-1.5 group/btn">
                       JOIN
                       <ChevronRight size={14} className="group-hover/btn:translate-x-0.5 transition-transform" />
                     </button>

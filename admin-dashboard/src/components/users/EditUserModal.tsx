@@ -57,15 +57,15 @@ export default function EditUserModal({ user, onClose, onUpdate }: EditUserModal
   }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm transition-all duration-300">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40  transition-all duration-300">
       <div 
         className="relative w-full max-w-md bg-white rounded-[32px] overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-200"
         onClick={(e) => e.stopPropagation()}
       >
         <header className="p-6 pb-0 flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-black text-slate-900 tracking-tight">Edit Profile</h2>
-            <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600/60 mt-1">Update host information</p>
+            <h2 className="text-2xl font-semibold text-slate-900 tracking-tight">Edit Profile</h2>
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mt-1">Update host information</p>
           </div>
           <button 
             onClick={onClose}
@@ -77,14 +77,14 @@ export default function EditUserModal({ user, onClose, onUpdate }: EditUserModal
 
         <form onSubmit={handleSubmit} className="p-6 space-y-5">
           {error && (
-            <div className="bg-red-50 text-red-600 px-4 py-3 rounded-2xl text-[13px] font-bold border border-red-100">
+            <div className="bg-red-50 text-red-600 px-4 py-3 rounded-lg text-[13px] font-bold border border-red-100">
               {error}
             </div>
           )}
 
           <div className="space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Full Name</label>
-            <div className="flex items-center gap-3 bg-slate-50 rounded-2xl px-4 py-3 border border-slate-100 focus-within:border-emerald-200 focus-within:bg-white transition-all">
+            <label className="text-[10px] font-semibold uppercase tracking-wide text-slate-400 ml-1">Full Name</label>
+            <div className="flex items-center gap-3 bg-slate-50 rounded-lg px-4 py-3 border border-slate-100 focus-within:border-emerald-200 focus-within:bg-white transition-all">
               <User size={18} className="text-emerald-600/40" />
               <input
                 required
@@ -97,8 +97,8 @@ export default function EditUserModal({ user, onClose, onUpdate }: EditUserModal
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Avatar URL</label>
-            <div className="flex items-center gap-3 bg-slate-50 rounded-2xl px-4 py-3 border border-slate-100 focus-within:border-emerald-200 focus-within:bg-white transition-all">
+            <label className="text-[10px] font-semibold uppercase tracking-wide text-slate-400 ml-1">Avatar URL</label>
+            <div className="flex items-center gap-3 bg-slate-50 rounded-lg px-4 py-3 border border-slate-100 focus-within:border-emerald-200 focus-within:bg-white transition-all">
               <LinkIcon size={18} className="text-emerald-600/40" />
               <input
                 value={avatar}
@@ -112,7 +112,7 @@ export default function EditUserModal({ user, onClose, onUpdate }: EditUserModal
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-slate-800 transition-all active:scale-[0.98] disabled:opacity-50 disabled:active:scale-100 shadow-xl shadow-slate-200 flex items-center justify-center gap-2"
+            className="w-full bg-slate-900 text-white py-4 rounded-lg font-semibold uppercase tracking-wide text-xs hover:bg-slate-800 transition-all  disabled:opacity-50 disabled:active:scale-100 shadow-sm flex items-center justify-center gap-2"
           >
             {loading ? (
               <>

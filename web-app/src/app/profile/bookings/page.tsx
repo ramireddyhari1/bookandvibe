@@ -202,12 +202,12 @@ function QrTicketModal({
                   <img src="/bv-white.png" alt="BV Logo" className="relative z-10 w-[55%] h-auto object-contain" />
                 </div>
                 <div>
-                  <p className="text-[11px] font-extrabold tracking-tight leading-none text-white">BOOK & VIBE</p>
-                  <p className="text-[8px] font-bold uppercase tracking-[0.2em] text-white/60 mt-0.5">Digital Pass</p>
+                  <p className="text-[11px] font-bold tracking-tight leading-none text-white">BOOK & VIBE</p>
+                  <p className="text-[8px] font-bold uppercase tracking-wider text-white/60 mt-0.5">Digital Pass</p>
                 </div>
               </div>
 
-              <h3 className="text-[18px] font-extrabold leading-tight tracking-tight pr-8 line-clamp-2 text-white">{title}</h3>
+              <h3 className="text-[18px] font-bold leading-tight tracking-tight pr-8 line-clamp-2 text-white">{title}</h3>
               
               <div className="flex flex-wrap items-center gap-1.5 mt-3">
                 {dateStr && (
@@ -253,15 +253,15 @@ function QrTicketModal({
                 <img src={qrDataUrl} alt="QR Code" className="w-40 h-40 rounded-xl" />
               </div>
             </div>
-            <p className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.25em] mt-1.5">Scan at venue</p>
+            <p className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mt-1.5">Scan at venue</p>
           </div>
 
           {/* Booking Code */}
           <div className="mx-6 mb-3">
             <div className="bg-gray-50 rounded-[16px] p-3 flex items-center justify-between border border-gray-100">
               <div>
-                <p className="text-[8px] font-bold uppercase tracking-[0.15em] text-gray-400">Booking Code</p>
-                <p className="text-[14px] font-black text-gray-900 tracking-wider font-mono mt-0.5">{qrCode}</p>
+                <p className="text-[8px] font-bold uppercase tracking-wider text-gray-400">Booking Code</p>
+                <p className="text-[14px] font-bold text-gray-900 tracking-wider font-mono mt-0.5">{qrCode}</p>
               </div>
               <button onClick={handleCopy} className="p-2 rounded-xl bg-white border border-gray-200 hover:border-orange-300 hover:bg-orange-50 transition-all text-gray-400 hover:text-orange-500">
                 {copied ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
@@ -273,15 +273,15 @@ function QrTicketModal({
           <div className="mx-6 mb-4 grid grid-cols-3 gap-2">
             <div className="bg-gray-50 rounded-[16px] px-3 py-2.5 text-center border border-gray-100">
               <p className="text-[8px] font-bold uppercase tracking-wider text-gray-400">{isEvent ? "Tickets" : "Slot"}</p>
-              <p className="font-black text-gray-900 text-[15px] mt-0.5">{isEvent ? `${booking.quantity || 1}` : "1"}</p>
+              <p className="font-bold text-gray-900 text-[15px] mt-0.5">{isEvent ? `${booking.quantity || 1}` : "1"}</p>
             </div>
             <div className="bg-gray-50 rounded-[16px] px-3 py-2.5 text-center border border-gray-100">
               <p className="text-[8px] font-bold uppercase tracking-wider text-gray-400">Amount</p>
-              <p className="font-black text-gray-900 text-[15px] mt-0.5">₹{(booking.totalAmount || 0).toLocaleString("en-IN")}</p>
+              <p className="font-bold text-gray-900 text-[15px] mt-0.5">₹{(booking.totalAmount || 0).toLocaleString("en-IN")}</p>
             </div>
             <div className="bg-gray-50 rounded-[16px] px-3 py-2.5 text-center border border-gray-100">
               <p className="text-[8px] font-bold uppercase tracking-wider text-gray-400">Status</p>
-              <p className={`font-black text-[12px] mt-0.5 ${statusStyle.text}`}>{statusStyle.label}</p>
+              <p className={`font-bold text-[12px] mt-0.5 ${statusStyle.text}`}>{statusStyle.label}</p>
             </div>
           </div>
 
@@ -419,29 +419,27 @@ export default function BookingsPage() {
 
         {/* ─── Bento Hero Header ─── */}
         <div className="bg-white rounded-[32px] p-8 md:p-10 border border-gray-100 shadow-[0_4px_30px_rgb(0,0,0,0.02)] mb-8 flex flex-col md:flex-row md:items-end justify-between gap-8 relative overflow-hidden">
-          {/* Subtle decoration */}
-          <div className="absolute -top-32 -right-32 w-96 h-96 bg-gradient-to-br from-orange-500/10 to-[#42B460]/10 rounded-full blur-[100px] pointer-events-none" />
 
           <div className="relative z-10">
-            <h1 className="text-4xl md:text-[42px] font-black text-gray-900 tracking-[-0.02em] leading-tight mb-2">My Bookings</h1>
+            <h1 className="text-4xl md:text-[42px] font-bold text-gray-900 tracking-[-0.02em] leading-tight mb-2">My Bookings</h1>
             <p className="text-gray-500 font-medium text-[15px] max-w-sm">Your confirmed tickets, court reservations, and everything in between.</p>
           </div>
 
           {!loading && (
             <div className="relative z-10 flex items-center gap-6 md:gap-8 bg-gray-50/80 backdrop-blur-md rounded-[24px] px-8 py-5 border border-gray-100 self-start md:self-auto shrink-0 shadow-sm">
               <div className="text-center">
-                <p className="text-[26px] leading-none font-black text-gray-900">{allBookings.length}</p>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mt-1.5">Total</p>
+                <p className="text-[26px] leading-none font-bold text-gray-900">{allBookings.length}</p>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mt-1.5">Total</p>
               </div>
               <div className="w-px h-10 bg-gray-200" />
               <div className="text-center">
-                <p className="text-[26px] leading-none font-black text-gray-900">{eventBookings.length}</p>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mt-1.5">Events</p>
+                <p className="text-[26px] leading-none font-bold text-gray-900">{eventBookings.length}</p>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mt-1.5">Events</p>
               </div>
               <div className="w-px h-10 bg-gray-200" />
               <div className="text-center">
-                <p className="text-[26px] leading-none font-black text-orange-500">₹{totalSpent.toLocaleString("en-IN")}</p>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mt-1.5">Spent</p>
+                <p className="text-[26px] leading-none font-bold text-orange-500">₹{totalSpent.toLocaleString("en-IN")}</p>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mt-1.5">Spent</p>
               </div>
             </div>
           )}
@@ -465,7 +463,7 @@ export default function BookingsPage() {
                   {tab.icon}
                 </div>
                 {tab.label}
-                <span className={`text-[11px] font-black px-2 py-0.5 rounded-lg ${
+                <span className={`text-[11px] font-bold px-2 py-0.5 rounded-lg ${
                   activeTab === tab.key ? "bg-white/20 text-white" : "bg-gray-100 text-gray-500"
                 }`}>
                   {tab.count}
@@ -504,7 +502,7 @@ export default function BookingsPage() {
               <div className="w-20 h-20 mx-auto rounded-[24px] bg-gray-50 border border-gray-100 flex items-center justify-center mb-6">
                 <Ticket size={32} className="text-gray-400" />
               </div>
-              <h3 className="text-[22px] font-black text-gray-900 tracking-tight mb-2">
+              <h3 className="text-[22px] font-bold text-gray-900 tracking-tight mb-2">
                 {searchQuery ? "No matches found" : "No bookings yet"}
               </h3>
               <p className="text-gray-500 text-[14px] max-w-xs mx-auto font-medium">
@@ -559,7 +557,7 @@ export default function BookingsPage() {
                       <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-transparent to-transparent opacity-60 md:opacity-0 group-hover:opacity-10 transition-opacity" />
 
                       {/* Type badge */}
-                      <div className={`absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1.5 rounded-[12px] text-[10px] font-black uppercase tracking-wider shadow-sm backdrop-blur-md ${
+                      <div className={`absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1.5 rounded-[12px] text-[10px] font-bold uppercase tracking-wider shadow-sm backdrop-blur-md ${
                         isEvent
                           ? "bg-rose-500/90 text-white"
                           : "bg-[#42B460]/90 text-white"
@@ -570,7 +568,7 @@ export default function BookingsPage() {
                       
                       {/* Date overlay on mobile */}
                       <div className="absolute bottom-3 left-3 md:hidden">
-                        <p className="text-white font-black text-[15px] leading-none drop-shadow-md">{formattedDate}</p>
+                        <p className="text-white font-bold text-[15px] leading-none drop-shadow-md">{formattedDate}</p>
                       </div>
                     </div>
 
@@ -578,7 +576,7 @@ export default function BookingsPage() {
                     <div className="flex-1 py-1 pr-1 md:py-3 md:pr-4 flex flex-col justify-between">
                       <div>
                         <div className="flex items-start justify-between gap-4 mb-3">
-                          <h3 className="text-[20px] font-black text-gray-900 tracking-tight line-clamp-1 group-hover:text-orange-500 transition-colors">
+                          <h3 className="text-[20px] font-bold text-gray-900 tracking-tight line-clamp-1 group-hover:text-orange-500 transition-colors">
                             {title || "Untitled"}
                           </h3>
                           <span className={`shrink-0 flex items-center gap-1.5 text-[10px] font-bold px-3 py-1.5 rounded-[10px] border ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border}`}>
@@ -622,15 +620,15 @@ export default function BookingsPage() {
                       <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
                         <div className="flex items-center gap-6 md:gap-8">
                           <div>
-                            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Total Paid</p>
-                            <p className="font-black text-gray-900 text-[18px] mt-0.5">₹{amount.toLocaleString("en-IN")}</p>
+                            <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Total Paid</p>
+                            <p className="font-bold text-gray-900 text-[18px] mt-0.5">₹{amount.toLocaleString("en-IN")}</p>
                           </div>
                           {isEvent && (
                             <>
                               <div className="h-8 w-px bg-gray-200" />
                               <div>
-                                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Tickets</p>
-                                <p className="font-black text-gray-900 text-[18px] mt-0.5">{booking.quantity || 1}</p>
+                                <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Tickets</p>
+                                <p className="font-bold text-gray-900 text-[18px] mt-0.5">{booking.quantity || 1}</p>
                               </div>
                             </>
                           )}

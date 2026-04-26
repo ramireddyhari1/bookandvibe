@@ -5,6 +5,7 @@ import { ArrowLeft, Search, MapPin, Filter, ChevronRight, Activity, Calendar, Tr
 import { fetchApi } from "@/lib/api";
 import { useLocation } from "@/context/LocationContext";
 import { motion } from "framer-motion";
+import PremiumLoader from "@/components/ui/PremiumLoader";
 
 interface Facility {
   id: string;
@@ -64,7 +65,7 @@ export default function MobileFacilityList() {
            <Link href="/" className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white active:scale-95 transition-transform">
              <ArrowLeft size={20} strokeWidth={2.5} />
            </Link>
-           <h1 className="text-white text-[28px] font-black tracking-tight">
+           <h1 className="text-white text-[28px] font-bold tracking-tight">
              {selectedDateIndex === 0 ? "Today" : days[selectedDateIndex].fullDay}
            </h1>
            <div className="w-10 h-10 flex items-center justify-end">
@@ -88,7 +89,7 @@ export default function MobileFacilityList() {
                }`}
              >
                <span className="text-[10px] font-bold uppercase mb-1">{d.day}</span>
-               <span className="text-[16px] font-black">{d.date}</span>
+               <span className="text-[16px] font-bold">{d.date}</span>
              </motion.button>
            ))}
         </div>
@@ -99,8 +100,8 @@ export default function MobileFacilityList() {
          <div className="bg-white rounded-[32px] p-6 shadow-2xl shadow-black/[0.03] min-h-[500px]">
             
             {loading ? (
-               <div className="py-20 flex justify-center">
-                  <div className="w-8 h-8 border-4 border-[#00A63E] border-t-transparent rounded-full animate-spin" />
+               <div className="py-24 flex justify-center">
+                  <PremiumLoader size="md" color="#00A63E" text="Locating Venues" />
                </div>
             ) : (
                <div className="space-y-10 relative">
@@ -125,7 +126,7 @@ export default function MobileFacilityList() {
                            {/* Content Card */}
                            <Link href={`/gamehub/${f.id}`} className="flex-1">
                               <div className="flex flex-col gap-1">
-                                 <span className="text-[11px] font-black text-gray-400 uppercase tracking-widest">{operationalTime}</span>
+                                 <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">{operationalTime}</span>
                                  <div className="flex items-start justify-between gap-4">
                                     <div className="flex-1 space-y-1">
                                        <h3 className="text-gray-900 text-[17px] font-bold leading-tight group-active:text-[#00A63E] transition-colors">{f.name}</h3>

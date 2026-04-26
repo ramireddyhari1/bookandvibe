@@ -20,6 +20,7 @@ type PartnerRecord = {
 };
 
 import { fetchApi } from "@/lib/api";
+import PremiumLoader from "@/components/ui/PremiumLoader";
 
 function toTitle(value: string): string {
   const normalized = String(value || "").toLowerCase();
@@ -220,83 +221,83 @@ export default function PartnersPage() {
   return (
     <div className="mx-auto max-w-7xl space-y-8">
       <header>
-        <h1 className="text-3xl font-black text-slate-900 tracking-tight uppercase">Partners Management</h1>
-        <p className="mt-1 text-[10px] font-black uppercase tracking-widest text-emerald-600/60">Create and manage partner accounts with role restrictions</p>
+        <h1 className="text-2xl font-bold text-gray-900">Partners Management</h1>
+        <p className="mt-1 text-[10px] font-semibold uppercase tracking-wide text-gray-400">Manage partner accounts and permissions</p>
       </header>
 
       <section className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <div className="dash-card bg-white p-5 rounded-2xl border border-emerald-50 shadow-sm transition-all hover:bg-emerald-50/30">
-          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400/80">Total Partners</p>
-          <p className="mt-1 text-3xl font-black text-slate-900 tracking-tight">{partnerStats.total}</p>
+        <div className="dash-card bg-white p-5 rounded-2xl border border-gray-100 shadow-sm transition-all hover:bg-gray-50">
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">Total Partners</p>
+          <p className="mt-1 text-3xl font-semibold text-slate-900 tracking-tight">{partnerStats.total}</p>
         </div>
-        <div className="dash-card bg-white p-5 rounded-2xl border border-emerald-50 shadow-sm transition-all hover:bg-emerald-50/30">
-          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400/80">Active</p>
-          <p className="mt-1 text-3xl font-black text-emerald-600 tracking-tight">{partnerStats.active}</p>
+        <div className="dash-card bg-white p-5 rounded-2xl border border-gray-100 shadow-sm transition-all hover:bg-gray-50">
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">Active</p>
+          <p className="mt-1 text-3xl font-semibold text-emerald-600 tracking-tight">{partnerStats.active}</p>
         </div>
-        <div className="dash-card bg-white p-5 rounded-2xl border border-emerald-50 shadow-sm transition-all hover:bg-emerald-50/30">
-          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400/80">Suspended</p>
-          <p className="mt-1 text-3xl font-black text-red-500 tracking-tight">{partnerStats.suspended}</p>
+        <div className="dash-card bg-white p-5 rounded-2xl border border-gray-100 shadow-sm transition-all hover:bg-gray-50">
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">Suspended</p>
+          <p className="mt-1 text-3xl font-semibold text-red-500 tracking-tight">{partnerStats.suspended}</p>
         </div>
       </section>
 
       {!isAdmin ? (
-        <section className="rounded-2xl border border-amber-100 bg-amber-50/50 p-4 text-[11px] font-black uppercase tracking-wider text-amber-700">
+        <section className="rounded-2xl border border-amber-100 bg-amber-50/50 p-4 text-[11px] font-semibold uppercase tracking-wider text-amber-700">
           Only ADMIN can add or change partner restrictions.
         </section>
       ) : (
-        <section className="dash-card bg-white p-7 rounded-3xl border border-emerald-50 shadow-sm">
+        <section className="dash-card bg-white p-7 rounded-xl border border-gray-100 shadow-sm">
           <div className="mb-6 flex items-center gap-2 text-emerald-900">
             <UserPlus size={20} className="text-emerald-500" />
-            <h2 className="text-lg font-black uppercase tracking-tighter">Add New Partner</h2>
+            <h2 className="text-lg font-bold">Add New Partner</h2>
           </div>
           <form onSubmit={handleCreatePartner} className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="space-y-1.5">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400/80 ml-1">Full Name</label>
+              <label className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 ml-1">Full Name</label>
               <input
                 required
                 placeholder="Partner name"
                 value={formState.name}
                 onChange={(e) => setFormState((prev) => ({ ...prev, name: e.target.value }))}
-                className="w-full rounded-2xl border border-emerald-50 bg-emerald-50/20 px-4 py-3 text-sm font-bold text-slate-900 outline-none focus:border-emerald-200 focus:bg-white transition-all"
+                className="w-full rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 text-sm font-bold text-slate-900 outline-none focus:border-gray-200 focus:bg-white transition-all"
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400/80 ml-1">Email Address</label>
+              <label className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 ml-1">Email Address</label>
               <input
                 required
                 type="email"
                 placeholder="Partner email"
                 value={formState.email}
                 onChange={(e) => setFormState((prev) => ({ ...prev, email: e.target.value }))}
-                className="w-full rounded-2xl border border-emerald-50 bg-emerald-50/20 px-4 py-3 text-sm font-bold text-slate-900 outline-none focus:border-emerald-200 focus:bg-white transition-all"
+                className="w-full rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 text-sm font-bold text-slate-900 outline-none focus:border-gray-200 focus:bg-white transition-all"
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400/80 ml-1">Phone Number</label>
+              <label className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 ml-1">Phone Number</label>
               <input
                 placeholder="Phone"
                 value={formState.phone}
                 onChange={(e) => setFormState((prev) => ({ ...prev, phone: e.target.value }))}
-                className="w-full rounded-2xl border border-emerald-50 bg-emerald-50/20 px-4 py-3 text-sm font-bold text-slate-900 outline-none focus:border-emerald-200 focus:bg-white transition-all"
+                className="w-full rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 text-sm font-bold text-slate-900 outline-none focus:border-gray-200 focus:bg-white transition-all"
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400/80 ml-1">Initial Password</label>
+              <label className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 ml-1">Initial Password</label>
               <input
                 required
                 type="password"
                 placeholder="Temporary password"
                 value={formState.password}
                 onChange={(e) => setFormState((prev) => ({ ...prev, password: e.target.value }))}
-                className="w-full rounded-2xl border border-emerald-50 bg-emerald-50/20 px-4 py-3 text-sm font-bold text-slate-900 outline-none focus:border-emerald-200 focus:bg-white transition-all"
+                className="w-full rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 text-sm font-bold text-slate-900 outline-none focus:border-gray-200 focus:bg-white transition-all"
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400/80 ml-1">Status</label>
+              <label className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 ml-1">Status</label>
               <select
                 value={formState.status}
                 onChange={(e) => setFormState((prev) => ({ ...prev, status: e.target.value }))}
-                className="w-full rounded-2xl border border-emerald-50 bg-emerald-50/20 px-4 py-3 text-sm font-bold text-slate-700 outline-none focus:border-emerald-200 focus:bg-white transition-all cursor-pointer"
+                className="w-full rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 text-sm font-bold text-slate-700 outline-none focus:border-gray-200 focus:bg-white transition-all cursor-pointer"
               >
                 <option value="ACTIVE">ACTIVE</option>
                 <option value="SUSPENDED">SUSPENDED</option>
@@ -304,11 +305,11 @@ export default function PartnersPage() {
               </select>
             </div>
             <div className="space-y-1.5">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400/80 ml-1">Partner Type</label>
+              <label className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 ml-1">Partner Type</label>
               <select
                 value={formState.partnerType}
                 onChange={(e) => setFormState((prev) => ({ ...prev, partnerType: e.target.value }))}
-                className="w-full rounded-2xl border border-emerald-50 bg-emerald-50/20 px-4 py-3 text-sm font-bold text-slate-700 outline-none focus:border-emerald-200 focus:bg-white transition-all cursor-pointer"
+                className="w-full rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 text-sm font-bold text-slate-700 outline-none focus:border-gray-200 focus:bg-white transition-all cursor-pointer"
               >
                 <option value="EVENT_HOST">EVENT HOST</option>
                 <option value="VENUE_OWNER">GAMEHUB PARTNER (VENUE OWNER)</option>
@@ -317,21 +318,21 @@ export default function PartnersPage() {
 
             {formState.partnerType === "EVENT_HOST" ? (
               <div className="space-y-1.5">
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400/80 ml-1">Event Host ID (Optional)</label>
+                <label className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 ml-1">Event Host ID (Optional)</label>
                 <input
                   placeholder="e.g. EH-778"
                   value={formState.eventHostId}
                   onChange={(e) => setFormState((prev) => ({ ...prev, eventHostId: e.target.value }))}
-                  className="w-full rounded-2xl border border-emerald-50 bg-emerald-50/20 px-4 py-3 text-sm font-bold text-slate-900 outline-none focus:border-emerald-200 focus:bg-white transition-all"
+                  className="w-full rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 text-sm font-bold text-slate-900 outline-none focus:border-gray-200 focus:bg-white transition-all"
                 />
               </div>
             ) : (
               <div className="space-y-1.5">
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400/80 ml-1">Assign to GameHub Venue</label>
+                <label className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 ml-1">Assign to GameHub Venue</label>
                 <select
                   value={formState.facilityId}
                   onChange={(e) => setFormState((prev) => ({ ...prev, facilityId: e.target.value }))}
-                  className="w-full rounded-2xl border border-emerald-50 bg-emerald-50/20 px-4 py-3 text-sm font-bold text-slate-700 outline-none focus:border-emerald-200 focus:bg-white transition-all cursor-pointer"
+                  className="w-full rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 text-sm font-bold text-slate-700 outline-none focus:border-gray-200 focus:bg-white transition-all cursor-pointer"
                 >
                   <option value="">No Venue Assigned</option>
                   {facilities.map((f) => (
@@ -344,7 +345,7 @@ export default function PartnersPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="btn-primary-glow w-full rounded-2xl px-6 py-4 text-sm font-black uppercase tracking-widest shadow-lg shadow-emerald-100 transition-all hover:scale-[1.02] disabled:opacity-50"
+                className="bg-gray-900 text-white w-full rounded-lg px-6 py-2.5 text-sm font-semibold uppercase tracking-wide shadow-sm transition-all  disabled:opacity-50"
               >
                 {submitting ? "Creating..." : "Create Partner Account"}
               </button>
@@ -353,21 +354,21 @@ export default function PartnersPage() {
         </section>
       )}
 
-      <section className="dash-card bg-white p-5 rounded-3xl border border-emerald-50 shadow-sm">
+      <section className="dash-card bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
         <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
-          <label className="md:col-span-2 flex items-center gap-3 rounded-2xl border border-emerald-50/50 bg-emerald-50/20 px-4 py-3 focus-within:bg-white focus-within:border-emerald-200 transition-all">
+          <label className="md:col-span-2 flex items-center gap-3 rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 focus-within:bg-white focus-within:border-gray-200 transition-all">
             <Search size={18} className="text-emerald-600/40" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search partner directory..."
-              className="w-full bg-transparent text-sm font-bold text-slate-900 outline-none placeholder:text-emerald-900/30"
+              className="w-full bg-transparent text-sm font-bold text-slate-900 outline-none placeholder:text-gray-400"
             />
           </label>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="rounded-2xl border border-emerald-50/50 bg-emerald-50/20 px-4 py-3 text-sm font-black uppercase tracking-wider text-emerald-800 outline-none focus:bg-white focus:border-emerald-200 transition-all cursor-pointer"
+            className="rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 text-sm font-semibold uppercase tracking-wider text-emerald-800 outline-none focus:bg-white focus:border-gray-200 transition-all cursor-pointer"
           >
             <option value="All">All Statuses</option>
             <option value="Active">Active only</option>
@@ -381,11 +382,13 @@ export default function PartnersPage() {
         ) : null}
 
         {message ? (
-          <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700">{message}</div>
+          <div className="mb-4 rounded-xl border border-gray-200 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700">{message}</div>
         ) : null}
 
         {loading ? (
-          <div className="py-10 text-center text-sm font-semibold text-slate-500">Loading partners...</div>
+          <div className="py-24 flex flex-col items-center justify-center">
+            <PremiumLoader size="lg" color="#10b981" text="Verifying Partners" />
+          </div>
         ) : partners.length === 0 ? (
           <div className="py-10 text-center text-sm font-semibold text-slate-500">No partners found.</div>
         ) : (
@@ -412,17 +415,17 @@ export default function PartnersPage() {
                     <td className="p-3">
                       <div className="flex flex-wrap gap-1.5">
                         {partner.eventHostId && (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-purple-50 text-purple-700 border border-purple-100">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-semibold uppercase tracking-wider bg-purple-50 text-purple-700 border border-purple-100">
                             ID: {partner.eventHostId}
                           </span>
                         )}
                         {partner.gamehubFacilities && partner.gamehubFacilities.length > 0 && (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-100">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-semibold uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-100">
                             🏟️ {partner.gamehubFacilities[0].name}
                           </span>
                         )}
                         {!partner.eventHostId && (!partner.gamehubFacilities || partner.gamehubFacilities.length === 0) && (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-slate-50 text-slate-500 border border-slate-100 italic">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-semibold uppercase tracking-wider bg-slate-50 text-slate-500 border border-slate-100 italic">
                             No active portal
                           </span>
                         )}
@@ -463,7 +466,7 @@ export default function PartnersPage() {
                     <td className="p-3 text-right">
                       <button 
                         onClick={() => setEditingPartner(partner)}
-                        className="p-2 rounded-xl bg-slate-50 text-slate-400 hover:bg-emerald-50 hover:text-emerald-600 transition-all active:scale-95"
+                        className="p-2 rounded-xl bg-slate-50 text-slate-400 hover:bg-gray-50 hover:text-gray-700 transition-all active:scale-95"
                         title="Edit Profile"
                       >
                         <Edit2 size={16} />
@@ -477,7 +480,7 @@ export default function PartnersPage() {
         )}
       </section>
 
-      <section className="rounded-2xl border border-blue-50 bg-blue-50/30 p-5 text-[11px] font-black uppercase tracking-wider text-blue-800/60 leading-relaxed shadow-sm">
+      <section className="rounded-2xl border border-blue-50 bg-blue-50/30 p-5 text-[11px] font-semibold uppercase tracking-wider text-blue-800/60 leading-relaxed shadow-sm">
         <p className="inline-flex items-center gap-2 italic"><UsersIcon size={14} className="text-blue-500" /> Restriction policy: only ADMIN can create partners and change role/status. Role changes are restricted to USER/PARTNER (no ADMIN escalation).</p>
       </section>
 

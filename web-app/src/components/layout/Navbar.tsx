@@ -111,7 +111,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className={`fixed w-full z-[100] pt-4 pb-4 backdrop-blur-md transition-all duration-300 hidden md:block ${isDarkPage ? `bg-[#0f1115]/70 border-b-[3px] ${isGamehub ? 'border-[#42B460]' : isEvents ? 'border-orange-500' : 'border-white'} shadow-[0_4px_30px_rgba(0,0,0,0.3)]` : `bg-white/90 border-b-[3px] ${isGamehub ? 'border-[#42B460]' : isEvents ? 'border-orange-500' : 'border-rose-500'} shadow-lg`}`}>
+    <nav className={`fixed w-full z-[100] pt-4 pb-4 backdrop-blur-md transition-all duration-300 hidden md:block ${isDarkPage ? `bg-[#0f1115]/80 border-b-[3px] ${isGamehub ? 'border-[#42B460]' : isEvents ? 'border-orange-500' : 'border-white'} shadow-md` : `bg-white/95 border-b-[3px] ${isGamehub ? 'border-[#42B460]' : isEvents ? 'border-orange-500' : 'border-rose-500'} shadow-md`}`}>
       <div className="max-w-[1600px] mx-auto px-4 lg:px-6">
         <div className="flex items-center justify-between h-20 gap-4">
 
@@ -121,7 +121,7 @@ export default function Navbar() {
               <img
                 src={logoSrc}
                 alt="Book & Vibe"
-                className="h-28 lg:h-32 w-auto rounded-md transition-transform group-hover:scale-[1.03]"
+                className="h-16 lg:h-20 w-auto rounded-md transition-transform group-hover:scale-[1.03]"
               />
             </Link>
 
@@ -138,9 +138,9 @@ export default function Navbar() {
 
           {/* Centered Navigation */}
           <div className="hidden xl:flex items-center justify-center space-x-12 shrink-0 px-4">
-            <Link href="/" className={`text-[17px] font-bold ${isDarkPage ? 'text-white/90 hover:text-white' : `text-[#1c222b] ${theme.primaryHover}`} transition whitespace-nowrap uppercase tracking-widest`}>FOR YOU</Link>
-            <Link href="/events" className={`text-[17px] font-bold ${isDarkPage ? 'text-white/90 hover:text-white' : `text-[#1c222b] ${theme.primaryHover}`} transition whitespace-nowrap uppercase tracking-widest`}>EVENTS</Link>
-            <Link href="/gamehub" className={`text-[17px] font-bold ${isDarkPage ? 'text-white/90 hover:text-white' : isGamehub ? theme.primary : `text-[#1c222b]`} ${isDarkPage ? '' : theme.primaryHover} transition whitespace-nowrap uppercase tracking-widest`}>GAMEHUB</Link>
+            <Link href="/" className={`text-[15px] font-semibold ${isDarkPage ? 'text-white/90 hover:text-white' : `text-[#1c222b] ${theme.primaryHover}`} transition whitespace-nowrap uppercase tracking-wider`}>FOR YOU</Link>
+            <Link href="/events" className={`text-[15px] font-semibold ${isDarkPage ? 'text-white/90 hover:text-white' : `text-[#1c222b] ${theme.primaryHover}`} transition whitespace-nowrap uppercase tracking-wider`}>EVENTS</Link>
+            <Link href="/gamehub" className={`text-[15px] font-semibold ${isDarkPage ? 'text-white/90 hover:text-white' : isGamehub ? theme.primary : `text-[#1c222b]`} ${isDarkPage ? '' : theme.primaryHover} transition whitespace-nowrap uppercase tracking-wider`}>GAMEHUB</Link>
           </div>
 
           {/* Location & Actions (Right Side) */}
@@ -193,7 +193,7 @@ export default function Navbar() {
                     >
                       <div className={`mt-0.5 mr-3 shrink-0 ${theme.primaryIcon} ${theme.primaryLightBgHover} p-1 -m-1 rounded-full group-hover:scale-110 transition-all`}>
                         {isDetecting ? (
-                          <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                          <div className="w-4 h-4 border-2 border-[#10b981] border-t-transparent rounded-full animate-spin" />
                         ) : (
                           <Navigation size={16} className={theme.primaryFill} />
                         )}

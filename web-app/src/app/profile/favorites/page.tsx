@@ -97,7 +97,7 @@ export default function FavoritesPage() {
             <ArrowLeft size={18} className="group-hover:-translate-x-0.5 transition-transform" />
           </Link>
           <div>
-            <h1 className="text-2xl font-black text-gray-900">Favorites</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Favorites</h1>
             <p className="text-sm text-gray-500 font-medium">Saved events and venues</p>
           </div>
         </div>

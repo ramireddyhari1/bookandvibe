@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import { useLocation } from "@/context/LocationContext";
 import { fetchApi } from "@/lib/api";
+import PremiumLoader from "@/components/ui/PremiumLoader";
 
 // Real event data is fetched from the API via useEffect below.
 
@@ -263,6 +264,11 @@ export default function EventsPage() {
 
   const filteredEvents = useMemo(() => {
     let result = events;
+
+    // Hide past events (safety check)
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    result = result.filter(e => new Date(e.date) >= today);
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       result = result.filter(e => 
@@ -328,17 +334,15 @@ export default function EventsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#fff7ed] via-white to-white text-[#1c222b] pb-24 font-sans leading-normal">
 
-      {/* ═══════════════════════════════════════════════════════
-          MASSIVE 16:9 POSTER BANNER CAROUSEL (Desktop)
-      ═══════════════════════════════════════════════════════ */}
+      {/* Hero Spotlight */}
       {bannerEvents.length > 0 ? (
         <div className="hidden md:block relative w-full pt-[124px] max-w-[1600px] mx-auto px-4 lg:px-6">
-          <div className="relative w-full overflow-hidden rounded-3xl shadow-2xl" style={{ aspectRatio: '21/9', maxHeight: '75vh' }}>
+          <div className="relative w-full overflow-hidden rounded-[32px] shadow-sm border border-gray-100" style={{ aspectRatio: '21/9', maxHeight: '70vh' }}>
             {bannerEvents.map((event, idx) => (
               <Link
                 href={`/events/${event.id}`}
                 key={event.id}
-                className={`absolute inset-0 transition-all duration-700 ease-in-out ${
+                className={`absolute inset-0 transition-all duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] ${
                   idx === currentSlide
                     ? "opacity-100 scale-100 z-10"
                     : "opacity-0 scale-105 z-0"
@@ -349,37 +353,28 @@ export default function EventsPage() {
                   alt={event.title}
                   className="w-full h-full object-cover"
                 />
-                {/* Gradient overlays */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1c222b] via-[#1c222b]/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#1c222b]/40 via-transparent to-transparent" />
 
-                {/* Content overlay */}
-                <div className="absolute bottom-0 left-0 right-0 p-8 lg:p-14 z-20">
+                <div className="absolute bottom-0 left-0 right-0 p-10 lg:p-16 z-20">
                   <div className="max-w-[1400px] mx-auto">
-                    <div className="flex items-center gap-3 mb-4">
-                      <span className="bg-[#D53F17] text-white text-[11px] tracking-wider uppercase px-3 py-1.5 rounded-full font-extrabold shadow-lg">
-                        {event.featured ? "⭐ Featured" : event.category}
-                      </span>
-                      <span className="bg-white/15 backdrop-blur-md text-white text-[11px] tracking-wider uppercase px-3 py-1.5 rounded-full font-extrabold border border-white/20">
-                        {formatEventDate(event.date)}
+                    <div className="flex items-center gap-3 mb-6">
+                      <span className="bg-white/10 backdrop-blur-md text-white text-[10px] tracking-[0.1em] uppercase px-3 py-1.5 rounded-lg font-bold border border-white/20">
+                        {event.featured ? "Recommended" : event.category}
                       </span>
                     </div>
-                    <h2 className="text-4xl lg:text-6xl xl:text-7xl font-extrabold text-white tracking-tight leading-[1.05] mb-4 drop-shadow-xl max-w-3xl">
+                    <h2 className="text-5xl lg:text-7xl font-bold text-white tracking-tight leading-[0.95] mb-6 max-w-4xl">
                       {event.title}
                     </h2>
-                    <div className="flex flex-wrap items-center gap-5 text-white/80 text-sm font-semibold mb-6">
+                    <div className="flex items-center gap-6 text-white/70 text-[13px] font-bold uppercase tracking-wider">
                       <span className="flex items-center gap-2">
-                        <Calendar size={16} className="text-[#D53F17]" />
-                        {formatEventDate(event.date)}, {event.time}
+                        <Calendar size={14} className="text-orange-500" />
+                        {formatEventDate(event.date)}
                       </span>
+                      <span className="w-1 h-1 rounded-full bg-white/20" />
                       <span className="flex items-center gap-2">
-                        <MapPin size={16} className="text-[#D53F17]" />
+                        <MapPin size={14} className="text-orange-500" />
                         {event.venue}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <span className="bg-white text-[#1c222b] px-8 py-3.5 rounded-2xl font-extrabold text-[15px] hover:bg-[#D53F17] hover:text-white transition-colors shadow-xl">
-                        ₹{event.price} · Get Tickets
                       </span>
                     </div>
                   </div>
@@ -387,38 +382,20 @@ export default function EventsPage() {
               </Link>
             ))}
 
-            {/* Navigation Arrows */}
             {bannerEvents.length > 1 && (
-              <>
+              <div className="absolute bottom-10 right-10 z-30 flex items-center gap-3">
                 <button
                   onClick={(e) => { e.preventDefault(); prevSlide(); }}
-                  className="absolute left-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-white/10 backdrop-blur-lg hover:bg-white/25 rounded-full flex items-center justify-center text-white transition-all border border-white/20 shadow-lg"
+                  className="w-10 h-10 bg-white/10 backdrop-blur-lg hover:bg-white text-white hover:text-black rounded-full flex items-center justify-center transition-all border border-white/10"
                 >
-                  <ChevronLeft size={24} />
+                  <ChevronLeft size={20} />
                 </button>
                 <button
                   onClick={(e) => { e.preventDefault(); nextSlide(); }}
-                  className="absolute right-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-white/10 backdrop-blur-lg hover:bg-white/25 rounded-full flex items-center justify-center text-white transition-all border border-white/20 shadow-lg"
+                  className="w-10 h-10 bg-white/10 backdrop-blur-lg hover:bg-white text-white hover:text-black rounded-full flex items-center justify-center transition-all border border-white/10"
                 >
-                  <ChevronRight size={24} />
+                  <ChevronRight size={20} />
                 </button>
-              </>
-            )}
-
-            {/* Dot Indicators */}
-            {bannerEvents.length > 1 && (
-              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 bg-black/30 backdrop-blur-md px-4 py-2 rounded-full">
-                {bannerEvents.map((_, idx) => (
-                  <button
-                    key={idx}
-                    onClick={(e) => { e.preventDefault(); goToSlide(idx); }}
-                    className={`rounded-full transition-all duration-300 ${
-                      idx === currentSlide
-                        ? "w-8 h-2.5 bg-[#D53F17]"
-                        : "w-2.5 h-2.5 bg-white/40 hover:bg-white/60"
-                    }`}
-                  />
-                ))}
               </div>
             )}
           </div>
@@ -457,7 +434,7 @@ export default function EventsPage() {
               <SlidersHorizontal size={16} />
               Filters
               {activeFilterCount > 0 && (
-                <span className="bg-white text-[#D53F17] text-[11px] font-black w-5 h-5 rounded-full flex items-center justify-center">
+                <span className="bg-white text-[#D53F17] text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
                   {activeFilterCount}
                 </span>
               )}
@@ -469,7 +446,7 @@ export default function EventsPage() {
             <div className="absolute top-[110%] left-0 right-0 bg-white rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-gray-100 overflow-hidden z-[100] flex flex-col max-h-[400px]">
               <div className="overflow-y-auto p-4 flex flex-col gap-2">
                 <div className="flex items-center justify-between px-2 pb-2 border-b border-gray-50 mb-1">
-                  <span className="text-[12px] font-black text-gray-400 uppercase tracking-widest">
+                  <span className="text-[12px] font-bold text-gray-400 uppercase tracking-wider">
                     Quick Results
                   </span>
                 </div>
@@ -505,7 +482,7 @@ export default function EventsPage() {
               
               {filteredEvents.length > 0 && (
                 <div className="bg-gray-50 p-3 text-center border-t border-gray-100">
-                   <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Showing top {Math.min(10, filteredEvents.length)} matches</p>
+                   <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">Showing top {Math.min(10, filteredEvents.length)} matches</p>
                 </div>
               )}
             </div>
@@ -580,40 +557,29 @@ export default function EventsPage() {
 
       {/* ── Main Content ─────────────────────────────────── */}
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 mt-4">
-        {/* ── Category Tabs ────────────────────── */}
-        <div className="flex gap-3 overflow-x-auto w-full pb-4 mb-8 scrollbar-hide">
+        {/* Category Navigation */}
+        <div className="flex gap-4 overflow-x-auto w-full pb-6 mb-10 scrollbar-hide">
           {CATEGORIES.map((cat) => (
             <button
               key={cat.label}
               onClick={() => setActiveCategory(cat.label)}
-              className={`group relative flex items-center gap-2.5 px-5 py-2.5 min-h-[48px] rounded-2xl text-[15px] font-bold whitespace-nowrap transition-all duration-300 border font-sans focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#fff7ed] ${
+              className={`flex items-center gap-3 px-6 py-3 rounded-2xl text-[14px] font-bold whitespace-nowrap transition-all duration-200 border ${
                 activeCategory === cat.label
-                  ? "bg-gradient-to-b from-[#D53F17] to-[#D53F17] text-white border-[#D53F17] shadow-[0_8px_20px_rgba(249,115,22,0.30)]"
-                  : "bg-white text-[#334155] border-gray-200 hover:border-orange-300 hover:text-orange-700 hover:bg-gradient-to-b hover:from-white hover:to-orange-50/60 shadow-[0_1px_2px_rgba(15,23,42,0.06)] hover:shadow-[0_8px_18px_rgba(15,23,42,0.08)]"
+                  ? "bg-[#1c222b] text-white border-[#1c222b] shadow-lg"
+                  : "bg-white text-gray-500 border-gray-100 hover:border-gray-200 hover:bg-gray-50"
               }`}
-              aria-pressed={activeCategory === cat.label}
             >
-              <span
-                className={`inline-flex items-center justify-center w-5 h-5 ${
-                  activeCategory === cat.label
-                    ? "text-white"
-                    : "text-slate-500 group-hover:text-orange-600"
-                } transition-colors`}
-              >
+              <span className={activeCategory === cat.label ? "text-orange-500" : "text-gray-400"}>
                 {cat.icon}
               </span>
-              <span className="tracking-[0.01em]">{cat.display || cat.label}</span>
-              {activeCategory === cat.label && (
-                <span className="absolute inset-x-4 -bottom-px h-[2px] rounded-full bg-white/85" />
-              )}
+              {cat.display || cat.label}
             </button>
           ))}
         </div>
 
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-20 animate-pulse">
-            <div className="w-12 h-12 border-4 border-[#D53F17] border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p className="text-[#D53F17] font-bold font-sans">Discovering experiences...</p>
+          <div className="py-24">
+            <PremiumLoader size="lg" color="#D53F17" text="Discovering experiences..." />
           </div>
         ) : error ? (
           <div className="bg-white border border-orange-100 rounded-3xl p-12 text-center shadow-sm mb-12">
@@ -629,70 +595,16 @@ export default function EventsPage() {
           </div>
         ) : (
           <>
-            {/* Featured Section */}
-            {featuredEvent && activeCategory === "All" && !searchQuery && (
-              <div className="mb-12 md:hidden">
-                <Link href={`/events/${featuredEvent.id}`} className="block group">
-                  <div className="relative w-full h-[280px] md:h-[380px] rounded-3xl overflow-hidden shadow-lg border border-gray-100">
-                    <img
-                      src={getEventImage(featuredEvent.images, true)}
-                      alt={featuredEvent.title}
-                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out font-sans"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#1c222b]/90 via-[#1c222b]/50 to-transparent" />
-                    
-                    <div className="absolute inset-y-0 left-0 p-8 md:p-12 flex flex-col justify-center max-w-xl">
-                      <div className="flex items-center gap-3 mb-4">
-                        <span className="bg-[#D53F17] text-white text-[11px] tracking-wider uppercase px-3 py-1.5 rounded-full font-extrabold shadow-lg font-sans">
-                          ⭐ Featured
-                        </span>
-                        <span className="bg-white/15 backdrop-blur-md text-white text-[11px] tracking-wider uppercase px-3 py-1.5 rounded-full font-extrabold border border-white/20 font-sans">
-                          {featuredEvent.category}
-                        </span>
-                      </div>
-                      <h2 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight leading-tight mb-3 drop-shadow-lg font-sans">
-                        {featuredEvent.title}
-                      </h2>
-                      <p className="text-white/80 text-sm md:text-base font-medium mb-5 line-clamp-2 font-sans">
-                        {featuredEvent.description}
-                      </p>
-                      <div className="flex flex-wrap items-center gap-4 text-white/70 text-sm font-medium mb-6 font-sans">
-                        <span className="flex items-center gap-1.5 font-sans">
-                          <Calendar size={15} className="text-orange-400" />
-                          {formatEventDate(featuredEvent.date)}, {featuredEvent.time}
-                        </span>
-                        <span className="flex items-center gap-1.5 font-sans">
-                          <MapPin size={15} className="text-orange-400" />
-                          {featuredEvent.venue}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-4 font-sans">
-                        <span className="bg-white text-[#1c222b] px-6 py-3 rounded-2xl font-extrabold text-[15px] group-hover:bg-orange-500 group-hover:text-white transition-colors shadow-lg font-sans">
-                          ₹{featuredEvent.price} · Get Tickets
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            )}
 
             {/* Trending Section */}
             {trendingEvents.length > 0 && activeCategory === "All" && !searchQuery && (
               <div className="mb-12">
-                <div className="flex justify-between items-end border-b border-gray-200 pb-4 mb-8">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-gradient-to-br from-[#D53F17] to-[#D53F17] text-white p-2.5 rounded-xl shadow-md font-sans">
-                      <Flame size={20} />
-                    </div>
-                    <div>
-                      <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight font-sans">
-                        Trending in {selectedLocation.city || "Your Area"}
-                      </h2>
-                      <p className="text-sm text-gray-500 font-medium font-sans">
-                        Location-based events near you
-                      </p>
-                    </div>
+                <div className="flex items-center justify-between border-b border-gray-100 pb-6 mb-10">
+                  <div>
+                    <h2 className="text-3xl font-bold tracking-tight text-[#1c222b]">
+                      Trending in {selectedLocation.city || "Your City"}
+                    </h2>
+                    <p className="text-gray-400 text-sm font-medium mt-1">Experiences people are loving right now</p>
                   </div>
                 </div>
 
@@ -700,7 +612,7 @@ export default function EventsPage() {
                   {trendingEvents.slice(0, 3).map((event, idx) => (
                     <Link href={`/events/${event.id}`} key={event.id} className="block group">
                       <div className="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-md hover:shadow-2xl transition-all duration-300 h-full flex group-hover:-translate-y-2 relative">
-                        <div className="absolute top-4 left-4 z-20 bg-gradient-to-br from-amber-400 to-orange-500 text-white w-9 h-9 rounded-xl flex items-center justify-center font-black text-sm shadow-lg font-sans">
+                        <div className="absolute top-4 left-4 z-20 bg-gradient-to-br from-amber-400 to-orange-500 text-white w-9 h-9 rounded-xl flex items-center justify-center font-bold text-sm shadow-lg font-sans">
                           #{idx + 1}
                         </div>
                         <div className="w-[140px] md:w-[180px] shrink-0 relative overflow-hidden">
@@ -711,10 +623,10 @@ export default function EventsPage() {
                           />
                         </div>
                         <div className="flex-1 p-5 flex flex-col">
-                          <span className="text-[11px] font-extrabold text-[#D53F17] uppercase tracking-wider mb-1.5 font-sans">
+                          <span className="text-[11px] font-bold text-[#D53F17] uppercase tracking-wider mb-1.5 font-sans">
                             {event.category}
                           </span>
-                          <h3 className="text-[16px] font-extrabold text-[#1c222b] leading-snug mb-2 line-clamp-2 group-hover:text-orange-600 transition-colors font-sans">
+                          <h3 className="text-[16px] font-bold text-[#1c222b] leading-snug mb-2 line-clamp-2 group-hover:text-orange-600 transition-colors font-sans">
                             {event.title}
                           </h3>
                           <div className="space-y-1 text-xs text-gray-500 font-semibold mb-3 flex-1 font-sans">
@@ -728,7 +640,7 @@ export default function EventsPage() {
                             </p>
                           </div>
                           <div className="flex items-center justify-between pt-3 border-t border-gray-100 font-sans">
-                            <span className="text-lg font-black text-[#1c222b] font-sans">
+                            <span className="text-lg font-bold text-[#1c222b] font-sans">
                               ₹{event.price}
                             </span>
                           </div>
@@ -741,19 +653,12 @@ export default function EventsPage() {
             )}
 
             {/* All Events */}
-            <div className="flex justify-between items-end border-b border-gray-200 pb-4 mb-8 font-sans">
-              <div className="flex items-center gap-3 font-sans">
-                <div className="bg-gradient-to-br from-[#D53F17] to-[#D53F17] text-white p-2.5 rounded-xl shadow-md font-sans">
-                  <Ticket size={20} />
-                </div>
-                <div className="font-sans">
-                  <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight font-sans">
-                    {activeCategory === "All"
-                      ? "All Events"
-                      : CATEGORIES.find((c) => c.label === activeCategory)?.display || activeCategory}
-                  </h2>
-                </div>
-              </div>
+            <div className="flex items-center justify-between border-b border-gray-100 pb-6 mb-10">
+              <h2 className="text-3xl font-bold tracking-tight text-[#1c222b]">
+                {activeCategory === "All"
+                  ? "Explore All Events"
+                  : CATEGORIES.find((c) => c.label === activeCategory)?.display || activeCategory}
+              </h2>
             </div>
 
             {filteredEvents.length > 0 ? (
@@ -768,7 +673,7 @@ export default function EventsPage() {
                           className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out font-sans"
                         />
                         <div className="absolute top-3 left-3 right-3 flex items-start justify-between z-10 font-sans">
-                          <span className="bg-white/90 backdrop-blur-md text-[#1c222b] text-[11px] tracking-wider uppercase px-2.5 py-1.5 rounded-xl font-extrabold shadow-sm border border-white/50 font-sans">
+                          <span className="bg-white/90 backdrop-blur-md text-[#1c222b] text-[11px] tracking-wider uppercase px-2.5 py-1.5 rounded-xl font-bold shadow-sm border border-white/50 font-sans">
                             {event.category}
                           </span>
                           <button
@@ -786,10 +691,10 @@ export default function EventsPage() {
                         </div>
                         <div className="absolute bottom-3 left-3 z-10 font-sans">
                           <div className="bg-white rounded-xl px-3 py-2 text-center shadow-lg min-w-[52px] font-sans">
-                            <p className="text-[10px] text-orange-500 font-extrabold uppercase tracking-wider leading-none font-sans">
+                            <p className="text-[10px] text-orange-500 font-bold uppercase tracking-wider leading-none font-sans">
                               {new Date(event.date).toLocaleDateString("en-US", { month: "short" })}
                             </p>
-                            <p className="text-xl font-black text-[#1c222b] leading-none mt-0.5 font-sans">
+                            <p className="text-xl font-bold text-[#1c222b] leading-none mt-0.5 font-sans">
                               {new Date(event.date).getDate()}
                             </p>
                           </div>
@@ -800,7 +705,7 @@ export default function EventsPage() {
                           <Clock size={13} />
                           {formatEventDate(event.date)}, {event.time}
                         </p>
-                        <h3 className="text-[17px] font-extrabold text-[#1c222b] leading-snug line-clamp-2 mb-2 group-hover:text-orange-600 transition-colors font-sans">
+                        <h3 className="text-[17px] font-bold text-[#1c222b] leading-snug line-clamp-2 mb-2 group-hover:text-orange-600 transition-colors font-sans">
                           {event.title}
                         </h3>
                         <p className="text-gray-500 text-[13px] font-semibold flex items-center gap-1.5 mb-4 mt-auto font-sans">
@@ -808,7 +713,7 @@ export default function EventsPage() {
                           {event.venue}
                         </p>
                         <div className="flex justify-between items-center pt-4 border-t border-gray-100 font-sans">
-                           <span className="text-xl font-black text-[#1c222b] font-sans">₹{event.price}</span>
+                           <span className="text-xl font-bold text-[#1c222b] font-sans">₹{event.price}</span>
                            <span className="text-[11px] text-gray-400 font-bold font-sans">Available</span>
                         </div>
                       </div>
@@ -819,7 +724,7 @@ export default function EventsPage() {
             ) : (
               <div className="text-center py-24 bg-white/50 border border-dashed border-gray-200 rounded-3xl font-sans">
                 <Frown className="text-orange-300 mx-auto mb-4 font-sans" size={64} strokeWidth={1} />
-                <h3 className="text-2xl font-black text-[#1c222b] mb-2 font-sans">No events found</h3>
+                <h3 className="text-2xl font-bold text-[#1c222b] mb-2 font-sans">No events found</h3>
                 <p className="text-gray-500 max-w-md mx-auto font-medium mb-6 font-sans">
                   There are currently no events matching your criteria in <strong className="text-orange-500 font-sans">{selectedLocation.city}</strong>.
                 </p>

@@ -20,6 +20,7 @@ import {
   Ticket,
   LayoutTemplate,
 } from "lucide-react";
+import PremiumLoader from "@/components/ui/PremiumLoader";
 
 interface Banner {
   id: string;
@@ -96,11 +97,11 @@ export default function SettingsPage() {
     <div className="max-w-5xl mx-auto space-y-8">
       {/* Header */}
       <header>
-        <h1 className="text-3xl font-black text-slate-900 tracking-tight uppercase">
+        <h1 className="text-2xl font-bold text-gray-900">
           System Settings
         </h1>
-        <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600/60 mt-1">
-          Global platform configuration and security protocols
+        <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mt-1">
+          Platform configuration and preferences
         </p>
       </header>
 
@@ -108,7 +109,7 @@ export default function SettingsPage() {
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Tab Sidebar */}
         <div className="lg:w-[240px] shrink-0">
-          <div className="bg-white rounded-3xl shadow-sm border border-emerald-50 p-2 lg:sticky lg:top-8">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-2 lg:sticky lg:top-8">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -116,13 +117,13 @@ export default function SettingsPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-left transition-all ${
+                  className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-left transition-all ${
                     isActive
-                      ? "bg-emerald-500 text-white font-black shadow-lg shadow-emerald-100"
-                      : "text-slate-500 hover:bg-emerald-50/50 hover:text-emerald-700 font-bold"
+                      ? "bg-gray-900 text-white font-medium"
+                      : "text-slate-500 hover:bg-gray-50 hover:text-gray-900 font-bold"
                   }`}
                 >
-                  <Icon size={18} className={isActive ? "text-white" : "text-emerald-600/40"} />
+                  <Icon size={18} className={isActive ? "text-white" : "text-gray-400"} />
                   <span className="text-[13px] uppercase tracking-wider">{tab.label}</span>
                 </button>
               );
@@ -134,62 +135,62 @@ export default function SettingsPage() {
         <div className="flex-1">
           {/* ── General Settings ──────────────── */}
           {activeTab === "general" && (
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
               <div className="p-6 border-b border-slate-100">
-                <h2 className="text-lg font-extrabold text-slate-900">General Settings</h2>
+                <h2 className="text-lg font-bold text-slate-900">General Settings</h2>
                 <p className="text-sm text-slate-500 font-medium mt-1">Basic platform configuration</p>
               </div>
 
               <div className="p-6 space-y-6">
                 {/* Platform Logo */}
-                <div className="flex items-center gap-6 pb-6 border-b border-emerald-50">
-                  <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shadow-xl shadow-emerald-100 relative group cursor-pointer">
+                <div className="flex items-center gap-6 pb-6 border-b border-gray-100">
+                  <div className="w-20 h-20 rounded-xl bg-gray-200 flex items-center justify-center shadow-sm relative group cursor-pointer">
                     <Ticket size={32} className="text-white -rotate-44" />
-                    <div className="absolute inset-0 bg-emerald-900/40 rounded-3xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+                    <div className="absolute inset-0 bg-emerald-900/40 rounded-xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
                       <Camera size={22} className="text-white" />
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-black text-slate-800 uppercase text-sm tracking-tight">Identity Branding</h3>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">PNG/SVG Preferred. Max 2MB.</p>
-                    <button className="mt-3 text-xs text-emerald-600 font-black uppercase tracking-wider hover:text-emerald-700 transition-all">Update Asset</button>
+                    <h3 className="font-semibold text-slate-800 uppercase text-sm tracking-tight">Identity Branding</h3>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide mt-1">PNG/SVG Preferred. Max 2MB.</p>
+                    <button className="mt-3 text-xs text-emerald-600 font-semibold uppercase tracking-wider hover:text-gray-900 transition-all">Update Asset</button>
                   </div>
                 </div>
 
                 {/* Platform Name */}
                 <div>
-                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Platform Identity</label>
+                  <label className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-2 ml-1">Platform Identity</label>
                   <input
                     type="text"
                     defaultValue="Book & Vibe"
-                    className="w-full bg-emerald-50/20 border border-emerald-50 focus:border-emerald-200 rounded-2xl px-5 py-3.5 text-slate-900 text-sm font-bold outline-none transition-all"
+                    className="w-full bg-white border border-gray-200 focus:border-gray-400 rounded-lg px-4 py-2.5 text-gray-900 text-sm outline-none transition-all"
                   />
                 </div>
 
                 {/* Platform URL */}
                 <div>
-                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Platform URL</label>
+                  <label className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-2 ml-1">Platform URL</label>
                   <input
                     type="url"
                     defaultValue="https://bookandvibe.com"
-                    className="w-full bg-emerald-50/20 border border-emerald-50 focus:border-emerald-200 rounded-2xl px-5 py-3.5 text-slate-900 text-sm font-bold outline-none transition-all"
+                    className="w-full bg-white border border-gray-200 focus:border-gray-400 rounded-lg px-4 py-2.5 text-gray-900 text-sm outline-none transition-all"
                   />
                 </div>
 
                 {/* Support Email */}
                 <div>
-                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Support Email</label>
+                  <label className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-2 ml-1">Support Email</label>
                   <input
                     type="email"
                     defaultValue="support@bookandvibe.com"
-                    className="w-full bg-emerald-50/20 border border-emerald-50 focus:border-emerald-200 rounded-2xl px-5 py-3.5 text-slate-900 text-sm font-bold outline-none transition-all"
+                    className="w-full bg-white border border-gray-200 focus:border-gray-400 rounded-lg px-4 py-2.5 text-gray-900 text-sm outline-none transition-all"
                   />
                 </div>
 
                 {/* Timezone */}
                 <div>
-                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">System Timezone</label>
-                  <select className="w-full bg-emerald-50/20 border border-emerald-50 focus:border-emerald-200 rounded-2xl px-5 py-4 text-slate-900 text-sm font-bold outline-none transition-all cursor-pointer">
+                  <label className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-2 ml-1">System Timezone</label>
+                  <select className="w-full bg-white border border-gray-200 focus:border-gray-400 rounded-lg px-4 py-2.5 text-gray-900 text-sm outline-none transition-all cursor-pointer">
                     <option>Asia/Kolkata (IST, +05:30)</option>
                     <option>America/New_York (EST, -05:00)</option>
                     <option>Europe/London (GMT, +00:00)</option>
@@ -199,8 +200,8 @@ export default function SettingsPage() {
 
                 {/* Currency */}
                 <div>
-                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Default Currency</label>
-                  <select className="w-full bg-emerald-50/20 border border-emerald-50 focus:border-emerald-200 rounded-2xl px-5 py-4 text-slate-900 text-sm font-bold outline-none transition-all cursor-pointer">
+                  <label className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-2 ml-1">Default Currency</label>
+                  <select className="w-full bg-white border border-gray-200 focus:border-gray-400 rounded-lg px-4 py-2.5 text-gray-900 text-sm outline-none transition-all cursor-pointer">
                     <option>₹ INR – Indian Rupee</option>
                     <option>$ USD – US Dollar</option>
                     <option>€ EUR – Euro</option>
@@ -209,13 +210,13 @@ export default function SettingsPage() {
                 </div>
               </div>
 
-              <div className="p-6 border-t border-emerald-50 bg-emerald-50/10 flex justify-end">
+              <div className="p-6 border-t border-gray-100 bg-gray-50 flex justify-end">
                 <button
                   onClick={handleSave}
-                  className="btn-primary-glow flex items-center gap-2 rounded-2xl px-8 py-4 font-black text-sm uppercase tracking-widest shadow-lg shadow-emerald-100/50 hover:scale-[1.02] transition-all"
+                  className="bg-gray-900 text-white flex items-center gap-2 rounded-lg px-6 py-2.5 font-semibold text-sm shadow-sm  transition-all"
                 >
                   {saved ? <Check size={18} strokeWidth={3} /> : <Save size={18} strokeWidth={3} />}
-                  {saved ? "Synchronized" : "Commit Changes"}
+                  {saved ? "Saved!" : "Save Changes"}
                 </button>
               </div>
             </div>
@@ -223,10 +224,10 @@ export default function SettingsPage() {
 
           {/* ── Notification Settings ────────── */}
           {activeTab === "notifications" && (
-            <div className="bg-white rounded-3xl shadow-sm border border-emerald-50 overflow-hidden">
-              <div className="p-6 border-b border-emerald-50">
-                <h2 className="text-lg font-black text-slate-900 uppercase">Notification Protocols</h2>
-                <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600/60 mt-1">Configure automated alert distribution</p>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+              <div className="p-6 border-b border-gray-100">
+                <h2 className="text-lg font-semibold text-slate-900 uppercase">Notifications</h2>
+                <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 mt-1">Configure alerts and email notifications</p>
               </div>
 
               <div className="p-6 space-y-0">
@@ -272,7 +273,7 @@ export default function SettingsPage() {
               <div className="p-6 border-t border-slate-100 bg-slate-50/50 flex justify-end">
                 <button
                   onClick={handleSave}
-                  className="flex items-center gap-2 bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-3 rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-rose-200 transition"
+                  className="flex items-center gap-2 bg-red-600 text-white px-6 py-3 rounded-xl font-bold text-sm hover:shadow-sm hover:shadow-rose-200 transition"
                 >
                   {saved ? <Check size={17} /> : <Save size={17} />}
                   {saved ? "Saved!" : "Save Preferences"}
@@ -285,27 +286,27 @@ export default function SettingsPage() {
           {activeTab === "security" && (
             <div className="space-y-6">
               {/* Change Password */}
-              <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+              <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
                 <div className="p-6 border-b border-slate-100">
-                  <h2 className="text-lg font-extrabold text-slate-900">Change Password</h2>
+                  <h2 className="text-lg font-bold text-slate-900">Change Password</h2>
                   <p className="text-sm text-slate-500 font-medium mt-1">Update your admin account password</p>
                 </div>
                 <div className="p-6 space-y-4">
                   <div>
                     <label className="block text-sm font-bold text-slate-700 mb-2">Current Password</label>
-                    <input type="password" className="w-full bg-slate-50 border-2 border-slate-200 focus:border-rose-400 rounded-xl px-4 py-3 text-[15px] font-medium outline-none transition-all focus:shadow-[0_0_0_4px_rgba(244,63,94,0.1)]" placeholder="Enter current password" />
+                    <input type="password" className="w-full bg-slate-50 border-2 border-slate-200 focus:border-rose-400 rounded-xl px-4 py-3 text-[15px] font-medium outline-none transition-all focus:ring-2 focus:ring-gray-200" placeholder="Enter current password" />
                   </div>
                   <div>
                     <label className="block text-sm font-bold text-slate-700 mb-2">New Password</label>
-                    <input type="password" className="w-full bg-slate-50 border-2 border-slate-200 focus:border-rose-400 rounded-xl px-4 py-3 text-[15px] font-medium outline-none transition-all focus:shadow-[0_0_0_4px_rgba(244,63,94,0.1)]" placeholder="Enter new password" />
+                    <input type="password" className="w-full bg-slate-50 border-2 border-slate-200 focus:border-rose-400 rounded-xl px-4 py-3 text-[15px] font-medium outline-none transition-all focus:ring-2 focus:ring-gray-200" placeholder="Enter new password" />
                   </div>
                   <div>
                     <label className="block text-sm font-bold text-slate-700 mb-2">Confirm New Password</label>
-                    <input type="password" className="w-full bg-slate-50 border-2 border-slate-200 focus:border-rose-400 rounded-xl px-4 py-3 text-[15px] font-medium outline-none transition-all focus:shadow-[0_0_0_4px_rgba(244,63,94,0.1)]" placeholder="Confirm new password" />
+                    <input type="password" className="w-full bg-slate-50 border-2 border-slate-200 focus:border-rose-400 rounded-xl px-4 py-3 text-[15px] font-medium outline-none transition-all focus:ring-2 focus:ring-gray-200" placeholder="Confirm new password" />
                   </div>
                 </div>
                 <div className="p-6 border-t border-slate-100 bg-slate-50/50 flex justify-end">
-                  <button onClick={handleSave} className="flex items-center gap-2 bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-3 rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-rose-200 transition">
+                  <button onClick={handleSave} className="flex items-center gap-2 bg-red-600 text-white px-6 py-3 rounded-xl font-bold text-sm hover:shadow-sm hover:shadow-rose-200 transition">
                     {saved ? <Check size={17} /> : <Shield size={17} />}
                     {saved ? "Updated!" : "Update Password"}
                   </button>
@@ -313,22 +314,22 @@ export default function SettingsPage() {
               </div>
 
               {/* Two-Factor */}
-              <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+              <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="font-bold text-slate-900 text-[15px]">Two-Factor Authentication</h3>
                     <p className="text-sm text-slate-500 font-medium mt-1">Add an extra layer of security to your account</p>
                   </div>
-                  <button className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-emerald-100 transition">
+                  <button className="bg-emerald-50 text-emerald-700 border border-gray-200 px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-emerald-100 transition">
                     Enable 2FA
                   </button>
                 </div>
               </div>
 
               {/* Active Sessions */}
-              <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+              <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
                 <div className="p-6 border-b border-slate-100">
-                  <h2 className="text-lg font-extrabold text-slate-900">Active Sessions</h2>
+                  <h2 className="text-lg font-bold text-slate-900">Active Sessions</h2>
                 </div>
                 <div className="p-6 space-y-4">
                   {[
@@ -342,7 +343,7 @@ export default function SettingsPage() {
                         <p className="text-[12px] text-slate-500 font-medium">{session.location} · {session.time}</p>
                       </div>
                       {session.current ? (
-                        <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                        <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-gray-200">
                           Current
                         </span>
                       ) : (
@@ -357,9 +358,9 @@ export default function SettingsPage() {
 
           {/* ── API Keys ─────────────────────── */}
           {activeTab === "api" && (
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
               <div className="p-6 border-b border-slate-100">
-                <h2 className="text-lg font-extrabold text-slate-900">API Configuration</h2>
+                <h2 className="text-lg font-bold text-slate-900">API Configuration</h2>
                 <p className="text-sm text-slate-500 font-medium mt-1">Manage API keys for integrations</p>
               </div>
 
@@ -405,7 +406,7 @@ export default function SettingsPage() {
                   <input
                     type="url"
                     defaultValue="https://bookandvibe.com/api/webhooks"
-                    className="w-full bg-slate-50 border-2 border-slate-200 focus:border-rose-400 rounded-xl px-4 py-3 text-[15px] font-medium outline-none transition-all focus:shadow-[0_0_0_4px_rgba(244,63,94,0.1)]"
+                    className="w-full bg-slate-50 border-2 border-slate-200 focus:border-rose-400 rounded-xl px-4 py-3 text-[15px] font-medium outline-none transition-all focus:ring-2 focus:ring-gray-200"
                   />
                 </div>
 
@@ -426,7 +427,7 @@ export default function SettingsPage() {
               <div className="p-6 border-t border-slate-100 bg-slate-50/50 flex justify-end">
                 <button
                   onClick={handleSave}
-                  className="flex items-center gap-2 bg-gradient-to-r from-rose-500 to-pink-500 text-white px-6 py-3 rounded-xl font-bold text-sm hover:shadow-lg hover:shadow-rose-200 transition"
+                  className="flex items-center gap-2 bg-red-600 text-white px-6 py-3 rounded-xl font-bold text-sm hover:shadow-sm hover:shadow-rose-200 transition"
                 >
                   {saved ? <Check size={17} /> : <Save size={17} />}
                   {saved ? "Saved!" : "Save Configuration"}
@@ -437,9 +438,9 @@ export default function SettingsPage() {
 
           {/* ── Appearance Settings ──────────── */}
           {activeTab === "appearance" && (
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
               <div className="p-6 border-b border-slate-100">
-                <h2 className="text-lg font-extrabold text-slate-900">Appearance</h2>
+                <h2 className="text-lg font-bold text-slate-900">Appearance</h2>
                 <p className="text-sm text-slate-500 font-medium mt-1">Customize the dashboard look and feel</p>
               </div>
 
@@ -451,7 +452,7 @@ export default function SettingsPage() {
                     {[
                       { name: "Light", bg: "bg-white border-rose-400", active: true },
                       { name: "Dark", bg: "bg-slate-900", active: false },
-                      { name: "System", bg: "bg-gradient-to-r from-white to-slate-900", active: false },
+                      { name: "System", bg: "bg-gray-400", active: false },
                     ].map((theme) => (
                       <button
                         key={theme.name}
@@ -487,7 +488,7 @@ export default function SettingsPage() {
                         className={`w-10 h-10 rounded-xl ${c.color} transition-all ${
                           c.active
                             ? "ring-4 ring-offset-2 ring-emerald-200 scale-110"
-                            : "hover:scale-110"
+                            : ""
                         }`}
                         title={c.name}
                       />
@@ -506,39 +507,41 @@ export default function SettingsPage() {
                 </div>
               </div>
 
-              <div className="p-6 border-t border-emerald-50 bg-emerald-50/10 flex justify-end">
+              <div className="p-6 border-t border-gray-100 bg-gray-50 flex justify-end">
                 <button
                   onClick={handleSave}
-                  className="btn-primary-glow flex items-center gap-2 rounded-2xl px-8 py-4 font-black text-sm uppercase tracking-widest shadow-lg shadow-emerald-100/50 hover:scale-[1.02] transition-all"
+                  className="bg-gray-900 text-white flex items-center gap-2 rounded-lg px-6 py-2.5 font-semibold text-sm shadow-sm  transition-all"
                 >
                   {saved ? <Check size={18} strokeWidth={3} /> : <Save size={18} strokeWidth={3} />}
-                  {saved ? "Synchronized" : "Apply Changes"}
+                  {saved ? "Saved!" : "Save Changes"}
                 </button>
               </div>
             </div>
           )}
           {/* ── Website Content ────────────── */}
           {activeTab === "website" && (
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
               <div className="p-6 border-b border-slate-100">
-                <h2 className="text-lg font-extrabold text-slate-900">Website Content</h2>
+                <h2 className="text-lg font-bold text-slate-900">Website Content</h2>
                 <p className="text-sm text-slate-500 font-medium mt-1">Manage public landing page banners and footer</p>
               </div>
 
               {configLoading ? (
-                <div className="p-8 text-center text-sm font-bold text-slate-400">Loading Configuration...</div>
+                <div className="py-12 flex flex-col items-center justify-center">
+                  <PremiumLoader size="md" color="#10b981" text="Fetching Config" />
+                </div>
               ) : (
                 <div className="p-6 space-y-8">
                   {/* Banners */}
                   <div>
-                    <h3 className="font-black text-slate-800 uppercase text-sm tracking-tight mb-4">Hero Banners</h3>
+                    <h3 className="font-semibold text-slate-800 uppercase text-sm tracking-tight mb-4">Hero Banners</h3>
                     <div className="space-y-6">
                       {websiteConfig.banners?.map((banner, index) => (
-                        <div key={banner.id} className="p-5 border border-emerald-50 rounded-xl bg-emerald-50/10">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600 mb-4">{banner.id}</p>
+                        <div key={banner.id} className="p-5 border border-gray-100 rounded-xl bg-gray-50">
+                          <p className="text-[10px] font-semibold uppercase tracking-wide text-emerald-600 mb-4">{banner.id}</p>
                           <div className="space-y-4">
                             <div>
-                              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Title</label>
+                              <label className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-2 ml-1">Title</label>
                               <input
                                 type="text"
                                 value={banner.title || ""}
@@ -551,7 +554,7 @@ export default function SettingsPage() {
                               />
                             </div>
                             <div>
-                              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Subtitle</label>
+                              <label className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-2 ml-1">Subtitle</label>
                               <input
                                 type="text"
                                 value={banner.subtitle || ""}
@@ -564,7 +567,7 @@ export default function SettingsPage() {
                               />
                             </div>
                             <div>
-                              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Background Image URL</label>
+                              <label className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-2 ml-1">Background Image URL</label>
                               <input
                                 type="text"
                                 value={banner.image || ""}
@@ -583,11 +586,11 @@ export default function SettingsPage() {
                   </div>
 
                   {/* Footer Setup */}
-                  <div className="pt-6 border-t border-emerald-50">
-                    <h3 className="font-black text-slate-800 uppercase text-sm tracking-tight mb-4">Footer Section</h3>
+                  <div className="pt-6 border-t border-gray-100">
+                    <h3 className="font-semibold text-slate-800 uppercase text-sm tracking-tight mb-4">Footer Section</h3>
                     <div className="space-y-4">
                       <div>
-                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Bio Text</label>
+                        <label className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-2 ml-1">Bio Text</label>
                         <textarea
                           rows={3}
                           value={websiteConfig.footerText || ""}
@@ -597,7 +600,7 @@ export default function SettingsPage() {
                       </div>
 
                       <div className="pt-2">
-                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 ml-1">Social Media Links</label>
+                        <label className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-3 ml-1">Social Media Links</label>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           {websiteConfig.socialLinks?.map((link, index) => (
                             <div key={index} className="flex flex-col gap-1">
@@ -621,14 +624,14 @@ export default function SettingsPage() {
                 </div>
               )}
 
-              <div className="p-6 border-t border-emerald-50 bg-emerald-50/10 flex justify-end">
+              <div className="p-6 border-t border-gray-100 bg-gray-50 flex justify-end">
                 <button
                   onClick={handleSaveWebsiteConfig}
                   disabled={configLoading}
-                  className="btn-primary-glow flex items-center gap-2 rounded-2xl px-8 py-4 font-black text-sm uppercase tracking-widest shadow-lg shadow-emerald-100/50 hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-gray-900 text-white flex items-center gap-2 rounded-lg px-6 py-2.5 font-semibold text-sm shadow-sm  transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {saved ? <Check size={18} strokeWidth={3} /> : <Save size={18} strokeWidth={3} />}
-                  {saved ? "Synchronized" : "Apply Changes"}
+                  {saved ? "Saved!" : "Save Changes"}
                 </button>
               </div>
             </div>

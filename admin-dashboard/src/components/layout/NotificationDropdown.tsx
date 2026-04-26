@@ -81,7 +81,7 @@ export default function NotificationDropdown() {
 
   function getIcon(type: string) {
     switch (type) {
-      case "BOOKING": return <Ticket size={14} className="text-emerald-500" />;
+      case "BOOKING": return <Ticket size={14} className="text-gray-500" />;
       case "PAYMENT": return <AlertCircle size={14} className="text-amber-500" />;
       default: return <Info size={14} className="text-blue-500" />;
     }
@@ -102,69 +102,66 @@ export default function NotificationDropdown() {
     <div className="relative" ref={dropdownRef}>
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="btn-glass focus-premium relative rounded-xl p-2.5 text-slate-600 hover:text-emerald-600 transition-all"
+        className="relative rounded-lg border border-gray-200 p-2 text-gray-600 hover:bg-gray-50 transition-colors"
       >
-        <Bell size={18} className={unreadCount > 0 ? "text-emerald-600" : ""} />
+        <Bell size={18} />
         {unreadCount > 0 && (
-          <>
-            <span className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-white shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-            <span className="absolute right-2 top-2 h-2.5 w-2.5 animate-ping rounded-full bg-emerald-400 opacity-75" />
-          </>
+          <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white" />
         )}
       </button>
 
       {isOpen && (
-        <div className="dash-card absolute right-0 mt-3 w-80 max-h-[480px] origin-top-right border-emerald-100 bg-white shadow-2xl z-[100] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-          <div className="flex items-center justify-between border-b border-emerald-50 p-4 bg-emerald-50/20">
-            <h3 className="text-sm font-black text-slate-900 uppercase tracking-wider">Center Notifications</h3>
+        <div className="absolute right-0 mt-2 w-80 max-h-[480px] origin-top-right rounded-xl border border-gray-200 bg-white shadow-lg z-[100] flex flex-col overflow-hidden">
+          <div className="flex items-center justify-between border-b border-gray-100 p-4">
+            <h3 className="text-sm font-semibold text-gray-900">Notifications</h3>
             {unreadCount > 0 && (
               <button 
                 onClick={markAllAsRead}
-                className="flex items-center gap-1.5 text-[10px] font-black text-emerald-600 hover:text-emerald-700 uppercase tracking-widest"
+                className="flex items-center gap-1 text-[11px] font-medium text-gray-500 hover:text-gray-900 transition-colors"
               >
                 <CheckCheck size={12} /> Mark all read
               </button>
             )}
           </div>
 
-          <div className="flex-1 overflow-y-auto custom-scrollbar font-sans">
+          <div className="flex-1 overflow-y-auto custom-scrollbar">
             {notifications.length > 0 ? (
               notifications.map((n) => (
                 <div 
                   key={n.id} 
                   onClick={() => !n.isRead && markAsRead(n.id)}
-                  className={`group flex cursor-pointer items-start gap-3 border-b border-emerald-50/50 p-4 transition-all hover:bg-emerald-50/30 ${!n.isRead ? "bg-white" : "opacity-60"}`}
+                  className={`group flex cursor-pointer items-start gap-3 border-b border-gray-50 p-3.5 transition-colors hover:bg-gray-50 ${!n.isRead ? "bg-white" : "opacity-60"}`}
                 >
-                  <div className={`mt-1 rounded-xl p-2 ${!n.isRead ? "bg-emerald-50 text-emerald-600" : "bg-slate-50 text-slate-400"}`}>
+                  <div className="mt-0.5 shrink-0">
                     {getIcon(n.type)}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2">
-                      <p className={`truncate text-xs font-black ${!n.isRead ? "text-slate-900" : "text-slate-500"}`}>{n.title}</p>
-                      {!n.isRead && <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500" />}
+                      <p className={`truncate text-[13px] font-semibold ${!n.isRead ? "text-gray-900" : "text-gray-500"}`}>{n.title}</p>
+                      {!n.isRead && <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-blue-500" />}
                     </div>
-                    <p className="mt-1 text-[11px] font-bold leading-relaxed text-slate-500 line-clamp-2">
+                    <p className="mt-0.5 text-[12px] text-gray-500 leading-relaxed line-clamp-2">
                       {n.message}
                     </p>
-                    <p className="mt-2 flex items-center gap-1 text-[9px] font-black uppercase tracking-widest text-slate-400">
+                    <p className="mt-1.5 flex items-center gap-1 text-[11px] text-gray-400">
                       <Clock size={10} /> {formatTime(n.createdAt)}
                     </p>
                   </div>
                 </div>
               ))
             ) : (
-              <div className="flex flex-col items-center justify-center p-12 text-center opacity-40">
-                <Bell size={40} className="mb-4 text-emerald-200" />
-                <p className="text-xs font-bold text-slate-400">All caught up!</p>
-                <p className="mt-1 text-[10px] font-medium text-slate-300">No new notifications</p>
+              <div className="flex flex-col items-center justify-center p-10 text-center">
+                <Bell size={32} className="mb-3 text-gray-200" />
+                <p className="text-sm text-gray-400">All caught up!</p>
+                <p className="mt-1 text-xs text-gray-300">No new notifications</p>
               </div>
             )}
           </div>
 
           {notifications.length > 0 && (
-            <div className="border-t border-emerald-50 bg-slate-50/50 p-3 text-center">
-              <button className="text-[10px] font-black text-slate-400 hover:text-emerald-600 uppercase tracking-widest transition-colors">
-                View all history
+            <div className="border-t border-gray-100 p-3 text-center">
+              <button className="text-[12px] font-medium text-gray-500 hover:text-gray-900 transition-colors">
+                View all
               </button>
             </div>
           )}

@@ -15,6 +15,7 @@ import {
   ChevronRight
 } from "lucide-react";
 import { fetchApi } from "@/lib/api";
+import PremiumLoader from "@/components/ui/PremiumLoader";
 
 export default function WithdrawPage() {
   const [balance, setBalance] = useState<number | null>(null);
@@ -95,19 +96,19 @@ export default function WithdrawPage() {
   if (success) {
     return (
       <div className="flex h-[80vh] items-center justify-center p-6">
-        <div className="dash-card max-w-lg overflow-hidden border-emerald-100 bg-white text-center shadow-2xl shadow-emerald-500/10 animate-in zoom-in-95 duration-500">
+        <div className="dash-card max-w-lg overflow-hidden border-gray-200 bg-white text-center shadow-lg ">
           <div className="bg-emerald-500 p-10 text-white">
-            <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-3xl bg-white/20 backdrop-blur-xl shadow-inner">
-              <CheckCircle2 size={48} className="animate-pulse" />
+            <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-xl bg-white/10  ">
+              <CheckCircle2 size={48} className="" />
             </div>
-            <h2 className="dash-title text-3xl font-black">Request Submitted!</h2>
+            <h2 className="dash-title text-3xl font-semibold">Request Submitted!</h2>
             <p className="mt-3 text-sm font-bold text-emerald-50/80 leading-relaxed">
               Your payout request for <span className="text-white underline underline-offset-4">{formatCurrency(parseFloat(formData.amount))}</span> has been successfully sent to the administration team.
             </p>
           </div>
           <div className="p-10 space-y-6">
-            <div className="rounded-2xl border border-emerald-50 bg-emerald-50/30 p-4 text-left">
-              <p className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-emerald-900/40">
+            <div className="rounded-2xl border border-gray-100 bg-gray-50 p-4 text-left">
+              <p className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-wide text-gray-400">
                 <Info size={12} /> Next Steps
               </p>
               <p className="mt-2 text-xs font-bold text-slate-500 leading-relaxed">
@@ -116,7 +117,7 @@ export default function WithdrawPage() {
             </div>
             <button 
               onClick={() => { setSuccess(false); setFormData({ ...formData, amount: "" }); }}
-              className="w-full rounded-2xl bg-slate-900 py-4 text-sm font-black uppercase tracking-widest text-white transition hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-slate-200"
+              className="w-full rounded-2xl bg-slate-900 py-4 text-sm font-semibold uppercase tracking-wide text-white transition   shadow-sm"
             >
               Return to Earnings
             </button>
@@ -130,11 +131,11 @@ export default function WithdrawPage() {
     <div className="mx-auto max-w-4xl space-y-8 pb-12">
       <header>
         <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 shadow-lg shadow-emerald-200/50">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-600 shadow-sm">
             <ArrowUpToLine className="text-white" size={24} />
           </div>
           <div>
-            <h1 className="dash-title text-2xl font-black text-slate-900">Withdraw Funds</h1>
+            <h1 className="dash-title text-2xl font-semibold text-slate-900">Withdraw Funds</h1>
             <p className="text-sm font-bold text-slate-400">Request your earnings to be transferred to your bank account</p>
           </div>
         </div>
@@ -143,10 +144,10 @@ export default function WithdrawPage() {
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         {/* Left Side: Info & Balance */}
         <div className="space-y-6">
-          <div className="dash-card overflow-hidden border-emerald-100 bg-white shadow-sm">
-            <div className="bg-emerald-50/50 p-6">
-              <p className="text-[10px] font-black uppercase tracking-widest text-emerald-900/40">Available for Payout</p>
-              <h3 className="dash-title mt-2 text-3xl font-black text-slate-900">
+          <div className="dash-card overflow-hidden border-gray-200 bg-white shadow-sm">
+            <div className="bg-gray-50 p-6">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">Available for Payout</p>
+              <h3 className="dash-title mt-2 text-3xl font-semibold text-slate-900">
                 {loading ? "..." : formatCurrency(balance || 0)}
               </h3>
             </div>
@@ -159,7 +160,7 @@ export default function WithdrawPage() {
           </div>
 
           <div className="dash-card border-slate-100 bg-slate-50/50 p-6 space-y-4">
-            <h4 className="text-xs font-black uppercase tracking-widest text-slate-400">Security & Privacy</h4>
+            <h4 className="text-xs font-semibold uppercase tracking-wide text-slate-400">Security & Privacy</h4>
             <div className="flex items-start gap-3">
               <ShieldCheck className="mt-1 text-emerald-500" size={18} />
               <div>
@@ -179,10 +180,10 @@ export default function WithdrawPage() {
 
         {/* Right Side: Form */}
         <div className="lg:col-span-2">
-          <div className="dash-card border-emerald-100 bg-white p-8 shadow-xl shadow-emerald-500/5">
+          <div className="dash-card border-gray-200 bg-white p-8 shadow-sm">
             <form onSubmit={handleSubmit} className="space-y-8">
               <div className="space-y-4">
-                <h3 className="flex items-center gap-2 text-sm font-black text-slate-900">
+                <h3 className="flex items-center gap-2 text-sm font-semibold text-slate-900">
                   <CreditCard size={18} className="text-emerald-500" />
                   1. Payout Amount
                 </h3>
@@ -194,61 +195,61 @@ export default function WithdrawPage() {
                     placeholder="Enter amount (e.g. 5000)"
                     value={formData.amount}
                     onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                    className="w-full rounded-2xl border border-emerald-100 bg-emerald-50/30 px-6 py-4 pl-12 text-lg font-black text-slate-900 outline-none focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10 transition-all placeholder:text-slate-300"
+                    className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-6 py-4 pl-12 text-lg font-semibold text-slate-900 outline-none focus:border-gray-1000 focus:bg-white focus:ring-4 focus:ring-emerald-500/10 transition-all placeholder:text-slate-300"
                   />
-                  <span className="absolute left-6 top-1/2 -translate-y-1/2 text-lg font-black text-emerald-600">₹</span>
+                  <span className="absolute left-6 top-1/2 -translate-y-1/2 text-lg font-semibold text-emerald-600">₹</span>
                 </div>
                 {error && <p className="text-xs font-bold text-red-500">{error}</p>}
               </div>
 
               <div className="space-y-4 pt-4">
-                <h3 className="flex items-center gap-2 text-sm font-black text-slate-900">
+                <h3 className="flex items-center gap-2 text-sm font-semibold text-slate-900">
                   <Landmark size={18} className="text-emerald-500" />
                   2. Bank Information
                 </h3>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Account Holder Name</label>
+                    <label className="text-[10px] font-semibold uppercase tracking-wide text-slate-400 ml-1">Account Holder Name</label>
                     <input
                       type="text"
                       required
                       placeholder="As per bank records"
                       value={formData.accountHolder}
                       onChange={(e) => setFormData({ ...formData, accountHolder: e.target.value })}
-                      className="w-full rounded-xl border border-slate-100 bg-slate-50/50 px-4 py-3 text-sm font-bold text-slate-800 outline-none focus:border-emerald-500 focus:bg-white transition-all"
+                      className="w-full rounded-xl border border-slate-100 bg-slate-50/50 px-4 py-3 text-sm font-bold text-slate-800 outline-none focus:border-gray-1000 focus:bg-white transition-all"
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Bank Name</label>
+                    <label className="text-[10px] font-semibold uppercase tracking-wide text-slate-400 ml-1">Bank Name</label>
                     <input
                       type="text"
                       required
                       placeholder="e.g. HDFC, SBI"
                       value={formData.bankName}
                       onChange={(e) => setFormData({ ...formData, bankName: e.target.value })}
-                      className="w-full rounded-xl border border-slate-100 bg-slate-50/50 px-4 py-3 text-sm font-bold text-slate-800 outline-none focus:border-emerald-500 focus:bg-white transition-all"
+                      className="w-full rounded-xl border border-slate-100 bg-slate-50/50 px-4 py-3 text-sm font-bold text-slate-800 outline-none focus:border-gray-1000 focus:bg-white transition-all"
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Account Number</label>
+                    <label className="text-[10px] font-semibold uppercase tracking-wide text-slate-400 ml-1">Account Number</label>
                     <input
                       type="text"
                       required
                       placeholder="000000000000"
                       value={formData.accountNumber}
                       onChange={(e) => setFormData({ ...formData, accountNumber: e.target.value })}
-                      className="w-full rounded-xl border border-slate-100 bg-slate-50/50 px-4 py-3 text-sm font-bold text-slate-800 outline-none focus:border-emerald-500 focus:bg-white transition-all"
+                      className="w-full rounded-xl border border-slate-100 bg-slate-50/50 px-4 py-3 text-sm font-bold text-slate-800 outline-none focus:border-gray-1000 focus:bg-white transition-all"
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">IFSC Code</label>
+                    <label className="text-[10px] font-semibold uppercase tracking-wide text-slate-400 ml-1">IFSC Code</label>
                     <input
                       type="text"
                       required
                       placeholder="HDFC0123456"
                       value={formData.ifscCode}
                       onChange={(e) => setFormData({ ...formData, ifscCode: e.target.value.toUpperCase() })}
-                      className="w-full rounded-xl border border-slate-100 bg-slate-50/50 px-4 py-3 text-sm font-bold text-slate-800 outline-none focus:border-emerald-500 focus:bg-white transition-all"
+                      className="w-full rounded-xl border border-slate-100 bg-slate-50/50 px-4 py-3 text-sm font-bold text-slate-800 outline-none focus:border-gray-1000 focus:bg-white transition-all"
                     />
                   </div>
                 </div>
@@ -261,10 +262,13 @@ export default function WithdrawPage() {
                 <button
                   type="submit"
                   disabled={submitting || loading || !formData.amount}
-                  className="group flex w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 py-4 text-sm font-black uppercase tracking-widest text-white shadow-xl shadow-emerald-200 transition hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+                  className="group flex w-full items-center justify-center gap-3 rounded-2xl bg-emerald-600 py-4 text-sm font-semibold uppercase tracking-wide text-white shadow-xl shadow-emerald-200 transition   disabled:opacity-50"
                 >
                   {submitting ? (
-                    <RefreshCw className="animate-spin" size={18} />
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <span>Syncing Transaction...</span>
+                    </div>
                   ) : (
                     <>
                       Confirm Payout Request <ChevronRight size={18} className="transition-transform group-hover:translate-x-1" />

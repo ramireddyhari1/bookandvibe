@@ -32,8 +32,9 @@ import {
   Baby,
   Dog,
   Accessibility,
-  Navigation as NavigationIcon
+  Navigation as NavigationIcon,
 } from "lucide-react";
+import PremiumLoader from "@/components/ui/PremiumLoader";
 import { useAuth } from "@/context/AuthContext";
 import { fetchApi } from "@/lib/api";
 
@@ -123,7 +124,7 @@ const FALLBACK_EVENTS: EventData[] = [
     date: "2026-11-15",
     time: "7:00 PM onwards",
     price: 3999,
-    images: JSON.stringify(["https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Diljit_Dosanjh_at_the_launch_of_his_new_film_Super_Singh_%281%29_%28cropped%29.jpg/640px-Diljit_Dosanjh_at_the_launch_of_his_new_film_Super_Singh_%281%29_%28cropped%29.jpg"]),
+    images: JSON.stringify(["https://images.unsplash.com/photo-1598387993441-a364f854c3e1?q=80&w=800"]),
     availableSlots: 5000,
   },
   {
@@ -175,7 +176,7 @@ const FALLBACK_EVENTS: EventData[] = [
     date: "2026-10-04",
     time: "5:00 PM onwards",
     price: 2000,
-    images: JSON.stringify(["https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Alan_Walker_%2842416801991%29.jpg/640px-Alan_Walker_%2842416801991%29.jpg"]),
+    images: JSON.stringify(["https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?q=80&w=800"]),
     availableSlots: 3000,
   }
 ];
@@ -256,13 +257,13 @@ export default function EventDetailsPage() {
             ...apiEvent,
             id: String(apiEvent.id),
             price: Number(apiEvent.price),
-            vibeTags: ["Live", "Trending", "Elite Access"],
+            vibeTags: ["Live Performance", "Curated Space", "Premium Venue"],
             partner: apiEvent.partner,
             highlights: apiEvent.highlights?.length ? apiEvent.highlights : [
-              "Hassle-free digital entry via QR",
-              "Access to Premium Lounges",
-              "Exclusive 15% VIP Discount",
-              "24/7 Concierge Support",
+              "Secure digital ticketing",
+              "Premium lounge access",
+              "Exclusive event benefits",
+              "On-site support available",
             ]
           });
         } else {
@@ -291,12 +292,12 @@ export default function EventDetailsPage() {
         if (found) {
           setEvent({
             ...found,
-            vibeTags: ["Live", "Trending", "Elite Access"],
+            vibeTags: ["Live Performance", "Curated Space", "Premium Venue"],
             highlights: [
-               "Hassle-free digital entry via QR",
-               "Access to Premium Lounges",
-               "Exclusive 15% VIP Discount",
-               "24/7 Concierge Support",
+              "Secure digital ticketing",
+              "Premium lounge access",
+              "Exclusive event benefits",
+              "On-site support available",
             ]
           });
           setSuggestedEvents(FALLBACK_EVENTS.filter(e => e.id !== eventId).slice(0, 4));
@@ -487,17 +488,14 @@ export default function EventDetailsPage() {
 
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center gap-4">
-        <div className="w-12 h-12 border-4 border-[#D53F17] border-t-transparent rounded-full animate-spin" />
-        <p className="text-[#D53F17] font-bold tracking-widest uppercase text-xs">Preparing Experience</p>
-      </motion.div>
+      <PremiumLoader size="lg" color="#D53F17" text="Preparing Experience" />
     </div>
   );
 
   if (!event) return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-gray-50">
       <AlertCircle size={48} className="text-[#D53F17] mb-4" />
-      <h2 className="text-2xl font-black text-gray-900 mb-2">Event Not Found</h2>
+      <h2 className="text-2xl font-bold text-gray-900 mb-2">Event Not Found</h2>
       <button onClick={() => router.back()} className="text-[#D53F17] font-bold flex items-center gap-2">
         <ArrowLeft size={20} /> Go Back
       </button>
@@ -507,7 +505,8 @@ export default function EventDetailsPage() {
   return (
     <div className="min-h-screen bg-white">
       <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
-      {/* â•â•â• CLEAN MINIMAL HEADER (Mobile) â•â•â• */}
+      
+      {/* Navigation (Mobile) */}
       <motion.nav 
         style={{ backgroundColor: headerBg, backdropFilter: headerBlurVal, boxShadow: headerShadow }}
         className="md:hidden fixed top-0 left-0 right-0 z-[100] px-5 py-[max(env(safe-area-inset-top),16px)] flex items-center justify-between transition-all duration-300"
@@ -546,7 +545,7 @@ export default function EventDetailsPage() {
 
 
 
-      {/* â•â•â• APP-NATIVE HERO IMAGE (Mobile) â•â•â• */}
+      {/* Hero Media (Mobile) */}
       <div className="md:hidden relative h-[38vh] w-full overflow-hidden bg-gray-100">
         <motion.div 
           style={{ y: heroY, scale: heroScale }}
@@ -558,14 +557,14 @@ export default function EventDetailsPage() {
         </motion.div>
       </div>
 
-      {/* â•â•â• MASSIVE POSTER BANNER (Desktop) â•â•â• */}
+      {/* Hero Media (Desktop) */}
       <div className="hidden md:block relative w-full pt-[120px] lg:pt-[132px] max-w-[1400px] mx-auto px-4 lg:px-6 mb-8">
         <div className="relative w-full overflow-hidden rounded-[32px] shadow-2xl bg-gray-100" style={{ aspectRatio: '21/9', maxHeight: '600px' }}>
           <img src={heroImage} className="w-full h-full object-cover" alt="" />
         </div>
       </div>
 
-      {/* â•â•â• CRISP CONTENT LAYOUT â•â•â• */}
+      {/* Layout Grid */}
       <div className="relative z-20 bg-white -mt-10 md:mt-0 rounded-t-[32px] md:rounded-none md:pt-4 px-6 pt-8 pb-40 max-w-[1240px] mx-auto min-h-screen">
         <div className="lg:grid lg:grid-cols-12 lg:gap-12">
           {/* Main Column */}
@@ -573,7 +572,7 @@ export default function EventDetailsPage() {
             {/* Title Area */}
             <div className="mb-6">
               <div className="flex items-center justify-between mb-4">
-                 <span className="text-[#D53F17] text-[11px] font-black tracking-widest uppercase bg-orange-50 px-2.5 py-1 rounded-md">{event.category}</span>
+                 <span className="text-[#D53F17] text-[11px] font-bold tracking-widest uppercase bg-orange-50 px-2.5 py-1 rounded-md">{event.category}</span>
                  <motion.button 
                    onClick={() => setIsFavorite(!isFavorite)}
                    whileTap={{ scale: 0.85 }}
@@ -583,7 +582,7 @@ export default function EventDetailsPage() {
                  </motion.button>
               </div>
               
-              <h1 className="text-4xl font-extrabold text-gray-900 leading-[1.05] tracking-tight mb-2">{event.title}</h1>
+              <h1 className="text-4xl font-bold text-gray-900 leading-[1.05] tracking-tight mb-2">{event.title}</h1>
               <p className="text-gray-500 text-[14px] font-medium flex items-center gap-1.5"><MapPin size={14}/> {event.venue}</p>
               
               <div className="lg:hidden flex flex-wrap gap-4 mt-8 pb-8 border-b border-gray-100">
@@ -593,7 +592,7 @@ export default function EventDetailsPage() {
                     <CalendarDays size={24} />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[11px] uppercase tracking-wider font-extrabold text-gray-400 mb-0.5">Date & Time</span>
+                    <span className="text-[11px] uppercase tracking-wider font-bold text-gray-400 mb-0.5">Date & Time</span>
                     <span className="text-[15px] font-bold text-gray-900 leading-tight">{formattedDate}</span>
                     <span className="text-[13px] font-semibold text-gray-500">{event.time}</span>
                   </div>
@@ -606,7 +605,7 @@ export default function EventDetailsPage() {
                     <Clock size={24} />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[11px] uppercase tracking-wider font-extrabold text-gray-400 mb-0.5">Duration</span>
+                    <span className="text-[11px] uppercase tracking-wider font-bold text-gray-400 mb-0.5">Duration</span>
                     <span className="text-[15px] font-bold text-gray-900">{event.duration}</span>
                   </div>
                 </div>
@@ -616,7 +615,7 @@ export default function EventDetailsPage() {
 
             {/* About (Formerly The Vibe) */}
              <section className="mb-10">
-                <h2 className="text-[20px] font-black text-gray-900 mb-3 tracking-tight">About</h2>
+                <h2 className="text-[20px] font-bold text-gray-900 mb-3 tracking-tight">About</h2>
                 <div className="relative">
                   <p className={`text-gray-600 leading-relaxed text-[14px] font-medium whitespace-pre-line ${!isExpanded ? 'line-clamp-3' : ''}`}>
                     {event.description}
@@ -649,9 +648,7 @@ export default function EventDetailsPage() {
             </section>
             <section className="mb-14">
                <h2 className="text-[18px] font-bold text-gray-900 mb-4 tracking-tight">Hosted By</h2>
-               <div className="relative overflow-hidden bg-white rounded-3xl p-5 border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex items-center justify-between group">
-                  {/* Decorative gradient blur */}
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-orange-100 to-orange-50 rounded-full blur-3xl opacity-60 -mr-10 -mt-10 pointer-events-none" />
+               <div className="relative bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex items-center justify-between group">
                   
                   <div className="relative flex items-center gap-4">
                      <div className="w-14 h-14 rounded-full p-0.5 bg-gradient-to-tr from-[#D53F17] to-[#D53F17] shrink-0 shadow-md">
@@ -659,7 +656,7 @@ export default function EventDetailsPage() {
                            {event.partner?.avatar ? (
                              <img src={event.partner.avatar} className="w-full h-full object-cover" alt="" />
                            ) : (
-                             <span className="text-[#D53F17] font-extrabold text-xl tracking-tight">
+                             <span className="text-[#D53F17] font-bold text-xl tracking-tight">
                                {getInitials(event.partner?.name || "Organizer")}
                              </span>
                            )}
@@ -685,7 +682,7 @@ export default function EventDetailsPage() {
             {/* Location & Venue (Mobile Only) */}
             <section className="mb-14 lg:hidden">
               <h2 className="text-[18px] font-bold text-gray-900 mb-4 tracking-tight">Venue & Location</h2>
-              <div className="bg-white rounded-3xl border border-gray-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)] overflow-hidden">
+              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
                 <div className="h-32 bg-gray-100 relative group">
                   {/* Static Map Mockup with high-end style */}
                   <img 
@@ -717,97 +714,51 @@ export default function EventDetailsPage() {
                     <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center border border-gray-100 group-hover:bg-orange-50 transition-colors">
                        <NavigationIcon size={18} className="text-gray-400 group-hover:text-[#D53F17]" />
                     </div>
-                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Directions</span>
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Directions</span>
                   </button>
                 </div>
               </div>
             </section>
 
-            {/* ——— SIGNATURE PROTOCOL HEADER ——— */}
-            <section className="mb-20 relative">
-               {/* Aesthetic Watermark - Centered for Mobile */}
-               <div className="absolute -top-10 left-1/2 -translate-x-1/2 text-[72px] md:left-0 md:translate-x-0 md:text-[140px] font-black text-gray-900/5 select-none pointer-events-none tracking-tighter z-0 whitespace-nowrap">
-                  ESSENTIAL
+            {/* Essential Information */}
+            <section className="mb-8 mt-12 relative">
+               <div className="relative z-10 flex flex-col items-start px-2 md:px-0 gap-2">
+                  <h2 className="text-[24px] font-bold tracking-tight text-gray-900">
+                     Know Before You Go
+                  </h2>
+                  <p className="text-gray-500 font-medium text-[13px]">
+                     Important information for your event experience.
+                  </p>
                </div>
 
-               <div className="relative z-10 flex flex-col items-center text-center md:text-left md:items-start px-6 md:px-0 gap-8">
-                  {/* Vertical Signature Anchor */}
-                  <div className="hidden md:block absolute -left-10 top-0 bottom-0 w-[5px] bg-gradient-to-b from-[#D53F17] via-pink-500 to-transparent rounded-full shadow-[0_0_20px_rgba(249,115,22,0.3)]" />
-                  
-                  <div className="flex-1 space-y-4 w-full">
-                     <div className="flex items-center justify-center md:justify-start gap-3">
-                        <div className="px-2 py-1 border border-gray-900/10 rounded-md bg-white/50 backdrop-blur-sm">
-                           <span className="text-[10px] font-mono font-bold text-gray-400 tracking-tighter uppercase tracking-widest leading-none">
-                              [ SEC : PROTOCOL_04 ]
-                           </span>
-                        </div>
-                        <div className="w-2 h-2 rounded-full bg-[#D53F17] animate-pulse shadow-[0_0_10px_rgba(249,115,22,0.5)]" />
-                     </div>
-
-                     <h2 className="text-[42px] md:text-[56px] leading-[0.9] font-medium tracking-tight text-gray-900">
-                        Know Before <br />
-                        <span className="font-black tracking-tighter">
-                           You <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D53F17] via-pink-600 to-rose-600">Go.</span>
-                        </span>
-                     </h2>
-                  </div>
-
-                  {/* Subtext with Editorial Line */}
-                  <div className="md:w-px md:h-24 md:bg-gray-200 relative w-full flex justify-center md:justify-start">
-                     <p className="md:absolute md:top-0 md:left-8 md:w-64 text-gray-400 font-black text-[12px] leading-relaxed uppercase tracking-[0.2em] max-w-[280px]">
-                        Curated guidelines for an <span className="text-gray-900 underline decoration-[#D53F17]/30 decoration-4 underline-offset-4">elite event</span> experience.
-                     </p>
-                  </div>
-               </div>
-
-                {/* ——— THE SIGNATURE PROTOCOL GRID ——— */}
-                <div className="relative mt-8">
-                   {/* Background Glows */}
-                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[#D53F17]/5 blur-[120px] rounded-full pointer-events-none" />
-                   
-                   <div className="grid grid-cols-2 gap-3 relative z-10">
-                      {[
-                         { label: "Language", value: event.language || "English / Multi", icon: <Languages size={22} />, color: "from-[#D53F17] to-amber-500" },
-                         { label: "Duration", value: event.duration || "2+ Hours", icon: <Clock size={22} />, color: "from-rose-500 to-pink-500" },
-                         { label: "Passholders", value: event.ticketAgeLimit || "All Ages Welcome", icon: <Ticket size={22} className="-rotate-45" />, color: "from-indigo-500 to-blue-500" },
-                         { label: "Entry Policy", value: event.ageLimit || "Standard Entry", icon: <BadgeCheck size={22} />, color: "from-emerald-500 to-teal-500" },
-                         { label: "Venue Style", value: event.layout || "Contemporary Indoor", icon: <Accessibility size={22} />, color: "from-violet-500 to-purple-500" },
-                         { label: "Seating", value: event.seating || "Open Access", icon: <Users size={22} />, color: "from-cyan-500 to-sky-500" },
-                         { label: "Family Policy", value: event.kidsAllowed ? "Family Friendly" : "Adults Exclusive", icon: <Baby size={22} />, color: "from-[#D53F17] to-rose-600" },
-                         { label: "Pet Access", value: event.petsAllowed ? "Pets Allowed" : "No Pets Permitted", icon: <Dog size={22} />, color: "from-slate-600 to-slate-800" }
-                      ].map((tile, i) => (
-                         <motion.div 
-                           key={i}
-                           initial={{ opacity: 0, y: 20 }}
-                           whileInView={{ opacity: 1, y: 0 }}
-                           viewport={{ once: true }}
-                           transition={{ delay: i * 0.05 }}
-                           className="group/protocol relative bg-white border border-gray-100 rounded-[24px] p-4 shadow-[0_4px_20px_rgba(0,0,0,0.03)] active:scale-95 transition-all overflow-hidden"
-                         >
-                            {/* Decorative Protocol Number */}
-                            <div className="absolute top-3 right-3 opacity-[0.03] font-mono font-black text-[32px] leading-none select-none">
-                               0{i + 1}
-                            </div>
-
-                            <div className="relative flex flex-col gap-4">
-                               {/* Icon with gradient background */}
-                               <div className={`w-11 h-11 rounded-2xl bg-gradient-to-br ${tile.color} p-[1px] shadow-lg shadow-gray-200/50`}>
-                                  <div className="w-full h-full rounded-[15px] bg-white flex items-center justify-center text-gray-900">
-                                     {tile.icon}
-                                  </div>
-                               </div>
+               {/* Details Grid */}
+               <div className="mt-6">
+                  <div className="grid grid-cols-2 gap-3">
+                     {[
+                        { label: "Language", value: event.language || "English / Multi", icon: <Languages size={20} /> },
+                        { label: "Duration", value: event.duration || "2+ Hours", icon: <Clock size={20} /> },
+                        { label: "Passholders", value: event.ticketAgeLimit || "All Ages Welcome", icon: <Ticket size={20} className="-rotate-45" /> },
+                        { label: "Entry Policy", value: event.ageLimit || "Standard Entry", icon: <BadgeCheck size={20} /> },
+                        { label: "Venue Style", value: event.layout || "Contemporary Indoor", icon: <Accessibility size={20} /> },
+                        { label: "Seating", value: event.seating || "Open Access", icon: <Users size={20} /> },
+                        { label: "Family Policy", value: event.kidsAllowed ? "Family Friendly" : "Adults Exclusive", icon: <Baby size={20} /> },
+                        { label: "Pet Access", value: event.petsAllowed ? "Pets Allowed" : "No Pets Permitted", icon: <Dog size={20} /> }
+                     ].map((tile, i) => (
+                        <div 
+                          key={i}
+                          className="bg-gray-50/50 border border-gray-100 rounded-2xl p-4 flex flex-col gap-3"
+                        >
+                           <div className="w-10 h-10 rounded-xl bg-white border border-gray-100 flex items-center justify-center text-gray-600 shadow-sm">
+                              {tile.icon}
+                           </div>
 
                                <div className="space-y-0.5">
-                                  <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.1em]">{tile.label}</p>
+                                  <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">{tile.label}</p>
                                   <h3 className="text-[14px] font-bold text-gray-900 leading-tight">
                                      {tile.value}
                                   </h3>
                                </div>
-                            </div>
-
-                            {/* Hover/Active State Indicator */}
-                            <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#D53F17] to-transparent opacity-0 group-active/protocol:opacity-100 transition-opacity" />
-                         </motion.div>
+                        </div>
                       ))}
                    </div>
                 </div>
@@ -916,13 +867,13 @@ export default function EventDetailsPage() {
                 <div className="mt-6 pt-6 border-t border-gray-100 flex items-center justify-between">
                   <div className="flex flex-col">
                     <div className="flex items-baseline gap-1">
-                      <span className="text-2xl font-black text-gray-900">{isMounted ? "₹" : ""}{event.price}</span>
+                      <span className="text-2xl font-bold text-gray-900">{isMounted ? "₹" : ""}{event.price}</span>
                       <span className="text-[12px] font-bold text-gray-400">onwards</span>
                     </div>
                   </div>
                   <button 
                     onClick={() => setShowCheckout(true)}
-                    className="bg-gray-900 hover:bg-black active:scale-95 transition-all text-white py-4 px-10 rounded-[18px] font-black text-[15px] shadow-lg shadow-black/10"
+                    className="bg-gray-900 hover:bg-black active:scale-95 transition-all text-white py-4 px-10 rounded-[18px] font-bold text-[15px] shadow-lg shadow-black/10"
                   >
                     Book Tickets
                   </button>
@@ -933,7 +884,7 @@ export default function EventDetailsPage() {
         </div>
       </div>
 
-      {/* ——— SLEEK ACTION PILL ——— */}
+      {/* Action Pill (Mobile) */}
       <div className="fixed bottom-6 left-0 right-0 z-[110] px-4 md:px-0 pointer-events-none flex justify-center lg:hidden">
          <motion.div 
            initial={{ y: 50, opacity: 0 }}
@@ -955,7 +906,7 @@ export default function EventDetailsPage() {
          </motion.div>
       </div>
 
-      {/* ——— CLEAN CHECKOUT SHEET ——— */}
+      {/* Checkout Sheet */}
       <AnimatePresence>
         {showCheckout && (
           <motion.div 
@@ -1027,7 +978,7 @@ export default function EventDetailsPage() {
                                 <Ticket size={16} />
                               </div>
                               <div className="flex flex-col">
-                                <span className="text-[12px] font-black uppercase tracking-wider text-emerald-700">{appliedCoupon.code}</span>
+                                <span className="text-[12px] font-bold uppercase tracking-wider text-emerald-700">{appliedCoupon.code}</span>
                                 <span className="text-[11px] font-bold text-emerald-600/70">Discount applied</span>
                               </div>
                             </div>
@@ -1066,7 +1017,11 @@ export default function EventDetailsPage() {
                                     disabled={!couponInput || validatingCoupon}
                                     className="bg-gray-900 hover:bg-black disabled:opacity-50 text-white px-5 py-3 rounded-xl font-bold transition-all whitespace-nowrap min-w-[80px]"
                                   >
-                                    {validatingCoupon ? <Loader2 size={20} className="animate-spin mx-auto" /> : "Apply"}
+                                    {validatingCoupon ? (
+                                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto" />
+                                    ) : (
+                                      "Apply"
+                                    )}
                                   </button>
                                 </div>
                                 {couponError && <p className="text-[12px] font-bold text-red-500 ml-1 flex items-center gap-1"><AlertCircle size={12}/> {couponError}</p>}
@@ -1078,7 +1033,7 @@ export default function EventDetailsPage() {
 
                         <div className="flex justify-between items-end pt-4 mt-2 border-t border-gray-100">
                            <span className="text-[14px] font-bold text-gray-500 mb-1">Total to pay</span>
-                           <span className="text-[24px] font-black tracking-tight text-gray-900">{isMounted ? "₹" : ""}{finalTotalAmount}</span>
+                           <span className="text-[24px] font-bold tracking-tight text-gray-900">{isMounted ? "₹" : ""}{finalTotalAmount}</span>
                         </div>
                      </div>
 
@@ -1093,11 +1048,11 @@ export default function EventDetailsPage() {
                   <div className="py-12 flex flex-col items-center gap-6 text-center h-[380px] justify-center">
                      {paymentState === "PROCESSING" ? (
                         <>
-                          <Loader2 size={48} className="animate-spin text-[#D53F17]" />
-                          <div className="space-y-1">
-                             <h3 className="text-[18px] font-bold text-gray-900 tracking-tight">Processing Payment</h3>
-                             <p className="text-gray-500 text-[14px]">Please don&apos;t close this screen</p>
-                          </div>
+                           <div className="w-12 h-12 border-4 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" />
+                           <div className="space-y-1">
+                              <h3 className="text-[18px] font-bold text-gray-900 tracking-tight">Processing Payment</h3>
+                              <p className="text-gray-500 text-[14px]">Please don&apos;t close this screen</p>
+                           </div>
                         </>
                      ) : (
                         <motion.div 
@@ -1123,8 +1078,8 @@ export default function EventDetailsPage() {
                            </div>
                            
                            <div className="space-y-2">
-                              <span className="bg-green-100 text-green-700 text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full">Booking Confirmed</span>
-                              <h3 className="text-[28px] font-black text-gray-900 tracking-tight leading-none pt-2">Payment Successful!</h3>
+                              <span className="bg-green-100 text-green-700 text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full">Booking Confirmed</span>
+                              <h3 className="text-[28px] font-bold text-gray-900 tracking-tight leading-none pt-2">Payment Successful!</h3>
                               <p className="text-gray-500 text-[15px] font-medium">Your tickets have been secured and sent to your email.</p>
                            </div>
 
@@ -1134,7 +1089,7 @@ export default function EventDetailsPage() {
                               </div>
                               <div className="flex-1 text-left">
                                 <p className="text-[14px] font-bold text-gray-900 line-clamp-1">{event.title}</p>
-                                <p className="text-[12px] text-gray-500 font-medium">{quantity} {quantity > 1 ? 'Tickets' : 'Ticket'}{totalAmount > 0 ? (isMounted ? ` â€¢ ₹${totalAmount}` : "") : " â€¢ Free"}</p>
+                                <p className="text-[12px] text-gray-500 font-medium">{quantity} {quantity > 1 ? 'Tickets' : 'Ticket'}{totalAmount > 0 ? (isMounted ? ` • ₹${totalAmount}` : "") : " • Free"}</p>
                               </div>
                            </div>
                         </motion.div>
@@ -1144,7 +1099,7 @@ export default function EventDetailsPage() {
              </motion.div>
           </motion.div>
         )}
-        {/* â•â•â• TERMS MODAL â•â•â• */}
+        {/* Terms Modal */}
          {showTermsModal && (
            <motion.div 
              initial={{ opacity: 0 }}
@@ -1177,7 +1132,7 @@ export default function EventDetailsPage() {
                     {event.terms ? (
                       <div className="space-y-6">
                         <div className="p-6 bg-orange-50/50 rounded-2xl border border-orange-100/50">
-                          <h3 className="font-extrabold text-orange-900 mb-3 flex items-center gap-2 uppercase tracking-wide text-[12px]">
+                          <h3 className="font-bold text-orange-900 mb-3 flex items-center gap-2 uppercase tracking-wide text-[12px]">
                             <Shield size={16} className="text-[#D53F17]" /> Event Specific Policy
                           </h3>
                           <p className="text-gray-700 leading-relaxed font-semibold whitespace-pre-line text-[14px]">

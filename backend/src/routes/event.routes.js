@@ -193,8 +193,13 @@ router.get('/', async (req, res) => {
       where.visibility = 'PUBLIC';
       
       // Hide past events for public users
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      // Calculation for IST midnight (UTC+5:30)
+      const now = new Date();
+      const istOffset = 5.5 * 60 * 60 * 1000;
+      const istNow = new Date(now.getTime() + istOffset);
+      istNow.setUTCHours(0, 0, 0, 0);
+      const today = new Date(istNow.getTime() - istOffset);
+      
       where.date = { gte: today };
     }
 
@@ -258,8 +263,11 @@ router.get('/search', async (req, res) => {
     const { q } = req.query;
     if (!q || q.length < 2) return res.json({ data: [] });
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const now = new Date();
+    const istOffset = 5.5 * 60 * 60 * 1000;
+    const istNow = new Date(now.getTime() + istOffset);
+    istNow.setUTCHours(0, 0, 0, 0);
+    const today = new Date(istNow.getTime() - istOffset);
 
     const events = await prisma.event.findMany({
       where: {

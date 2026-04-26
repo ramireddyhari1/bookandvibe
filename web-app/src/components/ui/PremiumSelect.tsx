@@ -49,7 +49,7 @@ export default function PremiumSelect({
 
   return (
     <div className={`relative ${className}`} ref={containerRef}>
-      <label className="text-[10px] font-black uppercase text-gray-500 tracking-widest block mb-2 px-1">
+      <label className="text-[10px] font-bold uppercase text-gray-500 tracking-wider block mb-2 px-1">
         {label}
       </label>
       
@@ -70,7 +70,7 @@ export default function PremiumSelect({
             </span>
           </div>
           {selectedOption?.price !== undefined && (
-            <span className="text-[#42B460] font-black text-xs ml-auto whitespace-nowrap">
+            <span className="text-[#42B460] font-bold text-xs ml-auto whitespace-nowrap">
               ₹{selectedOption.price}{selectedOption.unit ? `/${selectedOption.unit}` : ""}
             </span>
           )}
@@ -117,11 +117,11 @@ export default function PremiumSelect({
                   <div className="flex items-center justify-between flex-1 min-w-0">
                     <div className="flex flex-col items-start min-w-0">
                       <span className="text-sm font-bold truncate w-full">{option.label}</span>
-                      {option.disabled && <span className="text-[10px] font-black uppercase tracking-tighter opacity-70">Sold Out</span>}
+                      {option.disabled && <span className="text-[10px] font-bold uppercase tracking-tighter opacity-70">Sold Out</span>}
                     </div>
                     {option.price !== undefined && (
                       <div className="flex flex-col items-end flex-shrink-0">
-                        <span className={`font-black text-sm ${value === option.value ? "text-white/90" : "text-[#42B460]"}`}>
+                        <span className={`font-bold text-sm ${value === option.value ? "text-white/90" : "text-[#42B460]"}`}>
                           ₹{option.price}
                         </span>
                         {option.unit && (

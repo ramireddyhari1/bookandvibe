@@ -2,7 +2,8 @@
 
 import { FormEvent, Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowRight, Building2, Eye, EyeOff, ShieldCheck, Sparkles, Users } from "lucide-react";
+import { ArrowRight, Eye, EyeOff } from "lucide-react";
+import PremiumLoader from "@/components/ui/PremiumLoader";
 
 import { fetchApi } from "@/lib/api";
 
@@ -77,142 +78,84 @@ function LoginPageContent() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#070b1d] px-4 py-6 text-white sm:px-6 lg:px-8">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(34,197,94,0.18),_transparent_28%),radial-gradient(circle_at_top_right,_rgba(244,63,94,0.16),_transparent_30%),radial-gradient(circle_at_bottom,_rgba(15,23,42,0.9),_rgba(7,11,29,1)_52%)]" />
-      <div className="pointer-events-none absolute inset-0 opacity-[0.14] [background-image:linear-gradient(rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:52px_52px]" />
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-6">
+      <div className="w-full max-w-[420px]">
+        {/* Logo */}
+        <div className="flex justify-center mb-8">
+          <img src="/logo.png" alt="Book & Vibe" className="h-10 w-10 object-contain" />
+        </div>
 
-      <div className="relative mx-auto flex min-h-[calc(100vh-3rem)] w-full max-w-7xl items-center">
-        <div className="grid w-full gap-8 lg:grid-cols-[1.05fr_0.95fr] xl:gap-10">
-          <section className="hidden flex-col justify-between rounded-[2rem] border border-white/10 bg-white/6 p-8 shadow-[0_30px_120px_rgba(0,0,0,0.28)] backdrop-blur-2xl lg:flex xl:p-10">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-xl shadow-emerald-500/10">
-                  <img src="/logo.png" alt="Book & Vibe" className="h-10 w-10 object-contain" />
-                </div>
-                <div>
-                  <p className="text-[11px] font-black uppercase tracking-[0.28em] text-emerald-300/80">Book & Vibe</p>
-                  <h1 className="mt-1 text-2xl font-black tracking-tight text-white xl:text-3xl">Company Access Portal</h1>
-                </div>
-              </div>
-              <div className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.22em] text-emerald-200">
-                Secure Sign In
-              </div>
-            </div>
+        {/* Card */}
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 sm:p-8">
+          <div className="text-center mb-6">
+            <h1 className="text-xl font-bold text-gray-900">Sign in to your account</h1>
+            <p className="mt-1.5 text-sm text-gray-500">
+              Enter your credentials to access the dashboard.
+            </p>
+          </div>
 
-            <div className="max-w-xl pt-6">
-              <p className="text-sm font-medium leading-7 text-slate-300 xl:text-base">
-                Access the operations console for events, bookings, partners, and live controls from one secure workspace.
-              </p>
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            <label className="block">
+              <span className="mb-1.5 block text-[12px] font-semibold uppercase tracking-wide text-gray-600">Email</span>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 text-sm text-gray-900 outline-none placeholder:text-gray-400 focus:border-gray-400 transition-colors"
+                placeholder="you@bookandvibe.com"
+              />
+            </label>
 
-              <div className="mt-8 grid gap-4 sm:grid-cols-2">
-                {[
-                  { title: "Centralized workflow", desc: "Track bookings, revenue, and live activity in one place.", icon: Building2 },
-                  { title: "Role-aware access", desc: "Sign in with approved company credentials only.", icon: ShieldCheck },
-                  { title: "Fast operations", desc: "Move between tasks without losing context.", icon: Sparkles },
-                  { title: "Team ready", desc: "Built for admins, partners, and operators.", icon: Users },
-                ].map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <div key={item.title} className="rounded-2xl border border-white/10 bg-white/6 p-4">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-400/10 text-emerald-300">
-                        <Icon size={18} />
-                      </div>
-                      <h2 className="mt-3 text-sm font-extrabold text-white">{item.title}</h2>
-                      <p className="mt-1 text-sm leading-6 text-slate-300">{item.desc}</p>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between border-t border-white/10 pt-6 text-[11px] font-black uppercase tracking-[0.24em] text-slate-400">
-              <span>Verified Workspace</span>
-              <span>Encrypted Session</span>
-              <span>Live Operations</span>
-            </div>
-          </section>
-
-          <section className="mx-auto w-full max-w-md rounded-[2rem] border border-white/10 bg-white/7 p-6 shadow-[0_30px_120px_rgba(0,0,0,0.35)] backdrop-blur-2xl sm:p-8 lg:mx-0 lg:max-w-none lg:self-center xl:p-10">
-            <div className="mb-8 text-center lg:text-left">
-              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-[1.75rem] bg-white shadow-2xl shadow-emerald-500/10 lg:mx-0">
-                <img src="/logo.png" alt="Book & Vibe" className="h-14 w-14 object-contain" />
-              </div>
-              <p className="text-[11px] font-black uppercase tracking-[0.3em] text-emerald-300/80">Company Portal</p>
-              <h1 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-4xl">Welcome back</h1>
-              <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">
-                Sign in to continue to your secure operations workspace.
-              </p>
-            </div>
-
-            <form className="space-y-4" onSubmit={handleSubmit}>
-              <label className="block">
-                <span className="mb-2 block text-[11px] font-black uppercase tracking-[0.25em] text-slate-300">Work Email</span>
+            <label className="block">
+              <span className="mb-1.5 block text-[12px] font-semibold uppercase tracking-wide text-gray-600">Password</span>
+              <div className="relative">
                 <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-emerald-400/50 focus:bg-slate-950/60"
-                  placeholder="you@bookandvibe.com"
+                  className="w-full rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 pr-11 text-sm text-gray-900 outline-none placeholder:text-gray-400 focus:border-gray-400 transition-colors"
+                  placeholder="Enter your password"
                 />
-              </label>
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+            </label>
 
-              <label className="block">
-                <span className="mb-2 block text-[11px] font-black uppercase tracking-[0.25em] text-slate-300">Password</span>
-                <div className="relative">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    className="w-full rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-3 pr-12 text-sm text-white outline-none placeholder:text-slate-500 focus:border-emerald-400/50 focus:bg-slate-950/60"
-                    placeholder="Enter your password"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword((prev) => !prev)}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 rounded-xl p-2 text-slate-300 transition hover:bg-white/5 hover:text-white"
-                    aria-label={showPassword ? "Hide password" : "Show password"}
-                  >
-                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                  </button>
-                </div>
-              </label>
+            {error && (
+              <div className="rounded-lg border border-red-200 bg-red-50 px-3.5 py-2.5 text-sm text-red-700">
+                {error}
+              </div>
+            )}
 
-              {error ? (
-                <div className="rounded-2xl border border-rose-400/30 bg-rose-500/10 px-4 py-3 text-sm font-semibold text-rose-100">
-                  {error}
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? (
+                <div className="flex flex-col items-center justify-center py-2">
+                  <PremiumLoader size="sm" color="#ffffff" />
                 </div>
               ) : (
-                <div className="rounded-2xl border border-emerald-400/15 bg-emerald-500/8 px-4 py-3 text-sm text-slate-200">
-                  Use your approved company credentials to access the portal.
-                </div>
+                <span className="inline-flex items-center gap-2">
+                  Sign In <ArrowRight size={16} />
+                </span>
               )}
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="btn-primary-glow flex w-full items-center justify-center gap-2 rounded-2xl px-4 py-3.5 text-sm font-black uppercase tracking-[0.24em] disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {loading ? (
-                  <span className="inline-flex items-center gap-2">
-                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                    Signing in...
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-2">
-                    Sign In <ArrowRight size={16} />
-                  </span>
-                )}
-              </button>
-            </form>
-
-            <div className="mt-6 flex items-center justify-between text-[11px] font-black uppercase tracking-[0.22em] text-slate-400">
-              <span>Secure session</span>
-              <span>Protected access</span>
-            </div>
-          </section>
+            </button>
+          </form>
         </div>
+
+        <p className="mt-5 text-center text-xs text-gray-400">
+          Admin & Partner access only
+        </p>
       </div>
     </div>
   );
@@ -220,7 +163,7 @@ function LoginPageContent() {
 
 export default function AdminLoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#070b1d] flex items-center justify-center text-white">Loading...</div>}>
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center text-gray-500">Loading...</div>}>
       <LoginPageContent />
     </Suspense>
   );

@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Gamepad2, MapPin, Search, Star, Users, Ticket, Sparkles, ArrowUpRight, RefreshCw, Plus, Pencil, Trash2, X, Clock, HelpCircle, Check } from "lucide-react";
+import { Gamepad2, MapPin, Search, Star, Users, Ticket, Sparkles, ArrowUpRight, RefreshCw, Plus, Pencil, Trash2, X, Clock, HelpCircle, Check, ChevronRight, Zap, Building2, ShieldCheck } from "lucide-react";
+import PremiumLoader from "@/components/ui/PremiumLoader";
 
 type GameHubFacility = {
   id: string;
@@ -30,6 +31,7 @@ type GameHubFacility = {
   slotTemplate?: Array<{ label: string; isBooked?: boolean }>;
   availableSports?: string[];
   terms?: string;
+  mapLink?: string;
   partnerId?: string | null;
   partner?: { id: string; name: string; email: string } | null;
 };
@@ -75,6 +77,7 @@ type FacilityFormState = {
   slotTemplate: string;
   availableSports: string;
   terms: string;
+  mapLink: string;
   slotStartHour: string;
   slotEndHour: string;
   slotInterval: string;
@@ -83,12 +86,26 @@ type FacilityFormState = {
   peakPrice: string;
   weekendPrice: string;
   status: "ACTIVE" | "INACTIVE" | "MAINTENANCE";
+  partnerId: string;
 };
 
 import { fetchApi } from "@/lib/api";
 
 const defaultImage = "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1200";
 const WEEKDAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+const HOURS_24 = Array.from({ length: 24 }, (_, i) => ({
+  value: String(i),
+  label: i === 0 ? "12 AM" : i < 12 ? `${i} AM` : i === 12 ? "12 PM" : `${i - 12} PM`
+}));
+
+const HOURS_24_PLUS_1 = Array.from({ length: 24 }, (_, i) => {
+  const h = i + 1;
+  return {
+    value: String(h),
+    label: h === 12 ? "12 PM" : h < 12 ? `${h} AM` : h === 24 ? "12 AM" : `${h - 12} PM`
+  };
+});
 
 const emptyFormState: FacilityFormState = {
   name: "",
@@ -97,7 +114,7 @@ const emptyFormState: FacilityFormState = {
   venue: "",
   distance: "0 km away",
   rating: "4.5",
-  priceRange: "INR 500 / hr",
+  priceRange: "",
   pricePerHour: "500",
   unit: "hr",
   image: defaultImage,
@@ -108,10 +125,11 @@ const emptyFormState: FacilityFormState = {
   features: "",
   tags: "",
   gallery: "",
-  pricingRules: "",
-  slotTemplate: "",
+  pricingRules: "[]",
+  slotTemplate: "[]",
   availableSports: "",
   terms: "",
+  mapLink: "",
   slotStartHour: "6",
   slotEndHour: "22",
   slotInterval: "60",
@@ -120,6 +138,7 @@ const emptyFormState: FacilityFormState = {
   peakPrice: "800",
   weekendPrice: "1000",
   status: "ACTIVE",
+  partnerId: "",
 };
 
 function listToCsv(input?: string[]) {
@@ -140,6 +159,37 @@ function readCookie(name: string): string {
     .find((item) => item.startsWith(`${name}=`));
   if (!entry) return "";
   return decodeURIComponent(entry.split("=").slice(1).join("="));
+}
+
+function generateSlotTemplate({ startHour = 6, endHour = 22, intervalMinutes = 60, basePrice = 500, peakStartHour, peakEndHour, peakPrice, weekendPrice }: any) {
+  const slots = [];
+  const startMinute = Math.max(0, Math.min(23, Number(startHour))) * 60;
+  const endMinute = Math.max(0, Math.min(24, Number(endHour))) * 60;
+  const step = Math.max(15, Number(intervalMinutes) || 60);
+
+  function labelFor(minute: number) {
+    const hour24 = Math.floor(minute / 60);
+    const minuteValue = minute % 60;
+    const period = hour24 >= 12 ? "PM" : "AM";
+    const hour12 = ((hour24 + 11) % 12) + 1;
+    return `${String(hour12).padStart(2, "0")}:${String(minuteValue).padStart(2, "0")} ${period}`;
+  }
+
+  for (let cursor = startMinute; cursor + step <= endMinute; cursor += step) {
+    const hour = Math.floor(cursor / 60);
+    const inPeak = Number.isFinite(Number(peakStartHour)) && Number.isFinite(Number(peakEndHour))
+      ? hour >= Number(peakStartHour) && hour < Number(peakEndHour)
+      : false;
+
+    slots.push({
+      label: `${labelFor(cursor)} - ${labelFor(cursor + step)}`,
+      isBooked: false,
+      price: inPeak && Number(peakPrice) > 0 ? Number(peakPrice) : Number(basePrice),
+      weekendPrice: Number(weekendPrice) > 0 ? Number(weekendPrice) : Number(basePrice),
+    });
+  }
+
+  return slots;
 }
 
 function mapFacilityToForm(facility: GameHubFacility): FacilityFormState {
@@ -165,6 +215,7 @@ function mapFacilityToForm(facility: GameHubFacility): FacilityFormState {
     slotTemplate: JSON.stringify(facility.slotTemplate || [], null, 2),
     availableSports: listToCsv(facility.availableSports),
     terms: facility.terms || "",
+    mapLink: facility.mapLink || "",
     slotStartHour: "6",
     slotEndHour: "22",
     slotInterval: "60",
@@ -173,6 +224,7 @@ function mapFacilityToForm(facility: GameHubFacility): FacilityFormState {
     peakPrice: "800",
     weekendPrice: "1000",
     status: facility.status || "ACTIVE",
+    partnerId: facility.partnerId || "",
   };
 }
 
@@ -194,6 +246,7 @@ export default function GameHubAdminPage() {
   const [selectedCalendarFacilityId, setSelectedCalendarFacilityId] = useState("");
   const [calendarDays, setCalendarDays] = useState<CalendarDay[]>([]);
   const [calendarLoading, setCalendarLoading] = useState(false);
+  const [dayAvailability, setDayAvailability] = useState<any[]>([]);
   const [blockDate, setBlockDate] = useState(todayDateString());
   const [blockReason, setBlockReason] = useState("Maintenance");
   const [blockSlotsInput, setBlockSlotsInput] = useState("");
@@ -205,6 +258,17 @@ export default function GameHubAdminPage() {
   const [selectedDate, setSelectedDate] = useState(`${currentMonthString()}-01`);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [editorExperience, setEditorExperience] = useState<"easy" | "advanced">("easy");
+  const [mounted, setMounted] = useState(false);
+  
+  // Custom input states for Step 3
+  const [customSport, setCustomSport] = useState("");
+  const [customAmenity, setCustomAmenity] = useState("");
+  const [customFeature, setCustomFeature] = useState("");
+  const [customTag, setCustomTag] = useState("");
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   function clearDashboardSession() {
     sessionStorage.removeItem("admin_dash_token");
@@ -264,7 +328,9 @@ export default function GameHubAdminPage() {
     setActionError("");
   }
 
-  function hourToTimeString(hour: number) {
+  function hourToTimeString(hourInput: number | string) {
+    const hour = Number(hourInput);
+    if (isNaN(hour)) return "12:00 AM";
     const period = hour >= 12 ? "PM" : "AM";
     const h12 = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
     return `${h12}:00 ${period}`;
@@ -350,8 +416,15 @@ export default function GameHubAdminPage() {
     }
   }
 
-  async function handleSubmitFacility(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  async function handleSubmitFacility(e?: React.FormEvent) {
+    if (e) e.preventDefault();
+    
+    // Safety check: Only allow submission if on the final step (Step 4)
+    if (wizardStep < 4) {
+      console.warn("Prevented premature submission at step:", wizardStep);
+      return;
+    }
+
     if (!hasAdminAccess) {
       setActionError("Admin or Partner login required to save facilities");
       return;
@@ -366,7 +439,24 @@ export default function GameHubAdminPage() {
 
     try {
       parsedPricingRules = formState.pricingRules.trim() ? JSON.parse(formState.pricingRules) : [];
-      parsedSlotTemplate = formState.slotTemplate.trim() ? JSON.parse(formState.slotTemplate) : [];
+      
+      // Auto-generate slots if missing and we have basic pricing info
+      let templateStr = formState.slotTemplate.trim();
+      if (!templateStr || templateStr === "[]") {
+        const generated = generateSlotTemplate({
+          startHour: Number(formState.slotStartHour || 6),
+          endHour: Number(formState.slotEndHour || 22),
+          intervalMinutes: Number(formState.slotInterval || 60),
+          basePrice: Number(formState.pricePerHour || 500),
+          peakStartHour: Number(formState.peakStartHour || 18),
+          peakEndHour: Number(formState.peakEndHour || 22),
+          peakPrice: Number(formState.peakPrice || 800),
+          weekendPrice: Number(formState.weekendPrice || 1000),
+        });
+        parsedSlotTemplate = generated;
+      } else {
+        parsedSlotTemplate = JSON.parse(templateStr);
+      }
     } catch (_) {
       setActionLoading(false);
       setActionError("Pricing rules / slot template must be valid JSON");
@@ -380,7 +470,9 @@ export default function GameHubAdminPage() {
       venue: formState.venue.trim(),
       distance: formState.distance.trim(),
       rating: Number(formState.rating || 0),
-      priceRange: formState.priceRange.trim() || `INR ${Number(formState.pricePerHour || 0)} / ${formState.unit.trim() || "hr"}`,
+      priceRange: formState.priceRange.trim() === "" || formState.priceRange === "INR 500 / hr" 
+        ? `INR ${Number(formState.pricePerHour || 0)} / ${formState.unit.trim() || "hr"}`
+        : formState.priceRange.trim(),
       pricePerHour: Number(formState.pricePerHour || 0),
       unit: formState.unit.trim() || "hr",
       image: formState.image.trim() || defaultImage,
@@ -397,6 +489,8 @@ export default function GameHubAdminPage() {
       slotTemplate: Array.isArray(parsedSlotTemplate) ? parsedSlotTemplate : [],
       availableSports: csvToList(formState.availableSports),
       terms: formState.terms.trim(),
+      mapLink: formState.mapLink.trim(),
+      partnerId: formState.partnerId || null,
     };
 
     try {
@@ -587,6 +681,16 @@ export default function GameHubAdminPage() {
   }, [calendarMonth]);
 
   useEffect(() => {
+    if (selectedDate && selectedCalendarFacilityId) {
+      fetchApi(`/gamehub/facilities/${selectedCalendarFacilityId}/availability?date=${selectedDate}`)
+        .then((res: any) => {
+          if (res?.data?.slots) setDayAvailability(res.data.slots);
+        })
+        .catch(() => setDayAvailability([]));
+    }
+  }, [selectedDate, selectedCalendarFacilityId]);
+
+  useEffect(() => {
     setBlockDate(selectedDate);
   }, [selectedDate]);
 
@@ -688,6 +792,72 @@ export default function GameHubAdminPage() {
     }
   }
 
+  async function handleCancelBooking(bookingId: string) {
+    if (!hasAdminAccess) {
+      setActionError("Admin or Partner login required to cancel bookings");
+      return;
+    }
+
+    const isConfirmed = window.confirm("Are you sure you want to cancel this booking? This will free up the slot for others.");
+    if (!isConfirmed) return;
+
+    setActionLoading(true);
+    setActionError("");
+    setActionMessage("");
+
+    try {
+      await fetchApi(`/gamehub/bookings/${bookingId}/cancel`, {
+        method: "PATCH",
+      });
+
+      setActionMessage("Booking cancelled successfully.");
+
+      const refreshedPayload = await fetchApi(`/gamehub/facilities/${selectedCalendarFacilityId}/calendar?month=${calendarMonth}`) as { data: { days: CalendarDay[] } };
+      setCalendarDays(Array.isArray(refreshedPayload?.data?.days) ? refreshedPayload.data.days : []);
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : "Failed to cancel booking");
+    } finally {
+      setActionLoading(false);
+    }
+  }
+
+  async function handleQuickHold(slotLabel: string) {
+    if (!hasAdminAccess) {
+      setActionError("Admin or Partner login required to hold slots");
+      return;
+    }
+
+    setActionLoading(true);
+    setActionError("");
+    setActionMessage("");
+
+    try {
+      await fetchApi(`/gamehub/facilities/${selectedCalendarFacilityId}/block-slots`, {
+        method: "POST",
+        body: JSON.stringify({
+          date: selectedDate,
+          slotLabels: [slotLabel],
+          reason: "Manual Hold",
+        }),
+      });
+
+      setActionMessage(`Slot ${slotLabel} held successfully.`);
+      
+      // Refresh calendar and availability
+      const [cal, avail] = await Promise.all([
+        fetchApi(`/gamehub/facilities/${selectedCalendarFacilityId}/calendar?month=${calendarMonth}`),
+        fetchApi(`/gamehub/facilities/${selectedCalendarFacilityId}/availability?date=${selectedDate}`)
+      ]) as [any, any];
+      
+      setCalendarDays(Array.isArray(cal?.data?.days) ? cal.data.days : []);
+      if (avail?.data?.slots) setDayAvailability(avail.data.slots);
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : "Failed to hold slot");
+    } finally {
+      setActionLoading(false);
+    }
+  }
+
   const stats = useMemo(() => {
     const total = facilities.length;
     const featured = facilities.filter((item) => (item.tags || []).some((tag) => /featured|premium/i.test(tag))).length;
@@ -699,29 +869,24 @@ export default function GameHubAdminPage() {
 
   return (
     <div className="mx-auto max-w-7xl space-y-8">
-      <section className="dash-card overflow-hidden bg-white border-emerald-100 p-8 shadow-sm relative">
-        <div className="pointer-events-none absolute -right-20 -top-20 h-96 w-96 rounded-full bg-gradient-to-br from-emerald-400/20 via-teal-300/10 to-emerald-200/5 blur-3xl opacity-70" />
-        <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-3xl space-y-4">
-            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600">
-              <Gamepad2 size={14} /> GameHub Operations
-            </div>
-            <div>
-              <h1 className="text-3xl font-black tracking-tighter md:text-5xl text-slate-900 uppercase">
-                Unified Control for GameHub Facilities
-              </h1>
-              <p className="mt-4 max-w-2xl text-sm font-bold leading-relaxed text-slate-500/80 md:text-base">
-                Monitor live availability, manage facility metadata, and execute operational blocks from one professional command center.
-              </p>
-            </div>
+      <section className="dash-card overflow-hidden bg-white border-gray-200 p-6 shadow-sm relative">
+        <div className="hidden" />
+        <div className="relative z-10 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">
+              GameHub
+            </h1>
+            <p className="mt-1 text-sm text-gray-500">
+              Manage facility inventory, bookings, and availability.
+            </p>
           </div>
 
           <button
             type="button"
             onClick={() => window.location.reload()}
-            className="inline-flex items-center gap-2 self-start rounded-2xl border border-emerald-100 bg-white px-5 py-3 text-xs font-black uppercase tracking-widest text-emerald-700 transition hover:bg-emerald-50 hover:shadow-lg shadow-emerald-100/50"
+            className="inline-flex items-center gap-2 self-start rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-xs font-semibold text-gray-700 transition hover:bg-gray-50"
           >
-            <RefreshCw size={16} /> Sync Live Data
+            <RefreshCw size={14} /> Refresh
           </button>
         </div>
 
@@ -733,40 +898,40 @@ export default function GameHubAdminPage() {
           ].map((item) => {
             const Icon = item.icon;
             return (
-              <div key={item.label} className={`rounded-3xl border border-emerald-50 ${item.bg} p-6 transition-all hover:scale-[1.02]`}>
+              <div key={item.label} className={`rounded-xl border border-gray-100 ${item.bg} p-6 transition-all `}>
                 <div className="flex items-center gap-3 opacity-60">
                   <Icon size={18} className={item.color} />
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900">{item.label}</span>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-900">{item.label}</span>
                 </div>
-                <div className="mt-3 text-4xl font-black text-slate-900">{item.value}</div>
+                <div className="mt-3 text-4xl font-semibold text-slate-900">{item.value}</div>
               </div>
             );
           })}
         </div>
       </section>
 
-      <section className="dash-card bg-white p-7 rounded-3xl border border-emerald-100 shadow-sm">
+      <section className="dash-card bg-white p-7 rounded-xl border border-gray-200 shadow-sm">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tighter">Facilities Catalog</h2>
-            <p className="mt-1 text-xs font-bold uppercase tracking-widest text-emerald-600/60">Search and inspect live facility inventory</p>
+            <h2 className="text-xl font-bold text-gray-900">Facilities</h2>
+            <p className="mt-0.5 text-sm text-gray-500">Browse and manage facilities</p>
           </div>
 
           <div className="flex w-full flex-col gap-3 md:w-auto md:flex-row">
-            <label className="flex w-full max-w-md items-center gap-3 rounded-2xl border border-emerald-50/50 bg-emerald-50/20 px-4 py-3 text-sm font-bold focus-within:bg-white focus-within:border-emerald-200 transition-all md:w-auto">
+            <label className="flex w-full max-w-md items-center gap-3 rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 text-sm font-bold focus-within:bg-white focus-within:border-gray-200 transition-all md:w-auto">
               <Search size={18} className="text-emerald-600/40" />
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search resources..."
-                className="w-full bg-transparent outline-none placeholder:text-emerald-900/30 text-slate-900"
+                className="w-full bg-transparent outline-none placeholder:text-gray-400 text-slate-900"
               />
             </label>
 
             <button
               type="button"
               onClick={openCreateEditor}
-              className="btn-primary-glow inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-4 text-sm font-black uppercase tracking-widest shadow-lg shadow-emerald-100 transition-all hover:scale-[1.02]"
+              className="bg-gray-900 text-white inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold uppercase tracking-wide shadow-sm transition-all "
             >
               <Plus size={18} strokeWidth={3} /> Add Facility
             </button>
@@ -784,150 +949,330 @@ export default function GameHubAdminPage() {
           </div>
         ) : null}
         {actionMessage ? (
-          <div className="mt-5 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+          <div className="mt-5 rounded-2xl border border-gray-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
             {actionMessage}
           </div>
         ) : null}
 
         {isEditorOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
-            <form onSubmit={handleSubmitFacility} className="bg-white rounded-3xl shadow-2xl w-full max-w-4xl overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/60  overflow-y-auto">
+            <div className="bg-white rounded-xl shadow-lg w-full max-w-4xl overflow-hidden flex flex-col max-h-[90vh]">
               {/* Wizard Header */}
-              <div className="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-                <div>
-                  <h3 className="text-2xl font-black text-slate-900 tracking-tight">
-                    {editorMode === "create" ? "Add New Facility" : "Edit Facility"}
-                  </h3>
-                  <p className="text-slate-500 text-sm font-semibold mt-1">
-                    Step {wizardStep} of 4: {
-                      wizardStep === 1 ? "Basic Details" :
-                      wizardStep === 2 ? "Media & Description" :
-                      wizardStep === 3 ? "Amenities & Features" :
-                      "Pricing & Slots"
-                    }
-                  </p>
+              <div className="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-white relative">
+                <div className="absolute top-0 left-0 w-full h-1.5 bg-slate-100">
+                  <div 
+                    className="h-full bg-emerald-500 transition-all duration-700 ease-out" 
+                    style={{ width: `${(wizardStep / 4) * 100}%` }}
+                  />
                 </div>
-                <button type="button" onClick={closeEditor} className="p-2 bg-white hover:bg-slate-100 rounded-full border border-slate-200 transition-colors">
-                  <X size={20} className="text-slate-500" />
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900 tracking-tight">
+                    {editorMode === "create" ? "New Facility" : "Edit Facility"}
+                  </h3>
+                  <div className="flex items-center gap-3 mt-1.5">
+                    <span className="px-2.5 py-0.5 bg-emerald-50 text-emerald-600 rounded-lg text-[9px] font-bold uppercase tracking-widest border border-emerald-100">
+                      Step {wizardStep} of 4
+                    </span>
+                    <span className="text-gray-400 text-[9px] font-bold uppercase tracking-widest">
+                      {
+                        wizardStep === 1 ? "Basic Identity" :
+                        wizardStep === 2 ? "Media & Stats" :
+                        wizardStep === 3 ? "Categories" :
+                        "Pricing & Slots"
+                      }
+                    </span>
+                  </div>
+                </div>
+                <button type="button" onClick={closeEditor} className="p-2.5 bg-gray-50 hover:bg-rose-50 hover:text-rose-500 rounded-xl border border-gray-200 transition-all group">
+                  <X size={18} className="text-gray-400 group-hover:text-rose-500" />
                 </button>
               </div>
 
-              {/* Progress Bar */}
-              <div className="flex h-1.5 w-full bg-slate-100">
-                <div 
-                  className="bg-emerald-500 transition-all duration-300" 
-                  style={{ width: `${(wizardStep / 4) * 100}%` }}
-                />
-              </div>
-
               {actionError && (
-                <div className="mx-8 mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-bold text-red-700 flex items-center gap-2">
-                  <X size={16} className="text-red-500" /> {actionError}
+                <div className="mx-10 mt-8 rounded-2xl border border-red-100 bg-red-50/50 p-5 text-xs font-semibold text-red-600 flex items-center gap-3 uppercase tracking-wider animate-in shake duration-500">
+                  <div className="p-2 bg-white rounded-lg shadow-sm">
+                    <X size={16} className="text-red-500" /> 
+                  </div>
+                  {actionError}
                 </div>
               )}
 
               {/* Form Body */}
               <div className="flex-1 overflow-y-auto p-8 pt-6">
                 {/* Step 1: Basic Details */}
-                {wizardStep === 1 && (
-                  <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                {mounted && wizardStep === 1 && (
+                  <div className="space-y-8 py-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
                       <div className="space-y-2">
-                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Facility Name</label>
-                        <input value={formState.name} onChange={(e) => handleFormChange("name", e.target.value)} required placeholder="e.g. Neon Turf Arena" className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold text-slate-900 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none" />
+                        <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider ml-1">Facility Name</label>
+                        <input 
+                          value={formState.name} 
+                          onChange={(e) => handleFormChange("name", e.target.value)} 
+                          placeholder="e.g. Neon Turf Arena" 
+                          required 
+                          className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-gray-400 transition-colors outline-none placeholder:text-gray-400" 
+                        />
                       </div>
                       <div className="space-y-2">
-                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Facility Type</label>
-                        <input value={formState.type} onChange={(e) => handleFormChange("type", e.target.value)} required placeholder="e.g. Football" className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold text-slate-900 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none" />
+                        <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider ml-1">Facility Type</label>
+                        <input 
+                          value={formState.type} 
+                          onChange={(e) => handleFormChange("type", e.target.value)} 
+                          placeholder="e.g. Football" 
+                          required 
+                          className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-gray-400 transition-colors outline-none placeholder:text-gray-400" 
+                        />
                       </div>
-                      <div className="space-y-2">
-                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Location (City/Area)</label>
-                        <input value={formState.location} onChange={(e) => handleFormChange("location", e.target.value)} required placeholder="e.g. Gachibowli, Hyd" className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold text-slate-900 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none" />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Specific Venue Address</label>
-                        <input value={formState.venue} onChange={(e) => handleFormChange("venue", e.target.value)} required placeholder="Full Address" className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold text-slate-900 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none" />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Open Hours</label>
-                        <div className="grid grid-cols-2 gap-3">
+
+                      {currentRole === "ADMIN" && (
+                        <div className="space-y-2 md:col-span-2">
+                          <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider ml-1">Assign Partner (Owner)</label>
                           <select 
-                            value={formState.openHours.split(" - ")[0] || "6:00 AM"} 
-                            onChange={(e) => {
-                              const end = formState.openHours.split(" - ")[1] || "10:00 PM";
-                              handleOpenHoursChange(e.target.value, end);
-                            }}
-                            className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold text-slate-900 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none"
+                            value={formState.partnerId} 
+                            onChange={(e) => handleFormChange("partnerId", e.target.value)} 
+                            className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-gray-400 transition-colors outline-none cursor-pointer appearance-none"
                           >
-                            {[
-                              "12:00 AM", "1:00 AM", "2:00 AM", "3:00 AM", "4:00 AM", "5:00 AM", 
-                              "6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM",
-                              "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", 
-                              "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM", "10:00 PM", "11:00 PM"
-                            ].map(time => (
-                              <option key={`start-${time}`} value={time}>{time}</option>
+                            <option value="">No Partner (Admin Managed)</option>
+                            {partners.map(p => (
+                              <option key={p.id} value={p.id}>{p.name} ({p.email})</option>
                             ))}
                           </select>
+                        </div>
+                      )}
+
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider ml-1">Location (City/Area)</label>
+                        <input 
+                          value={formState.location} 
+                          onChange={(e) => handleFormChange("location", e.target.value)} 
+                          placeholder="e.g. Gachibowli, Hyd" 
+                          required 
+                          className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-gray-400 transition-colors outline-none placeholder:text-gray-400" 
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider ml-1">Specific Venue Address</label>
+                        <input 
+                          value={formState.venue} 
+                          onChange={(e) => handleFormChange("venue", e.target.value)} 
+                          placeholder="Full Address" 
+                          required 
+                          className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-gray-400 transition-colors outline-none placeholder:text-gray-400" 
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider ml-1">Open Hours</label>
+                        <div className="flex items-center gap-3">
                           <select 
-                            value={formState.openHours.split(" - ")[1] || "10:00 PM"} 
-                            onChange={(e) => {
-                              const start = formState.openHours.split(" - ")[0] || "6:00 AM";
-                              handleOpenHoursChange(start, e.target.value);
-                            }}
-                            className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold text-slate-900 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none"
+                            value={formState.openHours.split(" - ")[0] || "6:00 AM"} 
+                            onChange={(e) => handleOpenHoursChange(e.target.value, formState.openHours.split(" - ")[1] || "10:00 PM")}
+                            className="flex-1 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-gray-400 transition-colors outline-none cursor-pointer appearance-none"
                           >
                             {[
-                              "12:00 AM", "1:00 AM", "2:00 AM", "3:00 AM", "4:00 AM", "5:00 AM", 
-                              "6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM",
-                              "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", 
-                              "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM", "10:00 PM", "11:00 PM"
+                              "12:00 AM", "1:00 AM", "2:00 AM", "3:00 AM", "4:00 AM", "5:00 AM", "6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM",
+                              "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM", "10:00 PM", "11:00 PM"
                             ].map(time => (
-                              <option key={`end-${time}`} value={time}>{time}</option>
+                              <option key={time} value={time}>{time}</option>
+                            ))}
+                          </select>
+                          <span className="text-slate-300 font-bold">to</span>
+                          <select 
+                            value={formState.openHours.split(" - ")[1] || "10:00 PM"} 
+                            onChange={(e) => handleOpenHoursChange(formState.openHours.split(" - ")[0] || "6:00 AM", e.target.value)}
+                            className="flex-1 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-gray-400 transition-colors outline-none cursor-pointer appearance-none"
+                          >
+                            {[
+                              "12:00 AM", "1:00 AM", "2:00 AM", "3:00 AM", "4:00 AM", "5:00 AM", "6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM",
+                              "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM", "10:00 PM", "11:00 PM"
+                            ].map(time => (
+                              <option key={time} value={time}>{time}</option>
                             ))}
                           </select>
                         </div>
                       </div>
+
                       <div className="space-y-2">
-                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Status</label>
-                        <select value={formState.status} onChange={(e) => handleFormChange("status", e.target.value)} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-bold text-slate-900 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none">
+                        <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider ml-1">Status</label>
+                        <select 
+                          value={formState.status} 
+                          onChange={(e) => handleFormChange("status", e.target.value)} 
+                          className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-gray-400 transition-colors outline-none cursor-pointer appearance-none"
+                        >
                           <option value="ACTIVE">Active (Bookable)</option>
                           <option value="INACTIVE">Inactive (Hidden)</option>
                           <option value="MAINTENANCE">Maintenance</option>
                         </select>
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider ml-1">Pricing Unit</label>
+                        <select 
+                          value={formState.unit} 
+                          onChange={(e) => handleFormChange("unit", e.target.value)} 
+                          className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-gray-400 transition-colors outline-none cursor-pointer appearance-none"
+                        >
+                          <option value="hr">Per Hour</option>
+                          <option value="session">Per Session</option>
+                          <option value="match">Per Match</option>
+                          <option value="day">Per Day</option>
+                        </select>
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider ml-1">Display Distance / Area</label>
+                        <input 
+                          value={formState.distance} 
+                          onChange={(e) => handleFormChange("distance", e.target.value)} 
+                          placeholder="e.g. 2 km away" 
+                          className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-gray-400 transition-colors outline-none placeholder:text-gray-400" 
+                        />
+                      </div>
+
+                      <div className="space-y-2 md:col-span-2">
+                        <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider ml-1">Google Maps Embed Link / Location URL</label>
+                        <input 
+                          value={formState.mapLink} 
+                          onChange={(e) => handleFormChange("mapLink", e.target.value)} 
+                          placeholder="Paste Google Maps URL (for live map preview)" 
+                          className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-gray-400 transition-colors outline-none placeholder:text-gray-400" 
+                        />
+                        <p className="text-[9px] text-gray-400 font-medium ml-1">If provided, this link will be used for the live map display on the facility page.</p>
                       </div>
                     </div>
                   </div>
                 )}
 
                 {/* Step 2: Media & Description */}
-                {wizardStep === 2 && (
-                  <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+                {mounted && wizardStep === 2 && (
+                  <div className="space-y-8 py-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
                     <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Cover Image URL</label>
-                      <input value={formState.image} onChange={(e) => handleFormChange("image", e.target.value)} placeholder="https://..." className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-900 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none" />
+                      <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider ml-1">Cover Image URL</label>
+                      <input 
+                        value={formState.image} 
+                        onChange={(e) => handleFormChange("image", e.target.value)} 
+                        placeholder="https://images.unsplash.com/..." 
+                        className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-gray-400 transition-colors outline-none placeholder:text-gray-400" 
+                      />
                       {formState.image && (
-                        <div className="mt-2 h-40 w-full md:w-1/2 rounded-xl overflow-hidden border border-slate-200">
+                        <div className="mt-4 h-52 w-full rounded-xl overflow-hidden border-4 border-white shadow-xl">
                            <img src={formState.image} alt="Cover Preview" className="w-full h-full object-cover" />
                         </div>
                       )}
                     </div>
                     <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Facility Description</label>
-                      <textarea value={formState.description} onChange={(e) => handleFormChange("description", e.target.value)} placeholder="Detailed description of the facility..." rows={4} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-900 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none" />
+                      <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider ml-1">Facility Description</label>
+                      <textarea 
+                        value={formState.description} 
+                        onChange={(e) => handleFormChange("description", e.target.value)} 
+                        placeholder="Describe the atmosphere, equipment, and unique features..." 
+                        rows={4} 
+                        className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-gray-400 transition-colors outline-none placeholder:text-gray-400" 
+                      />
                     </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider ml-1">Phone Number</label>
+                        <input 
+                          value={formState.phone} 
+                          onChange={(e) => handleFormChange("phone", e.target.value)} 
+                          placeholder="+91 98765 43210" 
+                          className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-gray-400 transition-colors outline-none placeholder:text-gray-400" 
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider ml-1">Initial Rating (0-5)</label>
+                        <input 
+                          type="number"
+                          step="0.1"
+                          min="0"
+                          max="5"
+                          value={formState.rating} 
+                          onChange={(e) => handleFormChange("rating", e.target.value)} 
+                          className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-gray-400 transition-colors outline-none" 
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider ml-1">Initial Reviews Count</label>
+                        <input 
+                          type="number"
+                          value={formState.reviewsCount || "0"} 
+                          onChange={(e) => handleFormChange("reviewsCount", e.target.value)} 
+                          className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-gray-400 transition-colors outline-none" 
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider ml-1">Gallery Images (Max 10)</label>
+                        <button 
+                          type="button"
+                          onClick={() => {
+                            const list = csvToList(formState.gallery);
+                            if (list.length < 10) {
+                              handleFormChange("gallery", listToCsv([...list, ""]));
+                            }
+                          }}
+                          className="text-[10px] font-bold text-emerald-600 hover:text-emerald-700 uppercase tracking-widest flex items-center gap-1"
+                        >
+                          <Plus size={12} /> Add Image
+                        </button>
+                      </div>
+                      <div className="grid grid-cols-1 gap-4">
+                        {csvToList(formState.gallery).map((url, idx) => (
+                          <div key={`gallery-${idx}`} className="flex items-center gap-3">
+                            <input 
+                              value={url} 
+                              onChange={(e) => {
+                                const list = csvToList(formState.gallery);
+                                list[idx] = e.target.value;
+                                handleFormChange("gallery", listToCsv(list));
+                              }} 
+                              placeholder={`Gallery Image URL #${idx + 1}`} 
+                              className="flex-1 rounded-lg border border-gray-200 bg-white px-4 py-2 text-xs text-gray-900 focus:border-gray-400 outline-none" 
+                            />
+                            <button 
+                              type="button"
+                              onClick={() => {
+                                const list = csvToList(formState.gallery);
+                                const newList = list.filter((_, i) => i !== idx);
+                                handleFormChange("gallery", listToCsv(newList));
+                              }}
+                              className="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          </div>
+                        ))}
+                        {csvToList(formState.gallery).length === 0 && (
+                          <div className="p-8 border-2 border-dashed border-gray-100 rounded-2xl flex flex-col items-center justify-center text-gray-300">
+                             <Gamepad2 size={32} className="mb-2 opacity-20" />
+                             <p className="text-[10px] font-semibold uppercase tracking-wider">No gallery images added yet</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
                     <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Phone Number</label>
-                      <input value={formState.phone} onChange={(e) => handleFormChange("phone", e.target.value)} placeholder="+91..." className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-900 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all outline-none" />
+                        <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider ml-1">Terms & Conditions</label>
+                        <textarea 
+                          value={formState.terms} 
+                          onChange={(e) => handleFormChange("terms", e.target.value)} 
+                          placeholder="Usage policy, cancellation rules..." 
+                          rows={2} 
+                          className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 focus:border-gray-400 transition-colors outline-none placeholder:text-gray-400" 
+                        />
                     </div>
                   </div>
                 )}
 
                 {/* Step 3: Amenities & Sports */}
-                {wizardStep === 3 && (
-                  <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Available Sports</label>
-                      <div className="flex flex-wrap gap-2 p-3 bg-slate-50/50 rounded-xl border border-slate-200">
+                {mounted && wizardStep === 3 && (
+                  <div className="space-y-8 py-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div className="space-y-4">
+                      <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider ml-1">Available Sports</label>
+                      <div className="flex flex-wrap gap-2.5 p-5 bg-slate-50/50 rounded-xl border border-slate-200 ">
                         {["Cricket", "Football", "Tennis", "Badminton", "Basketball", "Volleyball", "Table Tennis", "Swimming", "Squash", "Box Cricket", "Pickleball"].map(sport => {
                           const isSelected = csvToList(formState.availableSports).includes(sport);
                           return (
@@ -939,17 +1284,41 @@ export default function GameHubAdminPage() {
                                 const newList = list.includes(sport) ? list.filter(s => s !== sport) : [...list, sport];
                                 handleFormChange("availableSports", listToCsv(newList));
                               }}
-                              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${isSelected ? 'bg-emerald-500 text-white border-emerald-600 shadow-sm' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}
+                              className={`px-5 py-2.5 rounded-xl text-xs font-semibold transition-all border shadow-sm ${isSelected ? 'bg-emerald-500 text-gray-900 border-emerald-600 ' : 'bg-white text-slate-600 border-slate-200 hover:border-emerald-300 hover:text-gray-700'}`}
                             >
                               {sport}
                             </button>
                           );
                         })}
+                        <div className="flex items-center gap-2 px-2 border-l border-slate-200 ml-2">
+                           <input 
+                             type="text" 
+                             value={customSport}
+                             onChange={(e) => setCustomSport(e.target.value)}
+                             placeholder="Custom Sport"
+                             className="px-4 py-2 text-[10px] rounded-lg border border-slate-200 outline-none w-32"
+                           />
+                           <button 
+                             type="button" 
+                             onClick={() => {
+                               if (!customSport.trim()) return;
+                               const list = csvToList(formState.availableSports);
+                               if (!list.includes(customSport.trim())) {
+                                 handleFormChange("availableSports", listToCsv([...list, customSport.trim()]));
+                               }
+                               setCustomSport("");
+                             }}
+                             className="p-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-all"
+                           >
+                             <Plus size={14} />
+                           </button>
+                        </div>
                       </div>
                     </div>
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Amenities</label>
-                      <div className="flex flex-wrap gap-2 p-3 bg-slate-50/50 rounded-xl border border-slate-200">
+
+                    <div className="space-y-4">
+                      <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider ml-1">Amenities</label>
+                      <div className="flex flex-wrap gap-2.5 p-5 bg-slate-50/50 rounded-xl border border-slate-200 ">
                         {["Parking", "Washrooms", "Drinking Water", "First Aid", "Changing Rooms", "Lockers", "Seating Area", "Cafe/Snacks", "Wi-Fi", "Equipment Rental"].map(amenity => {
                           const isSelected = csvToList(formState.amenities).includes(amenity);
                           return (
@@ -961,17 +1330,41 @@ export default function GameHubAdminPage() {
                                 const newList = list.includes(amenity) ? list.filter(a => a !== amenity) : [...list, amenity];
                                 handleFormChange("amenities", listToCsv(newList));
                               }}
-                              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${isSelected ? 'bg-emerald-500 text-white border-emerald-600 shadow-sm' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}
+                              className={`px-5 py-2.5 rounded-xl text-xs font-semibold transition-all border shadow-sm ${isSelected ? 'bg-amber-500 text-gray-900 border-amber-600 ' : 'bg-white text-slate-600 border-slate-200 hover:border-amber-300 hover:text-amber-600'}`}
                             >
                               {amenity}
                             </button>
                           );
                         })}
+                        <div className="flex items-center gap-2 px-2 border-l border-slate-200 ml-2">
+                           <input 
+                             type="text" 
+                             value={customAmenity}
+                             onChange={(e) => setCustomAmenity(e.target.value)}
+                             placeholder="Custom Amenity"
+                             className="px-4 py-2 text-[10px] rounded-lg border border-slate-200 outline-none w-32"
+                           />
+                           <button 
+                             type="button" 
+                             onClick={() => {
+                               if (!customAmenity.trim()) return;
+                               const list = csvToList(formState.amenities);
+                               if (!list.includes(customAmenity.trim())) {
+                                 handleFormChange("amenities", listToCsv([...list, customAmenity.trim()]));
+                               }
+                               setCustomAmenity("");
+                             }}
+                             className="p-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-all"
+                           >
+                             <Plus size={14} />
+                           </button>
+                        </div>
                       </div>
                     </div>
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Special Features</label>
-                      <div className="flex flex-wrap gap-2 p-3 bg-slate-50/50 rounded-xl border border-slate-200">
+
+                    <div className="space-y-4">
+                      <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider ml-1">Special Features</label>
+                      <div className="flex flex-wrap gap-2.5 p-5 bg-slate-50/50 rounded-xl border border-slate-200 ">
                         {["Floodlights", "Artificial Grass", "Wooden Court", "Synthetic Court", "Indoor", "Outdoor", "CCTV", "Turf", "24/7 Power", "Coach Available"].map(feature => {
                           const isSelected = csvToList(formState.features).includes(feature);
                           return (
@@ -983,17 +1376,41 @@ export default function GameHubAdminPage() {
                                 const newList = list.includes(feature) ? list.filter(f => f !== feature) : [...list, feature];
                                 handleFormChange("features", listToCsv(newList));
                               }}
-                              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${isSelected ? 'bg-emerald-500 text-white border-emerald-600 shadow-sm' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}
+                              className={`px-5 py-2.5 rounded-xl text-xs font-semibold transition-all border shadow-sm ${isSelected ? 'bg-indigo-500 text-gray-900 border-indigo-600 ' : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-300 hover:text-indigo-600'}`}
                             >
                               {feature}
                             </button>
                           );
                         })}
+                        <div className="flex items-center gap-2 px-2 border-l border-slate-200 ml-2">
+                           <input 
+                             type="text" 
+                             value={customFeature}
+                             onChange={(e) => setCustomFeature(e.target.value)}
+                             placeholder="Custom Feature"
+                             className="px-4 py-2 text-[10px] rounded-lg border border-slate-200 outline-none w-32"
+                           />
+                           <button 
+                             type="button" 
+                             onClick={() => {
+                               if (!customFeature.trim()) return;
+                               const list = csvToList(formState.features);
+                               if (!list.includes(customFeature.trim())) {
+                                 handleFormChange("features", listToCsv([...list, customFeature.trim()]));
+                               }
+                               setCustomFeature("");
+                             }}
+                             className="p-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-all"
+                           >
+                             <Plus size={14} />
+                           </button>
+                        </div>
                       </div>
                     </div>
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Tags</label>
-                      <div className="flex flex-wrap gap-2 p-3 bg-slate-50/50 rounded-xl border border-slate-200">
+
+                    <div className="space-y-4">
+                      <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider ml-1">System Tags</label>
+                      <div className="flex flex-wrap gap-2.5 p-5 bg-slate-50/50 rounded-xl border border-slate-200 ">
                         {["featured", "premium", "new", "popular", "discount", "family-friendly", "tournament-ready", "corporate-events", "training"].map(tag => {
                           const isSelected = csvToList(formState.tags).includes(tag);
                           return (
@@ -1005,226 +1422,301 @@ export default function GameHubAdminPage() {
                                 const newList = list.includes(tag) ? list.filter(t => t !== tag) : [...list, tag];
                                 handleFormChange("tags", listToCsv(newList));
                               }}
-                              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${isSelected ? 'bg-emerald-500 text-white border-emerald-600 shadow-sm' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}`}
+                              className={`px-5 py-2.5 rounded-xl text-xs font-semibold transition-all border shadow-sm ${isSelected ? 'bg-rose-500 text-gray-900 border-rose-600 ' : 'bg-white text-slate-600 border-slate-200 hover:border-rose-300 hover:text-rose-600'}`}
                             >
                               {tag}
                             </button>
                           );
                         })}
+                        <div className="flex items-center gap-2 px-2 border-l border-slate-200 ml-2">
+                           <input 
+                             type="text" 
+                             value={customTag}
+                             onChange={(e) => setCustomTag(e.target.value)}
+                             placeholder="Custom Tag"
+                             className="px-4 py-2 text-[10px] rounded-lg border border-slate-200 outline-none w-32"
+                           />
+                           <button 
+                             type="button" 
+                             onClick={() => {
+                               if (!customTag.trim()) return;
+                               const list = csvToList(formState.tags);
+                               if (!list.includes(customTag.trim())) {
+                                 handleFormChange("tags", listToCsv([...list, customTag.trim()]));
+                               }
+                               setCustomTag("");
+                             }}
+                             className="p-2 bg-rose-500 text-white rounded-lg hover:bg-rose-600 transition-all"
+                           >
+                             <Plus size={14} />
+                           </button>
+                        </div>
                       </div>
                     </div>
                   </div>
                 )}
 
                 {/* Step 4: Pricing & Slots */}
-                {wizardStep === 4 && (
-                  <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-                    <div className="bg-emerald-50/50 rounded-2xl p-6 border border-emerald-100 shadow-sm">
-                      <div className="flex items-center justify-between mb-6">
-                        <div className="flex items-center gap-3">
-                          <div className="bg-white p-2 rounded-xl shadow-sm border border-emerald-100 text-emerald-600">
-                             <Sparkles size={20} />
-                          </div>
-                          <div>
-                            <h4 className="text-lg font-black text-slate-900">Slot & Pricing Generator</h4>
-                            <p className="text-xs font-bold text-slate-500 mt-0.5">Define your operational hours to auto-generate bookable slots</p>
-                          </div>
-                        </div>
-                        <button 
-                          type="button" 
-                          onClick={() => setShowAdvanced(!showAdvanced)}
-                          className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-emerald-600 transition-colors"
-                        >
-                          {showAdvanced ? "Hide Advanced JSON" : "Show Advanced JSON"}
-                        </button>
+                {mounted && wizardStep === 4 && (
+                  <div key="step-4-pricing-v3" className="space-y-8 py-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div className="bg-white rounded-2xl p-8 relative overflow-hidden border border-gray-100 shadow-sm">
+                      <div className="absolute top-0 right-0 p-8 opacity-5">
+                        <Zap size={120} className="text-emerald-500" />
                       </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {/* Operating Hours */}
-                        <div className="space-y-4">
-                          <h5 className="text-[11px] font-black text-slate-800 uppercase tracking-widest border-b border-slate-200 pb-2 flex items-center justify-between">
-                            Operating Hours
-                            <span className="text-[9px] lowercase font-normal text-slate-400">(Synced from Step 1)</span>
-                          </h5>
-                          <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-1.5">
-                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Start Hour</label>
-                              <select 
-                                value={formState.slotStartHour} 
-                                onChange={(e) => handleFormChange("slotStartHour", e.target.value)} 
-                                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-bold text-slate-900 outline-none focus:border-emerald-400"
-                              >
-                                {Array.from({ length: 24 }).map((_, i) => (
-                                  <option key={`slot-start-${i}`} value={i}>{i === 0 ? "12 AM" : i < 12 ? `${i} AM` : i === 12 ? "12 PM" : `${i-12} PM`}</option>
-                                ))}
-                              </select>
+                      
+                      <div className="relative z-10">
+                        <div className="flex items-center justify-between mb-10">
+                          <div className="flex items-center gap-5">
+                            <div className="bg-emerald-500 p-3.5 rounded-2xl shadow-lg shadow-emerald-500/20">
+                               <Zap size={24} className="text-white" />
                             </div>
-                            <div className="space-y-1.5">
-                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">End Hour</label>
-                              <select 
-                                value={formState.slotEndHour} 
-                                onChange={(e) => handleFormChange("slotEndHour", e.target.value)} 
-                                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-bold text-slate-900 outline-none focus:border-emerald-400"
-                              >
-                                {Array.from({ length: 24 }).map((_, i) => (
-                                  <option key={`slot-end-${i+1}`} value={i+1}>{(i+1) === 12 ? "12 PM" : (i+1) < 12 ? `${i+1} AM` : (i+1) === 24 ? "12 AM" : `${(i+1)-12} PM`}</option>
-                                ))}
-                              </select>
+                            <div>
+                              <h4 className="text-2xl font-bold text-gray-900 tracking-tight">Pricing Setup</h4>
+                              <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest mt-1.5 flex items-center gap-2">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                Configure slot timing and pricing
+                              </p>
                             </div>
                           </div>
-                          <div className="space-y-1.5">
-                            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Slot Duration</label>
-                            <select value={formState.slotInterval} onChange={(e) => handleFormChange("slotInterval", e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-bold text-slate-900 outline-none focus:border-emerald-400">
-                              <option value="30">30 Minutes</option>
-                              <option value="60">1 Hour</option>
-                              <option value="90">1.5 Hours</option>
-                              <option value="120">2 Hours</option>
-                            </select>
-                          </div>
+                          <button 
+                            type="button" 
+                            onClick={() => setShowAdvanced(!showAdvanced)}
+                            className="px-5 py-2.5 bg-gray-50 hover:bg-gray-100 rounded-xl text-[10px] font-bold uppercase tracking-wider text-gray-400 hover:text-gray-900 transition-all border border-gray-200"
+                          >
+                            {showAdvanced ? "Basic Mode" : "Developer JSON"}
+                          </button>
                         </div>
 
-                        {/* Pricing */}
-                        <div className="space-y-4">
-                          <h5 className="text-[11px] font-black text-slate-800 uppercase tracking-widest border-b border-slate-200 pb-2">Base Pricing</h5>
-                          <div className="space-y-1.5">
-                            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Standard Base Price (₹)</label>
-                            <input value={formState.pricePerHour} onChange={(e) => handleFormChange("pricePerHour", e.target.value)} type="number" min="0" className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-black text-emerald-600 bg-white outline-none focus:border-emerald-400" />
-                          </div>
-                          <div className="space-y-1.5">
-                            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Weekend Base Price (₹)</label>
-                            <input value={formState.weekendPrice} onChange={(e) => handleFormChange("weekendPrice", e.target.value)} type="number" min="0" className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-black text-indigo-600 bg-white outline-none focus:border-emerald-400" />
-                          </div>
-                        </div>
-                        
-                        {/* Peak Pricing */}
-                        <div className="space-y-4 md:col-span-2 bg-rose-50/50 p-4 rounded-xl border border-rose-100">
-                          <h5 className="text-[11px] font-black text-rose-800 uppercase tracking-widest border-b border-rose-200/50 pb-2">Peak Hours Pricing (Optional)</h5>
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div className="space-y-1.5">
-                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Peak Start</label>
-                              <select 
-                                value={formState.peakStartHour} 
-                                onChange={(e) => handleFormChange("peakStartHour", e.target.value)} 
-                                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-bold text-slate-900 outline-none focus:border-rose-300"
-                              >
-                                {Array.from({ length: 24 }).map((_, i) => (
-                                  <option key={`peak-start-${i}`} value={i}>{i === 0 ? "12 AM" : i < 12 ? `${i} AM` : i === 12 ? "12 PM" : `${i-12} PM`}</option>
-                                ))}
-                              </select>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                          {/* Left Column: Hours & Pricing */}
+                          <div className="space-y-8">
+                            <div className="p-6 bg-white rounded-xl border border-gray-100 shadow-sm">
+                              <h5 className="text-[10px] font-semibold text-emerald-600 uppercase tracking-wide mb-4 flex items-center justify-between">
+                                Operating Hours
+                                <span className="text-[9px] lowercase font-normal text-gray-400 tracking-normal">(Synced from Step 1)</span>
+                              </h5>
+                              <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-1.5">
+                                  <label className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider ml-1">Start Hour</label>
+                                  <select 
+                                    value={String(formState.slotStartHour)} 
+                                    onChange={(e) => handleFormChange("slotStartHour", e.target.value)} 
+                                    className="w-full rounded-xl border border-gray-200 bg-gray-50/50 px-4 py-3 text-sm font-bold text-gray-900 outline-none focus:border-emerald-500 transition-all cursor-pointer"
+                                  >
+                                    {HOURS_24.map((h) => (
+                                      <option key={`slot-start-${h.value}`} value={h.value}>{h.label}</option>
+                                    ))}
+                                  </select>
+                                </div>
+                                <div className="space-y-1.5">
+                                  <label className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider ml-1">End Hour</label>
+                                  <select 
+                                    value={String(formState.slotEndHour)} 
+                                    onChange={(e) => handleFormChange("slotEndHour", e.target.value)} 
+                                    className="w-full rounded-xl border border-gray-200 bg-gray-50/50 px-4 py-3 text-sm font-bold text-gray-900 outline-none focus:border-emerald-500 transition-all cursor-pointer"
+                                  >
+                                    {HOURS_24_PLUS_1.map((h) => (
+                                      <option key={`slot-end-${h.value}`} value={h.value}>{h.label}</option>
+                                    ))}
+                                  </select>
+                                </div>
+                              </div>
                             </div>
-                            <div className="space-y-1.5">
-                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Peak End</label>
-                              <select 
-                                value={formState.peakEndHour} 
-                                onChange={(e) => handleFormChange("peakEndHour", e.target.value)} 
-                                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-bold text-slate-900 outline-none focus:border-rose-300"
-                              >
-                                {Array.from({ length: 24 }).map((_, i) => (
-                                  <option key={`peak-end-${i+1}`} value={i+1}>{(i+1) === 12 ? "12 PM" : (i+1) < 12 ? `${i+1} AM` : (i+1) === 24 ? "12 AM" : `${(i+1)-12} PM`}</option>
-                                ))}
-                              </select>
-                            </div>
-                            <div className="space-y-1.5">
-                              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Peak Price (₹)</label>
-                              <input value={formState.peakPrice} onChange={(e) => handleFormChange("peakPrice", e.target.value)} type="number" min="0" className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-black text-rose-600 bg-white outline-none focus:border-rose-300" />
-                            </div>
-                          </div>
-                        </div>
 
-                        {/* Slot Preview */}
-                        {formState.slotTemplate && formState.slotTemplate.length > 5 && (
-                          <div className="md:col-span-2 space-y-3">
-                             <h5 className="text-[11px] font-black text-slate-800 uppercase tracking-widest border-b border-slate-200 pb-2">Generated Slot Preview</h5>
-                             <div className="max-h-32 overflow-y-auto grid grid-cols-2 sm:grid-cols-3 gap-2 p-2 bg-white rounded-lg border border-slate-200">
-                                {JSON.parse(formState.slotTemplate).map((slot: any, idx: number) => (
-                                  <div key={idx} className="px-2 py-1 bg-slate-50 border border-slate-100 rounded text-[10px] font-bold text-slate-600 flex justify-between items-center">
-                                    <span>{slot.label.split(' - ')[0]}</span>
-                                    <span className="text-emerald-600">₹{slot.price}</span>
+                            <div className="p-6 bg-white rounded-xl border border-gray-100 shadow-sm space-y-6">
+                              <h5 className="text-[10px] font-semibold text-indigo-600 uppercase tracking-wide mb-4">Base Pricing (INR)</h5>
+                              <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-1.5">
+                                  <label className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider ml-1">Standard (₹)</label>
+                                  <input 
+                                    type="number" 
+                                    value={formState.pricePerHour} 
+                                    onChange={(e) => handleFormChange("pricePerHour", e.target.value)} 
+                                    className="w-full rounded-xl border border-gray-200 bg-gray-50/50 px-4 py-3 text-sm font-semibold text-emerald-600 outline-none focus:border-emerald-500 transition-all" 
+                                  />
+                                </div>
+                                <div className="space-y-1.5">
+                                  <label className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider ml-1">Weekend (₹)</label>
+                                  <input 
+                                    type="number" 
+                                    value={formState.weekendPrice} 
+                                    onChange={(e) => handleFormChange("weekendPrice", e.target.value)} 
+                                    className="w-full rounded-xl border border-gray-200 bg-gray-50/50 px-4 py-3 text-sm font-semibold text-indigo-600 outline-none focus:border-indigo-500 transition-all" 
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Right Column: Peak Pricing & Generate */}
+                          <div className="space-y-8 flex flex-col justify-between">
+                            <div className="p-6 bg-white rounded-xl border border-gray-100 shadow-sm space-y-6">
+                              <h5 className="text-[10px] font-semibold text-rose-600 uppercase tracking-wide mb-4">Peak Hour Optimization</h5>
+                              <div className="grid grid-cols-3 gap-3">
+                                <div className="space-y-1.5">
+                                  <label className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider ml-1">Start</label>
+                                  <select 
+                                    value={String(formState.peakStartHour)} 
+                                    onChange={(e) => handleFormChange("peakStartHour", e.target.value)} 
+                                    className="w-full rounded-xl border border-gray-200 bg-gray-50/50 px-3 py-3 text-xs font-bold text-gray-900 outline-none focus:border-rose-500 cursor-pointer"
+                                  >
+                                    {HOURS_24.map((h) => (
+                                      <option key={`peak-start-${h.value}`} value={h.value}>{h.label}</option>
+                                    ))}
+                                  </select>
+                                </div>
+                                <div className="space-y-1.5">
+                                  <label className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider ml-1">End</label>
+                                  <select 
+                                    value={String(formState.peakEndHour)} 
+                                    onChange={(e) => handleFormChange("peakEndHour", e.target.value)} 
+                                    className="w-full rounded-xl border border-gray-200 bg-gray-50/50 px-3 py-3 text-xs font-bold text-gray-900 outline-none focus:border-rose-500 cursor-pointer"
+                                  >
+                                    {HOURS_24.map((h) => (
+                                      <option key={`peak-end-${h.value}`} value={h.value}>{h.label}</option>
+                                    ))}
+                                  </select>
+                                </div>
+                                <div className="space-y-1.5">
+                                  <label className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider ml-1">Price (₹)</label>
+                                  <input 
+                                    type="number" 
+                                    value={formState.peakPrice} 
+                                    onChange={(e) => handleFormChange("peakPrice", e.target.value)} 
+                                    className="w-full rounded-xl border border-gray-200 bg-gray-50/50 px-3 py-3 text-xs font-semibold text-rose-600 outline-none focus:border-rose-500" 
+                                  />
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="space-y-4">
+                              <button
+                                type="button"
+                                onClick={generateSlotsFromPreset}
+                                className="w-full group relative overflow-hidden px-8 py-5 bg-gray-900 text-white text-sm font-bold uppercase tracking-widest rounded-[1.5rem] hover:bg-emerald-600 transition-all shadow-xl shadow-gray-200 active:scale-95 flex items-center justify-center gap-3"
+                              >
+                                <Zap size={18} fill="currentColor" className="text-emerald-400" /> Initialize Configuration
+                              </button>
+                              
+                              {formState.slotTemplate && formState.slotTemplate !== "[]" ? (
+                                <div className="space-y-3">
+                                  <div className="flex items-center justify-center gap-3 py-4 bg-emerald-500/5 rounded-2xl border border-emerald-500/10">
+                                    <div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/30">
+                                      <Check size={16} className="text-white" />
+                                    </div>
+                                    <span className="text-xs font-bold text-emerald-600 uppercase tracking-widest">
+                                      {JSON.parse(formState.slotTemplate || "[]").length} Slots Active
+                                    </span>
                                   </div>
-                                ))}
-                             </div>
-                          </div>
-                        )}
-                      </div>
-
-                      {showAdvanced && (
-                        <div className="mt-8 space-y-4 animate-in fade-in duration-300">
-                          <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Raw Slot Template (JSON)</label>
-                            <textarea value={formState.slotTemplate} onChange={(e) => handleFormChange("slotTemplate", e.target.value)} rows={5} className="w-full rounded-lg border border-slate-300 bg-slate-900 p-3 font-mono text-[10px] text-emerald-400 outline-none" />
-                          </div>
-                          <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Raw Pricing Rules (JSON)</label>
-                            <textarea value={formState.pricingRules} onChange={(e) => handleFormChange("pricingRules", e.target.value)} rows={5} className="w-full rounded-lg border border-slate-300 bg-slate-900 p-3 font-mono text-[10px] text-amber-400 outline-none" />
+                                  <button 
+                                    type="button"
+                                    onClick={() => handleFormChange("slotTemplate", "[]")}
+                                    className="w-full py-2 text-[10px] font-bold text-rose-500/50 hover:text-rose-500 uppercase tracking-widest transition-colors flex items-center justify-center gap-2"
+                                  >
+                                    <Trash2 size={12} /> Discard & Reset
+                                  </button>
+                                </div>
+                              ) : (
+                                <div className="p-6 bg-gray-50 rounded-2xl border border-dashed border-gray-200 text-center">
+                                  <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest leading-relaxed">
+                                    No slots configured yet. <br /> Auto-generation recommended.
+                                  </p>
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
-                      )}
-
-                      <div className="mt-6 flex flex-col items-center">
-                        <button
-                          type="button"
-                          onClick={generateSlotsFromPreset}
-                          className="w-full md:w-auto px-8 py-3 bg-slate-900 text-white text-sm font-black uppercase tracking-widest rounded-xl hover:bg-slate-800 transition-colors shadow-lg shadow-slate-900/20 active:scale-95 flex items-center justify-center gap-2"
-                        >
-                          <Sparkles size={16} /> Generate Slots Configuration
-                        </button>
-                        {formState.slotTemplate.length > 5 && (
-                          <p className="mt-3 text-xs font-bold text-emerald-600 flex items-center gap-1">
-                            <Check size={14} /> Slots generated successfully
-                          </p>
-                        )}
-                        {(!formState.slotTemplate || formState.slotTemplate.length <= 5) && (
-                          <p className="mt-2 text-[10px] text-amber-600 font-bold italic">You must generate slots before submitting</p>
-                        )}
                       </div>
                     </div>
+
+                    {showAdvanced && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 animate-in fade-in slide-in-from-top-4 duration-500">
+                         <div className="space-y-3">
+                            <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider ml-1">Slot Pipeline (JSON)</label>
+                            <textarea 
+                              value={formState.slotTemplate || "[]"} 
+                              onChange={(e) => handleFormChange("slotTemplate", e.target.value)} 
+                              rows={8} 
+                              className="w-full rounded-[2rem] border border-slate-200 bg-slate-900 p-6 font-mono text-[10px] text-emerald-400 outline-none shadow-xl custom-scrollbar" 
+                            />
+                         </div>
+                         <div className="space-y-3">
+                            <label className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider ml-1">Pricing Logic (JSON)</label>
+                            <textarea 
+                              value={formState.pricingRules || "[]"} 
+                              onChange={(e) => handleFormChange("pricingRules", e.target.value)} 
+                              rows={8} 
+                              className="w-full rounded-[2rem] border border-slate-200 bg-slate-900 p-6 font-mono text-[10px] text-amber-400 outline-none shadow-xl custom-scrollbar" 
+                            />
+                         </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
 
               {/* Wizard Footer / Actions */}
-              <div className="px-8 py-5 border-t border-slate-100 bg-slate-50 flex items-center justify-between">
+              <div className="px-10 py-8 border-t border-slate-100 bg-white flex items-center justify-between relative">
+                <div className="w-full h-px bg-gray-100" />
+                
                 <button
                   type="button"
                   disabled={wizardStep === 1}
                   onClick={() => setWizardStep(prev => Math.max(1, prev - 1))}
-                  className="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-200 transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
+                  className="px-8 py-3.5 rounded-2xl text-xs font-semibold text-slate-400 hover:text-slate-900 hover:bg-slate-50 transition-all disabled:opacity-0 disabled:pointer-events-none uppercase tracking-wider"
                 >
-                  Back
+                  Previous Phase
                 </button>
 
-                {wizardStep < 4 ? (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (wizardStep === 1 && (!formState.name || !formState.type || !formState.location || !formState.venue)) {
-                        setActionError("Please fill out all required Basic Details.");
-                        return;
-                      }
-                      setActionError("");
-                      setWizardStep(prev => Math.min(4, prev + 1));
-                    }}
-                    className="px-8 py-2.5 rounded-xl bg-emerald-600 text-white text-sm font-black uppercase tracking-wider shadow-md hover:bg-emerald-700 transition-colors active:scale-95"
-                  >
-                    Continue
-                  </button>
-                ) : (
-                  <button
-                    type="submit"
-                    disabled={actionLoading || formState.slotTemplate.length <= 5}
-                    className="px-8 py-2.5 rounded-xl bg-slate-900 text-white text-sm font-black uppercase tracking-wider shadow-md hover:bg-slate-800 transition-colors active:scale-95 disabled:opacity-50 disabled:active:scale-100 flex items-center gap-2"
-                  >
-                    {actionLoading ? "Saving..." : editorMode === "create" ? "Create Facility" : "Save Changes"}
-                    <Check size={16} />
-                  </button>
-                )}
+                <div className="flex items-center gap-4">
+                  {wizardStep < 4 ? (
+                    <button
+                      key="next-phase-btn"
+                      type="button"
+                      onClick={() => {
+                        if (wizardStep === 1 && (!formState.name || !formState.type || !formState.location || !formState.venue)) {
+                          setActionError("Required: Please fill in all facility details.");
+                          return;
+                        }
+                        if (wizardStep === 2 && (!formState.description || !formState.phone || !formState.image)) {
+                          setActionError("Required: Please provide a description, phone number, and cover image.");
+                          return;
+                        }
+                        setActionError("");
+                        setWizardStep(prev => Math.min(4, prev + 1));
+                      }}
+                      className="group px-10 py-4 rounded-[1.25rem] bg-emerald-500 text-gray-900 text-xs font-semibold uppercase tracking-wider shadow-sm hover:bg-emerald-400 hover:-translate-y-0.5 transition-all active:scale-95 flex items-center gap-3"
+                    >
+                      Next Phase
+                      <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  ) : (
+                    <button
+                      key="submit-facility-btn"
+                      type="button"
+                      disabled={actionLoading}
+                      onClick={() => handleSubmitFacility()}
+                      className="px-10 py-4 rounded-[1.25rem] bg-emerald-600 text-white text-xs font-semibold uppercase tracking-wider shadow-lg shadow-emerald-900/20 hover:bg-emerald-700 hover:-translate-y-0.5 transition-all active:scale-95 disabled:opacity-50 disabled:active:scale-100 flex items-center gap-3"
+                    >
+                      {actionLoading ? "Finalizing..." : editorMode === "create" ? "Initialize Asset" : "Commit Changes"}
+                      {!actionLoading && <Check size={16} />}
+                    </button>
+                  )}
+                  {wizardStep === 4 && (
+                    <div className="flex flex-col items-center gap-4">
+                        {/* Empty spacer or additional step 4 buttons could go here */}
+                    </div>
+                  )}
+                </div>
               </div>
-            </form>
+            </div>
           </div>
         )}
 
         {loading ? (
-          <div className="py-16 text-center text-sm font-semibold text-slate-500">Loading GameHub facilities...</div>
+          <div className="py-24 flex flex-col items-center justify-center">
+            <PremiumLoader size="lg" color="#10b981" text="Retrieving Resources" />
+          </div>
         ) : error ? (
           <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-700">
             {error}
@@ -1236,14 +1728,14 @@ export default function GameHubAdminPage() {
         ) : (
           <div className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
             {facilities.map((facility) => (
-              <article key={facility.id} className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+              <article key={facility.id} className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-sm">
                 <div className="relative h-48 bg-slate-100">
                   <img
                     src={facility.image || "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1200"}
                     alt={facility.name}
                     className="h-full w-full object-cover"
                   />
-                  <div className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full bg-black/55 px-3 py-1.5 text-xs font-bold text-white backdrop-blur">
+                  <div className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full bg-black/55 px-3 py-1.5 text-xs font-bold text-gray-900 ">
                     <MapPin size={13} /> {facility.location}
                   </div>
                 </div>
@@ -1251,7 +1743,7 @@ export default function GameHubAdminPage() {
                 <div className="space-y-4 p-5">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <h3 className="text-xl font-extrabold text-slate-900">{facility.name}</h3>
+                      <h3 className="text-xl font-bold text-slate-900">{facility.name}</h3>
                       <p className="mt-1 text-sm font-semibold text-slate-500">{facility.venue}</p>
                     </div>
                     <span className="rounded-full bg-rose-50 px-3 py-1 text-xs font-bold uppercase tracking-wide text-rose-600">
@@ -1260,7 +1752,7 @@ export default function GameHubAdminPage() {
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <span className={`rounded-full px-2.5 py-1 text-[11px] font-extrabold ${
+                    <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${
                       facility.status === "MAINTENANCE"
                         ? "bg-amber-100 text-amber-700"
                         : facility.status === "INACTIVE"
@@ -1307,7 +1799,7 @@ export default function GameHubAdminPage() {
                       <Link
                         href={`http://localhost:3000/gamehub/${facility.id}`}
                         target="_blank"
-                        className="inline-flex items-center gap-2 rounded-2xl bg-slate-900 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-black"
+                        className="inline-flex items-center gap-2 rounded-2xl bg-slate-900 px-4 py-2.5 text-sm font-bold text-gray-900 transition hover:bg-black"
                       >
                         Open Public Page <ArrowUpRight size={16} />
                       </Link>
@@ -1337,10 +1829,10 @@ export default function GameHubAdminPage() {
         )}
       </section>
 
-      <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
-            <h2 className="text-2xl font-extrabold text-slate-900">Booking Calendar & Slot Blocking</h2>
+            <h2 className="text-2xl font-bold text-slate-900">Booking Calendar & Slot Blocking</h2>
             <p className="mt-1 text-sm font-medium text-slate-500">Monitor monthly activity and block slots for maintenance or tournaments.</p>
           </div>
 
@@ -1367,7 +1859,7 @@ export default function GameHubAdminPage() {
           <input type="date" value={blockDate} onChange={(e) => setBlockDate(e.target.value)} className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" required />
           <input value={blockReason} onChange={(e) => setBlockReason(e.target.value)} placeholder="Reason" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" required />
           <input value={blockSlotsInput} onChange={(e) => setBlockSlotsInput(e.target.value)} placeholder="Slots CSV (empty = full day)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" />
-          <button type="submit" disabled={actionLoading || !hasAdminAccess} className="rounded-xl bg-amber-500 px-4 py-2 text-sm font-extrabold text-white disabled:opacity-60 md:col-span-4">
+          <button type="submit" disabled={actionLoading || !hasAdminAccess} className="rounded-xl bg-amber-500 px-4 py-2 text-sm font-bold text-gray-900 disabled:opacity-60 md:col-span-4">
             {actionLoading ? "Updating..." : "Block Slots"}
           </button>
         </form>
@@ -1421,7 +1913,7 @@ export default function GameHubAdminPage() {
 
             <article className="rounded-2xl border border-slate-200 bg-white p-4">
               <div className="flex items-center justify-between gap-3">
-                <p className="text-sm font-extrabold text-slate-900">{selectedDay.date}</p>
+                <p className="text-sm font-bold text-slate-900">{selectedDay.date}</p>
                 <div className="flex items-center gap-2 text-xs font-bold">
                   <span className="rounded-full bg-emerald-100 px-2 py-1 text-emerald-700">Bookings: {selectedDay.bookingCount}</span>
                   <span className="rounded-full bg-amber-100 px-2 py-1 text-amber-700">Blocked: {selectedDay.blockedCount}</span>
@@ -1435,33 +1927,100 @@ export default function GameHubAdminPage() {
               ) : null}
 
               {selectedDay.bookings.length > 0 ? (
-                <div className="mt-4 space-y-1 text-xs text-slate-600">
-                  {selectedDay.bookings.map((booking) => (
-                    <div key={booking.id} className="rounded-lg bg-emerald-50 px-2 py-1 font-semibold text-emerald-700">
-                      {booking.slotLabel}
-                    </div>
-                  ))}
+                <div className="mt-4 space-y-3">
+                  <h4 className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest flex items-center gap-2">
+                    <Check size={12} /> Active Bookings
+                  </h4>
+                  <div className="space-y-2">
+                    {selectedDay.bookings.map((booking) => (
+                      <div key={booking.id} className="group relative rounded-xl border border-emerald-100 bg-emerald-50/50 p-3 transition-all hover:bg-emerald-50">
+                        <div className="flex items-center justify-between gap-3">
+                           <div>
+                              <p className="text-xs font-bold text-emerald-900">{booking.slotLabel}</p>
+                              <p className="text-[9px] text-emerald-600/60 font-semibold uppercase tracking-tighter mt-0.5">Booking Confirmed</p>
+                           </div>
+                           <button 
+                             type="button"
+                             disabled={!hasAdminAccess || actionLoading}
+                             onClick={() => handleCancelBooking(booking.id)}
+                             className="p-1.5 rounded-lg bg-white text-rose-500 hover:bg-rose-500 hover:text-white transition-all shadow-sm opacity-0 group-hover:opacity-100 disabled:opacity-0"
+                             title="Cancel Booking"
+                           >
+                             <X size={14} />
+                           </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               ) : null}
 
               {selectedDay.blocks.length > 0 ? (
-                <div className="mt-4 space-y-2 text-xs">
-                  {selectedDay.blocks.map((block) => (
-                    <div key={block.id} className="rounded-lg border border-amber-200 bg-amber-50 px-2 py-2">
-                      <p className="font-bold text-amber-800">{block.slotLabel === "*" ? "Full Day" : block.slotLabel}</p>
-                      <p className="text-amber-700">{block.reason}</p>
-                      <button
-                        type="button"
-                        disabled={!hasAdminAccess || actionLoading}
-                        onClick={() => handleUnblockSlot(block.id)}
-                        className="mt-1 rounded-md bg-white px-2 py-1 font-bold text-amber-700 disabled:opacity-50"
-                      >
-                        Unblock
-                      </button>
-                    </div>
-                  ))}
+                <div className="mt-6 space-y-3">
+                  <h4 className="text-[10px] font-bold text-amber-600 uppercase tracking-widest flex items-center gap-2">
+                    <ShieldCheck size={12} /> Blocked Slots (Hold)
+                  </h4>
+                  <div className="space-y-2">
+                    {selectedDay.blocks.map((block) => (
+                      <div key={block.id} className="group relative rounded-xl border border-amber-200 bg-amber-50/30 p-3 transition-all hover:bg-amber-50">
+                        <div className="flex items-center justify-between gap-3">
+                           <div>
+                              <p className="text-xs font-bold text-amber-900">{block.slotLabel === "*" ? "Full Day" : block.slotLabel}</p>
+                              <p className="text-[9px] text-amber-600/60 font-semibold uppercase tracking-tighter mt-0.5">{block.reason || "Manual Hold"}</p>
+                           </div>
+                           <button 
+                             type="button"
+                             disabled={!hasAdminAccess || actionLoading}
+                             onClick={() => handleUnblockSlot(block.id)}
+                             className="px-2.5 py-1.5 rounded-lg bg-white text-amber-600 text-[10px] font-bold uppercase tracking-wider hover:bg-amber-600 hover:text-white transition-all shadow-sm disabled:opacity-50"
+                           >
+                             Unblock
+                           </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               ) : null}
+
+              {dayAvailability.length > 0 && (
+                <div className="mt-8 border-t border-slate-100 pt-6">
+                  <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                    <Clock size={12} /> Full Day Slot Manager
+                  </h4>
+                  <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                    {dayAvailability.map((slot) => {
+                      const isBooked = slot.status === "BOOKED";
+                      const isBlocked = slot.status === "BLOCKED";
+                      const isAvailable = slot.status === "AVAILABLE";
+                      
+                      return (
+                        <div key={slot.label} className="flex items-center justify-between gap-3 p-2.5 rounded-xl bg-slate-50/50 hover:bg-slate-50 border border-transparent hover:border-slate-100 transition-all">
+                           <div className="flex items-center gap-3">
+                              <div className={`w-1.5 h-1.5 rounded-full ${isAvailable ? 'bg-emerald-400' : isBooked ? 'bg-blue-400' : 'bg-amber-400'}`} />
+                              <span className="text-[11px] font-bold text-slate-700">{slot.label}</span>
+                           </div>
+                           
+                           {isAvailable ? (
+                             <button
+                               type="button"
+                               onClick={() => handleQuickHold(slot.label)}
+                               disabled={!hasAdminAccess || actionLoading}
+                               className="text-[10px] font-bold text-emerald-600 hover:bg-emerald-600 hover:text-white px-3 py-1.5 rounded-lg border border-emerald-200 bg-white transition-all uppercase tracking-wider shadow-sm"
+                             >
+                               Hold Slot
+                             </button>
+                           ) : (
+                             <span className={`text-[9px] font-bold uppercase tracking-tighter px-2 py-1 rounded-md border ${isBooked ? "bg-blue-50 border-blue-100 text-blue-700" : "bg-amber-50 border-amber-100 text-amber-700"}`}>
+                               {slot.status}
+                             </span>
+                           )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </article>
           </div>
         ) : null}

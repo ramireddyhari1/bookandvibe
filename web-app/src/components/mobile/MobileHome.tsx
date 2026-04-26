@@ -15,6 +15,7 @@ import { fetchApi } from "@/lib/api";
 import Image from "next/image";
 import { useSocket } from "@/context/SocketContext";
 import LiveMatchCard from "./LiveMatchCard";
+import PremiumLoader from "@/components/ui/PremiumLoader";
 
 interface Event {
   id: string;
@@ -190,20 +191,20 @@ const ALL_SPORTS = [
 const PROMO_BANNERS = [
   {
     id: "promo-1",
-    gradient: "linear-gradient(135deg, #FF7A00, #FFB800, #FACC15)",
-    title: "DON'T JUST PLAY!",
-    subTitle: "DOMINATE!",
-    meta: "Best Gear | Fast Delivery | Wide Variety",
-    ctaText: "Shop Now - Min 40% Off",
+    gradient: "linear-gradient(135deg, #00A63E, #059669)",
+    title: "PREMIUM TURFS",
+    subTitle: "BOOK LOCALLY",
+    meta: "Instant Confirmation • Top Ratings",
+    ctaText: "Find a Turf",
     bgImg: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?q=80&w=800",
   },
   {
     id: "promo-2",
-    gradient: "linear-gradient(135deg, #1E1B4B, #312E81, #4F46E5)",
-    title: "PLAY FEARLESS!",
-    subTitle: "ROCKET GEAR",
-    meta: "Protect Your Game Daily",
-    ctaText: "Explore Collection",
+    gradient: "linear-gradient(135deg, #1E293B, #0F172A)",
+    title: "TEAM EVENTS",
+    subTitle: "CORPORATE PLAY",
+    meta: "Book bulk hours & tournaments",
+    ctaText: "Enquire Now",
     bgImg: "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?q=80&w=800",
   },
 ];
@@ -222,7 +223,7 @@ const FALLBACK_EVENTS = [
     title: "Dil Se - DSP Special Telugu Jamming",
     venue: "Throwback, Kavuri Hills",
     category: "Live Music",
-    date: "2026-04-19",
+    date: "2026-05-19",
     price: 349,
     images: JSON.stringify(["https://d3pmsbscv4kwdi.cloudfront.net/events/1775570542079-384f5959f4eefd59.jpg"]),
   },
@@ -233,7 +234,7 @@ const FALLBACK_EVENTS = [
     category: "Punjabi Pop",
     date: "2026-11-15",
     price: 3999,
-    images: JSON.stringify(["https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Diljit_Dosanjh_at_the_launch_of_his_new_film_Super_Singh_%281%29_%28cropped%29.jpg/640px-Diljit_Dosanjh_at_the_launch_of_his_new_film_Super_Singh_%281%29_%28cropped%29.jpg"]),
+    images: JSON.stringify(["https://images.unsplash.com/photo-1598387993441-a364f854c3e1?q=80&w=800"]),
   },
   {
     id: "e-3",
@@ -249,7 +250,7 @@ const FALLBACK_EVENTS = [
     title: "Coldplay: Music Of The Spheres World Tour",
     venue: "DY Patil Stadium, Navi Mumbai",
     category: "Rock / Pop",
-    date: "2026-01-18",
+    date: "2026-06-18",
     price: 8000,
     images: JSON.stringify(["https://i.scdn.co/image/ab6761610000e5eb989ed05e1f0570cc4726c2d3"]),
   },
@@ -269,7 +270,7 @@ const FALLBACK_EVENTS = [
     category: "EDM",
     date: "2026-10-04",
     price: 2000,
-    images: JSON.stringify(["https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Alan_Walker_%2842416801991%29.jpg/640px-Alan_Walker_%2842416801991%29.jpg"]),
+    images: JSON.stringify(["https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?q=80&w=1200"]),
   }
 ];
 
@@ -279,7 +280,7 @@ function HeroPosterCard({ event }: { event: Event }) {
   const statusLine = "Tickets selling fast!";
   return (
     <Link href={`/events/${event.id}`} className="block shrink-0 w-[85vw] sm:w-[320px] snap-center">
-      <div className="relative w-full aspect-[3.5/4.5] rounded-[36px] overflow-hidden group shadow-2xl shadow-orange-900/20">
+      <div className="relative w-full aspect-[3.5/4.5] rounded-[24px] overflow-hidden group shadow-xl">
         <motion.img 
           src={getEventImage(event.images)} 
           alt={event.title} 
@@ -287,42 +288,42 @@ function HeroPosterCard({ event }: { event: Event }) {
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0F0A1F] via-[#0F0A1F]/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
         
         {/* Top Badges */}
-        <div className="absolute top-6 left-6 right-6 flex justify-between items-center">
-          <div className="bg-white/10 backdrop-blur-md border border-white/20 px-3 py-1 rounded-full">
-            <span className="text-white text-[10px] font-black tracking-[0.1em] uppercase">FEATURED</span>
+        <div className="absolute top-4 right-4 flex justify-end">
+          <div className="w-8 h-8 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center shadow-sm">
+            <Bookmark size={14} className="text-white" />
           </div>
         </div>
 
         {/* Content Area */}
-        <div className="absolute bottom-0 left-0 right-0 p-7">
+        <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/90 via-black/60 to-transparent">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="space-y-3"
+            className="space-y-2"
           >
-            <div className="flex items-center gap-2">
-              <span className="text-[#FFD700] text-[11px] font-black tracking-widest uppercase flex items-center gap-1.5 bg-[#FFD700]/10 px-2 py-0.5 rounded border border-[#FFD700]/20">
-                <Sparkles size={10} fill="#FFD700" /> {statusLine}
+            <div className="flex items-center gap-2 mb-1">
+              <span className="bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm uppercase tracking-wider">
+                {event.category}
               </span>
             </div>
             
-            <h3 className="text-[26px] font-bold text-white leading-tight tracking-tight drop-shadow-md italic">
+            <h3 className="text-[22px] font-bold text-white leading-[1.1] tracking-tight">
               {event.title}
             </h3>
             
-            <div className="flex items-center gap-3 text-white/70 text-[13px] font-medium">
-              <div className="flex items-center gap-1">
+            <div className="flex items-center gap-3 text-white/80 text-[13px] font-medium mt-2">
+              <div className="flex items-center gap-1.5">
                 <CalendarDays size={14} className="text-orange-400" />
                 <span>{new Date(event.date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</span>
               </div>
               <span className="w-1 h-1 rounded-full bg-white/30" />
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1.5">
                 <MapPin size={14} className="text-orange-400" />
-                <span className="max-w-[120px] truncate">{event.venue}</span>
+                <span className="max-w-[140px] truncate">{event.venue}</span>
               </div>
             </div>
           </motion.div>
@@ -404,7 +405,7 @@ function SectionEventCard({ event }: { event: Event }) {
   const formatCurrency = (v: number) => `₹${new Intl.NumberFormat("en-IN").format(v || 0)}`;
   return (
     <Link href={`/events/${event.id}`} className="block shrink-0 w-[65vw] max-w-[240px] snap-start">
-      <div className="relative w-full aspect-[3/4] rounded-[28px] overflow-hidden bg-white shadow-md border border-gray-100">
+      <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-white shadow-sm border border-gray-100">
         <img src={getEventImage(event.images)} alt={event.title} className="absolute inset-0 w-full h-[60%] object-cover" />
         <div className="absolute top-[60%] bottom-0 left-0 right-0 p-4 bg-white flex flex-col justify-end">
           <p className="text-orange-500 text-[12px] font-bold tracking-wider mb-1.5">
@@ -416,7 +417,7 @@ function SectionEventCard({ event }: { event: Event }) {
                <MapPin size={12} className="text-gray-400 shrink-0" />
                <span className="text-gray-500 text-[12px] truncate">{event.venue}</span>
              </div>
-             <span className="text-gray-900 text-[14px] font-black">{formatCurrency(event.price)}</span>
+             <span className="text-gray-900 text-[14px] font-bold">{formatCurrency(event.price)}</span>
           </div>
         </div>
       </div>
@@ -437,18 +438,22 @@ function GridEventCard({ event }: { event: Event }) {
   return (
     <Link href={`/events/${event.id}`} className="block">
       <div className="w-full">
-        <div className="relative w-full aspect-[4/5] rounded-[24px] overflow-hidden bg-gray-100 border border-gray-200/50">
+        <div className="relative w-full aspect-[4/5] rounded-[20px] overflow-hidden bg-gray-100 shadow-sm">
           <img src={getEventImage(event.images)} alt={event.title} className="w-full h-full object-cover" />
-          <div className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-white/90 flex items-center justify-center shadow-sm">
-            <Bookmark size={16} className="text-gray-600" />
+          <div className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/10">
+            <Bookmark size={14} className="text-white" />
           </div>
         </div>
-        <div className="mt-2.5">
-          <h4 className="text-gray-900 text-[15px] font-bold leading-5 line-clamp-2">{event.title}</h4>
-          <p className="text-gray-500 text-[12px] mt-1">
-            {new Date(event.date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}, 12:00 AM onwards
+        <div className="mt-3 px-1">
+          <h4 className="text-gray-900 text-[15px] font-bold leading-snug line-clamp-2 tracking-tight">{event.title}</h4>
+          <p className="text-gray-500 text-[13px] mt-1 font-medium flex items-center gap-1.5">
+            <CalendarDays size={12} className="text-gray-400"/>
+            {new Date(event.date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
           </p>
-          <p className="text-gray-500 text-[12px] mt-0.5 truncate">{event.venue}</p>
+          <p className="text-gray-500 text-[13px] mt-0.5 truncate flex items-center gap-1.5">
+            <MapPin size={12} className="text-gray-400"/>
+            {event.venue}
+          </p>
           {tags.length > 0 && (
             <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
               {tags.map((tag: string, idx: number) => (
@@ -473,8 +478,8 @@ function FacilityCard({ facility }: { facility: Facility }) {
           <img src={facility.image} alt={facility.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-60" />
           <div className="absolute top-3 right-3 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/30 flex items-baseline gap-[2px] shadow-sm">
-            <span className="text-white text-[11px] font-extrabold tracking-tight">₹</span>
-            <span className="text-white text-[14px] font-black tracking-tight">{facility.pricePerHour}</span>
+            <span className="text-white text-[11px] font-bold tracking-tight">₹</span>
+            <span className="text-white text-[14px] font-bold tracking-tight">{facility.pricePerHour}</span>
             <span className="text-white/80 text-[10px] font-bold">/hr</span>
           </div>
           
@@ -483,11 +488,11 @@ function FacilityCard({ facility }: { facility: Facility }) {
                <Star size={10} className="text-yellow-400 fill-yellow-400" />
                <span className="text-white text-[11px] font-bold">{facility.rating}</span>
              </div>
-             <span className="bg-[#00A63E] px-2 py-1 rounded-lg text-white text-[10px] font-black uppercase tracking-wider">{facility.type}</span>
+             <span className="bg-[#00A63E] px-2 py-1 rounded-lg text-white text-[10px] font-bold uppercase tracking-wider">{facility.type}</span>
           </div>
         </div>
         <div className="mt-3 px-1">
-          <h4 className="text-gray-900 text-[17px] font-black tracking-tight truncate">{facility.name}</h4>
+          <h4 className="text-gray-900 text-[17px] font-bold tracking-tight truncate">{facility.name}</h4>
           <div className="flex items-center gap-1.5 mt-1 text-gray-500">
             <MapPin size={12} />
             <p className="text-[13px] font-medium truncate">{facility.location}</p>
@@ -499,69 +504,11 @@ function FacilityCard({ facility }: { facility: Facility }) {
 }
 
 function LogoLoader({ isGameHub }: { isGameHub: boolean }) {
-  const finalLogo = isGameHub ? "/bv-green.png" : "/bv-orange.png";
-  const personImage = isGameHub ? "/game_virat_green.png" : "/vibe_artist_orange.png";
-  const primaryColor = isGameHub ? "#00A63E" : "#D53F17"; 
-  const bgColor = isGameHub ? "radial-gradient(circle at center, #F0FDF4 0%, #FFFFFF 100%)" : "radial-gradient(circle at center, #fff7ed 0%, #ffffff 100%)";
+  const accentColor = isGameHub ? "#00A63E" : "#D53F17";
 
   return (
-    <div className="min-h-screen flex items-center justify-center overflow-hidden" style={{ background: bgColor }}>
-      
-      {/* Ambient Glow */}
-      <motion.div
-        className="absolute w-40 h-40 rounded-full"
-        style={{ backgroundColor: primaryColor, filter: "blur(40px)" }}
-        animate={{ scale: [1, 1.3, 1], opacity: [0.15, 0.3, 0.15] }}
-        transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-      />
-
-      {/* The Loader Container - Perfect Circle Avatar Style */}
-      <div 
-        className="relative w-36 h-36 rounded-full overflow-hidden shadow-2xl z-10 flex items-center justify-center"
-        style={{ border: `4px solid ${primaryColor}40`, backgroundColor: "#f8fafc" }}
-      >
-        
-        {/* Layer 1: Contextual Image */}
-        <motion.div 
-          className="absolute inset-0"
-          animate={{ scale: [1, 1.15, 1] }}
-          transition={{ duration: 2.2, repeat: Infinity, ease: "linear" }}
-        >
-          <img src={personImage} alt="Context" className="w-full h-full object-cover" />
-        </motion.div>
-
-        {/* Layer 2: The Burst Wipe (White Canvas) */}
-        <motion.div
-          className="absolute w-4 h-4 rounded-full bg-white z-10"
-          animate={{
-            scale: [0, 0, 18, 18, 0, 0]
-          }}
-          transition={{
-            duration: 2.2,
-            ease: "easeInOut",
-            repeat: Infinity,
-            times: [0, 0.3, 0.45, 0.8, 0.95, 1]
-          }}
-        />
-
-        {/* Layer 3: Final Brand Logo Pop */}
-        <motion.div
-          className="absolute inset-0 z-20 flex items-center justify-center p-5"
-          animate={{
-            opacity: [0, 0, 1, 1, 0, 0],
-            scale: [0, 0, 1.1, 1, 0, 0]
-          }}
-          transition={{
-            duration: 2.2,
-            ease: "backOut", // Bouncy spring pop
-            repeat: Infinity,
-            times: [0, 0.35, 0.45, 0.8, 0.9, 1]
-          }}
-        >
-          <img src={finalLogo} alt="Logo" className="w-full h-full object-contain" />
-        </motion.div>
-
-      </div>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-white">
+      <PremiumLoader size="lg" color={accentColor} text="Book & Vibe" />
     </div>
   );
 }
@@ -617,6 +564,11 @@ export default function MobileHome() {
 
   const filteredEvents = useMemo(() => {
     let list = events;
+    
+    // Hide past events (safety check)
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    list = list.filter(e => new Date(e.date) >= today);
     
     // Filter by Search Query
     if (query.trim()) {
@@ -736,9 +688,9 @@ export default function MobileHome() {
                 onClick={() => setIsLocationOpen(true)}
               >
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-black text-[#00A63E]/60 uppercase tracking-widest leading-none mb-0.5">CITY</span>
+                  <span className="text-[10px] font-bold text-[#00A63E]/60 uppercase tracking-wider leading-none mb-0.5">CITY</span>
                   <div className="flex items-center gap-1">
-                    <span className="text-gray-900 text-[15px] font-black tracking-tight">{selectedLocation.city}</span>
+                    <span className="text-gray-900 text-[15px] font-bold tracking-tight">{selectedLocation.city}</span>
                     <ChevronDown size={14} className="text-[#00A63E]" />
                   </div>
                 </div>
@@ -751,7 +703,7 @@ export default function MobileHome() {
                 <div className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-[#00A63E] border-2 border-white" />
               </Link>
               <Link href="/profile" className="w-10 h-10 rounded-full bg-[#00A63E] flex items-center justify-center border-2 border-emerald-200 shadow-sm">
-                <span className="text-white text-[16px] font-black uppercase">{user?.name?.charAt(0) || "U"}</span>
+                <span className="text-white text-[16px] font-bold uppercase">{user?.name?.charAt(0) || "U"}</span>
               </Link>
             </div>
           </div>
@@ -773,9 +725,9 @@ export default function MobileHome() {
                 onClick={() => setIsLocationOpen(true)}
               >
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-black text-orange-500/60 uppercase tracking-widest leading-none mb-0.5">CITY</span>
+                  <span className="text-[10px] font-bold text-orange-500/60 uppercase tracking-wider leading-none mb-0.5">CITY</span>
                   <div className="flex items-center gap-1">
-                    <span className="text-gray-900 text-[15px] font-black tracking-tight">{selectedLocation.city}</span>
+                    <span className="text-gray-900 text-[15px] font-bold tracking-tight">{selectedLocation.city}</span>
                     <ChevronDown size={14} className="text-orange-300" />
                   </div>
                 </div>
@@ -788,7 +740,7 @@ export default function MobileHome() {
                 <div className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-orange-500 border-2 border-white" />
               </Link>
               <Link href="/profile" className="w-10 h-10 rounded-full bg-orange-600 flex items-center justify-center border-2 border-orange-200 shadow-sm">
-                <span className="text-white text-[16px] font-black uppercase">{user?.name?.charAt(0) || "U"}</span>
+                <span className="text-white text-[16px] font-bold uppercase">{user?.name?.charAt(0) || "U"}</span>
               </Link>
             </div>
           </div>
@@ -893,8 +845,7 @@ export default function MobileHome() {
             onClick={() => handleTabChange("events")}
             className="relative z-10 flex-1 h-full flex items-center justify-center gap-1.5 transition-all duration-300"
           >
-            <span className="text-[15px] font-extrabold" style={{ color: activeTab === "events" ? "#FFFFFF" : "#64748B" }}>✦</span>
-            <span className="text-[15px] font-extrabold" style={{ color: activeTab === "events" ? "#FFFFFF" : "#64748B" }}>Events</span>
+            <span className="text-[14px] font-bold uppercase tracking-wide" style={{ color: activeTab === "events" ? "#FFFFFF" : "#64748B" }}>Events</span>
           </button>
 
           {/* GameHub Button */}
@@ -902,8 +853,7 @@ export default function MobileHome() {
             onClick={() => handleTabChange("gamehub")}
             className="relative z-10 flex-1 h-full flex items-center justify-center gap-1.5 transition-all duration-300"
           >
-            <span className="text-[15px] font-extrabold" style={{ color: activeTab === "gamehub" ? "#FFFFFF" : "#64748B" }}>✦</span>
-            <span className="text-[15px] font-extrabold uppercase tracking-wide" style={{ color: activeTab === "gamehub" ? "#FFFFFF" : "#64748B" }}>GameHub</span>
+            <span className="text-[14px] font-bold uppercase tracking-wide" style={{ color: activeTab === "gamehub" ? "#FFFFFF" : "#64748B" }}>GameHub</span>
           </button>
         </div>
       </div>
@@ -913,17 +863,12 @@ export default function MobileHome() {
         <>
           {/* For You Section */}
           <div className="mb-10">
-            <div className="flex items-center justify-between px-5 mb-5 mt-2">
+            <div className="flex items-end justify-between px-5 mb-5 mt-2">
               <div className="flex flex-col">
-                <span className="text-[#D53F17] text-[11px] font-black tracking-[0.2em] uppercase mb-1">CURATED FOR YOU</span>
-                <h2 className="text-gray-900 text-[26px] font-black tracking-tight leading-none">Top Picks</h2>
+                <h2 className="text-gray-900 text-[24px] font-bold tracking-tight leading-tight mb-0.5">Top Events</h2>
+                <p className="text-gray-500 text-[13px] font-medium">The best experiences in your city</p>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="bg-orange-50 px-3 py-1.5 rounded-2xl border border-orange-100 flex items-center gap-2 group active:scale-95 transition-transform shadow-sm">
-                  <span className="text-orange-600 text-[12px] font-bold">Top</span>
-                  <Zap size={14} className="text-[#D53F17] fill-orange-500" />
-                </div>
-              </div>
+              <Link href="/events" className="text-orange-600 text-[14px] font-bold pb-1 hover:text-orange-700 transition-colors">See all</Link>
             </div>
             
             <PosterBannerCarousel events={events.slice(0, 5)} />
@@ -932,9 +877,9 @@ export default function MobileHome() {
           {/* Trending Section */}
           {musicEvents.length > 0 && (
             <div className="mb-8">
-              <div className="flex items-center justify-between px-5 mb-4">
-                <h2 className="text-white text-[20px] font-bold tracking-tight">Trending in Events</h2>
-                <Link href="/events" className="text-[#D53F17] text-[14px] font-bold">See all</Link>
+              <div className="flex items-center justify-between px-5 mb-4 mt-2">
+                <h2 className="text-gray-900 text-[20px] font-bold tracking-tight">Trending</h2>
+                <Link href="/events" className="text-orange-600 text-[14px] font-bold hover:text-orange-700 transition-colors">See all</Link>
               </div>
               <div className="flex gap-4 overflow-x-auto px-5 scroll-px-5 snap-x scrollbar-hide">
                 {events.slice(0, 6).map(ev => (
@@ -945,9 +890,9 @@ export default function MobileHome() {
               {/* Spotlight Banner */}
               {posterEvent && (
                 <Link href={`/events/${posterEvent.id}`} className="block mx-5 mt-5">
-                  <div className="relative h-[160px] rounded-[18px] overflow-hidden border border-orange-500/20">
+                  <div className="relative h-[160px] rounded-[18px] overflow-hidden border border-gray-100 shadow-sm">
                     <img src={getEventImage(posterEvent.images)} alt={posterEvent.title} className="absolute inset-0 w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900/72 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                     <div className="absolute left-4 right-4 bottom-3.5">
                       <span className="inline-block px-2 py-1 rounded-full bg-orange-600/95 text-white text-[10px] font-bold tracking-wide mb-1.5">SPOTLIGHT</span>
                       <h3 className="text-white text-[19px] font-bold truncate">{posterEvent.title}</h3>
@@ -961,11 +906,11 @@ export default function MobileHome() {
 
           {/* All Events Grid */}
           <div className="py-4 mb-20">
-            <div className="flex items-center justify-between px-5 mb-4">
-              <h2 className="text-gray-900 text-[20px] font-bold tracking-tight">All Events</h2>
+            <div className="flex items-center justify-between px-5 mb-5 mt-2">
+              <h2 className="text-gray-900 text-[24px] font-bold tracking-tight">All Events</h2>
             </div>
             {/* Filter Pills */}
-            <div className="flex gap-2 overflow-x-auto px-5 scroll-px-5 mb-4 scrollbar-hide">
+            <div className="flex gap-2.5 overflow-x-auto px-5 scroll-px-5 mb-5 scrollbar-hide">
               {["Filters", "Date", "Today", "Tomorrow"].map((label, i) => (
                 <button 
                   key={label} 
@@ -1026,11 +971,11 @@ export default function MobileHome() {
                   <img src={banner.bgImg} alt="" className="absolute inset-0 w-full h-full object-cover opacity-60" />
                   <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
                   <div className="relative z-10 flex flex-col justify-center items-start h-full p-5 w-[85%]">
-                    <h3 className="text-white text-[14px] font-black uppercase tracking-widest leading-none mb-1 opacity-90">{banner.title}</h3>
-                    <h4 className="text-white text-[28px] font-black italic leading-[1.1] tracking-tight mb-2">{banner.subTitle}</h4>
+                    <h3 className="text-white text-[14px] font-bold uppercase tracking-wider leading-none mb-1 opacity-90">{banner.title}</h3>
+                    <h4 className="text-white text-[28px] font-bold italic leading-[1.1] tracking-tight mb-2">{banner.subTitle}</h4>
                     <p className="text-gray-300 text-[11px] font-medium tracking-wide mb-4">{banner.meta}</p>
                     <div className="bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full active:scale-95 transition-transform">
-                      <span className="text-white text-[11px] font-black uppercase tracking-wider">{banner.ctaText}</span>
+                      <span className="text-white text-[11px] font-bold uppercase tracking-wider">{banner.ctaText}</span>
                     </div>
                   </div>
                 </div>
@@ -1067,21 +1012,13 @@ export default function MobileHome() {
                       whileTap={{ scale: 0.95 }}
                       className={`relative w-full aspect-square rounded-[22px] overflow-hidden flex items-center justify-center p-2.5 transition-all duration-300 ${
                         !isMore && selectedSportCategory?.toLowerCase() === cat.title.toLowerCase() 
-                        ? 'border-[3px] border-[#00A63E] ring-4 ring-[#00A63E]/10 shadow-lg' 
-                        : 'border border-white/80'
+                        ? 'border-2 border-[#00A63E] bg-emerald-50 shadow-sm' 
+                        : 'bg-white border border-gray-100 shadow-sm hover:border-gray-300'
                       }`}
-                      style={{
-                        background: "linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.65))",
-                        backdropFilter: "blur(12px)",
-                        WebkitBackdropFilter: "blur(12px)",
-                        boxShadow: !isMore && selectedSportCategory?.toLowerCase() === cat.title.toLowerCase() 
-                          ? `0 12px 30px -4px ${cat.color}40` 
-                          : `0 8px 24px -6px ${cat.color}25, inset 0 2px 4px rgba(255,255,255,0.7)`
-                      }}
                     >
                       {/* Subtle glow behind the icon */}
                       <div 
-                        className="absolute inset-0 opacity-20 blur-xl transition-opacity duration-300 group-hover:opacity-40"
+                        className="absolute inset-0 opacity-10 transition-opacity duration-300 group-hover:opacity-20 rounded-[22px]"
                         style={{ background: cat.color }}
                       />
                       
@@ -1090,7 +1027,7 @@ export default function MobileHome() {
                         {cat.icon("w-7 h-7")}
                       </div>
                     </motion.div>
-                    <span className="text-gray-900 text-[11px] font-black tracking-tight text-center">{cat.title}</span>
+                    <span className="text-gray-900 text-[11px] font-bold tracking-tight text-center">{cat.title}</span>
                   </div>
                 );
               })}
@@ -1102,7 +1039,7 @@ export default function MobileHome() {
               <div className="flex items-center justify-between px-5 mb-4">
                 <div className="flex items-center gap-2">
                   <h2 className="text-[#00A63E] text-[20px] font-bold tracking-tight">Live Matches</h2>
-                  <div className="bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md animate-pulse">LIVE</div>
+                  <div className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md animate-pulse">LIVE</div>
                 </div>
               </div>
               <div className="flex gap-4 overflow-x-auto px-5 scroll-px-5 snap-x scrollbar-hide pb-2">
@@ -1141,28 +1078,20 @@ export default function MobileHome() {
           </div>
 
           {/* Host a Match Banner */}
-          <div className="mx-5 mb-8 rounded-[28px] overflow-hidden shadow-xl">
-            <div className="bg-gray-900 p-6 relative overflow-hidden flex items-center">
-              {/* Decorative Mesh Background */}
-              <div className="absolute top-[-50%] right-[-20%] w-[150%] h-[200%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#00A63E]/30 via-gray-900/0 to-transparent blur-2xl" />
-              <div className="absolute bottom-[-50%] left-[-20%] w-[100%] h-[150%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-500/20 via-gray-900/0 to-transparent blur-2xl" />
-              
+          <div className="mx-5 mb-8 rounded-[24px] overflow-hidden shadow-sm border border-gray-100">
+            <div className="bg-[#111827] p-6 relative overflow-hidden flex items-center">
               <div className="relative z-10 flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="flex h-2 w-2 relative">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00A63E] opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00A63E]"></span>
-                  </span>
-                  <span className="text-[#00A63E] text-[10px] font-black tracking-widest uppercase">Community</span>
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className="w-2 h-2 rounded-full bg-[#00A63E]"></span>
+                  <span className="text-[#00A63E] text-[11px] font-bold tracking-wider uppercase">Community Matches</span>
                 </div>
-                <h3 className="text-white text-[22px] font-black leading-tight tracking-tight mb-1">Can&apos;t find a game?</h3>
-                <p className="text-gray-400 text-[13px] font-medium mb-5 max-w-[80%]">Host a match and invite players nearby to join the action.</p>
-                <button className="bg-[#00A63E] text-white px-5 py-3 rounded-2xl flex items-center gap-2 active:scale-95 transition-transform shadow-[0_4px_20px_rgba(0,166,62,0.4)]">
-                  <span className="text-[13px] font-black tracking-wide">HOST A MATCH</span>
-                  <ArrowRight size={14} strokeWidth={3} />
+                <h3 className="text-white text-[20px] font-bold leading-tight mb-1">Looking for players?</h3>
+                <p className="text-gray-400 text-[13px] font-medium mb-5 max-w-[85%]">Host a match and invite local players to join your game.</p>
+                <button className="bg-[#00A63E] text-white px-5 py-2.5 rounded-xl flex items-center gap-2 active:scale-95 transition-transform hover:bg-[#009035]">
+                  <span className="text-[13px] font-bold tracking-wide">Host Match</span>
+                  <ArrowRight size={16} strokeWidth={2.5} />
                 </button>
               </div>
-              <Trophy size={80} className="absolute right-[-10px] bottom-[-10px] text-white/5 rotate-12" strokeWidth={1.5} />
             </div>
           </div>
 
@@ -1174,9 +1103,9 @@ export default function MobileHome() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                 
                 <div className="absolute top-4 left-4">
-                  <div className="bg-white/20 backdrop-blur-md border border-white/30 px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">
-                    <Sparkles size={12} className="text-yellow-400" />
-                    <span className="text-white text-[10px] font-black tracking-widest uppercase">Featured Venue</span>
+                  <div className="bg-black/40 backdrop-blur-md border border-white/10 px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-400"></span>
+                    <span className="text-white text-[10px] font-bold tracking-wider uppercase">Featured Venue</span>
                   </div>
                 </div>
 
@@ -1184,7 +1113,7 @@ export default function MobileHome() {
                   <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-4 rounded-[20px]">
                     <div className="flex justify-between items-end">
                       <div>
-                        <h3 className="text-white text-[20px] font-black tracking-tight leading-tight">{filteredFacilities[0].name}</h3>
+                        <h3 className="text-white text-[20px] font-bold tracking-tight leading-tight">{filteredFacilities[0].name}</h3>
                         <div className="flex items-center gap-1.5 mt-1">
                           <MapPin size={12} className="text-gray-300" />
                           <p className="text-gray-300 text-[13px] font-medium">{filteredFacilities[0].location}</p>
@@ -1224,7 +1153,7 @@ export default function MobileHome() {
               {/* Header */}
               <div className="p-6 border-b border-gray-100 flex items-center justify-between">
                 <div>
-                  <h3 className="text-[20px] font-black text-gray-900 tracking-tight">Change Location</h3>
+                  <h3 className="text-[20px] font-bold text-gray-900 tracking-tight">Change Location</h3>
                   <p className="text-[13px] text-gray-500 font-medium mt-0.5">Select a city to see events near you</p>
                 </div>
                 <button 
@@ -1268,7 +1197,7 @@ export default function MobileHome() {
                     )}
                   </div>
                   <div className="text-left">
-                    <p className="text-[15px] font-black text-orange-600 uppercase tracking-wide">
+                    <p className="text-[15px] font-bold text-orange-600 uppercase tracking-wide">
                       {isDetecting ? "Detecting..." : "Detect my location"}
                     </p>
                     <p className="text-[12px] text-gray-500 font-medium">Using GPS Device</p>
@@ -1332,10 +1261,10 @@ export default function MobileHome() {
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsFilterOpen(false)} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[1000]" />
             <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} transition={{ type: "spring", damping: 25, stiffness: 200 }} className="fixed bottom-0 left-0 right-0 bg-white rounded-t-[32px] z-[1001] p-6 pb-10 shadow-2xl">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-[20px] font-black text-gray-900 tracking-tight">Filters</h3>
+                <h3 className="text-[20px] font-bold text-gray-900 tracking-tight">Filters</h3>
                 <button onClick={() => { setSelectedCategory("All"); setIsFilterOpen(false); }} className="text-orange-600 text-[14px] font-bold">Reset</button>
               </div>
-              <p className="text-[14px] font-bold text-gray-400 uppercase tracking-widest mb-4">Categories</p>
+              <p className="text-[14px] font-bold text-gray-400 uppercase tracking-wider mb-4">Categories</p>
               <div className="flex flex-wrap gap-2 mb-8">
                 {["All", "Music", "Comedy", "Workshops", "Arts", "Sports", "Festivals"].map(cat => (
                   <button
@@ -1362,7 +1291,7 @@ export default function MobileHome() {
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsDateFilterOpen(false)} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[1000]" />
             <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} transition={{ type: "spring", damping: 25, stiffness: 200 }} className="fixed bottom-0 left-0 right-0 bg-white rounded-t-[32px] z-[1001] p-6 pb-10 shadow-2xl">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-[20px] font-black text-gray-900 tracking-tight">Select Date</h3>
+                <h3 className="text-[20px] font-bold text-gray-900 tracking-tight">Select Date</h3>
                 <button onClick={() => { setSelectedDate(null); setIsDateFilterOpen(false); }} className="text-orange-600 text-[14px] font-bold">Reset</button>
               </div>
               <div className="space-y-2 mb-8">
@@ -1410,7 +1339,7 @@ export default function MobileHome() {
             >
               <div className="p-6 border-b border-gray-100 flex items-center justify-between">
                 <div>
-                  <h3 className="text-[20px] font-black text-gray-900 tracking-tight">All Sports</h3>
+                  <h3 className="text-[20px] font-bold text-gray-900 tracking-tight">All Sports</h3>
                   <p className="text-[13px] text-gray-500 font-medium mt-0.5">Explore activities in your area</p>
                 </div>
                 <button 
@@ -1455,7 +1384,7 @@ export default function MobileHome() {
                           {sport.icon("w-8 h-8")}
                         </div>
                       </div>
-                      <span className="text-gray-900 text-[13px] font-black tracking-tight text-center">{sport.title}</span>
+                      <span className="text-gray-900 text-[13px] font-bold tracking-tight text-center">{sport.title}</span>
                     </button>
                   ))}
                 </div>

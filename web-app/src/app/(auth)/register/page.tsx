@@ -95,9 +95,9 @@ export default function RegisterPage() {
         <div className="absolute bottom-12 left-12 opacity-80">
            <div className="flex items-center gap-2 mb-2 text-rose-400">
               <Music size={18} />
-              <span className="font-bold tracking-widest uppercase text-xs">Live Events & Concerts</span>
+              <span className="font-bold tracking-wider uppercase text-xs">Live Events & Concerts</span>
            </div>
-           <h3 className="text-4xl lg:text-5xl font-black text-white/10 tracking-tighter">THE VIBE.</h3>
+           <h3 className="text-4xl lg:text-5xl font-bold text-white/10 tracking-tighter">THE VIBE.</h3>
         </div>
       </div>
 
@@ -120,10 +120,10 @@ export default function RegisterPage() {
         {/* Subtle Watermark Copy */}
         <div className="absolute bottom-12 right-12 opacity-80 text-right flex flex-col items-end">
            <div className="flex items-center gap-2 mb-2 text-[#42B460]">
-              <span className="font-bold tracking-widest uppercase text-xs">Premium Courts</span>
+              <span className="font-bold tracking-wider uppercase text-xs">Premium Courts</span>
               <Zap size={18} />
            </div>
-           <h3 className="text-4xl lg:text-5xl font-black text-white/10 tracking-tighter">THE GAME.</h3>
+           <h3 className="text-4xl lg:text-5xl font-bold text-white/10 tracking-tighter">THE GAME.</h3>
         </div>
       </div>
 
@@ -147,7 +147,7 @@ export default function RegisterPage() {
           {error && (
             <div className="bg-red-50 border border-red-100 text-red-600 text-xs font-semibold p-3 rounded-lg mb-5 flex items-start gap-2.5">
               <div className="w-4 h-4 rounded-full bg-red-100 flex flex-shrink-0 items-center justify-center mt-0.5">
-                <span className="text-red-500 text-[10px] font-black">!</span>
+                <span className="text-red-500 text-[10px] font-bold">!</span>
               </div>
               {error}
             </div>
@@ -249,10 +249,13 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-rose-500 to-[#42B460] hover:opacity-90 text-white font-black uppercase tracking-wide text-[13px] py-3.5 rounded-xl transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 mt-2"
+              className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-rose-500 to-[#42B460] hover:opacity-90 text-white font-bold uppercase tracking-wide text-[13px] py-3.5 rounded-xl transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 mt-2"
             >
               {loading ? (
-                <Loader2 className="animate-spin" size={18} />
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <span>Authorizing</span>
+                </div>
               ) : (
                 "Create Account"
               )}

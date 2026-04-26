@@ -16497,12 +16497,14 @@ export namespace Prisma {
     rating: number | null
     reviewsCount: number | null
     pricePerHour: number | null
+    advancePercentage: number | null
   }
 
   export type GamehubFacilitySumAggregateOutputType = {
     rating: number | null
     reviewsCount: number | null
     pricePerHour: number | null
+    advancePercentage: number | null
   }
 
   export type GamehubFacilityMinAggregateOutputType = {
@@ -16530,7 +16532,9 @@ export namespace Prisma {
     battleModes: string | null
     slotTemplate: string | null
     availableSports: string | null
+    advancePercentage: number | null
     terms: string | null
+    mapLink: string | null
     createdAt: Date | null
     updatedAt: Date | null
     partnerId: string | null
@@ -16561,7 +16565,9 @@ export namespace Prisma {
     battleModes: string | null
     slotTemplate: string | null
     availableSports: string | null
+    advancePercentage: number | null
     terms: string | null
+    mapLink: string | null
     createdAt: Date | null
     updatedAt: Date | null
     partnerId: string | null
@@ -16592,7 +16598,9 @@ export namespace Prisma {
     battleModes: number
     slotTemplate: number
     availableSports: number
+    advancePercentage: number
     terms: number
+    mapLink: number
     createdAt: number
     updatedAt: number
     partnerId: number
@@ -16604,12 +16612,14 @@ export namespace Prisma {
     rating?: true
     reviewsCount?: true
     pricePerHour?: true
+    advancePercentage?: true
   }
 
   export type GamehubFacilitySumAggregateInputType = {
     rating?: true
     reviewsCount?: true
     pricePerHour?: true
+    advancePercentage?: true
   }
 
   export type GamehubFacilityMinAggregateInputType = {
@@ -16637,7 +16647,9 @@ export namespace Prisma {
     battleModes?: true
     slotTemplate?: true
     availableSports?: true
+    advancePercentage?: true
     terms?: true
+    mapLink?: true
     createdAt?: true
     updatedAt?: true
     partnerId?: true
@@ -16668,7 +16680,9 @@ export namespace Prisma {
     battleModes?: true
     slotTemplate?: true
     availableSports?: true
+    advancePercentage?: true
     terms?: true
+    mapLink?: true
     createdAt?: true
     updatedAt?: true
     partnerId?: true
@@ -16699,7 +16713,9 @@ export namespace Prisma {
     battleModes?: true
     slotTemplate?: true
     availableSports?: true
+    advancePercentage?: true
     terms?: true
+    mapLink?: true
     createdAt?: true
     updatedAt?: true
     partnerId?: true
@@ -16817,7 +16833,9 @@ export namespace Prisma {
     battleModes: string
     slotTemplate: string
     availableSports: string
+    advancePercentage: number
     terms: string | null
+    mapLink: string | null
     createdAt: Date
     updatedAt: Date
     partnerId: string | null
@@ -16867,7 +16885,9 @@ export namespace Prisma {
     battleModes?: boolean
     slotTemplate?: boolean
     availableSports?: boolean
+    advancePercentage?: boolean
     terms?: boolean
+    mapLink?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     partnerId?: boolean
@@ -16904,7 +16924,9 @@ export namespace Prisma {
     battleModes?: boolean
     slotTemplate?: boolean
     availableSports?: boolean
+    advancePercentage?: boolean
     terms?: boolean
+    mapLink?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     partnerId?: boolean
@@ -16936,7 +16958,9 @@ export namespace Prisma {
     battleModes?: boolean
     slotTemplate?: boolean
     availableSports?: boolean
+    advancePercentage?: boolean
     terms?: boolean
+    mapLink?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     partnerId?: boolean
@@ -16968,13 +16992,15 @@ export namespace Prisma {
     battleModes?: boolean
     slotTemplate?: boolean
     availableSports?: boolean
+    advancePercentage?: boolean
     terms?: boolean
+    mapLink?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     partnerId?: boolean
   }
 
-  export type GamehubFacilityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "type" | "location" | "venue" | "distance" | "rating" | "reviewsCount" | "pricePerHour" | "unit" | "priceRange" | "image" | "description" | "phone" | "openHours" | "status" | "pricingRules" | "amenities" | "features" | "tags" | "gallery" | "battleModes" | "slotTemplate" | "availableSports" | "terms" | "createdAt" | "updatedAt" | "partnerId", ExtArgs["result"]["gamehubFacility"]>
+  export type GamehubFacilityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "type" | "location" | "venue" | "distance" | "rating" | "reviewsCount" | "pricePerHour" | "unit" | "priceRange" | "image" | "description" | "phone" | "openHours" | "status" | "pricingRules" | "amenities" | "features" | "tags" | "gallery" | "battleModes" | "slotTemplate" | "availableSports" | "advancePercentage" | "terms" | "mapLink" | "createdAt" | "updatedAt" | "partnerId", ExtArgs["result"]["gamehubFacility"]>
   export type GamehubFacilityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     partner?: boolean | GamehubFacility$partnerArgs<ExtArgs>
     reviews?: boolean | GamehubFacility$reviewsArgs<ExtArgs>
@@ -17024,7 +17050,9 @@ export namespace Prisma {
       battleModes: string
       slotTemplate: string
       availableSports: string
+      advancePercentage: number
       terms: string | null
+      mapLink: string | null
       createdAt: Date
       updatedAt: Date
       partnerId: string | null
@@ -17480,7 +17508,9 @@ export namespace Prisma {
     readonly battleModes: FieldRef<"GamehubFacility", 'String'>
     readonly slotTemplate: FieldRef<"GamehubFacility", 'String'>
     readonly availableSports: FieldRef<"GamehubFacility", 'String'>
+    readonly advancePercentage: FieldRef<"GamehubFacility", 'Int'>
     readonly terms: FieldRef<"GamehubFacility", 'String'>
+    readonly mapLink: FieldRef<"GamehubFacility", 'String'>
     readonly createdAt: FieldRef<"GamehubFacility", 'DateTime'>
     readonly updatedAt: FieldRef<"GamehubFacility", 'DateTime'>
     readonly partnerId: FieldRef<"GamehubFacility", 'String'>
@@ -19172,11 +19202,15 @@ export namespace Prisma {
 
   export type GamehubBookingAvgAggregateOutputType = {
     totalAmount: number | null
+    advanceAmount: number | null
+    balanceAmount: number | null
     discount: number | null
   }
 
   export type GamehubBookingSumAggregateOutputType = {
     totalAmount: number | null
+    advanceAmount: number | null
+    balanceAmount: number | null
     discount: number | null
   }
 
@@ -19185,6 +19219,8 @@ export namespace Prisma {
     bookingDate: Date | null
     slotLabel: string | null
     totalAmount: number | null
+    advanceAmount: number | null
+    balanceAmount: number | null
     currency: string | null
     status: string | null
     paymentMethod: string | null
@@ -19203,6 +19239,8 @@ export namespace Prisma {
     bookingDate: Date | null
     slotLabel: string | null
     totalAmount: number | null
+    advanceAmount: number | null
+    balanceAmount: number | null
     currency: string | null
     status: string | null
     paymentMethod: string | null
@@ -19221,6 +19259,8 @@ export namespace Prisma {
     bookingDate: number
     slotLabel: number
     totalAmount: number
+    advanceAmount: number
+    balanceAmount: number
     currency: number
     status: number
     paymentMethod: number
@@ -19238,11 +19278,15 @@ export namespace Prisma {
 
   export type GamehubBookingAvgAggregateInputType = {
     totalAmount?: true
+    advanceAmount?: true
+    balanceAmount?: true
     discount?: true
   }
 
   export type GamehubBookingSumAggregateInputType = {
     totalAmount?: true
+    advanceAmount?: true
+    balanceAmount?: true
     discount?: true
   }
 
@@ -19251,6 +19295,8 @@ export namespace Prisma {
     bookingDate?: true
     slotLabel?: true
     totalAmount?: true
+    advanceAmount?: true
+    balanceAmount?: true
     currency?: true
     status?: true
     paymentMethod?: true
@@ -19269,6 +19315,8 @@ export namespace Prisma {
     bookingDate?: true
     slotLabel?: true
     totalAmount?: true
+    advanceAmount?: true
+    balanceAmount?: true
     currency?: true
     status?: true
     paymentMethod?: true
@@ -19287,6 +19335,8 @@ export namespace Prisma {
     bookingDate?: true
     slotLabel?: true
     totalAmount?: true
+    advanceAmount?: true
+    balanceAmount?: true
     currency?: true
     status?: true
     paymentMethod?: true
@@ -19392,6 +19442,8 @@ export namespace Prisma {
     bookingDate: Date
     slotLabel: string
     totalAmount: number
+    advanceAmount: number
+    balanceAmount: number
     currency: string
     status: string
     paymentMethod: string
@@ -19429,6 +19481,8 @@ export namespace Prisma {
     bookingDate?: boolean
     slotLabel?: boolean
     totalAmount?: boolean
+    advanceAmount?: boolean
+    balanceAmount?: boolean
     currency?: boolean
     status?: boolean
     paymentMethod?: boolean
@@ -19450,6 +19504,8 @@ export namespace Prisma {
     bookingDate?: boolean
     slotLabel?: boolean
     totalAmount?: boolean
+    advanceAmount?: boolean
+    balanceAmount?: boolean
     currency?: boolean
     status?: boolean
     paymentMethod?: boolean
@@ -19470,6 +19526,8 @@ export namespace Prisma {
     bookingDate?: boolean
     slotLabel?: boolean
     totalAmount?: boolean
+    advanceAmount?: boolean
+    balanceAmount?: boolean
     currency?: boolean
     status?: boolean
     paymentMethod?: boolean
@@ -19490,6 +19548,8 @@ export namespace Prisma {
     bookingDate?: boolean
     slotLabel?: boolean
     totalAmount?: boolean
+    advanceAmount?: boolean
+    balanceAmount?: boolean
     currency?: boolean
     status?: boolean
     paymentMethod?: boolean
@@ -19503,7 +19563,7 @@ export namespace Prisma {
     facilityId?: boolean
   }
 
-  export type GamehubBookingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "bookingDate" | "slotLabel" | "totalAmount" | "currency" | "status" | "paymentMethod" | "paymentStatus" | "transactionId" | "couponCode" | "discount" | "createdAt" | "updatedAt" | "userId" | "facilityId", ExtArgs["result"]["gamehubBooking"]>
+  export type GamehubBookingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "bookingDate" | "slotLabel" | "totalAmount" | "advanceAmount" | "balanceAmount" | "currency" | "status" | "paymentMethod" | "paymentStatus" | "transactionId" | "couponCode" | "discount" | "createdAt" | "updatedAt" | "userId" | "facilityId", ExtArgs["result"]["gamehubBooking"]>
   export type GamehubBookingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     facility?: boolean | GamehubFacilityDefaultArgs<ExtArgs>
@@ -19530,6 +19590,8 @@ export namespace Prisma {
       bookingDate: Date
       slotLabel: string
       totalAmount: number
+      advanceAmount: number
+      balanceAmount: number
       currency: string
       status: string
       paymentMethod: string
@@ -19971,6 +20033,8 @@ export namespace Prisma {
     readonly bookingDate: FieldRef<"GamehubBooking", 'DateTime'>
     readonly slotLabel: FieldRef<"GamehubBooking", 'String'>
     readonly totalAmount: FieldRef<"GamehubBooking", 'Float'>
+    readonly advanceAmount: FieldRef<"GamehubBooking", 'Float'>
+    readonly balanceAmount: FieldRef<"GamehubBooking", 'Float'>
     readonly currency: FieldRef<"GamehubBooking", 'String'>
     readonly status: FieldRef<"GamehubBooking", 'String'>
     readonly paymentMethod: FieldRef<"GamehubBooking", 'String'>
@@ -28436,7 +28500,9 @@ export namespace Prisma {
     battleModes: 'battleModes',
     slotTemplate: 'slotTemplate',
     availableSports: 'availableSports',
+    advancePercentage: 'advancePercentage',
     terms: 'terms',
+    mapLink: 'mapLink',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     partnerId: 'partnerId'
@@ -28464,6 +28530,8 @@ export namespace Prisma {
     bookingDate: 'bookingDate',
     slotLabel: 'slotLabel',
     totalAmount: 'totalAmount',
+    advanceAmount: 'advanceAmount',
+    balanceAmount: 'balanceAmount',
     currency: 'currency',
     status: 'status',
     paymentMethod: 'paymentMethod',
@@ -29741,7 +29809,9 @@ export namespace Prisma {
     battleModes?: StringFilter<"GamehubFacility"> | string
     slotTemplate?: StringFilter<"GamehubFacility"> | string
     availableSports?: StringFilter<"GamehubFacility"> | string
+    advancePercentage?: IntFilter<"GamehubFacility"> | number
     terms?: StringNullableFilter<"GamehubFacility"> | string | null
+    mapLink?: StringNullableFilter<"GamehubFacility"> | string | null
     createdAt?: DateTimeFilter<"GamehubFacility"> | Date | string
     updatedAt?: DateTimeFilter<"GamehubFacility"> | Date | string
     partnerId?: StringNullableFilter<"GamehubFacility"> | string | null
@@ -29777,7 +29847,9 @@ export namespace Prisma {
     battleModes?: SortOrder
     slotTemplate?: SortOrder
     availableSports?: SortOrder
+    advancePercentage?: SortOrder
     terms?: SortOrderInput | SortOrder
+    mapLink?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     partnerId?: SortOrderInput | SortOrder
@@ -29816,7 +29888,9 @@ export namespace Prisma {
     battleModes?: StringFilter<"GamehubFacility"> | string
     slotTemplate?: StringFilter<"GamehubFacility"> | string
     availableSports?: StringFilter<"GamehubFacility"> | string
+    advancePercentage?: IntFilter<"GamehubFacility"> | number
     terms?: StringNullableFilter<"GamehubFacility"> | string | null
+    mapLink?: StringNullableFilter<"GamehubFacility"> | string | null
     createdAt?: DateTimeFilter<"GamehubFacility"> | Date | string
     updatedAt?: DateTimeFilter<"GamehubFacility"> | Date | string
     partnerId?: StringNullableFilter<"GamehubFacility"> | string | null
@@ -29852,7 +29926,9 @@ export namespace Prisma {
     battleModes?: SortOrder
     slotTemplate?: SortOrder
     availableSports?: SortOrder
+    advancePercentage?: SortOrder
     terms?: SortOrderInput | SortOrder
+    mapLink?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     partnerId?: SortOrderInput | SortOrder
@@ -29891,7 +29967,9 @@ export namespace Prisma {
     battleModes?: StringWithAggregatesFilter<"GamehubFacility"> | string
     slotTemplate?: StringWithAggregatesFilter<"GamehubFacility"> | string
     availableSports?: StringWithAggregatesFilter<"GamehubFacility"> | string
+    advancePercentage?: IntWithAggregatesFilter<"GamehubFacility"> | number
     terms?: StringNullableWithAggregatesFilter<"GamehubFacility"> | string | null
+    mapLink?: StringNullableWithAggregatesFilter<"GamehubFacility"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"GamehubFacility"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"GamehubFacility"> | Date | string
     partnerId?: StringNullableWithAggregatesFilter<"GamehubFacility"> | string | null
@@ -29977,6 +30055,8 @@ export namespace Prisma {
     bookingDate?: DateTimeFilter<"GamehubBooking"> | Date | string
     slotLabel?: StringFilter<"GamehubBooking"> | string
     totalAmount?: FloatFilter<"GamehubBooking"> | number
+    advanceAmount?: FloatFilter<"GamehubBooking"> | number
+    balanceAmount?: FloatFilter<"GamehubBooking"> | number
     currency?: StringFilter<"GamehubBooking"> | string
     status?: StringFilter<"GamehubBooking"> | string
     paymentMethod?: StringFilter<"GamehubBooking"> | string
@@ -29998,6 +30078,8 @@ export namespace Prisma {
     bookingDate?: SortOrder
     slotLabel?: SortOrder
     totalAmount?: SortOrder
+    advanceAmount?: SortOrder
+    balanceAmount?: SortOrder
     currency?: SortOrder
     status?: SortOrder
     paymentMethod?: SortOrder
@@ -30023,6 +30105,8 @@ export namespace Prisma {
     bookingDate?: DateTimeFilter<"GamehubBooking"> | Date | string
     slotLabel?: StringFilter<"GamehubBooking"> | string
     totalAmount?: FloatFilter<"GamehubBooking"> | number
+    advanceAmount?: FloatFilter<"GamehubBooking"> | number
+    balanceAmount?: FloatFilter<"GamehubBooking"> | number
     currency?: StringFilter<"GamehubBooking"> | string
     status?: StringFilter<"GamehubBooking"> | string
     paymentMethod?: StringFilter<"GamehubBooking"> | string
@@ -30043,6 +30127,8 @@ export namespace Prisma {
     bookingDate?: SortOrder
     slotLabel?: SortOrder
     totalAmount?: SortOrder
+    advanceAmount?: SortOrder
+    balanceAmount?: SortOrder
     currency?: SortOrder
     status?: SortOrder
     paymentMethod?: SortOrder
@@ -30069,6 +30155,8 @@ export namespace Prisma {
     bookingDate?: DateTimeWithAggregatesFilter<"GamehubBooking"> | Date | string
     slotLabel?: StringWithAggregatesFilter<"GamehubBooking"> | string
     totalAmount?: FloatWithAggregatesFilter<"GamehubBooking"> | number
+    advanceAmount?: FloatWithAggregatesFilter<"GamehubBooking"> | number
+    balanceAmount?: FloatWithAggregatesFilter<"GamehubBooking"> | number
     currency?: StringWithAggregatesFilter<"GamehubBooking"> | string
     status?: StringWithAggregatesFilter<"GamehubBooking"> | string
     paymentMethod?: StringWithAggregatesFilter<"GamehubBooking"> | string
@@ -31772,7 +31860,9 @@ export namespace Prisma {
     battleModes?: string
     slotTemplate?: string
     availableSports?: string
+    advancePercentage?: number
     terms?: string | null
+    mapLink?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     partner?: UserCreateNestedOneWithoutGamehubFacilitiesInput
@@ -31807,7 +31897,9 @@ export namespace Prisma {
     battleModes?: string
     slotTemplate?: string
     availableSports?: string
+    advancePercentage?: number
     terms?: string | null
+    mapLink?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     partnerId?: string | null
@@ -31842,7 +31934,9 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    advancePercentage?: IntFieldUpdateOperationsInput | number
     terms?: NullableStringFieldUpdateOperationsInput | string | null
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partner?: UserUpdateOneWithoutGamehubFacilitiesNestedInput
@@ -31877,7 +31971,9 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    advancePercentage?: IntFieldUpdateOperationsInput | number
     terms?: NullableStringFieldUpdateOperationsInput | string | null
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31912,7 +32008,9 @@ export namespace Prisma {
     battleModes?: string
     slotTemplate?: string
     availableSports?: string
+    advancePercentage?: number
     terms?: string | null
+    mapLink?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     partnerId?: string | null
@@ -31943,7 +32041,9 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    advancePercentage?: IntFieldUpdateOperationsInput | number
     terms?: NullableStringFieldUpdateOperationsInput | string | null
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -31973,7 +32073,9 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    advancePercentage?: IntFieldUpdateOperationsInput | number
     terms?: NullableStringFieldUpdateOperationsInput | string | null
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32060,6 +32162,8 @@ export namespace Prisma {
     bookingDate: Date | string
     slotLabel: string
     totalAmount: number
+    advanceAmount?: number
+    balanceAmount?: number
     currency?: string
     status?: string
     paymentMethod?: string
@@ -32079,6 +32183,8 @@ export namespace Prisma {
     bookingDate: Date | string
     slotLabel: string
     totalAmount: number
+    advanceAmount?: number
+    balanceAmount?: number
     currency?: string
     status?: string
     paymentMethod?: string
@@ -32098,6 +32204,8 @@ export namespace Prisma {
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     slotLabel?: StringFieldUpdateOperationsInput | string
     totalAmount?: FloatFieldUpdateOperationsInput | number
+    advanceAmount?: FloatFieldUpdateOperationsInput | number
+    balanceAmount?: FloatFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
@@ -32117,6 +32225,8 @@ export namespace Prisma {
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     slotLabel?: StringFieldUpdateOperationsInput | string
     totalAmount?: FloatFieldUpdateOperationsInput | number
+    advanceAmount?: FloatFieldUpdateOperationsInput | number
+    balanceAmount?: FloatFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
@@ -32136,6 +32246,8 @@ export namespace Prisma {
     bookingDate: Date | string
     slotLabel: string
     totalAmount: number
+    advanceAmount?: number
+    balanceAmount?: number
     currency?: string
     status?: string
     paymentMethod?: string
@@ -32154,6 +32266,8 @@ export namespace Prisma {
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     slotLabel?: StringFieldUpdateOperationsInput | string
     totalAmount?: FloatFieldUpdateOperationsInput | number
+    advanceAmount?: FloatFieldUpdateOperationsInput | number
+    balanceAmount?: FloatFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
@@ -32170,6 +32284,8 @@ export namespace Prisma {
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     slotLabel?: StringFieldUpdateOperationsInput | string
     totalAmount?: FloatFieldUpdateOperationsInput | number
+    advanceAmount?: FloatFieldUpdateOperationsInput | number
+    balanceAmount?: FloatFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
@@ -33754,7 +33870,9 @@ export namespace Prisma {
     battleModes?: SortOrder
     slotTemplate?: SortOrder
     availableSports?: SortOrder
+    advancePercentage?: SortOrder
     terms?: SortOrder
+    mapLink?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     partnerId?: SortOrder
@@ -33764,6 +33882,7 @@ export namespace Prisma {
     rating?: SortOrder
     reviewsCount?: SortOrder
     pricePerHour?: SortOrder
+    advancePercentage?: SortOrder
   }
 
   export type GamehubFacilityMaxOrderByAggregateInput = {
@@ -33791,7 +33910,9 @@ export namespace Prisma {
     battleModes?: SortOrder
     slotTemplate?: SortOrder
     availableSports?: SortOrder
+    advancePercentage?: SortOrder
     terms?: SortOrder
+    mapLink?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     partnerId?: SortOrder
@@ -33822,7 +33943,9 @@ export namespace Prisma {
     battleModes?: SortOrder
     slotTemplate?: SortOrder
     availableSports?: SortOrder
+    advancePercentage?: SortOrder
     terms?: SortOrder
+    mapLink?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     partnerId?: SortOrder
@@ -33832,6 +33955,7 @@ export namespace Prisma {
     rating?: SortOrder
     reviewsCount?: SortOrder
     pricePerHour?: SortOrder
+    advancePercentage?: SortOrder
   }
 
   export type GamehubFacilityScalarRelationFilter = {
@@ -33892,6 +34016,8 @@ export namespace Prisma {
     bookingDate?: SortOrder
     slotLabel?: SortOrder
     totalAmount?: SortOrder
+    advanceAmount?: SortOrder
+    balanceAmount?: SortOrder
     currency?: SortOrder
     status?: SortOrder
     paymentMethod?: SortOrder
@@ -33907,6 +34033,8 @@ export namespace Prisma {
 
   export type GamehubBookingAvgOrderByAggregateInput = {
     totalAmount?: SortOrder
+    advanceAmount?: SortOrder
+    balanceAmount?: SortOrder
     discount?: SortOrder
   }
 
@@ -33915,6 +34043,8 @@ export namespace Prisma {
     bookingDate?: SortOrder
     slotLabel?: SortOrder
     totalAmount?: SortOrder
+    advanceAmount?: SortOrder
+    balanceAmount?: SortOrder
     currency?: SortOrder
     status?: SortOrder
     paymentMethod?: SortOrder
@@ -33933,6 +34063,8 @@ export namespace Prisma {
     bookingDate?: SortOrder
     slotLabel?: SortOrder
     totalAmount?: SortOrder
+    advanceAmount?: SortOrder
+    balanceAmount?: SortOrder
     currency?: SortOrder
     status?: SortOrder
     paymentMethod?: SortOrder
@@ -33948,6 +34080,8 @@ export namespace Prisma {
 
   export type GamehubBookingSumOrderByAggregateInput = {
     totalAmount?: SortOrder
+    advanceAmount?: SortOrder
+    balanceAmount?: SortOrder
     discount?: SortOrder
   }
 
@@ -36056,6 +36190,8 @@ export namespace Prisma {
     bookingDate: Date | string
     slotLabel: string
     totalAmount: number
+    advanceAmount?: number
+    balanceAmount?: number
     currency?: string
     status?: string
     paymentMethod?: string
@@ -36074,6 +36210,8 @@ export namespace Prisma {
     bookingDate: Date | string
     slotLabel: string
     totalAmount: number
+    advanceAmount?: number
+    balanceAmount?: number
     currency?: string
     status?: string
     paymentMethod?: string
@@ -36176,7 +36314,9 @@ export namespace Prisma {
     battleModes?: string
     slotTemplate?: string
     availableSports?: string
+    advancePercentage?: number
     terms?: string | null
+    mapLink?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviews?: GamehubReviewCreateNestedManyWithoutFacilityInput
@@ -36210,7 +36350,9 @@ export namespace Prisma {
     battleModes?: string
     slotTemplate?: string
     availableSports?: string
+    advancePercentage?: number
     terms?: string | null
+    mapLink?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     reviews?: GamehubReviewUncheckedCreateNestedManyWithoutFacilityInput
@@ -36407,6 +36549,8 @@ export namespace Prisma {
     bookingDate?: DateTimeFilter<"GamehubBooking"> | Date | string
     slotLabel?: StringFilter<"GamehubBooking"> | string
     totalAmount?: FloatFilter<"GamehubBooking"> | number
+    advanceAmount?: FloatFilter<"GamehubBooking"> | number
+    balanceAmount?: FloatFilter<"GamehubBooking"> | number
     currency?: StringFilter<"GamehubBooking"> | string
     status?: StringFilter<"GamehubBooking"> | string
     paymentMethod?: StringFilter<"GamehubBooking"> | string
@@ -36521,7 +36665,9 @@ export namespace Prisma {
     battleModes?: StringFilter<"GamehubFacility"> | string
     slotTemplate?: StringFilter<"GamehubFacility"> | string
     availableSports?: StringFilter<"GamehubFacility"> | string
+    advancePercentage?: IntFilter<"GamehubFacility"> | number
     terms?: StringNullableFilter<"GamehubFacility"> | string | null
+    mapLink?: StringNullableFilter<"GamehubFacility"> | string | null
     createdAt?: DateTimeFilter<"GamehubFacility"> | Date | string
     updatedAt?: DateTimeFilter<"GamehubFacility"> | Date | string
     partnerId?: StringNullableFilter<"GamehubFacility"> | string | null
@@ -39080,6 +39226,8 @@ export namespace Prisma {
     bookingDate: Date | string
     slotLabel: string
     totalAmount: number
+    advanceAmount?: number
+    balanceAmount?: number
     currency?: string
     status?: string
     paymentMethod?: string
@@ -39098,6 +39246,8 @@ export namespace Prisma {
     bookingDate: Date | string
     slotLabel: string
     totalAmount: number
+    advanceAmount?: number
+    balanceAmount?: number
     currency?: string
     status?: string
     paymentMethod?: string
@@ -39364,7 +39514,9 @@ export namespace Prisma {
     battleModes?: string
     slotTemplate?: string
     availableSports?: string
+    advancePercentage?: number
     terms?: string | null
+    mapLink?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     partner?: UserCreateNestedOneWithoutGamehubFacilitiesInput
@@ -39398,7 +39550,9 @@ export namespace Prisma {
     battleModes?: string
     slotTemplate?: string
     availableSports?: string
+    advancePercentage?: number
     terms?: string | null
+    mapLink?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     partnerId?: string | null
@@ -39448,7 +39602,9 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    advancePercentage?: IntFieldUpdateOperationsInput | number
     terms?: NullableStringFieldUpdateOperationsInput | string | null
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partner?: UserUpdateOneWithoutGamehubFacilitiesNestedInput
@@ -39482,7 +39638,9 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    advancePercentage?: IntFieldUpdateOperationsInput | number
     terms?: NullableStringFieldUpdateOperationsInput | string | null
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39565,7 +39723,9 @@ export namespace Prisma {
     battleModes?: string
     slotTemplate?: string
     availableSports?: string
+    advancePercentage?: number
     terms?: string | null
+    mapLink?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     partner?: UserCreateNestedOneWithoutGamehubFacilitiesInput
@@ -39599,7 +39759,9 @@ export namespace Prisma {
     battleModes?: string
     slotTemplate?: string
     availableSports?: string
+    advancePercentage?: number
     terms?: string | null
+    mapLink?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     partnerId?: string | null
@@ -39729,7 +39891,9 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    advancePercentage?: IntFieldUpdateOperationsInput | number
     terms?: NullableStringFieldUpdateOperationsInput | string | null
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partner?: UserUpdateOneWithoutGamehubFacilitiesNestedInput
@@ -39763,7 +39927,9 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    advancePercentage?: IntFieldUpdateOperationsInput | number
     terms?: NullableStringFieldUpdateOperationsInput | string | null
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39808,6 +39974,8 @@ export namespace Prisma {
     bookingDate: Date | string
     slotLabel: string
     totalAmount: number
+    advanceAmount?: number
+    balanceAmount?: number
     currency?: string
     status?: string
     paymentMethod?: string
@@ -39826,6 +39994,8 @@ export namespace Prisma {
     bookingDate: Date | string
     slotLabel: string
     totalAmount: number
+    advanceAmount?: number
+    balanceAmount?: number
     currency?: string
     status?: string
     paymentMethod?: string
@@ -39869,7 +40039,9 @@ export namespace Prisma {
     battleModes?: string
     slotTemplate?: string
     availableSports?: string
+    advancePercentage?: number
     terms?: string | null
+    mapLink?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     partner?: UserCreateNestedOneWithoutGamehubFacilitiesInput
@@ -39903,7 +40075,9 @@ export namespace Prisma {
     battleModes?: string
     slotTemplate?: string
     availableSports?: string
+    advancePercentage?: number
     terms?: string | null
+    mapLink?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     partnerId?: string | null
@@ -39933,6 +40107,8 @@ export namespace Prisma {
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     slotLabel?: StringFieldUpdateOperationsInput | string
     totalAmount?: FloatFieldUpdateOperationsInput | number
+    advanceAmount?: FloatFieldUpdateOperationsInput | number
+    balanceAmount?: FloatFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
@@ -39951,6 +40127,8 @@ export namespace Prisma {
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     slotLabel?: StringFieldUpdateOperationsInput | string
     totalAmount?: FloatFieldUpdateOperationsInput | number
+    advanceAmount?: FloatFieldUpdateOperationsInput | number
+    balanceAmount?: FloatFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
@@ -40000,7 +40178,9 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    advancePercentage?: IntFieldUpdateOperationsInput | number
     terms?: NullableStringFieldUpdateOperationsInput | string | null
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partner?: UserUpdateOneWithoutGamehubFacilitiesNestedInput
@@ -40034,7 +40214,9 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    advancePercentage?: IntFieldUpdateOperationsInput | number
     terms?: NullableStringFieldUpdateOperationsInput | string | null
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40068,7 +40250,9 @@ export namespace Prisma {
     battleModes?: string
     slotTemplate?: string
     availableSports?: string
+    advancePercentage?: number
     terms?: string | null
+    mapLink?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     partner?: UserCreateNestedOneWithoutGamehubFacilitiesInput
@@ -40102,7 +40286,9 @@ export namespace Prisma {
     battleModes?: string
     slotTemplate?: string
     availableSports?: string
+    advancePercentage?: number
     terms?: string | null
+    mapLink?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     partnerId?: string | null
@@ -40152,7 +40338,9 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    advancePercentage?: IntFieldUpdateOperationsInput | number
     terms?: NullableStringFieldUpdateOperationsInput | string | null
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partner?: UserUpdateOneWithoutGamehubFacilitiesNestedInput
@@ -40186,7 +40374,9 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    advancePercentage?: IntFieldUpdateOperationsInput | number
     terms?: NullableStringFieldUpdateOperationsInput | string | null
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partnerId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40578,6 +40768,8 @@ export namespace Prisma {
     bookingDate: Date | string
     slotLabel: string
     totalAmount: number
+    advanceAmount?: number
+    balanceAmount?: number
     currency?: string
     status?: string
     paymentMethod?: string
@@ -40632,7 +40824,9 @@ export namespace Prisma {
     battleModes?: string
     slotTemplate?: string
     availableSports?: string
+    advancePercentage?: number
     terms?: string | null
+    mapLink?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -40849,6 +41043,8 @@ export namespace Prisma {
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     slotLabel?: StringFieldUpdateOperationsInput | string
     totalAmount?: FloatFieldUpdateOperationsInput | number
+    advanceAmount?: FloatFieldUpdateOperationsInput | number
+    balanceAmount?: FloatFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
@@ -40867,6 +41063,8 @@ export namespace Prisma {
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     slotLabel?: StringFieldUpdateOperationsInput | string
     totalAmount?: FloatFieldUpdateOperationsInput | number
+    advanceAmount?: FloatFieldUpdateOperationsInput | number
+    balanceAmount?: FloatFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
@@ -40885,6 +41083,8 @@ export namespace Prisma {
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     slotLabel?: StringFieldUpdateOperationsInput | string
     totalAmount?: FloatFieldUpdateOperationsInput | number
+    advanceAmount?: FloatFieldUpdateOperationsInput | number
+    balanceAmount?: FloatFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
@@ -40973,7 +41173,9 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    advancePercentage?: IntFieldUpdateOperationsInput | number
     terms?: NullableStringFieldUpdateOperationsInput | string | null
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviews?: GamehubReviewUpdateManyWithoutFacilityNestedInput
@@ -41007,7 +41209,9 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    advancePercentage?: IntFieldUpdateOperationsInput | number
     terms?: NullableStringFieldUpdateOperationsInput | string | null
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviews?: GamehubReviewUncheckedUpdateManyWithoutFacilityNestedInput
@@ -41041,7 +41245,9 @@ export namespace Prisma {
     battleModes?: StringFieldUpdateOperationsInput | string
     slotTemplate?: StringFieldUpdateOperationsInput | string
     availableSports?: StringFieldUpdateOperationsInput | string
+    advancePercentage?: IntFieldUpdateOperationsInput | number
     terms?: NullableStringFieldUpdateOperationsInput | string | null
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -41475,6 +41681,8 @@ export namespace Prisma {
     bookingDate: Date | string
     slotLabel: string
     totalAmount: number
+    advanceAmount?: number
+    balanceAmount?: number
     currency?: string
     status?: string
     paymentMethod?: string
@@ -41541,6 +41749,8 @@ export namespace Prisma {
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     slotLabel?: StringFieldUpdateOperationsInput | string
     totalAmount?: FloatFieldUpdateOperationsInput | number
+    advanceAmount?: FloatFieldUpdateOperationsInput | number
+    balanceAmount?: FloatFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
@@ -41559,6 +41769,8 @@ export namespace Prisma {
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     slotLabel?: StringFieldUpdateOperationsInput | string
     totalAmount?: FloatFieldUpdateOperationsInput | number
+    advanceAmount?: FloatFieldUpdateOperationsInput | number
+    balanceAmount?: FloatFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
@@ -41577,6 +41789,8 @@ export namespace Prisma {
     bookingDate?: DateTimeFieldUpdateOperationsInput | Date | string
     slotLabel?: StringFieldUpdateOperationsInput | string
     totalAmount?: FloatFieldUpdateOperationsInput | number
+    advanceAmount?: FloatFieldUpdateOperationsInput | number
+    balanceAmount?: FloatFieldUpdateOperationsInput | number
     currency?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string

@@ -76,7 +76,7 @@ export default function AddressesPage() {
               <ArrowLeft size={18} className="text-gray-600" />
             </Link>
             <div>
-              <h1 className="text-2xl font-black text-gray-900">Saved Addresses</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Saved Addresses</h1>
               <p className="text-sm text-gray-500 font-medium">Home, work & other locations</p>
             </div>
           </div>
