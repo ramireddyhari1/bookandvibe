@@ -491,7 +491,12 @@ function GridEventCard({ event }: { event: Event }) {
               <span className="text-[12px] font-bold uppercase tracking-wider">{new Date(event.date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</span>
             </div>
             <div className="flex items-center gap-1.5 text-gray-400">
-                        {tags.length > 0 && (
+              <MapPin size={13} className="shrink-0" />
+              <span className="text-[12px] font-bold truncate uppercase tracking-wider">{event.venue}</span>
+            </div>
+          </div>
+
+          {tags.length > 0 && (
             <div className="flex flex-wrap items-center gap-1.5 mt-3">
               {tags.slice(0, 2).map((tag: string, idx: number) => (
                 <div key={idx} className="bg-gray-50 border border-gray-100 px-2 py-0.5 rounded-lg flex items-center gap-1">
