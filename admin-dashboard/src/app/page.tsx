@@ -431,41 +431,43 @@ export default function AdminDashboard() {
             </span>
           </div>
 
-          <div className="rounded-xl border border-gray-100 bg-gray-50/50 p-3 flex-1 flex flex-col justify-between">
-            <div className="relative h-[200px]">
-              <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="h-full w-full" preserveAspectRatio="none" aria-label="Revenue trend chart">
-                <defs>
-                  <linearGradient id="lineGlow" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#10b981" />
-                    <stop offset="100%" stopColor="#059669" />
-                  </linearGradient>
-                  <linearGradient id="areaGlow" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="rgba(16,185,129,0.1)" />
-                    <stop offset="100%" stopColor="rgba(16,185,129,0)" />
-                  </linearGradient>
-                </defs>
+          <div className="rounded-xl border border-gray-100 bg-gray-50/50 p-3 flex-1 flex flex-col justify-between overflow-hidden">
+            <div className="relative h-[200px] overflow-x-auto custom-scrollbar">
+              <div className="min-w-[600px] h-full">
+                <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="h-full w-full" preserveAspectRatio="none" aria-label="Revenue trend chart">
+                  <defs>
+                    <linearGradient id="lineGlow" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stopColor="#10b981" />
+                      <stop offset="100%" stopColor="#059669" />
+                    </linearGradient>
+                    <linearGradient id="areaGlow" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="rgba(16,185,129,0.1)" />
+                      <stop offset="100%" stopColor="rgba(16,185,129,0)" />
+                    </linearGradient>
+                  </defs>
 
-                <path d={areaPath} fill="url(#areaGlow)" />
-                <path d={linePath} fill="none" stroke="url(#lineGlow)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d={areaPath} fill="url(#areaGlow)" />
+                  <path d={linePath} fill="none" stroke="url(#lineGlow)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
 
-                {points.map((point, index) => (
-                  <g key={chartLabels[index]}>
-                    <circle cx={point.x} cy={point.y} r="3" fill="#ffffff" stroke="#10b981" strokeWidth="2" />
-                  </g>
-                ))}
-              </svg>
-              <div className="absolute inset-x-2 bottom-0 flex justify-between">
-                {chartLabels.map((label, idx) => (
-                  <span key={label} className={`text-center text-[10px] font-semibold text-gray-400 ${(idx % 2 !== 0 && chartLabels.length > 6) ? 'hidden sm:block' : ''}`}>
-                    {label}
-                  </span>
-                ))}
+                  {points.map((point, index) => (
+                    <g key={chartLabels[index]}>
+                      <circle cx={point.x} cy={point.y} r="3" fill="#ffffff" stroke="#10b981" strokeWidth="2" />
+                    </g>
+                  ))}
+                </svg>
+                <div className="absolute inset-x-2 bottom-0 flex justify-between">
+                  {chartLabels.map((label, idx) => (
+                    <span key={label} className={`text-center text-[10px] font-semibold text-gray-400 ${(idx % 2 !== 0 && chartLabels.length > 6) ? 'hidden sm:block' : ''}`}>
+                      {label}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
             <div className="mt-4 grid grid-cols-3 gap-2 text-[11px] text-gray-500 font-semibold">
-              <p className="rounded-lg border border-gray-100 bg-white px-2 py-2 text-center">Peak: ₹45,600</p>
-              <p className="rounded-lg border border-gray-100 bg-white px-2 py-2 text-center">Avg: ₹31,240</p>
-              <p className="rounded-lg border border-gray-100 bg-white px-2 py-2 text-center">YoY: +24.3%</p>
+              <p className="rounded-lg border border-gray-100 bg-white px-1 py-2 text-center truncate">Peak: ₹45.6k</p>
+              <p className="rounded-lg border border-gray-100 bg-white px-1 py-2 text-center truncate">Avg: ₹31.2k</p>
+              <p className="rounded-lg border border-gray-100 bg-white px-1 py-2 text-center truncate">YoY: +24%</p>
             </div>
           </div>
         </div>

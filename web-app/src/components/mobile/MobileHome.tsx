@@ -277,66 +277,58 @@ const FALLBACK_EVENTS = [
 // ─── Sub-components ────────────────────────────────────────
 
 function HeroPosterCard({ event }: { event: Event }) {
+  const statusLine = "Tickets selling fast!";
   return (
-    <Link href={`/events/${event.id}`} className="block shrink-0 w-[82vw] sm:w-[320px] snap-center">
-      <div className="relative w-full aspect-[4/5.5] rounded-[32px] overflow-hidden group shadow-[0_20px_50px_rgba(0,0,0,0.2)]">
+    <Link href={`/events/${event.id}`} className="block shrink-0 w-[85vw] sm:w-[320px] snap-center">
+      <div className="relative w-full aspect-[3.5/4.5] rounded-[24px] overflow-hidden group shadow-xl">
         <motion.img 
           src={getEventImage(event.images)} 
           alt={event.title} 
           className="absolute inset-0 w-full h-full object-cover"
-          whileHover={{ scale: 1.1 }}
-          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
         
-        {/* Dramatic Overlays */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/20 to-transparent opacity-90" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent opacity-40" />
-        
-        {/* Category Badge - Glassmorphism */}
-        <div className="absolute top-5 left-5 z-20">
-          <div className="bg-white/10 backdrop-blur-xl border border-white/20 px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg">
-            <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></span>
-            <span className="text-white text-[10px] font-extrabold uppercase tracking-[0.1em]">
-              {event.category || "Featured"}
-            </span>
+        {/* Top Badges */}
+        <div className="absolute top-4 right-4 flex justify-end">
+          <div className="w-8 h-8 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center shadow-sm">
+            <Bookmark size={14} className="text-white" />
           </div>
         </div>
 
-        {/* Favorite/Bookmark - Premium Style */}
-        <div className="absolute top-5 right-5 z-20">
-          <button className="w-10 h-10 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white active:scale-90 transition-transform">
-            <Bookmark size={18} />
-          </button>
-        </div>
-
         {/* Content Area */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 z-20">
+        <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/90 via-black/60 to-transparent">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
+            className="space-y-2"
           >
-            <h3 className="text-[26px] font-black text-white leading-[1.05] tracking-tight mb-4 drop-shadow-2xl">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm uppercase tracking-wider">
+                {event.category}
+              </span>
+            </div>
+            
+            <h3 className="text-[22px] font-bold text-white leading-[1.1] tracking-tight">
               {event.title}
             </h3>
             
-            <div className="flex flex-wrap items-center gap-4">
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/10">
+            <div className="flex items-center gap-3 text-white/80 text-[13px] font-medium mt-2">
+              <div className="flex items-center gap-1.5">
                 <CalendarDays size={14} className="text-orange-400" />
-                <span className="text-white text-[12px] font-bold uppercase tracking-wider">
-                  {new Date(event.date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
-                </span>
+                <span>{new Date(event.date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</span>
               </div>
-              
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/10">
+              <span className="w-1 h-1 rounded-full bg-white/30" />
+              <div className="flex items-center gap-1.5">
                 <MapPin size={14} className="text-orange-400" />
-                <span className="text-white text-[12px] font-bold uppercase tracking-wider max-w-[120px] truncate">
-                  {event.venue}
-                </span>
+                <span className="max-w-[140px] truncate">{event.venue}</span>
               </div>
             </div>
           </motion.div>
         </div>
+
       </div>
     </Link>
   );
@@ -412,33 +404,20 @@ function PosterBannerCarousel({ events }: { events: Event[] }) {
 function SectionEventCard({ event }: { event: Event }) {
   const formatCurrency = (v: number) => `₹${new Intl.NumberFormat("en-IN").format(v || 0)}`;
   return (
-    <Link href={`/events/${event.id}`} className="block shrink-0 w-[70vw] max-w-[280px] snap-start">
-      <div className="relative w-full aspect-[4/5] rounded-[28px] overflow-hidden bg-white shadow-[0_15px_35px_rgba(0,0,0,0.08)] border border-gray-100/50 group">
-        <img src={getEventImage(event.images)} alt={event.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-        
-        {/* Elegant Date Badge */}
-        <div className="absolute top-4 left-4 z-10">
-          <div className="bg-white/90 backdrop-blur-xl px-3 py-1.5 rounded-2xl shadow-lg border border-white/50 text-center min-w-[50px]">
-            <p className="text-[10px] font-black text-orange-600 uppercase tracking-tighter leading-none mb-0.5">
-              {new Date(event.date).toLocaleDateString("en-IN", { month: "short" })}
-            </p>
-            <p className="text-[18px] font-black text-gray-900 leading-none">
-              {new Date(event.date).getDate()}
-            </p>
-          </div>
-        </div>
-
-        {/* Bottom Info - Glass Panel */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 pt-10 bg-gradient-to-t from-black/90 via-black/40 to-transparent">
-          <h4 className="text-white text-[17px] font-black line-clamp-1 mb-2 tracking-tight">{event.title}</h4>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1.5 text-white/70">
-              <MapPin size={13} className="text-orange-500" />
-              <span className="text-[12px] font-bold truncate max-w-[100px] uppercase tracking-wide">{event.venue}</span>
-            </div>
-            <div className="bg-orange-600 px-3 py-1 rounded-full shadow-lg border border-orange-400/50">
-              <span className="text-white text-[13px] font-black tracking-tight">{formatCurrency(event.price)}</span>
-            </div>
+    <Link href={`/events/${event.id}`} className="block shrink-0 w-[65vw] max-w-[240px] snap-start">
+      <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-white shadow-sm border border-gray-100">
+        <img src={getEventImage(event.images)} alt={event.title} className="absolute inset-0 w-full h-[60%] object-cover" />
+        <div className="absolute top-[60%] bottom-0 left-0 right-0 p-4 bg-white flex flex-col justify-end">
+          <p className="text-orange-500 text-[12px] font-bold tracking-wider mb-1.5">
+            {new Date(event.date).toLocaleDateString("en-IN", { day: "2-digit", month: "short" }).toUpperCase()}
+          </p>
+          <h4 className="text-gray-900 text-[16px] font-bold line-clamp-2 mb-1.5 leading-snug">{event.title}</h4>
+          <div className="flex items-center justify-between mt-auto">
+             <div className="flex items-center gap-1.5 max-w-[60%]">
+               <MapPin size={12} className="text-gray-400 shrink-0" />
+               <span className="text-gray-500 text-[12px] truncate">{event.venue}</span>
+             </div>
+             <span className="text-gray-900 text-[14px] font-bold">{formatCurrency(event.price)}</span>
           </div>
         </div>
       </div>
@@ -457,51 +436,30 @@ function GridEventCard({ event }: { event: Event }) {
   }, [event.tags]);
 
   return (
-    <Link href={`/events/${event.id}`} className="block group">
+    <Link href={`/events/${event.id}`} className="block">
       <div className="w-full">
-        <div className="relative w-full aspect-[1/1.2] rounded-[32px] overflow-hidden bg-gray-100 shadow-[0_10px_30px_rgba(0,0,0,0.06)] group-active:scale-[0.98] transition-all duration-300">
-          <img src={getEventImage(event.images)} alt={event.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-          
-          {/* Subtle Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-40" />
-          
-          {/* Price Badge */}
-          <div className="absolute bottom-3 left-3">
-             <div className="bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-xl shadow-sm border border-white/50">
-               <span className="text-[13px] font-black text-gray-900 tracking-tight">₹{event.price}</span>
-             </div>
-          </div>
-
-          <div className="absolute top-3 right-3">
-            <div className="w-9 h-9 rounded-2xl bg-white/20 backdrop-blur-md border border-white/20 flex items-center justify-center shadow-sm">
-              <Bookmark size={16} className="text-white" />
-            </div>
+        <div className="relative w-full aspect-[4/5] rounded-[20px] overflow-hidden bg-gray-100 shadow-sm">
+          <img src={getEventImage(event.images)} alt={event.title} className="w-full h-full object-cover" />
+          <div className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/10">
+            <Bookmark size={14} className="text-white" />
           </div>
         </div>
-        
-        <div className="mt-3.5 px-2">
-          <div className="flex items-center gap-1.5 mb-1">
-             <span className="text-[10px] font-black text-orange-600 uppercase tracking-[0.1em]">{event.category}</span>
-          </div>
-          <h4 className="text-gray-900 text-[16px] font-black leading-[1.2] line-clamp-2 tracking-tight group-hover:text-orange-600 transition-colors">{event.title}</h4>
-          
-          <div className="mt-2.5 space-y-1">
-            <div className="flex items-center gap-1.5 text-gray-400">
-              <CalendarDays size={13} className="shrink-0" />
-              <span className="text-[12px] font-bold uppercase tracking-wider">{new Date(event.date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</span>
-            </div>
-            <div className="flex items-center gap-1.5 text-gray-400">
-              <MapPin size={13} className="shrink-0" />
-              <span className="text-[12px] font-bold truncate uppercase tracking-wider">{event.venue}</span>
-            </div>
-          </div>
-
+        <div className="mt-3 px-1">
+          <h4 className="text-gray-900 text-[15px] font-bold leading-snug line-clamp-2 tracking-tight">{event.title}</h4>
+          <p className="text-gray-500 text-[13px] mt-1 font-medium flex items-center gap-1.5">
+            <CalendarDays size={12} className="text-gray-400"/>
+            {new Date(event.date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
+          </p>
+          <p className="text-gray-500 text-[13px] mt-0.5 truncate flex items-center gap-1.5">
+            <MapPin size={12} className="text-gray-400"/>
+            {event.venue}
+          </p>
           {tags.length > 0 && (
-            <div className="flex flex-wrap items-center gap-1.5 mt-3">
-              {tags.slice(0, 2).map((tag: string, idx: number) => (
-                <div key={idx} className="bg-gray-50 border border-gray-100 px-2 py-0.5 rounded-lg flex items-center gap-1">
-                  <Tag size={10} className="text-gray-400" />
-                  <span className="text-gray-500 text-[10px] font-bold uppercase tracking-wider">{tag}</span>
+            <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
+              {tags.map((tag: string, idx: number) => (
+                <div key={idx} className="flex items-center gap-1">
+                  <Tag size={12} className="text-orange-500" />
+                  <span className="text-orange-500 text-[12px] font-bold">{tag.length > 25 ? tag.substring(0, 22) + "..." : tag}</span>
                 </div>
               ))}
             </div>
@@ -514,36 +472,30 @@ function GridEventCard({ event }: { event: Event }) {
 
 function FacilityCard({ facility }: { facility: Facility }) {
   return (
-    <Link href={`/gamehub/${facility.id}`} className="block shrink-0 w-[65vw] max-w-[260px] snap-start group">
+    <Link href={`/gamehub/${facility.id}`} className="block shrink-0 w-[60vw] max-w-[220px] snap-start group">
       <div className="w-full">
-        <div className="relative w-full aspect-[4/5] rounded-[32px] overflow-hidden bg-gray-100 shadow-[0_15px_35px_rgba(0,0,0,0.08)] group-active:scale-[0.98] transition-all duration-300">
-          <img src={facility.image} alt={facility.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
-          
-          {/* Price Badge - Premium Glass */}
-          <div className="absolute top-4 right-4">
-            <div className="bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-2xl border border-white/30 flex items-baseline gap-[2px] shadow-lg">
-              <span className="text-white text-[11px] font-black tracking-tight">₹</span>
-              <span className="text-white text-[16px] font-black tracking-tight">{facility.pricePerHour}</span>
-              <span className="text-white/80 text-[10px] font-bold">/hr</span>
-            </div>
+        <div className="relative w-full aspect-[4/5] max-h-[280px] rounded-[24px] overflow-hidden bg-gray-100 shadow-[0_8px_24px_rgba(0,0,0,0.06)] group-hover:shadow-[0_12px_32px_rgba(0,0,0,0.1)] transition-all duration-300">
+          <img src={facility.image} alt={facility.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-60" />
+          <div className="absolute top-3 right-3 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/30 flex items-baseline gap-[2px] shadow-sm">
+            <span className="text-white text-[11px] font-bold tracking-tight">₹</span>
+            <span className="text-white text-[14px] font-bold tracking-tight">{facility.pricePerHour}</span>
+            <span className="text-white/80 text-[10px] font-bold">/hr</span>
           </div>
           
-          <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
-             <div className="bg-white/20 backdrop-blur-md px-2.5 py-1.5 rounded-xl border border-white/20 flex items-center gap-1.5">
-               <Star size={12} className="text-yellow-400 fill-yellow-400" />
-               <span className="text-white text-[13px] font-black">{facility.rating}</span>
+          <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
+             <div className="bg-white/20 backdrop-blur-md px-2 py-1 rounded-lg border border-white/20 flex items-center gap-1">
+               <Star size={10} className="text-yellow-400 fill-yellow-400" />
+               <span className="text-white text-[11px] font-bold">{facility.rating}</span>
              </div>
-             <div className="bg-[#00A63E] px-3 py-1.5 rounded-xl text-white text-[10px] font-black uppercase tracking-widest shadow-lg border border-emerald-400/50">
-               {facility.type}
-             </div>
+             <span className="bg-[#00A63E] px-2 py-1 rounded-lg text-white text-[10px] font-bold uppercase tracking-wider">{facility.type}</span>
           </div>
         </div>
-        <div className="mt-4 px-2">
-          <h4 className="text-gray-900 text-[18px] font-black tracking-tight truncate group-hover:text-[#00A63E] transition-colors">{facility.name}</h4>
-          <div className="flex items-center gap-1.5 mt-1.5 text-gray-400">
-            <MapPin size={13} className="text-emerald-500" />
-            <p className="text-[13px] font-bold uppercase tracking-wider truncate">{facility.location}</p>
+        <div className="mt-3 px-1">
+          <h4 className="text-gray-900 text-[17px] font-bold tracking-tight truncate">{facility.name}</h4>
+          <div className="flex items-center gap-1.5 mt-1 text-gray-500">
+            <MapPin size={12} />
+            <p className="text-[13px] font-medium truncate">{facility.location}</p>
           </div>
         </div>
       </div>
@@ -698,12 +650,21 @@ export default function MobileHome() {
     };
   }, [socket]);
 
-  const filteredFacilities = useMemo(() => {
+  const { filteredFacilities, isFallback } = useMemo(() => {
     let list = facilities.filter(f => f.location?.toLowerCase().includes(selectedLocation.city.toLowerCase()));
-    if (selectedSportCategory) {
-      list = list.filter(f => f.type.toLowerCase() === selectedSportCategory.toLowerCase());
+    let fallback = false;
+
+    if (list.length === 0 && facilities.length > 0) {
+      list = facilities;
+      fallback = true;
     }
-    return list;
+
+    if (selectedSportCategory) {
+      list = list.filter(f => f.type.toLowerCase().includes(selectedSportCategory.toLowerCase()) || 
+        (f.availableSports && f.availableSports.toLowerCase().includes(selectedSportCategory.toLowerCase())));
+    }
+
+    return { filteredFacilities: list, isFallback: fallback };
   }, [facilities, selectedLocation, selectedSportCategory]);
 
   const musicEvents = useMemo(() => events.filter(e => e.category === "Music" || e.category === "CONCERT"), [events]);
@@ -871,37 +832,37 @@ export default function MobileHome() {
       </div>
 
       {/* ═══ TAB SWITCHER ═══ */}
-      <div className="mx-5 mb-6 relative z-40">
-        <div className="bg-white/40 backdrop-blur-2xl rounded-[28px] p-1.5 flex items-center shadow-[0_8px_32px_rgba(0,0,0,0.06)] border border-white/50">
+      <div className="mx-5 mb-4 rounded-[22px] overflow-hidden shadow-sm" style={{
+        background: "#F8FAFC",
+        border: "1px solid rgba(0,0,0,0.05)"
+      }}>
+        <div className="relative flex h-[56px] p-[2px] items-center">
           {/* Active tab indicator */}
-          <motion.div
-            layoutId="activeTab"
-            className="absolute rounded-[22px] shadow-[0_4px_15px_rgba(0,0,0,0.1)] overflow-hidden"
+          <div
+            className="absolute h-[calc(100%-4px)] top-[2px] rounded-[20px] transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] overflow-hidden shadow-sm"
             style={{
-              width: "calc(50% - 10px)",
-              height: "calc(100% - 12px)",
+              width: "calc(50% - 2px)",
+              left: activeTab === "events" ? "2px" : "calc(50%)",
               background: activeTab === "events"
-                ? "linear-gradient(135deg, #fb923c, #D53F17)"
-                : "linear-gradient(135deg, #00A63E, #059669)",
+                ? "linear-gradient(90deg, #fb923c, #D53F17)"
+                : "linear-gradient(90deg, #00A63E, #059669)",
             }}
-            animate={{ x: activeTab === "events" ? 0 : "100%" }}
-            transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
           />
 
+          {/* Events Button */}
           <button
             onClick={() => handleTabChange("events")}
-            className="relative z-10 flex-1 h-[48px] flex items-center justify-center gap-2 transition-all duration-300"
+            className="relative z-10 flex-1 h-full flex items-center justify-center gap-1.5 transition-all duration-300"
           >
-            <Music size={16} className={activeTab === "events" ? "text-white" : "text-gray-400"} />
-            <span className="text-[14px] font-black uppercase tracking-[0.1em]" style={{ color: activeTab === "events" ? "#FFFFFF" : "#64748B" }}>Events</span>
+            <span className="text-[14px] font-bold uppercase tracking-wide" style={{ color: activeTab === "events" ? "#FFFFFF" : "#64748B" }}>Events</span>
           </button>
 
+          {/* GameHub Button */}
           <button
             onClick={() => handleTabChange("gamehub")}
-            className="relative z-10 flex-1 h-[48px] flex items-center justify-center gap-2 transition-all duration-300"
+            className="relative z-10 flex-1 h-full flex items-center justify-center gap-1.5 transition-all duration-300"
           >
-            <Trophy size={16} className={activeTab === "gamehub" ? "text-white" : "text-gray-400"} />
-            <span className="text-[14px] font-black uppercase tracking-[0.1em]" style={{ color: activeTab === "gamehub" ? "#FFFFFF" : "#64748B" }}>GameHub</span>
+            <span className="text-[14px] font-bold uppercase tracking-wide" style={{ color: activeTab === "gamehub" ? "#FFFFFF" : "#64748B" }}>GameHub</span>
           </button>
         </div>
       </div>
@@ -924,47 +885,27 @@ export default function MobileHome() {
 
           {/* Trending Section */}
           {musicEvents.length > 0 && (
-            <div className="mb-10">
-              <div className="flex items-center justify-between px-6 mb-4 mt-2">
-                <h2 className="text-gray-900 text-[22px] font-black tracking-tight uppercase">Trending Now</h2>
-                <Link href="/events" className="text-orange-600 text-[13px] font-black uppercase tracking-widest hover:text-orange-700 transition-colors">See all</Link>
+            <div className="mb-8">
+              <div className="flex items-center justify-between px-5 mb-4 mt-2">
+                <h2 className="text-gray-900 text-[20px] font-bold tracking-tight">Trending</h2>
+                <Link href="/events" className="text-orange-600 text-[14px] font-bold hover:text-orange-700 transition-colors">See all</Link>
               </div>
-              <div className="flex gap-4 overflow-x-auto px-6 scroll-px-6 snap-x scrollbar-hide pb-2">
+              <div className="flex gap-4 overflow-x-auto px-5 scroll-px-5 snap-x scrollbar-hide">
                 {events.slice(0, 6).map(ev => (
                   <SectionEventCard key={ev.id} event={ev} />
                 ))}
               </div>
 
-              {/* Spotlight Banner - Cinematic Style */}
+              {/* Spotlight Banner */}
               {posterEvent && (
-                <Link href={`/events/${posterEvent.id}`} className="block mx-6 mt-8 group">
-                  <div className="relative h-[240px] rounded-[36px] overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.2)] border border-white/20">
-                    <img src={getEventImage(posterEvent.images)} alt={posterEvent.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2.5s]" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-black/10 to-transparent opacity-90" />
-                    
-                    <div className="absolute top-5 left-5">
-                      <div className="bg-orange-600/90 backdrop-blur-xl px-3.5 py-1.5 rounded-full flex items-center gap-1.5 shadow-xl border border-white/20">
-                        <Zap size={12} className="text-white fill-white animate-pulse" />
-                        <span className="text-white text-[10px] font-black uppercase tracking-[0.2em]">Spotlight</span>
-                      </div>
-                    </div>
-
-                    <div className="absolute left-6 right-6 bottom-6">
-                      <h3 className="text-white text-[26px] font-black leading-[1.1] tracking-tight mb-2 drop-shadow-2xl">{posterEvent.title}</h3>
-                      <div className="flex items-center gap-3">
-                         <div className="flex items-center gap-1.5 text-white/80 font-bold text-[12px] uppercase tracking-widest">
-                           <MapPin size={14} className="text-orange-500" />
-                           {posterEvent.venue}
-                         </div>
-                         <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
-                         <span className="text-white/80 font-bold text-[12px] uppercase tracking-widest italic">Fast Filling</span>
-                      </div>
-                    </div>
-
-                    <div className="absolute bottom-6 right-6">
-                       <div className="w-12 h-12 rounded-[20px] bg-white flex items-center justify-center shadow-2xl group-hover:bg-orange-500 group-hover:text-white transition-all duration-500 active:scale-90">
-                          <ArrowRight size={22} strokeWidth={3} />
-                       </div>
+                <Link href={`/events/${posterEvent.id}`} className="block mx-5 mt-5">
+                  <div className="relative h-[160px] rounded-[18px] overflow-hidden border border-gray-100 shadow-sm">
+                    <img src={getEventImage(posterEvent.images)} alt={posterEvent.title} className="absolute inset-0 w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+                    <div className="absolute left-4 right-4 bottom-3.5">
+                      <span className="inline-block px-2 py-1 rounded-full bg-orange-600/95 text-white text-[10px] font-bold tracking-wide mb-1.5">SPOTLIGHT</span>
+                      <h3 className="text-white text-[19px] font-bold truncate">{posterEvent.title}</h3>
+                      <p className="text-white/80 text-[13px] mt-1 truncate">{posterEvent.venue}</p>
                     </div>
                   </div>
                 </Link>
@@ -972,17 +913,13 @@ export default function MobileHome() {
             </div>
           )}
 
-          {/* All Events Section */}
-          <div className="py-10 mb-20 bg-white/60 backdrop-blur-md rounded-t-[48px] shadow-[0_-20px_60px_rgba(0,0,0,0.05)] border-t border-gray-100">
-            <div className="flex items-center justify-between px-8 mb-8">
-              <h2 className="text-gray-900 text-[28px] font-black tracking-tight">Explore More</h2>
-              <div className="bg-orange-600 px-3.5 py-1.5 rounded-2xl shadow-lg shadow-orange-200">
-                <span className="text-white text-[11px] font-black uppercase tracking-wider">{filteredEvents.length} Events</span>
-              </div>
+          {/* All Events Grid */}
+          <div className="py-4 mb-20">
+            <div className="flex items-center justify-between px-5 mb-5 mt-2">
+              <h2 className="text-gray-900 text-[24px] font-bold tracking-tight">All Events</h2>
             </div>
-            
-            {/* Filter Pills - Premium Glass Style */}
-            <div className="flex gap-3 overflow-x-auto px-8 scroll-px-8 mb-8 scrollbar-hide">
+            {/* Filter Pills */}
+            <div className="flex gap-2.5 overflow-x-auto px-5 scroll-px-5 mb-5 scrollbar-hide">
               {["Filters", "Date", "Today", "Tomorrow"].map((label, i) => (
                 <button 
                   key={label} 
@@ -991,43 +928,38 @@ export default function MobileHome() {
                     else if (label === "Date") setIsDateFilterOpen(true);
                     else if (label === "Today" || label === "Tomorrow") {
                       setActiveFilter(activeFilter === label ? "All" : label);
-                      setSelectedDate(null);
+                      setSelectedDate(null); // Reset specific date if Today/Tomorrow is clicked
                     }
                   }}
-                  className={`flex items-center gap-2 px-5 py-3 rounded-2xl border transition-all shrink-0 shadow-sm ${
+                  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl border transition-all shrink-0 shadow-sm ${
                     activeFilter === label || (label === "Filters" && selectedCategory !== "All") || (label === "Date" && selectedDate)
-                      ? 'bg-orange-600 border-orange-500 text-white shadow-orange-300/50 shadow-xl scale-105' 
-                      : 'bg-white border-gray-100 text-gray-700 hover:border-orange-200'
+                      ? 'bg-orange-600 border-orange-600 text-white' 
+                      : 'bg-white border-gray-200 text-gray-700'
                   }`}
                 >
-                  {i === 0 && <SlidersHorizontal size={16} className={activeFilter === label || selectedCategory !== "All" ? "text-white" : "text-gray-400"} />}
-                  <span className={`text-[13px] font-black ${activeFilter === label || (label === "Filters" && selectedCategory !== "All") || (label === "Date" && selectedDate) ? "text-white" : "text-gray-700"}`}>
+                  {i === 0 && <SlidersHorizontal size={14} className={activeFilter === label || selectedCategory !== "All" ? "text-white" : "text-gray-500"} />}
+                  <span className={`text-[13px] font-bold ${activeFilter === label || (label === "Filters" && selectedCategory !== "All") || (label === "Date" && selectedDate) ? "text-white" : "text-gray-700"}`}>
                     {label === "Filters" && selectedCategory !== "All" ? selectedCategory : label === "Date" && selectedDate ? selectedDate : label}
                   </span>
-                  {i <= 1 && <ChevronDown size={14} className={activeFilter === label || (label === "Filters" && selectedCategory !== "All") || (label === "Date" && selectedDate) ? "text-white/70" : "text-gray-300"} />}
+                  {i <= 1 && <ChevronDown size={14} className={activeFilter === label || (label === "Filters" && selectedCategory !== "All") || (label === "Date" && selectedDate) ? "text-white/70" : "text-gray-400"} />}
                 </button>
               ))}
             </div>
-
             {/* Grid */}
-            <div className="grid grid-cols-2 gap-x-5 gap-y-10 px-8 pb-12">
+            <div className="grid grid-cols-2 gap-x-3 gap-y-5 px-3.5">
               {filteredEvents.map(ev => (
                 <GridEventCard key={ev.id} event={ev} />
               ))}
             </div>
-
             {filteredEvents.length === 0 && (
-              <div className="py-24 text-center flex flex-col items-center">
-                <div className="w-24 h-24 rounded-[40px] bg-orange-50 flex items-center justify-center mb-6 border border-orange-100 shadow-inner">
-                   <Search size={40} className="text-orange-200" />
-                </div>
-                <p className="text-gray-900 text-[20px] font-black tracking-tight">No events found</p>
-                <p className="text-gray-500 text-[14px] font-medium mt-2 max-w-[200px] mx-auto">Try adjusting your filters or location</p>
+              <div className="py-20 text-center">
+                <Search size={48} className="mx-auto text-gray-200 mb-4" />
+                <p className="text-gray-500 font-bold">No events found</p>
                 <button 
-                  onClick={() => { setActiveFilter("All"); setQuery(""); setSelectedCategory("All"); }}
-                  className="mt-8 bg-orange-100 text-orange-600 px-8 py-3 rounded-2xl font-black text-[13px] uppercase tracking-widest hover:bg-orange-200 transition-all shadow-md active:scale-95"
+                  onClick={() => { setActiveFilter("All"); setQuery(""); }}
+                  className="mt-2 text-orange-600 font-bold text-sm"
                 >
-                  Clear All Filters
+                  Clear all filters
                 </button>
               </div>
             )}
@@ -1128,11 +1060,18 @@ export default function MobileHome() {
           )}
           {/* Popular Facilities */}
           <div className="mb-8">
-            <div className="flex items-center justify-between px-5 mb-4">
-              <h2 className="text-[#00A63E] text-[20px] font-bold tracking-tight">
-                {selectedSportCategory ? `${selectedSportCategory} Facilities` : "Popular Facilities"}
-              </h2>
-              <Link href="/gamehub" className="text-[#00A63E] text-[14px] font-bold">See all</Link>
+            <div className="flex flex-col px-5 mb-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-[#00A63E] text-[20px] font-bold tracking-tight">
+                  {selectedSportCategory ? `${selectedSportCategory} Facilities` : "Popular Facilities"}
+                </h2>
+                <Link href="/gamehub" className="text-[#00A63E] text-[14px] font-bold">See all</Link>
+              </div>
+              {isFallback && filteredFacilities.length > 0 && (
+                <p className="text-emerald-600/60 text-[11px] font-medium mt-1">
+                  No venues found in {selectedLocation.city}. Showing venues from other cities.
+                </p>
+              )}
             </div>
             {filteredFacilities.length > 0 ? (
               <div className="flex gap-4 overflow-x-auto px-5 scroll-px-5 snap-x scrollbar-hide">
@@ -1154,36 +1093,20 @@ export default function MobileHome() {
             )}
           </div>
 
-          {/* Host a Match Banner - Pro Design */}
-          <div className="mx-6 mb-10 group cursor-pointer">
-            <div className="relative rounded-[36px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-emerald-100 bg-[#0a0a0a]">
-              {/* Abstract decorative elements */}
-              <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/20 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2" />
-              <div className="absolute bottom-0 left-0 w-48 h-48 bg-emerald-600/10 rounded-full blur-[60px] translate-y-1/2 -translate-x-1/2" />
-              
-              <div className="relative z-10 p-8 flex flex-col items-start">
-                <div className="flex items-center gap-2.5 mb-3">
-                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_10px_#10b981]" />
-                  <span className="text-emerald-500 text-[11px] font-black tracking-[0.2em] uppercase">Community Match</span>
+          {/* Host a Match Banner */}
+          <div className="mx-5 mb-8 rounded-[24px] overflow-hidden shadow-sm border border-gray-100">
+            <div className="bg-[#111827] p-6 relative overflow-hidden flex items-center">
+              <div className="relative z-10 flex-1">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className="w-2 h-2 rounded-full bg-[#00A63E]"></span>
+                  <span className="text-[#00A63E] text-[11px] font-bold tracking-wider uppercase">Community Matches</span>
                 </div>
-                
-                <h3 className="text-white text-[24px] font-black leading-tight tracking-tight mb-2">Short on Players?</h3>
-                <p className="text-gray-400 text-[14px] font-medium mb-8 max-w-[240px] leading-relaxed">Host a match and invite the local community to join your game instantly.</p>
-                
-                <div className="flex items-center gap-4 w-full">
-                  <button className="flex-1 bg-emerald-600 text-white h-14 rounded-2xl flex items-center justify-center gap-3 active:scale-95 transition-all hover:bg-emerald-500 shadow-xl shadow-emerald-900/20">
-                    <span className="text-[15px] font-black uppercase tracking-widest">Host Match</span>
-                    <ArrowRight size={20} strokeWidth={3} />
-                  </button>
-                  <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white active:scale-90 transition-transform">
-                     <MessageSquare size={22} />
-                  </div>
-                </div>
-              </div>
-
-              {/* Subtle mesh background detail */}
-              <div className="absolute top-0 right-0 p-8 opacity-10">
-                 <Trophy size={120} className="text-white rotate-12" />
+                <h3 className="text-white text-[20px] font-bold leading-tight mb-1">Looking for players?</h3>
+                <p className="text-gray-400 text-[13px] font-medium mb-5 max-w-[85%]">Host a match and invite local players to join your game.</p>
+                <button className="bg-[#00A63E] text-white px-5 py-2.5 rounded-xl flex items-center gap-2 active:scale-95 transition-transform hover:bg-[#009035]">
+                  <span className="text-[13px] font-bold tracking-wide">Host Match</span>
+                  <ArrowRight size={16} strokeWidth={2.5} />
+                </button>
               </div>
             </div>
           </div>

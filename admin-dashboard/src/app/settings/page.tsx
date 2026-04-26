@@ -143,8 +143,8 @@ export default function SettingsPage() {
 
               <div className="p-6 space-y-6">
                 {/* Platform Logo */}
-                <div className="flex items-center gap-6 pb-6 border-b border-gray-100">
-                  <div className="w-20 h-20 rounded-xl bg-gray-200 flex items-center justify-center shadow-sm relative group cursor-pointer">
+                <div className="flex flex-col sm:flex-row items-center gap-6 pb-6 border-b border-gray-100 text-center sm:text-left">
+                  <div className="w-20 h-20 rounded-xl bg-gray-200 flex items-center justify-center shadow-sm relative group cursor-pointer shrink-0">
                     <Ticket size={32} className="text-white -rotate-44" />
                     <div className="absolute inset-0 bg-emerald-900/40 rounded-xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
                       <Camera size={22} className="text-white" />
@@ -239,12 +239,12 @@ export default function SettingsPage() {
                   { label: "Weekly Reports", desc: "Receive weekly performance summary", email: true, push: false },
                   { label: "System Alerts", desc: "Critical system notifications", email: true, push: true },
                 ].map((item, i) => (
-                  <div key={i} className="flex items-center justify-between py-5 border-b border-slate-100 last:border-b-0">
+                  <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between py-5 border-b border-slate-100 last:border-b-0 gap-4 sm:gap-0">
                     <div>
                       <h4 className="font-bold text-slate-900 text-[14px]">{item.label}</h4>
                       <p className="text-[13px] text-slate-500 font-medium mt-0.5">{item.desc}</p>
                     </div>
-                    <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-6 sm:justify-end">
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="checkbox"
@@ -448,7 +448,7 @@ export default function SettingsPage() {
                 {/* Theme Selection */}
                 <div>
                   <label className="block text-sm font-bold text-slate-700 mb-3">Dashboard Theme</label>
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     {[
                       { name: "Light", bg: "bg-white border-rose-400", active: true },
                       { name: "Dark", bg: "bg-slate-900", active: false },
@@ -456,7 +456,7 @@ export default function SettingsPage() {
                     ].map((theme) => (
                       <button
                         key={theme.name}
-                        className={`p-4 rounded-xl border-2 transition-all ${
+                        className={`p-4 rounded-xl border-2 transition-all text-left ${
                           theme.active
                             ? "border-rose-400 shadow-sm shadow-rose-100"
                             : "border-slate-200 hover:border-slate-300"

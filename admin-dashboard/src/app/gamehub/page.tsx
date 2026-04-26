@@ -1780,7 +1780,7 @@ export default function GameHubAdminPage() {
                       <select
                         value={facility.partnerId || ""}
                         onChange={(e) => handleAssignFacilityPartner(facility.id, e.target.value)}
-                        className="mt-1 w-full rounded-xl border border-slate-300 bg-white px-2 py-2 text-xs font-semibold"
+                        className="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold focus:border-emerald-500 outline-none"
                       >
                         <option value="" disabled>Select partner</option>
                         {partners.map((partner) => (
@@ -1792,12 +1792,12 @@ export default function GameHubAdminPage() {
                     </div>
                   ) : null}
 
-                  <div className="flex items-center justify-between pt-1">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <Link
-                        href={`http://localhost:3000/gamehub/${facility.id}`}
+                        href={`${process.env.NEXT_PUBLIC_WEB_URL || 'https://bookandvibe.in'}/gamehub/${facility.id}`}
                         target="_blank"
-                        className="inline-flex items-center gap-2 rounded-2xl bg-slate-900 px-4 py-2.5 text-sm font-bold text-gray-900 transition hover:bg-black"
+                        className="inline-flex items-center gap-2 rounded-2xl bg-slate-900 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-black"
                       >
                         Open Public Page <ArrowUpRight size={16} />
                       </Link>
@@ -1805,20 +1805,20 @@ export default function GameHubAdminPage() {
                         type="button"
                         onClick={() => openEditEditor(facility)}
                         disabled={!hasAdminAccess}
-                        className="inline-flex items-center gap-1 rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-700"
+                        className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors"
                       >
-                        <Pencil size={13} /> Edit
+                        <Pencil size={14} /> Edit
                       </button>
                       <button
                         type="button"
                         onClick={() => handleDeleteFacility(facility)}
                         disabled={actionLoading || !hasAdminAccess}
-                        className="inline-flex items-center gap-1 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs font-bold text-red-700 disabled:opacity-60"
+                        className="inline-flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-sm font-bold text-red-700 hover:bg-red-100 transition-colors disabled:opacity-60"
                       >
-                        <Trash2 size={13} /> Delete
+                        <Trash2 size={14} /> Delete
                       </button>
                     </div>
-                    <span className="text-xs font-bold uppercase tracking-wide text-slate-400">Synced</span>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">ID: {facility.id.slice(0, 8)}</span>
                   </div>
                 </div>
               </article>
@@ -1897,10 +1897,10 @@ export default function GameHubAdminPage() {
                       <p className="text-xs font-bold">{dayNumber}</p>
                       <div className="mt-2 space-y-1 text-[11px]">
                         {day?.bookingCount ? (
-                          <p className="inline-flex rounded-full bg-emerald-100 px-2 py-0.5 font-bold text-emerald-700">B {day.bookingCount}</p>
+                          <p className="inline-flex rounded-md bg-emerald-100 px-1.5 py-0.5 font-bold text-emerald-700 text-[9px] sm:text-[11px]">B {day.bookingCount}</p>
                         ) : null}
                         {day?.blockedCount ? (
-                          <p className="inline-flex rounded-full bg-amber-100 px-2 py-0.5 font-bold text-amber-700">X {day.blockedCount}</p>
+                          <p className="inline-flex rounded-md bg-amber-100 px-1.5 py-0.5 font-bold text-amber-700 text-[9px] sm:text-[11px]">X {day.blockedCount}</p>
                         ) : null}
                       </div>
                     </button>
