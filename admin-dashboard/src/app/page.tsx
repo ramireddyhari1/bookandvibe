@@ -464,7 +464,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Quick Actions */}
-        <div className="dash-card p-5">
+        <div className="dash-card p-5 hidden md:block">
           <h3 className="dash-title mb-4 text-base font-bold text-gray-900">Quick Actions</h3>
           <div className="space-y-2">
             <Link href="/events/new" className="group flex w-full items-center gap-3 rounded-xl border border-gray-100 bg-white p-3.5 transition-all hover:bg-gray-50 hover:border-gray-200">
