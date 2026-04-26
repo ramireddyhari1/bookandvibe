@@ -38,6 +38,7 @@ interface Facility {
   rating: number;
   pricePerHour: number;
   image: string;
+  availableSports?: string;
 }
 
 // ─── Constants ─────────────────────────────────────────────
