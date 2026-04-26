@@ -32,6 +32,7 @@ type GameHubFacility = {
   availableSports?: string[];
   terms?: string;
   mapLink?: string;
+  reviewsCount?: number;
   partnerId?: string | null;
   partner?: { id: string; name: string; email: string } | null;
 };
@@ -87,6 +88,7 @@ type FacilityFormState = {
   weekendPrice: string;
   status: "ACTIVE" | "INACTIVE" | "MAINTENANCE";
   partnerId: string;
+  reviewsCount: string;
 };
 
 import { fetchApi } from "@/lib/api";
@@ -139,6 +141,7 @@ const emptyFormState: FacilityFormState = {
   weekendPrice: "1000",
   status: "ACTIVE",
   partnerId: "",
+  reviewsCount: "0",
 };
 
 function listToCsv(input?: string[]) {
@@ -225,6 +228,7 @@ function mapFacilityToForm(facility: GameHubFacility): FacilityFormState {
     weekendPrice: "1000",
     status: facility.status || "ACTIVE",
     partnerId: facility.partnerId || "",
+    reviewsCount: String(facility.reviewsCount || 0),
   };
 }
 
@@ -490,6 +494,7 @@ export default function GameHubAdminPage() {
       availableSports: csvToList(formState.availableSports),
       terms: formState.terms.trim(),
       mapLink: formState.mapLink.trim(),
+      reviewsCount: Number(formState.reviewsCount || 0),
       partnerId: formState.partnerId || null,
     };
 
