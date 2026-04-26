@@ -960,10 +960,10 @@ export default function GameHubAdminPage() {
         ) : null}
 
         {isEditorOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/60  overflow-y-auto">
-            <div className="bg-white rounded-xl shadow-lg w-full max-w-4xl overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-6 bg-slate-900/60 overflow-y-auto">
+            <div className="bg-white rounded-none sm:rounded-xl shadow-lg w-full max-w-4xl overflow-hidden flex flex-col h-full sm:h-auto sm:max-h-[90vh]">
               {/* Wizard Header */}
-              <div className="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-white relative">
+              <div className="px-4 py-4 sm:px-8 sm:py-6 border-b border-slate-100 flex items-center justify-between bg-white relative">
                 <div className="absolute top-0 left-0 w-full h-1.5 bg-slate-100">
                   <div 
                     className="h-full bg-emerald-500 transition-all duration-700 ease-out" 
@@ -971,14 +971,14 @@ export default function GameHubAdminPage() {
                   />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900 tracking-tight">
+                  <h3 className="text-lg sm:text-2xl font-bold text-gray-900 tracking-tight">
                     {editorMode === "create" ? "New Facility" : "Edit Facility"}
                   </h3>
-                  <div className="flex items-center gap-3 mt-1.5">
-                    <span className="px-2.5 py-0.5 bg-emerald-50 text-emerald-600 rounded-lg text-[9px] font-bold uppercase tracking-widest border border-emerald-100">
+                  <div className="flex items-center gap-3 mt-1 sm:mt-1.5">
+                    <span className="px-2.5 py-0.5 bg-emerald-50 text-emerald-600 rounded-lg text-[8px] sm:text-[9px] font-bold uppercase tracking-widest border border-emerald-100">
                       Step {wizardStep} of 4
                     </span>
-                    <span className="text-gray-400 text-[9px] font-bold uppercase tracking-widest">
+                    <span className="text-gray-400 text-[8px] sm:text-[9px] font-bold uppercase tracking-widest hidden sm:inline">
                       {
                         wizardStep === 1 ? "Basic Identity" :
                         wizardStep === 2 ? "Media & Stats" :
@@ -988,8 +988,8 @@ export default function GameHubAdminPage() {
                     </span>
                   </div>
                 </div>
-                <button type="button" onClick={closeEditor} className="p-2.5 bg-gray-50 hover:bg-rose-50 hover:text-rose-500 rounded-xl border border-gray-200 transition-all group">
-                  <X size={18} className="text-gray-400 group-hover:text-rose-500" />
+                <button type="button" onClick={closeEditor} className="p-2 sm:p-2.5 bg-gray-50 hover:bg-rose-50 hover:text-rose-500 rounded-xl border border-gray-200 transition-all group">
+                  <X size={16} className="text-gray-400 group-hover:text-rose-500" />
                 </button>
               </div>
 
@@ -1003,7 +1003,7 @@ export default function GameHubAdminPage() {
               )}
 
               {/* Form Body */}
-              <div className="flex-1 overflow-y-auto p-8 pt-6">
+              <div className="flex-1 overflow-y-auto p-4 sm:p-8 sm:pt-6">
                 {/* Step 1: Basic Details */}
                 {mounted && wizardStep === 1 && (
                   <div className="space-y-8 py-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -1661,22 +1661,20 @@ export default function GameHubAdminPage() {
               </div>
 
               {/* Wizard Footer / Actions */}
-              <div className="px-10 py-8 border-t border-slate-100 bg-white flex items-center justify-between relative">
-                <div className="w-full h-px bg-gray-100" />
-                
-                <button
-                  type="button"
-                  disabled={wizardStep === 1}
-                  onClick={() => setWizardStep(prev => Math.max(1, prev - 1))}
-                  className="px-8 py-3.5 rounded-2xl text-xs font-semibold text-slate-400 hover:text-slate-900 hover:bg-slate-50 transition-all disabled:opacity-0 disabled:pointer-events-none uppercase tracking-wider"
-                >
-                  Previous Phase
-                </button>
+              {/* Sticky Footer */}
+              <div className="sticky bottom-0 bg-white border-t border-slate-100 p-4 sm:px-8 sm:py-6 z-10">
+                <div className="flex items-center justify-between gap-4">
+                  <button 
+                    type="button" 
+                    onClick={() => setWizardStep(prev => Math.max(1, prev - 1))}
+                    disabled={wizardStep === 1}
+                    className="px-6 py-4 rounded-[1.25rem] bg-gray-50 text-gray-500 text-xs font-bold uppercase tracking-widest hover:bg-gray-100 transition-all disabled:opacity-30 disabled:pointer-events-none"
+                  >
+                    Back
+                  </button>
 
-                <div className="flex items-center gap-4">
                   {wizardStep < 4 ? (
                     <button
-                      key="next-phase-btn"
                       type="button"
                       onClick={() => {
                         if (wizardStep === 1 && (!formState.name || !formState.type || !formState.location || !formState.venue)) {
@@ -1690,7 +1688,7 @@ export default function GameHubAdminPage() {
                         setActionError("");
                         setWizardStep(prev => Math.min(4, prev + 1));
                       }}
-                      className="group px-10 py-4 rounded-[1.25rem] bg-emerald-500 text-gray-900 text-xs font-semibold uppercase tracking-wider shadow-sm hover:bg-emerald-400 hover:-translate-y-0.5 transition-all active:scale-95 flex items-center gap-3"
+                      className="group px-8 sm:px-10 py-4 rounded-[1.25rem] bg-emerald-500 text-gray-900 text-xs font-semibold uppercase tracking-wider shadow-sm hover:bg-emerald-400 transition-all active:scale-95 flex items-center gap-3"
                     >
                       Next Phase
                       <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
@@ -1701,16 +1699,11 @@ export default function GameHubAdminPage() {
                       type="button"
                       disabled={actionLoading}
                       onClick={() => handleSubmitFacility()}
-                      className="px-10 py-4 rounded-[1.25rem] bg-emerald-600 text-white text-xs font-semibold uppercase tracking-wider shadow-lg shadow-emerald-900/20 hover:bg-emerald-700 hover:-translate-y-0.5 transition-all active:scale-95 disabled:opacity-50 disabled:active:scale-100 flex items-center gap-3"
+                      className="px-8 sm:px-10 py-4 rounded-[1.25rem] bg-emerald-600 text-white text-xs font-semibold uppercase tracking-wider shadow-lg shadow-emerald-900/20 hover:bg-emerald-700 transition-all active:scale-95 disabled:opacity-50 flex items-center gap-3"
                     >
                       {actionLoading ? "Finalizing..." : editorMode === "create" ? "Initialize Asset" : "Commit Changes"}
                       {!actionLoading && <Check size={16} />}
                     </button>
-                  )}
-                  {wizardStep === 4 && (
-                    <div className="flex flex-col items-center gap-4">
-                        {/* Empty spacer or additional step 4 buttons could go here */}
-                    </div>
                   )}
                 </div>
               </div>
@@ -1860,11 +1853,11 @@ export default function GameHubAdminPage() {
           </div>
         </div>
 
-        <form onSubmit={handleBlockSlots} className="mt-5 grid grid-cols-1 gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 md:grid-cols-4">
+        <form onSubmit={handleBlockSlots} className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4">
           <input type="date" value={blockDate} onChange={(e) => setBlockDate(e.target.value)} className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" required />
           <input value={blockReason} onChange={(e) => setBlockReason(e.target.value)} placeholder="Reason" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm" required />
-          <input value={blockSlotsInput} onChange={(e) => setBlockSlotsInput(e.target.value)} placeholder="Slots CSV (empty = full day)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm md:col-span-2" />
-          <button type="submit" disabled={actionLoading || !hasAdminAccess} className="rounded-xl bg-amber-500 px-4 py-2 text-sm font-bold text-gray-900 disabled:opacity-60 md:col-span-4">
+          <input value={blockSlotsInput} onChange={(e) => setBlockSlotsInput(e.target.value)} placeholder="Slots CSV (empty = full day)" className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm sm:col-span-2 lg:col-span-2" />
+          <button type="submit" disabled={actionLoading || !hasAdminAccess} className="rounded-xl bg-amber-500 px-4 py-2 text-sm font-bold text-gray-900 disabled:opacity-60 sm:col-span-2 lg:col-span-4">
             {actionLoading ? "Updating..." : "Block Slots"}
           </button>
         </form>
@@ -1893,7 +1886,7 @@ export default function GameHubAdminPage() {
                       key={cell.date}
                       type="button"
                       onClick={() => setSelectedDate(cell.date)}
-                      className={`min-h-[88px] rounded-xl border p-2 text-left transition ${
+                      className={`min-h-[60px] sm:min-h-[88px] rounded-xl border p-1.5 sm:p-2 text-left transition ${
                         isSelected
                           ? "border-rose-400 bg-rose-50"
                           : cell.inCurrentMonth
