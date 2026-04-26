@@ -550,15 +550,6 @@ function FacilityCard({ facility }: { facility: Facility }) {
     </Link>
   );
 }
-ay-500">
-            <MapPin size={12} />
-            <p className="text-[13px] font-medium truncate">{facility.location}</p>
-          </div>
-        </div>
-      </div>
-    </Link>
-  );
-}
 
 function LogoLoader({ isGameHub }: { isGameHub: boolean }) {
   const accentColor = isGameHub ? "#00A63E" : "#D53F17";
